@@ -1,5 +1,6 @@
 mod files;
 mod events;
+mod gui;
 
 use crate::events::EliteEvent;
 use std::{
@@ -20,7 +21,8 @@ fn main() -> io::Result<()> {
     reader.seek(SeekFrom::Start(0))?;
 
     println!("Monitoring Elite Dangerous journal at: {}", current_journal_path.display());
-    println!("Press Ctrl+C to stop.\n");
+
+    //iced::run("A cool counter", gui::Counter::update, gui::Counter::view).ok();
 
     loop {
         let mut buffer = String::new();
