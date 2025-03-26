@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 pub struct MaterialTraderStats {
 
     #[serde(rename = "Trades_Completed")]

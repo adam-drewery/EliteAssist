@@ -1,7 +1,7 @@
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 pub struct Backpack {
-    
+
     pub timestamp: String
 }

@@ -3,7 +3,7 @@ use crate::events::faction::Faction;
 use crate::events::station_economy::StationEconomy;
 use crate::events::station_faction::StationFaction;
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 pub struct Location {
 
     pub timestamp: String,

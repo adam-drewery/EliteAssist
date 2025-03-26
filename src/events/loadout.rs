@@ -2,7 +2,7 @@ use serde::Deserialize;
 use crate::events::fuel_capacity::FuelCapacity;
 use crate::events::module::Module;
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 pub struct Loadout {
 
     pub timestamp: String,

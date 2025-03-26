@@ -1,7 +1,7 @@
 use crate::events::*;
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 #[serde(tag = "event")]
 pub enum EliteEvent {
 

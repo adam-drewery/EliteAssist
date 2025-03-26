@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 pub struct Multicrew {
 
     #[serde(rename = "Multicrew_Time_Total")]

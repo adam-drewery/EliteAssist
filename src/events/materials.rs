@@ -1,13 +1,13 @@
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 pub struct Materials {
 
     pub timestamp: String,
     pub materials: Vec<Material>
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 pub struct Material {
 
     #[serde(rename = "Name")]

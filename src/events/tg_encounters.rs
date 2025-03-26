@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 pub struct TgEncounters {
 
     #[serde(rename = "TG_ENCOUNTER_KILLED")]

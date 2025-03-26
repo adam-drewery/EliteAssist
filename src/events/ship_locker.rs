@@ -4,7 +4,7 @@ use crate::events::ship_locker_consumable::ShipLockerConsumable;
 use crate::events::ship_locker_data::ShipLockerData;
 use crate::events::ship_locker_item::ShipLockerItem;
 
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 pub struct ShipLocker {
 
     pub timestamp: String,
