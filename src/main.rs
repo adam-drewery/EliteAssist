@@ -2,7 +2,6 @@ mod files;
 mod events;
 
 use crate::events::EliteEvent;
-use serde::Deserialize;
 use std::{
     fs::OpenOptions,
     io,
@@ -28,32 +27,39 @@ fn main() -> io::Result<()> {
         let bytes_read = reader.read_line(&mut buffer)?;
 
         if bytes_read > 0 {
-            let event: EliteEvent = serde_json::from_str(buffer.as_str())?;
+            let line = buffer.as_str();
+            println!("{}", line);
+            
+            let event: EliteEvent = serde_json::from_str(line)?;
             
             match event {
                 EliteEvent::FileHeader(header) => {
-                    println!("{}", header);
+                    println!("Language: {}", header.language);
+                    println!("Game Version: {} ({})", header.game_version, header.build.trim_end());
                 }
                 EliteEvent::Commander(commander) => {
                     println!("Commander name: {}", commander.name)
                 }
-                EliteEvent::Materials { .. } => {}
-                EliteEvent::Rank { .. } => {}
-                EliteEvent::Progress { .. } => {}
-                EliteEvent::Reputation { .. } => {}
-                EliteEvent::EngineerProgress { .. } => {}
-                EliteEvent::SquadronStartup { .. } => {}
-                EliteEvent::LoadGame { .. } => {}
-                EliteEvent::Statistics { .. } => {}
-                EliteEvent::ReceiveText { .. } => {}
-                EliteEvent::Location { .. } => {}
-                EliteEvent::Powerplay { .. } => {}
-                EliteEvent::Music { .. } => {}
-                EliteEvent::SuitLoadout { .. } => {}
-                EliteEvent::Backpack { .. } => {}
-                EliteEvent::ShipLocker { .. } => {}
-                EliteEvent::Missions { .. } => {}
-                EliteEvent::Shutdown { .. } => {}
+                EliteEvent::Materials(_) => {}
+                EliteEvent::Rank(_) => {}
+                EliteEvent::Progress(_) => {}
+                EliteEvent::Reputation(_) => {}
+                EliteEvent::EngineerProgress(_) => {}
+                EliteEvent::SquadronStartup(_) => {}
+                EliteEvent::LoadGame(_) => {}
+                EliteEvent::Statistics(_) => {}
+                EliteEvent::ReceiveText(_) => {}
+                EliteEvent::Location(_) => {}
+                EliteEvent::Powerplay(_) => {}
+                EliteEvent::Music(_) => {}
+                EliteEvent::SuitLoadout(_) => {}
+                EliteEvent::Backpack(_) => {}
+                EliteEvent::ShipLocker(_) => {}
+                EliteEvent::Missions(_) => {}
+                EliteEvent::Shutdown(_) => {}
+                EliteEvent::Loadout(_) => {}
+                EliteEvent::BuyAmmo(_) => {}
+                EliteEvent::RestockVehicle(_) => {}
             }
             
         } else {

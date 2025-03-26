@@ -1,148 +1,85 @@
-use std::fmt;
-use std::fmt::Formatter;
-use serde::Deserialize;
+mod file_header;
+mod elite_event;
+mod commander;
+mod bank_account;
+mod materials;
+mod rank;
+mod progress;
+mod reputation;
+mod combat;
+mod crime;
+mod smuggling;
+mod trading;
+mod mining;
+mod exploration;
+mod passengers;
+mod search_and_rescue;
+mod tg_encounters;
+mod crafting;
+mod crew;
+mod multicrew;
+mod material_trader_stats;
+mod cqc;
+mod exobiology;
+mod engineer_progress;
+mod engineer;
+mod squadron_startup;
+mod load_game;
+mod statistics;
+mod receive_text;
+mod location;
+mod station_faction;
+mod station_economy;
+mod faction_state;
+mod faction;
+mod powerplay;
+mod music;
+mod suit_loadout;
+mod backpack;
+mod ship_locker;
+mod ship_locker_item;
+mod ship_locker_component;
+mod ship_locker_consumable;
+mod ship_locker_data;
+mod loadout;
+mod fuel_capacity;
+mod module;
+mod engineering;
+mod modifier;
+mod buy_ammo;
+mod missions;
+mod restock_vehicle;
+mod disembark;
+mod shutdown;
 
-#[derive(Debug, Deserialize)]
-pub struct FileHeader {
-    pub timestamp: String,
-    pub part: u8,
-    pub language: String,
-    #[serde(rename = "gameversion")]
-    pub game_version: String,
-    pub build: String
-}
-
-impl fmt::Display for FileHeader {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "Language: {}, Game Version: {} ({})", self.language, self.game_version, self.build)
-    }
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Commander {
-    pub timestamp: String,
-    #[serde(rename = "FID")]
-    pub fid: String,
-    #[serde(rename = "Name")]
-    pub name: String
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Materials {
-    pub timestamp: String,
-    pub materials: Vec<Material>
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Material {
-    #[serde(rename = "Name")]
-    pub name: String,
-    #[serde(rename = "Count")]
-    pub count: u8
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Rank {
-    pub timestamp: String
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Progress {
-    pub timestamp: String
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Reputation {
-    pub timestamp: String
-}
-
-#[derive(Debug, Deserialize)]
-pub struct EngineerProgress {
-    pub timestamp: String
-}
-
-#[derive(Debug, Deserialize)]
-pub struct SquadronStartup {
-    pub timestamp: String
-}
-
-#[derive(Debug, Deserialize)]
-pub struct LoadGame {
-    pub timestamp: String
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Statistics {
-    pub timestamp: String
-}
-
-#[derive(Debug, Deserialize)]
-pub struct ReceiveText {
-    pub timestamp: String
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Location {
-    pub timestamp: String
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Powerplay {
-    pub timestamp: String
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Music {
-    pub timestamp: String
-}
-
-#[derive(Debug, Deserialize)]
-pub struct SuitLoadout {
-    pub timestamp: String
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Backpack {
-    pub timestamp: String
-}
-
-#[derive(Debug, Deserialize)]
-pub struct ShipLocker {
-    pub timestamp: String
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Missions {
-    pub timestamp: String
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Shutdown {
-    pub timestamp: String
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(tag = "event")]
-pub enum EliteEvent {
-
-    #[serde(rename = "Fileheader")]
-    FileHeader(FileHeader),
-    Commander(Commander),
-    Materials(Materials),
-    Rank(Rank),
-    Progress(Progress),
-    Reputation(Reputation),
-    EngineerProgress(EngineerProgress),
-    SquadronStartup(SquadronStartup),
-    LoadGame(LoadGame),
-    Statistics(Statistics),
-    ReceiveText(ReceiveText),
-    Location(Location),
-    Powerplay(Powerplay),
-    Music(Music),
-    SuitLoadout(SuitLoadout),
-    Backpack(Backpack),
-    ShipLocker(ShipLocker),
-    Missions(Missions),
-    Shutdown(Shutdown)
-}
+pub use bank_account::BankAccount;
+pub use combat::Combat;
+pub use crime::Crime;
+pub use elite_event::EliteEvent;
+pub use exploration::Exploration;
+pub use mining::Mining;
+pub use passengers::Passengers;
+pub use smuggling::Smuggling;
+pub use trading::Trading;
+pub use backpack::Backpack;
+pub use buy_ammo::BuyAmmo;
+pub use commander::Commander;
+pub use engineer_progress::EngineerProgress;
+pub use file_header::FileHeader;
+pub use load_game::LoadGame;
+pub use loadout::Loadout;
+pub use location::Location;
+pub use materials::Materials;
+pub use missions::Missions;
+pub use music::Music;
+pub use powerplay::Powerplay;
+pub use progress::Progress;
+pub use rank::Rank;
+pub use receive_text::ReceiveText;
+pub use reputation::Reputation;
+pub use restock_vehicle::RestockVehicle;
+pub use ship_locker::ShipLocker;
+pub use shutdown::Shutdown;
+pub use squadron_startup::SquadronStartup;
+pub use statistics::Statistics;
+pub use suit_loadout::SuitLoadout;
