@@ -2,6 +2,7 @@ mod files;
 mod events;
 
 use crate::events::EliteEvent;
+use serde::Deserialize;
 use std::{
     fs::OpenOptions,
     io,
@@ -28,8 +29,33 @@ fn main() -> io::Result<()> {
 
         if bytes_read > 0 {
             let event: EliteEvent = serde_json::from_str(buffer.as_str())?;
-            println!("New journal event: {}", event);
-            println!("JSON: {}", buffer)
+            
+            match event {
+                EliteEvent::FileHeader(header) => {
+                    println!("{}", header);
+                }
+                EliteEvent::Commander(commander) => {
+                    println!("Commander name: {}", commander.name)
+                }
+                EliteEvent::Materials { .. } => {}
+                EliteEvent::Rank { .. } => {}
+                EliteEvent::Progress { .. } => {}
+                EliteEvent::Reputation { .. } => {}
+                EliteEvent::EngineerProgress { .. } => {}
+                EliteEvent::SquadronStartup { .. } => {}
+                EliteEvent::LoadGame { .. } => {}
+                EliteEvent::Statistics { .. } => {}
+                EliteEvent::ReceiveText { .. } => {}
+                EliteEvent::Location { .. } => {}
+                EliteEvent::Powerplay { .. } => {}
+                EliteEvent::Music { .. } => {}
+                EliteEvent::SuitLoadout { .. } => {}
+                EliteEvent::Backpack { .. } => {}
+                EliteEvent::ShipLocker { .. } => {}
+                EliteEvent::Missions { .. } => {}
+                EliteEvent::Shutdown { .. } => {}
+            }
+            
         } else {
             if let Ok(latest_path) = files::get_latest_journal_path(dir_path) {
                 if latest_path != current_journal_path {
