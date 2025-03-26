@@ -28,8 +28,6 @@ fn main() -> io::Result<()> {
 
         if bytes_read > 0 {
             let line = buffer.as_str();
-            println!("{}", line);
-            
             let event: EliteEvent = serde_json::from_str(line)?;
             
             match event {
@@ -40,10 +38,34 @@ fn main() -> io::Result<()> {
                 EliteEvent::Commander(commander) => {
                     println!("Commander name: {}", commander.name)
                 }
-                EliteEvent::Materials(_) => {}
-                EliteEvent::Rank(_) => {}
-                EliteEvent::Progress(_) => {}
-                EliteEvent::Reputation(_) => {}
+                EliteEvent::Materials(materials) => {
+                    println!("Material type count: {}", materials.materials.len())
+                }
+                EliteEvent::Rank(rank) => {
+                    println!("Exploration rank: {}", rank.explore);
+                    println!("Combat rank: {}", rank.combat);
+                    println!("Trade rank: {}", rank.trade);
+                    println!("Explore rank: {}", rank.explore);
+                    println!("Empire rank: {}", rank.empire);
+                    println!("Federation rank: {}", rank.federation);
+                    println!("CQC rank: {}", rank.cqc);
+                }
+                EliteEvent::Progress(progress) => {
+                    println!("Exploration progress: {}", progress.explore);
+                    println!("Combat progress: {}", progress.combat);
+                    println!("Trade progress: {}", progress.trade);
+                    println!("Explore progress: {}", progress.explore);
+                    println!("Empire progress: {}", progress.empire);
+                    println!("Federation progress: {}", progress.federation);
+                    println!("CQC progress: {}", progress.cqc);
+                }
+                EliteEvent::Reputation(reputation) => {
+                    println!("Alliance Reputation: {}", reputation.alliance);
+                    println!("Empire Reputation: {}", reputation.empire);
+                    println!("Federation Reputation: {}", reputation.federation);
+                    println!("Reputation Reputation: {}", reputation.independent);
+                                        
+                }
                 EliteEvent::EngineerProgress(_) => {}
                 EliteEvent::SquadronStartup(_) => {}
                 EliteEvent::LoadGame(_) => {}
