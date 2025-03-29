@@ -1,17 +1,15 @@
-use iced::futures::Stream;
-use iced::Subscription;
-use journal_poller::JournalPoller;
-
-use crate::events::{Commander, EliteEvent};
+use crate::events::*;
+use crate::subscription::*;
 
 mod journal_poller;
 mod events;
 mod gui;
+mod subscription;
 
 #[tokio::main]
 async fn main() {
 
-    iced::application("EliteAssist", gui::MainView::update, gui::MainView::view)
+    iced::application("EliteAssist", gui::Gui::update, gui::Gui::view)
         .subscription(subscription)
         .run()
         .unwrap();
@@ -19,29 +17,28 @@ async fn main() {
 
 #[derive(Default)]
 struct State {
+    load_game: LoadGame,
     commander: Commander,
+    statistics: Statistics,
+    file_header: FileHeader,
+    materials: Materials,
+    rank: Rank,
+    progress: Progress,
+    reputation: Reputation,
+    engineer_progress: EngineerProgress,
+    squadron_startup: SquadronStartup,
+    receive_text: ReceiveText,
+    location: Location,
+    powerplay: Powerplay,
+    music: Music,
+    suit_loadout: SuitLoadout,
+    backpack: Backpack,
+    ship_locker: ShipLocker,
+    missions: Missions,
+    shutdown: Shutdown,
+    loadout: Loadout,
+    buy_ammo: BuyAmmo,
+    restock_vehicle: RestockVehicle,
+    buy_micro_resources: BuyMicroResources
 }
 
-use tokio::sync::mpsc;
-use tokio_stream::wrappers::ReceiverStream;
-
-fn some_worker() -> impl Stream<Item = EliteEvent> {
-    // Create a Tokio channel with a buffer size of 100
-    let (sender, receiver) = mpsc::channel(16);
-
-    tokio::spawn(async move {
-        let mut poller = JournalPoller::new();
-        loop {
-                let input = poller.next().await;
-                sender.send(input).await.unwrap();
-            }
-        }
-    );
-
-    // Convert the receiver into a stream
-    ReceiverStream::new(receiver)
-}
-
-fn subscription(_state: &State) -> Subscription<EliteEvent> {
-    Subscription::run(some_worker)
-}

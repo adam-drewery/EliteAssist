@@ -9,7 +9,7 @@ use crate::events::multicrew::Multicrew;
 use crate::events::search_and_rescue::SearchAndRescue;
 use crate::events::tg_encounters::TgEncounters;
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Default)]
 pub struct Statistics {
 
     pub timestamp: String,

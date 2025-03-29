@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Default)]
 pub struct Smuggling {
 
     #[serde(rename = "Black_Markets_Traded_With")]

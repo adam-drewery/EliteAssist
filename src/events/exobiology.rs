@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Default)]
 pub struct Exobiology {
 
     #[serde(rename = "Organic_Genus_Encountered")]
