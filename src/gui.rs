@@ -1,15 +1,9 @@
 use crate::events::EliteEvent;
-use crate::journal_poller::JournalPoller;
-use crate::{State};
-use iced::futures::channel::mpsc;
-use iced::widget::{Column, column, text};
-use iced::{self, stream, Subscription, Task};
-use std::sync::Arc;
-use iced::futures::{SinkExt, Stream};
+use crate::State;
+use iced::widget::{column, text, Column};
+use iced::{self};
 
-pub struct MainView {
-    poller: JournalPoller,
-}
+pub struct MainView;
 
 impl MainView {
     pub fn view(state: &State) -> Column<EliteEvent> {
