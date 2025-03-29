@@ -18,5 +18,7 @@ async fn main() {
 struct State {
     commander_name: String,
     credits: String,
+    current_system: String,
+    current_body: String,
 }
 
