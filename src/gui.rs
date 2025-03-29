@@ -1,29 +1,67 @@
-use crate::State;
-use crate::events::EliteEvent;
+use crate::events::{EliteEvent, ShipLocker};
 use iced::widget::{column, container, row, text};
-use iced::{Element, Fill, Font, Left, Right};
+use iced::{Bottom, Element, Fill, Font, Left, Right};
 use thousands::Separable;
 
 pub struct Gui;
 
 const FONT: Font = Font::with_name("Eurostile");
 
+#[derive(Default)]
+struct State {
+    commander_name: String,
+    credits: String,
+    current_system: String,
+    current_body: String,
+    ship_locker: ShipLocker
+}
+
 impl Gui {
     pub fn view(state: &State) -> Element<EliteEvent> {
-        
-        container(row![
-            column![
-                text(&state.commander_name).size(30).font(FONT).color(iced::Color::from_rgb(1.0, 0.5, 0.0)),
-                text(&state.credits).size(30).font(FONT),
+        container(column![
+            row![
+                column![
+                    text(&state.commander_name)
+                        .size(30)
+                        .font(FONT)
+                        .color(iced::Color::from_rgb(1.0, 0.5, 0.0)),
+                    text(&state.credits).size(30).font(FONT),
+                ]
+                .width(Fill)
+                .align_x(Left),
+                column![
+                    text(&state.current_system).size(30).font(FONT),
+                    text(&state.current_body).size(30).font(FONT),
+                ]
+                .width(Fill)
+                .align_x(Right),
+            ],
+            row![
+                column![
+                    text("SHIP LOCKER")
+                        .size(20)
+                        .font(FONT)
+                        .color(iced::Color::from_rgb(1.0, 0.5, 0.0)),
+                    text("blah").size(16).font(FONT),
+                    text("blah").size(16).font(FONT),
+                    text("blah").size(16).font(FONT),
+                ]
+                .width(Fill)
+                .align_x(Left),
+                column![
+                    text("INVENTORY")
+                        .size(20)
+                        .font(FONT)
+                        .color(iced::Color::from_rgb(1.0, 0.5, 0.0)),
+                    text("blah").size(16).font(FONT),
+                    text("blah").size(16).font(FONT),
+                    text("blah").size(16).font(FONT),
+                ]
+                .width(Fill)
+                .align_x(Right),
             ]
-            .width(Fill)
-            .align_x(Left),
-            column![
-                text(&state.current_system).size(30).font(FONT),
-                text(&state.current_body).size(30).font(FONT),
-            ]
-            .width(Fill)
-            .align_x(Right),
+            .align_y(Bottom)
+            .height(Fill)
         ])
         .padding(10)
         .center_x(Fill)
@@ -31,7 +69,6 @@ impl Gui {
     }
 
     pub fn update(state: &mut State, message: EliteEvent) {
-
         match message {
             EliteEvent::FileHeader(_) => {}
             EliteEvent::Commander(commander) => {
@@ -53,7 +90,9 @@ impl Gui {
             EliteEvent::Music(_) => {}
             EliteEvent::SuitLoadout(_) => {}
             EliteEvent::Backpack(_) => {}
-            EliteEvent::ShipLocker(_) => {}
+            EliteEvent::ShipLocker(ship_locker) => {
+                state.ship_locker = ship_locker;
+            }
             EliteEvent::Missions(_) => {}
             EliteEvent::Shutdown(_) => {}
             EliteEvent::Loadout(_) => {}
@@ -62,20 +101,20 @@ impl Gui {
             EliteEvent::BuyMicroResources(_) => {}
             EliteEvent::Status(status) => {
                 state.credits = status.balance.separate_with_commas() + " CR";
-                
+
                 if status.body_name.is_some() {
                     state.current_body = status.body_name.unwrap()
                 }
-            },
+            }
             EliteEvent::Disembark(disembark) => {
                 state.current_body = disembark.body;
-            },
+            }
             EliteEvent::Embark(embark) => {
                 state.current_body = embark.body;
-            },
-            EliteEvent::NpcCrewPaidWage(_) => {},
-            EliteEvent::Cargo(_) => {},
-            EliteEvent::Market(_) => {},
+            }
+            EliteEvent::NpcCrewPaidWage(_) => {}
+            EliteEvent::Cargo(_) => {}
+            EliteEvent::Market(_) => {}
             EliteEvent::None => {}
         }
     }

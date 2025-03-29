@@ -32,6 +32,7 @@ impl JournalPoller {
             .read(true)
             .open(&current_journal_path)
             .unwrap();
+        
         let mut reader = BufReader::new(file);
         reader.seek(SeekFrom::Start(0)).unwrap();
 
@@ -63,6 +64,7 @@ impl JournalPoller {
 
             if bytes_read > 0 {
                 let line = buffer.as_str();
+                
                 if let Ok(event) = serde_json::from_str(&line) {
                     println!("Handling {}\n", line);
                     return event;
@@ -72,6 +74,7 @@ impl JournalPoller {
             } else {
                 let dir_path = Path::new(JOURNAL_DIRECTORY);
                 let latest_path = get_latest_journal_path(dir_path).unwrap();
+                
                 if latest_path != self.current_journal_path {
                     println!(
                         "\nNewer log file detected! Switching to: {}\n",
