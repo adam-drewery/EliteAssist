@@ -30,6 +30,11 @@ pub enum EliteEvent {
     RestockVehicle(RestockVehicle),
     BuyMicroResources(BuyMicroResources),
     Status(Status),
+    Embark(Embark),
+    Disembark(Disembark),
+    NpcCrewPaidWage(NpcCrewPaidWage),
+    Cargo(Cargo),
+    Market(Market),
 
     #[default]
     None

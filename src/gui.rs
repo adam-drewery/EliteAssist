@@ -13,7 +13,7 @@ impl Gui {
         
         container(row![
             column![
-                text(&state.commander_name).size(30).font(FONT),
+                text(&state.commander_name).size(30).font(FONT).color(iced::Color::from_rgb(1.0, 0.5, 0.0)),
                 text(&state.credits).size(30).font(FONT),
             ]
             .width(Fill)
@@ -31,7 +31,7 @@ impl Gui {
     }
 
     pub fn update(state: &mut State, message: EliteEvent) {
-        println!("Handling {:?}", message);
+        
         match message {
             EliteEvent::FileHeader(_) => {}
             EliteEvent::Commander(commander) => {
@@ -62,8 +62,13 @@ impl Gui {
             EliteEvent::BuyMicroResources(_) => {}
             EliteEvent::Status(status) => {
                 state.credits = status.balance.separate_with_commas() + " CR";
-                state.current_body = status.body_name
-            }
+                state.current_body = status.body_name.unwrap_or_default()
+            },
+            EliteEvent::Disembark(_) => {},
+            EliteEvent::Embark(_) => {},
+            EliteEvent::NpcCrewPaidWage(_) => {},
+            EliteEvent::Cargo(_) => {},
+            EliteEvent::Market(_) => {},
             EliteEvent::None => {}
         }
     }
