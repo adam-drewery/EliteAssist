@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct ReceiveText {
 
     pub timestamp: String,
@@ -12,7 +12,7 @@ pub struct ReceiveText {
     pub message: String,
 
     #[serde(rename = "Message_Localised")]
-    pub message_localised: String,
+    pub message_localised: Option<String>,
 
     #[serde(rename = "Channel")]
     pub channel: String

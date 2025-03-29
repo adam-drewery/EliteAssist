@@ -3,7 +3,7 @@ use crate::events::faction::Faction;
 use crate::events::station_economy::StationEconomy;
 use crate::events::station_faction::StationFaction;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Location {
 
     pub timestamp: String,
@@ -15,40 +15,40 @@ pub struct Location {
     pub docked: bool,
 
     #[serde(rename = "StationName")]
-    pub station_name: String,
+    pub station_name: Option<String>,
 
     #[serde(rename = "StationType")]
-    pub station_type: String,
+    pub station_type: Option<String>,
 
     #[serde(rename = "MarketID")]
-    pub market_id: u64,
+    pub market_id: Option<u64>,
 
     #[serde(rename = "StationFaction")]
-    pub station_faction: StationFaction,
+    pub station_faction: Option<StationFaction>,
 
     #[serde(rename = "StationGovernment")]
-    pub station_government: String,
+    pub station_government: Option<String>,
 
     #[serde(rename = "StationGovernment_Localised")]
-    pub station_government_localised: String,
+    pub station_government_localised: Option<String>,
 
     #[serde(rename = "StationServices")]
-    pub station_services: Vec<String>,
+    pub station_services: Option<Vec<String>>,
 
     #[serde(rename = "StationEconomy")]
-    pub station_economy: String,
+    pub station_economy: Option<String>,
 
     #[serde(rename = "StationEconomy_Localised")]
-    pub station_economy_localised: String,
+    pub station_economy_localised: Option<String>,
 
     #[serde(rename = "StationEconomies")]
-    pub station_economies: Vec<StationEconomy>,
+    pub station_economies: Option<Vec<StationEconomy>>,
 
     #[serde(rename = "Taxi")]
-    pub taxi: bool,
+    pub taxi: Option<bool>,
 
     #[serde(rename = "Multicrew")]
-    pub multicrew: bool,
+    pub multicrew: Option<bool>,
 
     #[serde(rename = "StarSystem")]
     pub star_system: String,

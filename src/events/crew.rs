@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Crew {
 
     #[serde(rename = "NpcCrew_TotalWages")]

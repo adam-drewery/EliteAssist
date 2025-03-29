@@ -1,9 +1,12 @@
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Crime {
 
+    #[serde(rename = "Notoriety")]
     pub notoriety: u64,
+
+    #[serde(rename = "Fines")]
     pub fines: u64,
 
     #[serde(rename = "Total_Fines")]

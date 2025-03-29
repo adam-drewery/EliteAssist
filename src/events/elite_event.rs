@@ -1,7 +1,7 @@
 use crate::events::*;
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug, Default)]
 #[serde(tag = "event")]
 pub enum EliteEvent {
 
@@ -28,4 +28,8 @@ pub enum EliteEvent {
     Loadout(Loadout),
     BuyAmmo(BuyAmmo),
     RestockVehicle(RestockVehicle),
+    BuyMicroResources(BuyMicroResources),
+
+    #[default]
+    None
 }

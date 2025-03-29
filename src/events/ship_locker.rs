@@ -4,20 +4,20 @@ use crate::events::ship_locker_consumable::ShipLockerConsumable;
 use crate::events::ship_locker_data::ShipLockerData;
 use crate::events::ship_locker_item::ShipLockerItem;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct ShipLocker {
 
     pub timestamp: String,
 
     #[serde(rename = "Items")]
-    pub items: Vec<ShipLockerItem>,
+    pub items: Option<Vec<ShipLockerItem>>,
 
     #[serde(rename = "Components")]
-    pub components: Vec<ShipLockerComponent>,
+    pub components: Option<Vec<ShipLockerComponent>>,
 
     #[serde(rename = "Consumables")]
-    pub consumables: Vec<ShipLockerConsumable>,
+    pub consumables: Option<Vec<ShipLockerConsumable>>,
 
     #[serde(rename = "Data")]
-    pub data: Vec<ShipLockerData>
+    pub data: Option<Vec<ShipLockerData>>
 }

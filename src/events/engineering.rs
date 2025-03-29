@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use crate::events::modifier::Modifier;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Engineering {
 
     #[serde(rename = "Engineer")]

@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use crate::events::engineer::Engineer;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct EngineerProgress {
 
     pub timestamp: String,

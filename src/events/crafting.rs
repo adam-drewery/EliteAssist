@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Crafting {
 
     #[serde(rename = "Count_Of_Used_Engineers")]

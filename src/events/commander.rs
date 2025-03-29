@@ -1,6 +1,7 @@
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
+#[derive(Default)]
 pub struct Commander {
 
     pub timestamp: String,

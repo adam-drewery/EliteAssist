@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use crate::events::faction_state::FactionState;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Faction {
 
     #[serde(rename = "Name")]

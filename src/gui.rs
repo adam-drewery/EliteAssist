@@ -1,41 +1,51 @@
-use iced::widget::{button, column, text, Column};
+use crate::events::EliteEvent;
+use crate::journal_poller::JournalPoller;
+use crate::{State};
+use iced::futures::channel::mpsc;
+use iced::widget::{Column, column, text};
+use iced::{self, stream, Subscription, Task};
+use std::sync::Arc;
+use iced::futures::{SinkExt, Stream};
 
-#[derive(Default)]
-pub struct Counter {
-    value: i32,
+pub struct MainView {
+    poller: JournalPoller,
 }
 
-#[derive(Debug, Clone, Copy)]
-pub enum Message {
-    Increment,
-    Decrement,
-}
-
-impl Counter {
-    pub fn view(&self) -> Column<Message> {
-        // We use a column: a simple vertical layout
-        column![
-            // The increment button. We tell it to produce an
-            // `Increment` message when pressed
-            button("+").on_press(Message::Increment),
-
-            // We show the value of the counter here
-            text(self.value).size(50),
-
-            // The decrement button. We tell it to produce a
-            // `Decrement` message when pressed
-            button("-").on_press(Message::Decrement),
-        ]
+impl MainView {
+    pub fn view(state: &State) -> Column<EliteEvent> {
+        column![text(&state.commander.name).size(50),]
     }
 
-    pub fn update(&mut self, message: Message) {
+    pub fn update(state: &mut State, message: EliteEvent) {
         match message {
-            Message::Increment => {
-                self.value += 1;
+            EliteEvent::FileHeader(_) => {}
+            EliteEvent::Commander(commander) => {
+                state.commander = commander;
             }
-            Message::Decrement => {
-                self.value -= 1;
-            }
+            EliteEvent::Materials(_) => {}
+            EliteEvent::Rank(_) => {}
+            EliteEvent::Progress(_) => {}
+            EliteEvent::Reputation(_) => {}
+            EliteEvent::EngineerProgress(_) => {}
+            EliteEvent::SquadronStartup(_) => {}
+            EliteEvent::LoadGame(_) => {}
+            EliteEvent::Statistics(_) => {}
+            EliteEvent::ReceiveText(_) => {}
+            EliteEvent::Location(_) => {}
+            EliteEvent::Powerplay(_) => {}
+            EliteEvent::Music(_) => {}
+            EliteEvent::SuitLoadout(_) => {}
+            EliteEvent::Backpack(_) => {}
+            EliteEvent::ShipLocker(_) => {}
+            EliteEvent::Missions(_) => {}
+            EliteEvent::Shutdown(_) => {}
+            EliteEvent::Loadout(_) => {}
+            EliteEvent::BuyAmmo(_) => {}
+            EliteEvent::RestockVehicle(_) => {}
+            EliteEvent::BuyMicroResources(_) => {}
+            EliteEvent::None => {}
         }
     }
 }
+
+
