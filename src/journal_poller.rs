@@ -64,7 +64,7 @@ impl JournalPoller {
             if bytes_read > 0 {
                 let line = buffer.as_str();
                 if let Ok(event) = serde_json::from_str(&line) {
-                    println!("Handling {:?}\n", line);
+                    println!("Handling {}\n", line);
                     return event;
                 } else {
                     eprintln!("Failed to parse journal file: {}", &line);
@@ -129,7 +129,7 @@ fn check_snapshot_file(file_details: &mut FileDetails) -> Option<EliteEvent> {
         if file.read_to_string(&mut content).is_ok() {
             file_details.last_modified = modified;
             if let Ok(event) = serde_json::from_str(&content) {
-                println!("Handling {:?}\n", content);
+                println!("Handling {}\n", content);
                 return event;
             } else {
                 eprintln!("Failed to parse snapshot file: {}", &content);

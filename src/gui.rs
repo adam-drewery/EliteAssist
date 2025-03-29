@@ -31,7 +31,7 @@ impl Gui {
     }
 
     pub fn update(state: &mut State, message: EliteEvent) {
-        
+
         match message {
             EliteEvent::FileHeader(_) => {}
             EliteEvent::Commander(commander) => {
@@ -62,10 +62,17 @@ impl Gui {
             EliteEvent::BuyMicroResources(_) => {}
             EliteEvent::Status(status) => {
                 state.credits = status.balance.separate_with_commas() + " CR";
-                state.current_body = status.body_name.unwrap_or_default()
+                
+                if status.body_name.is_some() {
+                    state.current_body = status.body_name.unwrap()
+                }
             },
-            EliteEvent::Disembark(_) => {},
-            EliteEvent::Embark(_) => {},
+            EliteEvent::Disembark(disembark) => {
+                state.current_body = disembark.body;
+            },
+            EliteEvent::Embark(embark) => {
+                state.current_body = embark.body;
+            },
             EliteEvent::NpcCrewPaidWage(_) => {},
             EliteEvent::Cargo(_) => {},
             EliteEvent::Market(_) => {},
