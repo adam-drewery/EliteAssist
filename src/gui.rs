@@ -1,23 +1,26 @@
 use crate::State;
 use crate::events::EliteEvent;
 use iced::widget::{column, container, row, text};
-use iced::{Element, Fill, Left, Right};
+use iced::{Element, Fill, Font, Left, Right};
 use thousands::Separable;
 
 pub struct Gui;
 
+const FONT: Font = Font::with_name("Eurostile");
+
 impl Gui {
     pub fn view(state: &State) -> Element<EliteEvent> {
+        
         container(row![
             column![
-                text(&state.commander_name).size(30),
-                text(&state.credits).size(30),
+                text(&state.commander_name).size(30).font(FONT),
+                text(&state.credits).size(30).font(FONT),
             ]
             .width(Fill)
             .align_x(Left),
             column![
-                text(&state.current_system).size(30),
-                text(&state.current_body).size(30),
+                text(&state.current_system).size(30).font(FONT),
+                text(&state.current_body).size(30).font(FONT),
             ]
             .width(Fill)
             .align_x(Right),
