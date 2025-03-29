@@ -1,14 +1,17 @@
 use crate::events::EliteEvent;
 use std::fs::{File, OpenOptions};
-use std::io::{BufRead, BufReader, Seek, SeekFrom};
+use std::io::{BufRead, BufReader, Seek, SeekFrom, Read};
 use std::path::{Path, PathBuf};
 use std::{io};
+use std::time::SystemTime;
 
 const JOURNAL_DIRECTORY: &str = "/home/adam/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/";
 
 pub struct JournalPoller {
     reader: BufReader<File>,
     current_journal_path: PathBuf,
+    status_path: PathBuf,
+    last_status_modified: SystemTime,
 }
 
 impl JournalPoller {
@@ -22,22 +25,44 @@ impl JournalPoller {
         let mut reader = BufReader::new(file);
         reader.seek(SeekFrom::Start(0)).unwrap();
 
+        let status_path = dir_path.join("Status.json");
+        let last_status_modified = SystemTime::UNIX_EPOCH;
+
         Self {
             reader,
             current_journal_path,
+            status_path,
+            last_status_modified
         }
     }
-    
+
     pub async fn next(&mut self) -> EliteEvent {
-        loop { 
+        loop {
+            // Check status.json first
+            if let Ok(metadata) = std::fs::metadata(&self.status_path) {
+                if let Ok(modified) = metadata.modified() {
+                    if modified > self.last_status_modified {
+                        let mut content = String::new();
+                        if let Ok(mut file) = File::open(&self.status_path) {
+                            if file.read_to_string(&mut content).is_ok() {
+                                self.last_status_modified = modified;
+                                if let Ok(event) = serde_json::from_str(&content) {
+                                    return event;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             let mut buffer = String::new();
             let bytes_read = self.reader.read_line(&mut buffer).unwrap();
 
             if bytes_read > 0 {
-                 let line = buffer.as_str();
+                let line = buffer.as_str();
                 return serde_json::from_str(line).unwrap();
             } else {
-                let dir_path = Path::new(JOURNAL_DIRECTORY); // todo: store this somewhere
+                let dir_path = Path::new(JOURNAL_DIRECTORY);
                 if let Ok(latest_path) = get_latest_journal_path(dir_path) {
                     if latest_path != self.current_journal_path {
                         println!(

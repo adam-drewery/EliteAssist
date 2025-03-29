@@ -29,6 +29,7 @@ pub enum EliteEvent {
     BuyAmmo(BuyAmmo),
     RestockVehicle(RestockVehicle),
     BuyMicroResources(BuyMicroResources),
+    Status(Status),
 
     #[default]
     None

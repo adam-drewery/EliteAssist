@@ -52,6 +52,7 @@ mod restock_vehicle;
 mod disembark;
 mod shutdown;
 mod buy_micro_resources;
+mod status;
 
 pub use bank_account::BankAccount;
 pub use combat::Combat;
@@ -85,3 +86,4 @@ pub use squadron_startup::SquadronStartup;
 pub use statistics::Statistics;
 pub use suit_loadout::SuitLoadout;
 pub use buy_micro_resources::BuyMicroResources;
+pub use status::Status;
