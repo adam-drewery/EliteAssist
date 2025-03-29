@@ -1,9 +1,6 @@
-use std::sync::{Arc, Mutex};
-use iced::futures::sink::SinkExt;
 use iced::futures::Stream;
-use iced::{stream, Subscription};
+use iced::Subscription;
 use journal_poller::JournalPoller;
-use tokio::time::{sleep, Duration};
 
 use crate::events::{Commander, EliteEvent};
 
@@ -46,6 +43,6 @@ fn some_worker() -> impl Stream<Item = EliteEvent> {
     ReceiverStream::new(receiver)
 }
 
-fn subscription(state: &State) -> Subscription<EliteEvent> {
+fn subscription(_state: &State) -> Subscription<EliteEvent> {
     Subscription::run(some_worker)
 }
