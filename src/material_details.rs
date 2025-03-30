@@ -17,9 +17,9 @@ pub struct MaterialDetail {
     https://elite-dangerous.fandom.com/wiki/Encoded_Materials#List_of_Encoded_Materials
  */
 
-const ENCODED_CSV: &[u8] = include_bytes!("material_details/encoded.csv");
-const MANUFACTURED_CSV: &[u8] = include_bytes!("material_details/manufactured.csv");
-const RAW_CSV: &[u8] = include_bytes!("material_details/raw.csv");
+const ENCODED_CSV: &[u8] = include_bytes!("material_details/encoded.tsv");
+const MANUFACTURED_CSV: &[u8] = include_bytes!("material_details/manufactured.tsv");
+const RAW_CSV: &[u8] = include_bytes!("material_details/raw.tsv");
 
 fn parse_csv(data: &[u8]) -> HashSet<MaterialDetail> {
     str::from_utf8(data)
