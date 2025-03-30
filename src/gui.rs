@@ -22,6 +22,7 @@ impl Gui {
             navigation_bar(state).align_y(Bottom),
         ]
         .width(Fill)
+        .padding(10)
         .into()
     }
 

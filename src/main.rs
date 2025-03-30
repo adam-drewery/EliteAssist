@@ -12,8 +12,10 @@ mod subscription;
 mod theme;
 mod image;
 mod text;
+mod material_details;
 
 const FONT_BYTES: &[u8] = include_bytes!("font/eurostile.ttf");
+
 pub const FONT: Font = Font::with_name("Eurostile");
 
 #[tokio::main]
