@@ -1,11 +1,11 @@
 use once_cell::sync::Lazy;
 use crate::text::title_case;
 use serde::Deserialize;
-use crate::material_details::{find_material, MaterialDetail};
+use crate::material_detail::{find_material, MaterialDetail};
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Materials {
-    
+
     pub timestamp: String,
 
     #[serde(rename = "Raw")]
@@ -20,7 +20,7 @@ pub struct Materials {
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct Material {
-    
+
     #[serde(rename = "Name")]
     pub name: String,
 
@@ -32,10 +32,12 @@ pub struct Material {
 }
 
 impl Material {
+    
     pub fn display_name(&self) -> String {
         self.name_localised
-            .clone()
-            .unwrap_or(title_case(&self.name))
+            .as_ref()
+            .map(|name| name.clone())
+            .unwrap_or_else(|| title_case(&self.name))
     }
     pub fn info(&self) -> &MaterialDetail {
 
