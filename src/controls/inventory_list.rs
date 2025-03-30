@@ -1,5 +1,5 @@
-use crate::color::{BLUE, ORANGE, YELLOW};
 use crate::events::{EliteEvent, ShipLockerItem};
+use crate::theme::{BLUE, ORANGE, YELLOW};
 use iced::widget::{column, row, scrollable, text, Column};
 use iced::{Color, Element, Fill, Left};
 use std::collections::HashMap;

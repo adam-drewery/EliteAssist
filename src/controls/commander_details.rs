@@ -1,6 +1,6 @@
-use crate::color::ORANGE;
 use crate::events::EliteEvent;
 use crate::state::State;
+use crate::theme::ORANGE;
 use iced::widget::{column, row, text, Row};
 use iced::{Fill, Left, Right};
 

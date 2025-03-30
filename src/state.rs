@@ -1,5 +1,6 @@
-use thousands::Separable;
 use crate::events::{EliteEvent, ShipLocker};
+use serde::Deserialize;
+use thousands::Separable;
 
 #[derive(Default)]
 pub struct State {
@@ -8,6 +9,20 @@ pub struct State {
     pub current_system: String,
     pub current_body: String,
     pub ship_locker: ShipLocker,
+    pub active_screen: ActiveScreen
+}
+
+#[derive(Deserialize, Default, Clone, Debug)]
+pub enum ActiveScreen {
+
+    Commander,
+
+    #[default]
+    ShipLocker,
+
+    Navigation,
+
+    Market,
 }
 
 impl State {
@@ -58,8 +73,12 @@ impl State {
             EliteEvent::NpcCrewPaidWage(_) => {}
             EliteEvent::Cargo(_) => {}
             EliteEvent::Market(_) => {}
+            
+            EliteEvent::NavigateTo(screen) => {
+                self.active_screen = screen;
+            }
+
             EliteEvent::None => {},
-            EliteEvent::ShowShipLocker => todo!()
         }
     }
 }

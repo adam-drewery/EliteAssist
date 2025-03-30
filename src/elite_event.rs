@@ -1,4 +1,5 @@
 use crate::events::*;
+use crate::state::ActiveScreen;
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -36,8 +37,9 @@ pub enum EliteEvent {
     Cargo(Cargo),
     Market(Market),
 
-    ShowShipLocker,
-
+    NavigateTo(ActiveScreen),
+    
     #[default]
-    None
+    None,
+
 }
