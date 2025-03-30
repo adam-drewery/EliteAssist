@@ -80,11 +80,13 @@ impl JournalPoller {
                         "\nNewer log file detected! Switching to: {}\n",
                         latest_path.display()
                     );
+                    
                     self.current_journal_path = latest_path;
                     let new_file = OpenOptions::new()
                         .read(true)
                         .open(&self.current_journal_path)
                         .unwrap();
+                    
                     self.reader = BufReader::new(new_file);
                     self.reader.seek(SeekFrom::Start(0)).unwrap();
                 }

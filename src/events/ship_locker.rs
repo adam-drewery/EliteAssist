@@ -1,5 +1,4 @@
 use serde::Deserialize;
-use crate::events::ship_locker_data::ShipLockerData;
 use crate::events::ship_locker_item::ShipLockerItem;
 
 #[derive(Deserialize, Debug, Default)]
@@ -17,5 +16,5 @@ pub struct ShipLocker {
     pub consumables: Option<Vec<ShipLockerItem>>,
 
     #[serde(rename = "Data")]
-    pub data: Option<Vec<ShipLockerData>>
+    pub data: Option<Vec<ShipLockerItem>>
 }
