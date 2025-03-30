@@ -14,7 +14,7 @@ pub fn inventory_list(title: &str, items: Option<Vec<ShipLockerItem>>) -> Elemen
                         
                         let color = if item.mission_id.is_some() { BLUE } else { Color::WHITE };
                         row![
-                            text(item.count).size(16).color(YELLOW).width(24),
+                            text(item.count).size(16).color(YELLOW).width(36),
                             text(item.display_name()).color(color).size(16)
                         ]
                         .padding(2)

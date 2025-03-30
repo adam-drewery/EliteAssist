@@ -3,7 +3,7 @@ use crate::events::EliteEvent;
 use crate::state::State;
 use crate::color::*;
 use iced::widget::{column, container, row, text};
-use iced::{Bottom, Element, Fill, Left, Right};
+use iced::{Element, Fill, Left, Right, Top};
 
 pub struct Gui;
 
@@ -30,8 +30,9 @@ impl Gui {
                 inventory_list("ITEMS", state.ship_locker.items.clone()),
                 inventory_list("COMPONENTS", state.ship_locker.components.clone()),
                 inventory_list("DATA", state.ship_locker.data.clone()),
+                inventory_list("CONSUMABLES", state.ship_locker.consumables.clone()),
             ]
-            .align_y(Bottom)
+            .align_y(Top)
             .height(Fill)
         ])
         .padding(10)
