@@ -11,7 +11,7 @@ mod controls;
 mod state;
 mod images;
 
-const FONT_BYTES: &[u8] = include_bytes!("eurostile.ttf");
+const FONT_BYTES: &[u8] = include_bytes!("fonts/eurostile.ttf");
 pub const FONT: Font = Font::with_name("Eurostile");
 
 #[tokio::main]
