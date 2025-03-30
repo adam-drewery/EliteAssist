@@ -38,8 +38,6 @@ mod suit_loadout;
 mod backpack;
 mod ship_locker;
 mod ship_locker_item;
-mod ship_locker_component;
-mod ship_locker_consumable;
 mod ship_locker_data;
 mod loadout;
 mod fuel_capacity;

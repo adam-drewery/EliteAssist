@@ -1,6 +1,4 @@
 use serde::Deserialize;
-use crate::events::ship_locker_component::ShipLockerComponent;
-use crate::events::ship_locker_consumable::ShipLockerConsumable;
 use crate::events::ship_locker_data::ShipLockerData;
 use crate::events::ship_locker_item::ShipLockerItem;
 
@@ -13,10 +11,10 @@ pub struct ShipLocker {
     pub items: Option<Vec<ShipLockerItem>>,
 
     #[serde(rename = "Components")]
-    pub components: Option<Vec<ShipLockerComponent>>,
+    pub components: Option<Vec<ShipLockerItem>>,
 
     #[serde(rename = "Consumables")]
-    pub consumables: Option<Vec<ShipLockerConsumable>>,
+    pub consumables: Option<Vec<ShipLockerItem>>,
 
     #[serde(rename = "Data")]
     pub data: Option<Vec<ShipLockerData>>

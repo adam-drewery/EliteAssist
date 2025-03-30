@@ -4,7 +4,7 @@ use tokio::sync::mpsc;
 use tokio_stream::wrappers::ReceiverStream;
 use crate::events::EliteEvent;
 use crate::journal_poller::JournalPoller;
-use crate::State;
+use crate::gui::State;
 
 fn stream_events() -> impl Stream<Item = EliteEvent> {
 

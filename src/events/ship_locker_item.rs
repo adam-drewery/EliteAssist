@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct ShipLockerItem {
 
     #[serde(rename = "Name")]
@@ -17,4 +17,10 @@ pub struct ShipLockerItem {
 
     #[serde(rename = "Count")]
     pub count: u64,
+}
+
+impl ShipLockerItem {
+    pub fn display_name(&self) -> String {
+        self.name_localised.clone().unwrap_or(self.name.clone())
+    }
 }

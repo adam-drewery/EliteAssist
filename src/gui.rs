@@ -1,19 +1,20 @@
 use crate::events::{EliteEvent, ShipLocker};
-use iced::widget::{column, container, row, text};
-use iced::{Bottom, Element, Fill, Font, Left, Right};
+use iced::widget::{Text, column, container, row, scrollable, text};
+use iced::{Bottom, Color, Element, Fill, Font, Left, Right};
 use thousands::Separable;
 
 pub struct Gui;
 
 const FONT: Font = Font::with_name("Eurostile");
+const TITLE_COLOR: Color = Color::from_rgb(1.0, 0.5, 0.0);
 
 #[derive(Default)]
-struct State {
+pub struct State {
     commander_name: String,
     credits: String,
     current_system: String,
     current_body: String,
-    ship_locker: ShipLocker
+    ship_locker: ShipLocker,
 }
 
 impl Gui {
@@ -24,7 +25,7 @@ impl Gui {
                     text(&state.commander_name)
                         .size(30)
                         .font(FONT)
-                        .color(iced::Color::from_rgb(1.0, 0.5, 0.0)),
+                        .color(TITLE_COLOR),
                     text(&state.credits).size(30).font(FONT),
                 ]
                 .width(Fill)
@@ -38,27 +39,35 @@ impl Gui {
             ],
             row![
                 column![
-                    text("SHIP LOCKER")
-                        .size(20)
-                        .font(FONT)
-                        .color(iced::Color::from_rgb(1.0, 0.5, 0.0)),
-                    text("blah").size(16).font(FONT),
-                    text("blah").size(16).font(FONT),
-                    text("blah").size(16).font(FONT),
+                    text("ITEMS").size(20).font(FONT).color(TITLE_COLOR),
+                    scrollable(column(
+                        state
+                            .ship_locker
+                            .items
+                            .clone()
+                            .unwrap_or_default()
+                            .into_iter()
+                            .map(|item| -> Text { text(item.display_name()).size(16).font(FONT) })
+                            .map(Element::from)
+                    ))
+                    .width(Fill)
                 ]
-                .width(Fill)
                 .align_x(Left),
                 column![
-                    text("INVENTORY")
-                        .size(20)
-                        .font(FONT)
-                        .color(iced::Color::from_rgb(1.0, 0.5, 0.0)),
-                    text("blah").size(16).font(FONT),
-                    text("blah").size(16).font(FONT),
-                    text("blah").size(16).font(FONT),
+                    text("COMPONENTS").size(20).font(FONT).color(TITLE_COLOR),
+                    scrollable(column(
+                        state
+                            .ship_locker
+                            .components
+                            .clone()
+                            .unwrap_or_default()
+                            .into_iter()
+                            .map(|item| -> Text { text(item.display_name()).size(16).font(FONT) })
+                            .map(Element::from)
+                    ))
+                    .width(Fill)
                 ]
-                .width(Fill)
-                .align_x(Right),
+                .align_x(Left),
             ]
             .align_y(Bottom)
             .height(Fill)
