@@ -4,7 +4,7 @@ use crate::events::{EliteEvent, ShipLockerItem};
 use crate::color::{BLUE, ORANGE, YELLOW};
 
 pub fn inventory_list(title: &str, items: Option<Vec<ShipLockerItem>>) -> Element<EliteEvent> {
-    iced::widget::column![
+    column![
             text(title).size(20).color(ORANGE),
             scrollable(column(
                 items
