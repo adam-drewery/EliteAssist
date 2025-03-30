@@ -66,7 +66,7 @@ impl JournalPoller {
                 let line = buffer.as_str();
                 
                 if let Ok(event) = serde_json::from_str(&line) {
-                    println!("Handling {}\n", line);
+                    println!("Handling {}", line);
                     return event;
                 } else {
                     eprintln!("Failed to parse journal file: {}", &line);
