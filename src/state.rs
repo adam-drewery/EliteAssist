@@ -58,7 +58,8 @@ impl State {
             EliteEvent::NpcCrewPaidWage(_) => {}
             EliteEvent::Cargo(_) => {}
             EliteEvent::Market(_) => {}
-            EliteEvent::None => {}
+            EliteEvent::None => {},
+            EliteEvent::ShowShipLocker => todo!()
         }
     }
 }

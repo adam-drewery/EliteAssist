@@ -1,7 +1,7 @@
 use crate::controls::*;
 use crate::events::EliteEvent;
 use crate::state::State;
-use iced::widget::column;
+use iced::widget::{button, column, row};
 use iced::{Element, Fill};
 
 pub struct Gui;
@@ -11,6 +11,9 @@ impl Gui {
         column![
             commander_details(state),
             ship_locker(state),
+            row![
+                button("SHIP LOCKER").on_press(EliteEvent::ShowShipLocker)
+            ]
         ]
         .padding(10)
         .width(Fill)

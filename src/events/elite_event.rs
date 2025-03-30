@@ -1,7 +1,7 @@
 use crate::events::*;
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default)]
+#[derive(Deserialize, Debug, Default, Clone)]
 #[serde(tag = "event")]
 pub enum EliteEvent {
 
@@ -35,6 +35,8 @@ pub enum EliteEvent {
     NpcCrewPaidWage(NpcCrewPaidWage),
     Cargo(Cargo),
     Market(Market),
+
+    ShowShipLocker,
 
     #[default]
     None

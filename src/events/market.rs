@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct MarketItem {
 
     pub id: i64,
@@ -48,7 +48,7 @@ pub struct MarketItem {
     pub rare: bool,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Market {
 
     pub timestamp: String,

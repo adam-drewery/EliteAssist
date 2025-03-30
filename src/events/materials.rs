@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default)]
+#[derive(Deserialize, Debug, Default, Clone)]
 pub struct Materials {
 
     pub timestamp: String,
@@ -15,7 +15,7 @@ pub struct Materials {
     pub encoded: Vec<Material>
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Material {
 
     #[serde(rename = "Name")]

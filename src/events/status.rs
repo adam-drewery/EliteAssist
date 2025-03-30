@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default)]
+#[derive(Deserialize, Debug, Default, Clone)]
 pub struct Status {
     pub timestamp: String,
 
@@ -44,7 +44,7 @@ pub struct Status {
     pub balance: i64,
 }
 
-#[derive(Deserialize, Debug, Default)]
+#[derive(Deserialize, Debug, Default, Clone)]
 pub struct Fuel {
 
     #[serde(rename = "FuelMain")]
@@ -52,7 +52,4 @@ pub struct Fuel {
 
     #[serde(rename = "FuelReservoir")]
     pub fuel_reservoir: f64,
-
-
-
 }
