@@ -71,6 +71,7 @@ pub use load_game::LoadGame;
 pub use loadout::Loadout;
 pub use location::Location;
 pub use market::Market;
+pub use materials::Material;
 pub use materials::Materials;
 pub use mining::Mining;
 pub use missions::Missions;
@@ -135,5 +136,4 @@ pub enum Event {
 
     #[default]
     None,
-
 }

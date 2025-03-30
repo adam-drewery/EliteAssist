@@ -1,3 +1,4 @@
+use crate::text::title_case;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Clone)]
@@ -22,13 +23,5 @@ pub struct ShipLockerItem {
 impl ShipLockerItem {
     pub fn display_name(&self) -> String {
         self.name_localised.clone().unwrap_or(title_case(&self.name))
-    }
-}
-
-fn title_case(s: &String) -> String {
-    let mut c = s.chars();
-    match c.next() {
-        Some(f) => f.to_uppercase().chain(c).collect(),
-        None => String::new()
     }
 }

@@ -4,7 +4,7 @@ use iced::widget::{column, row, scrollable, text, Column};
 use iced::{Color, Element, Fill, Left};
 use std::collections::HashMap;
 
-pub fn inventory_list(title: &str, items: Option<Vec<ShipLockerItem>>) -> Column<Event> {
+pub fn locker_item_list(title: &str, items: Option<Vec<ShipLockerItem>>) -> Column<Event> {
     column![
         text(title).size(20).color(ORANGE),
         scrollable(column(
@@ -25,7 +25,7 @@ pub fn inventory_list(title: &str, items: Option<Vec<ShipLockerItem>>) -> Column
 }
 
 fn sanitize_items(items: Option<Vec<ShipLockerItem>>) -> impl Iterator<Item = ShipLockerItem> {
-    
+
     let mut grouped_items: HashMap<(String, Option<u64>), ShipLockerItem> = HashMap::new();
 
     for item in items.unwrap_or_default() {

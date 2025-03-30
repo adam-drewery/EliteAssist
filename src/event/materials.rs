@@ -1,3 +1,4 @@
+use crate::text::title_case;
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -20,7 +21,16 @@ pub struct Material {
 
     #[serde(rename = "Name")]
     pub name: String,
+    
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
 
     #[serde(rename = "Count")]
     pub count: u16
+}
+
+impl Material {
+    pub fn display_name(&self) -> String {
+        self.name_localised.clone().unwrap_or(title_case(&self.name))
+    }
 }

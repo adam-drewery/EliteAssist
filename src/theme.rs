@@ -17,7 +17,7 @@ pub const RED: Color = Color::from_rgb(1.0, 0.0, 0.0);
 pub const WHITE: Color = Color::WHITE;
 
 pub const PALETTE: Palette = Palette {
-    text: Color::WHITE,
+    text: WHITE,
     background: BACKGROUND,
     danger: RED,
     primary: ORANGE,

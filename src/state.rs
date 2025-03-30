@@ -1,4 +1,4 @@
-use crate::event::{Event, ShipLocker};
+use crate::event::{Event, Materials, ShipLocker};
 use serde::Deserialize;
 use thousands::Separable;
 
@@ -9,7 +9,8 @@ pub struct State {
     pub current_system: String,
     pub current_body: String,
     pub ship_locker: ShipLocker,
-    pub active_screen: ActiveScreen
+    pub active_screen: ActiveScreen,
+    pub materials: Materials
 }
 
 #[derive(Deserialize, Default, Clone, Debug)]
@@ -23,6 +24,7 @@ pub enum ActiveScreen {
     Navigation,
 
     Market,
+    Materials,
 }
 
 impl State {
@@ -32,7 +34,9 @@ impl State {
             Event::Commander(commander) => {
                 self.commander_name = "CMDR ".to_owned() + &commander.name.to_uppercase();
             }
-            Event::Materials(_) => {}
+            Event::Materials(materials) => {
+                self.materials = materials;
+            }
             Event::Rank(_) => {}
             Event::Progress(_) => {}
             Event::Reputation(_) => {}

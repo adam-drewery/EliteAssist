@@ -1,1 +1,0 @@
-const COURIER_ICON: &[u8] = include_bytes!("images/courier.svg");

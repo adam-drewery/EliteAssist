@@ -1,5 +1,5 @@
-use serde::Deserialize;
 use crate::event::engineer::Engineer;
+use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct EngineerProgress {

@@ -1,24 +1,23 @@
-use crate::subscription::*;
+use crate::gui::Gui;
+use crate::subscription::subscription;
 use crate::theme::theme;
-use gui::*;
 use iced::Font;
 
-mod journal_poller;
+mod control;
 mod event;
 mod gui;
+mod journal_poller;
+mod state;
 mod subscription;
 mod theme;
-mod controls;
-mod state;
-mod images;
-mod elite_event;
+mod image;
+mod text;
 
-const FONT_BYTES: &[u8] = include_bytes!("fonts/eurostile.ttf");
+const FONT_BYTES: &[u8] = include_bytes!("font/eurostile.ttf");
 pub const FONT: Font = Font::with_name("Eurostile");
 
 #[tokio::main]
 async fn main() {
-
     iced::application("EliteAssist", Gui::update, Gui::view)
         .font(FONT_BYTES)
         .default_font(FONT)

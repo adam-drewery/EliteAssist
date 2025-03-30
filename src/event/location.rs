@@ -1,7 +1,7 @@
-use serde::Deserialize;
 use crate::event::faction::Faction;
 use crate::event::station_economy::StationEconomy;
 use crate::event::station_faction::StationFaction;
+use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Location {

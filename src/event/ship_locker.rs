@@ -1,5 +1,5 @@
-use serde::Deserialize;
 use crate::event::ship_locker_item::ShipLockerItem;
+use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct ShipLocker {

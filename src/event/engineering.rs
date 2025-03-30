@@ -1,5 +1,5 @@
-use serde::Deserialize;
 use crate::event::modifier::Modifier;
+use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct Engineering {

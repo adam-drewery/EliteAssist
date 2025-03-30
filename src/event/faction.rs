@@ -1,5 +1,5 @@
-use serde::Deserialize;
 use crate::event::faction_state::FactionState;
+use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct Faction {
