@@ -1,10 +1,10 @@
 use crate::color::ORANGE;
 use crate::events::EliteEvent;
 use crate::state::State;
-use iced::widget::{column, row, text};
-use iced::{Element, Fill, Left, Right};
+use iced::widget::{column, row, text, Row};
+use iced::{Fill, Left, Right};
 
-pub fn commander_details(state: &State) -> Element<EliteEvent> {
+pub fn commander_details(state: &State) -> Row<EliteEvent> {
     row![
         column![
             text(&state.commander_name).size(30).color(ORANGE),
@@ -19,5 +19,4 @@ pub fn commander_details(state: &State) -> Element<EliteEvent> {
         .width(Fill)
         .align_x(Right),
     ]
-    .into()
 }

@@ -1,10 +1,10 @@
-use iced::{Element, Fill, Top};
-use iced::widget::row;
 use crate::controls::inventory_list;
 use crate::events::EliteEvent;
 use crate::state::State;
+use iced::widget::{row, Row};
+use iced::{Fill, Top};
 
-pub fn ship_locker(state: &State) -> Element<EliteEvent> {
+pub fn ship_locker(state: &State) -> Row<EliteEvent> {
     
     row![
         inventory_list("ITEMS", state.ship_locker.items.clone()),
@@ -14,5 +14,4 @@ pub fn ship_locker(state: &State) -> Element<EliteEvent> {
     ]
     .align_y(Top)
     .height(Fill)
-    .into()
 }

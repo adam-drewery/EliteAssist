@@ -1,9 +1,9 @@
 use iced::{Color, Element, Fill, Left};
-use iced::widget::{column, row, scrollable, text};
+use iced::widget::{column, row, scrollable, text, Column};
 use crate::events::{EliteEvent, ShipLockerItem};
 use crate::color::{BLUE, ORANGE, YELLOW};
 
-pub fn inventory_list(title: &str, items: Option<Vec<ShipLockerItem>>) -> Element<EliteEvent> {
+pub fn inventory_list(title: &str, items: Option<Vec<ShipLockerItem>>) -> Column<EliteEvent> {
     column![
             text(title).size(20).color(ORANGE),
             scrollable(column(
@@ -24,5 +24,4 @@ pub fn inventory_list(title: &str, items: Option<Vec<ShipLockerItem>>) -> Elemen
             .width(Fill)
         ]
         .align_x(Left)
-        .into()
 }
