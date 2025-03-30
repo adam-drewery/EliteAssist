@@ -54,7 +54,6 @@ mod suit_loadout;
 mod tg_encounters;
 mod trading;
 
-pub use crate::elite_event::EliteEvent;
 pub use backpack::Backpack;
 pub use bank_account::BankAccount;
 pub use buy_ammo::BuyAmmo;
@@ -93,3 +92,48 @@ pub use statistics::Statistics;
 pub use status::Status;
 pub use suit_loadout::SuitLoadout;
 pub use trading::Trading;
+
+use crate::state::ActiveScreen;
+use serde::Deserialize;
+
+#[derive(Deserialize, Debug, Default, Clone)]
+#[serde(tag = "event")]
+pub enum Event {
+
+    #[serde(rename = "Fileheader")]
+    FileHeader(FileHeader),
+    Commander(Commander),
+    Materials(Materials),
+    Rank(Rank),
+    Progress(Progress),
+    Reputation(Reputation),
+    EngineerProgress(EngineerProgress),
+    SquadronStartup(SquadronStartup),
+    LoadGame(LoadGame),
+    Statistics(Statistics),
+    ReceiveText(ReceiveText),
+    Location(Location),
+    Powerplay(Powerplay),
+    Music(Music),
+    SuitLoadout(SuitLoadout),
+    Backpack(Backpack),
+    ShipLocker(ShipLocker),
+    Missions(Missions),
+    Shutdown(Shutdown),
+    Loadout(Loadout),
+    BuyAmmo(BuyAmmo),
+    RestockVehicle(RestockVehicle),
+    BuyMicroResources(BuyMicroResources),
+    Status(Status),
+    Embark(Embark),
+    Disembark(Disembark),
+    NpcCrewPaidWage(NpcCrewPaidWage),
+    Cargo(Cargo),
+    Market(Market),
+
+    NavigateTo(ActiveScreen),
+
+    #[default]
+    None,
+
+}

@@ -1,10 +1,10 @@
 use crate::controls::inventory_list;
-use crate::events::EliteEvent;
+use crate::event::Event;
 use crate::state::State;
 use iced::widget::{row, Row};
 use iced::{Fill, Top};
 
-pub fn ship_locker(state: &State) -> Row<EliteEvent> {
+pub fn ship_locker(state: &State) -> Row<Event> {
     
     row![
         inventory_list("ITEMS", state.ship_locker.items.clone()),

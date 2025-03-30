@@ -1,6 +1,6 @@
 use serde::Deserialize;
-use crate::events::fuel_capacity::FuelCapacity;
-use crate::events::module::Module;
+use crate::event::fuel_capacity::FuelCapacity;
+use crate::event::module::Module;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Loadout {

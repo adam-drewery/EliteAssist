@@ -1,5 +1,5 @@
 use crate::controls::*;
-use crate::events::EliteEvent;
+use crate::event::Event;
 use crate::state::{ActiveScreen, State};
 use iced::widget::{column, row, text};
 use iced::{Bottom, Element, Fill};
@@ -7,7 +7,7 @@ use iced::{Bottom, Element, Fill};
 pub struct Gui;
 
 impl Gui {
-    pub fn view(state: &State) -> Element<EliteEvent> {
+    pub fn view(state: &State) -> Element<Event> {
         column![
             commander_details(state),
 
@@ -23,7 +23,7 @@ impl Gui {
         .into()
     }
 
-    pub fn update(state: &mut State, message: EliteEvent) {
+    pub fn update(state: &mut State, message: Event) {
         state.update_from(message);
     }
 }

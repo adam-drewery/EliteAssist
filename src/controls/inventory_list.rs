@@ -1,10 +1,10 @@
-use crate::events::{EliteEvent, ShipLockerItem};
+use crate::event::{Event, ShipLockerItem};
 use crate::theme::{BLUE, ORANGE, YELLOW};
 use iced::widget::{column, row, scrollable, text, Column};
 use iced::{Color, Element, Fill, Left};
 use std::collections::HashMap;
 
-pub fn inventory_list(title: &str, items: Option<Vec<ShipLockerItem>>) -> Column<EliteEvent> {
+pub fn inventory_list(title: &str, items: Option<Vec<ShipLockerItem>>) -> Column<Event> {
     column![
         text(title).size(20).color(ORANGE),
         scrollable(column(

@@ -1,13 +1,13 @@
 use serde::Deserialize;
-use crate::events::{BankAccount, Combat, Crime, Exploration, Mining, Passengers, Smuggling, Trading};
-use crate::events::cqc::Cqc;
-use crate::events::crafting::Crafting;
-use crate::events::crew::Crew;
-use crate::events::exobiology::Exobiology;
-use crate::events::material_trader_stats::MaterialTraderStats;
-use crate::events::multicrew::Multicrew;
-use crate::events::search_and_rescue::SearchAndRescue;
-use crate::events::tg_encounters::TgEncounters;
+use crate::event::{BankAccount, Combat, Crime, Exploration, Mining, Passengers, Smuggling, Trading};
+use crate::event::cqc::Cqc;
+use crate::event::crafting::Crafting;
+use crate::event::crew::Crew;
+use crate::event::exobiology::Exobiology;
+use crate::event::material_trader_stats::MaterialTraderStats;
+use crate::event::multicrew::Multicrew;
+use crate::event::search_and_rescue::SearchAndRescue;
+use crate::event::tg_encounters::TgEncounters;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Statistics {

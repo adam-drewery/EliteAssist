@@ -4,7 +4,7 @@ use gui::*;
 use iced::Font;
 
 mod journal_poller;
-mod events;
+mod event;
 mod gui;
 mod subscription;
 mod theme;

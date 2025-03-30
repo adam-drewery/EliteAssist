@@ -1,4 +1,4 @@
-use crate::events::EliteEvent;
+use crate::event::Event;
 use std::fs::{File, OpenOptions};
 use std::io::{BufRead, BufReader, Seek, SeekFrom, Read};
 use std::path::{Path, PathBuf};
@@ -50,7 +50,7 @@ impl JournalPoller {
         }
     }
 
-    pub async fn next(&mut self) -> EliteEvent {
+    pub async fn next(&mut self) -> Event {
         loop {
             
             for file_details in &mut self.snapshot_files {
@@ -123,7 +123,7 @@ fn get_latest_journal_path(dir: &Path) -> io::Result<PathBuf> {
     Ok(newest)
 }
 
-fn check_snapshot_file(file_details: &mut FileDetails) -> Option<EliteEvent> {
+fn check_snapshot_file(file_details: &mut FileDetails) -> Option<Event> {
     // Check status.json first
     let metadata = std::fs::metadata(&file_details.path).unwrap();
     let modified = metadata.modified().unwrap();
