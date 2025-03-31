@@ -4,8 +4,8 @@ use crate::theme::{GRAY, ORANGE, YELLOW};
 use iced::widget::svg::Handle;
 use iced::widget::{column, row, scrollable, svg, text, Column};
 use iced::{Element, Fill, Left};
-use std::collections::{BTreeMap, HashMap};
 use once_cell::sync::Lazy;
+use std::collections::{BTreeMap, HashMap};
 
 static CATEGORY_NAMES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
     let mut m = HashMap::new();
@@ -58,7 +58,7 @@ pub fn materials_list(title: &str, items: Vec<Material>) -> Column<Event> {
         ))
         .width(Fill)
     ]
-        .align_x(Left)
+    .align_x(Left)
 }
 
 fn group_and_order_items(items: Vec<Material>) -> BTreeMap<String, Vec<Material>> {
