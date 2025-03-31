@@ -1,5 +1,3 @@
-use crate::event::fuel_capacity::FuelCapacity;
-use crate::event::module::Module;
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -45,4 +43,92 @@ pub struct Loadout {
 
     #[serde(rename = "Modules")]
     pub modules: Vec<Module>
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct Module {
+
+    #[serde(rename = "Slot")]
+    pub slot: String,
+
+    #[serde(rename = "Item")]
+    pub item: String,
+
+    #[serde(rename = "On")]
+    pub on: bool,
+
+    #[serde(rename = "Priority")]
+    pub priority: u8,
+
+    #[serde(rename = "Health")]
+    pub health: f64,
+
+    #[serde(rename = "Value")]
+    pub value: Option<u64>,
+
+    #[serde(rename = "AmmoInClip")]
+    pub ammo_in_clip: Option<u64>,
+
+    #[serde(rename = "AmmoInHopper")]
+    pub ammo_in_hopper: Option<u64>,
+
+    #[serde(rename = "Engineering")]
+    pub engineering: Option<Engineering>,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct Engineering {
+
+    #[serde(rename = "Engineer")]
+    pub engineer: String,
+
+    #[serde(rename = "EngineerID")]
+    pub engineer_id: u64,
+
+    #[serde(rename = "BlueprintID")]
+    pub blueprint_id: u64,
+
+    #[serde(rename = "BlueprintName")]
+    pub blueprint_name: String,
+
+    #[serde(rename = "Level")]
+    pub level: u8,
+
+    #[serde(rename = "Quality")]
+    pub quality: f64,
+
+    #[serde(rename = "ExperimentalEffect")]
+    pub experimental_effect: Option<String>,
+
+    #[serde(rename = "ExperimentalEffect_Localised")]
+    pub experimental_effect_localised: Option<String>,
+
+    #[serde(rename = "Modifiers")]
+    pub modifiers: Vec<Modifier>,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct Modifier {
+
+    #[serde(rename = "Label")]
+    pub label: String,
+
+    #[serde(rename = "Value")]
+    pub value: f64,
+
+    #[serde(rename = "OriginalValue")]
+    pub original_value: f64,
+
+    #[serde(rename = "LessIsGood")]
+    pub less_is_good: u8,
+}
+
+#[derive(Deserialize, Debug, Default, Clone)]
+pub struct FuelCapacity {
+
+    #[serde(rename = "Main")]
+    pub main: f64,
+
+    #[serde(rename = "Reserve")]
+    pub reserve: f64,
 }
