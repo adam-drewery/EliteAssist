@@ -32,8 +32,7 @@ pub fn materials_list(title: &str, items: Vec<Material>) -> Column<Event> {
                         .unwrap_or(category.as_str())
                         .to_string();
 
-                    let mut rows =
-                        vec![row![text(category_display).size(16).color(GRAY)].padding(2)];
+                    let mut rows = vec![row![text(category_display).size(16).color(GRAY)].padding(2)];
 
                     rows.extend(items.into_iter().map(|item| {
                         let svg_handle = match item.info().rarity.as_str() {
@@ -84,8 +83,8 @@ fn group_and_order_items(items: Vec<Material>) -> BTreeMap<String, Vec<Material>
                 _ => 6,
             };
 
-            let rarity_cmp =
-                rarity_order(a.info().rarity.as_str()).cmp(&rarity_order(b.info().rarity.as_str()));
+            let rarity_cmp = rarity_order(a.info().rarity.as_str())
+                .cmp(&rarity_order(b.info().rarity.as_str()));
 
             if rarity_cmp == std::cmp::Ordering::Equal {
                 a.name.cmp(&b.name)
