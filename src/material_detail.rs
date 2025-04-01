@@ -1,6 +1,6 @@
+use once_cell::sync::Lazy;
 use std::collections::HashSet;
 use std::str;
-use once_cell::sync::Lazy;
 
 #[derive(Hash, Eq, PartialEq, Debug, Default)]
 pub struct MaterialDetail {

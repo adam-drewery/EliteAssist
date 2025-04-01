@@ -10,7 +10,10 @@ pub struct State {
     pub current_body: String,
     pub ship_locker: ShipLocker,
     pub active_screen: ActiveScreen,
-    pub materials: Materials
+    pub materials: Materials,
+    pub legal_state: String,
+    pub active_fine : bool,
+    pub wanted : bool,
 }
 
 #[derive(Deserialize, Default, Clone, Debug)]
@@ -63,6 +66,7 @@ impl State {
             Event::BuyMicroResources(_) => {}
             Event::Status(status) => {
                 self.credits = status.balance.separate_with_commas() + " CR";
+                self.legal_state = status.legal_state;
 
                 if status.body_name.is_some() {
                     self.current_body = status.body_name.unwrap()
@@ -83,6 +87,10 @@ impl State {
             }
 
             Event::None => {},
+            Event::Docked(docked) => {
+                self.active_fine = docked.active_fine;
+                self.wanted = docked.wanted;
+            },
         }
     }
 }

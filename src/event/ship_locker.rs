@@ -1,5 +1,5 @@
-use serde::Deserialize;
 use crate::text::title_case;
+use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct ShipLocker {

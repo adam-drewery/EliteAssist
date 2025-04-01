@@ -9,7 +9,7 @@ pub struct Gui;
 impl Gui {
     pub fn view(state: &State) -> Element<Event> {
         column![
-            commander_details(state),
+            header_bar(state),
 
             match state.active_screen{
                 

@@ -1,7 +1,7 @@
-use once_cell::sync::Lazy;
-use crate::text::title_case;
-use serde::Deserialize;
 use crate::material_detail::{find_material, MaterialDetail};
+use crate::text::title_case;
+use once_cell::sync::Lazy;
+use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Materials {

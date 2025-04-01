@@ -1,22 +1,29 @@
 use crate::event::Event;
 use crate::state::State;
-use crate::theme::ORANGE;
-use iced::widget::{column, row, text, Row};
-use iced::{Fill, Left, Right};
+use iced::widget::{column, row, Row};
+use iced::{Fill, Top};
 
 pub fn commander_details(state: &State) -> Row<Event> {
+
     row![
         column![
-            text(&state.commander_name).size(30).color(ORANGE),
-            text(&state.credits).size(30),
-        ]
-        .width(Fill)
-        .align_x(Left),
-        column![
-            text(&state.current_system).size(30),
-            text(&state.current_body).size(30),
-        ]
-        .width(Fill)
-        .align_x(Right),
+        legal_status(state),
+        missions(state),
+        messages(state),
+        ],
     ]
+    .align_y(Top)
+    .height(Fill)
+}
+
+fn legal_status(state: &State) -> Row<Event> {
+    row![ state.commander_name.as_ref() ]
+}
+
+fn missions(state: &State) -> Row<Event> {
+    row![ state.commander_name.as_ref() ]
+}
+
+fn messages(state: &State) -> Row<Event> {
+    row![ state.commander_name.as_ref() ]
 }

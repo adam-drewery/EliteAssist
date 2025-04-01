@@ -27,41 +27,41 @@ mod squadron_startup;
 mod statistics;
 mod status;
 mod suit_loadout;
+mod docked;
 
-pub use backpack::Backpack;
-pub use buy_ammo::BuyAmmo;
-pub use buy_micro_resources::BuyMicroResources;
-pub use cargo::Cargo;
-pub use commander::Commander;
-pub use disembark::Disembark;
-pub use embark::Embark;
-pub use engineer_progress::EngineerProgress;
-pub use file_header::FileHeader;
-pub use load_game::LoadGame;
-pub use loadout::Loadout;
-pub use location::Location;
-pub use market::Market;
-pub use materials::Material;
-pub use materials::Materials;
-pub use missions::Missions;
-pub use music::Music;
-pub use npc_crew_paid_wage::NpcCrewPaidWage;
-pub use powerplay::Powerplay;
-pub use progress::Progress;
-pub use rank::Rank;
-pub use receive_text::ReceiveText;
-pub use reputation::Reputation;
-pub use restock_vehicle::RestockVehicle;
-pub use ship_locker::ShipLocker;
-pub use ship_locker::ShipLockerItem;
-pub use shutdown::Shutdown;
-pub use squadron_startup::SquadronStartup;
-pub use statistics::Statistics;
-pub use status::Status;
+pub use backpack::*;
+pub use buy_ammo::*;
+pub use buy_micro_resources::*;
+pub use cargo::*;
+pub use commander::*;
+pub use disembark::*;
+pub use docked::*;
+pub use embark::*;
+pub use engineer_progress::*;
+pub use file_header::*;
+pub use load_game::*;
+pub use loadout::*;
+pub use location::*;
+pub use market::*;
+pub use materials::*;
+pub use missions::*;
+pub use music::*;
+pub use npc_crew_paid_wage::*;
+pub use powerplay::*;
+pub use progress::*;
+pub use rank::*;
+pub use receive_text::*;
+pub use reputation::*;
+pub use restock_vehicle::*;
+pub use ship_locker::*;
+pub use shutdown::*;
+pub use squadron_startup::*;
+pub use statistics::*;
+pub use status::*;
 
+use crate::event::suit_loadout::SuitLoadout;
 use crate::state::ActiveScreen;
 use serde::Deserialize;
-use crate::event::suit_loadout::SuitLoadout;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 #[serde(tag = "event")]
@@ -96,6 +96,7 @@ pub enum Event {
     NpcCrewPaidWage(NpcCrewPaidWage),
     Cargo(Cargo),
     Market(Market),
+    Docked(Docked),
 
     NavigateTo(ActiveScreen),
 
