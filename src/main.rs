@@ -6,7 +6,7 @@ use iced::Font;
 mod control;
 mod event;
 mod gui;
-mod journal_poller;
+mod journal_watcher;
 mod state;
 mod subscription;
 mod theme;
