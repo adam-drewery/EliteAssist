@@ -33,40 +33,27 @@ pub enum ActiveScreen {
 impl State {
     pub fn update_from(&mut self, event: Event) {
         match event {
-            Event::FileHeader(_) => {}
+
             Event::Commander(commander) => {
                 self.commander_name = "CMDR ".to_owned() + &commander.name.to_uppercase();
             }
             Event::Materials(materials) => {
                 self.materials = materials;
             }
-            Event::Rank(_) => {}
-            Event::Progress(_) => {}
-            Event::Reputation(_) => {}
-            Event::EngineerProgress(_) => {}
-            Event::SquadronStartup(_) => {}
-            Event::LoadGame(_) => {}
-            Event::Statistics(_) => {}
-            Event::ReceiveText(_) => {}
             Event::Location(location) => {
                 self.current_system = location.star_system;
-            }
-            Event::Powerplay(_) => {}
-            Event::Music(_) => {}
-            Event::SuitLoadout(_) => {}
-            Event::Backpack(_) => {}
+            },
             Event::ShipLocker(ship_locker) => {
                 self.ship_locker = ship_locker;
             }
-            Event::Missions(_) => {}
-            Event::Shutdown(_) => {}
-            Event::Loadout(_) => {}
-            Event::BuyAmmo(_) => {}
-            Event::RestockVehicle(_) => {}
-            Event::BuyMicroResources(_) => {}
             Event::Status(status) => {
-                self.credits = status.balance.separate_with_commas() + " CR";
-                self.legal_state = status.legal_state;
+                if let Some(balance) = status.balance {
+                    self.credits = balance.separate_with_commas() + " CR";
+                }
+                
+                if let Some(legal_state) = status.legal_state {
+                    self.legal_state = legal_state;
+                }
 
                 if status.body_name.is_some() {
                     self.current_body = status.body_name.unwrap()
@@ -78,19 +65,20 @@ impl State {
             Event::Embark(embark) => {
                 self.current_body = embark.body;
             }
-            Event::NpcCrewPaidWage(_) => {}
-            Event::Cargo(_) => {}
-            Event::Market(_) => {}
             
             Event::NavigateTo(screen) => {
                 self.active_screen = screen;
             }
 
-            Event::None => {},
             Event::Docked(docked) => {
-                self.active_fine = docked.active_fine;
-                self.wanted = docked.wanted;
+                if let Some(active_fine) = docked.active_fine {
+                    self.active_fine = active_fine;
+                }
+                if let Some(wanted) = docked.wanted {
+                    self.wanted = wanted;
+                }
             },
+            _ => {}
         }
     }
 }

@@ -1,3 +1,4 @@
+use crate::event::navigation::faction::Faction;
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -6,7 +7,7 @@ pub struct Location {
     pub timestamp: String,
 
     #[serde(rename = "DistFromStarLS")]
-    pub dist_from_star_ls: f64,
+    pub dist_from_star_ls: Option<f64>,
 
     #[serde(rename = "Docked")]
     pub docked: bool,
@@ -21,7 +22,7 @@ pub struct Location {
     pub market_id: Option<u64>,
 
     #[serde(rename = "StationFaction")]
-    pub station_faction: Option<StationFaction>,
+    pub station_faction: Option<SystemFaction>,
 
     #[serde(rename = "StationGovernment")]
     pub station_government: Option<String>,
@@ -96,28 +97,28 @@ pub struct Location {
     pub body_type: String,
 
     #[serde(rename = "ControllingPower")]
-    pub controlling_power: String,
+    pub controlling_power: Option<String>,
 
     #[serde(rename = "Powers")]
-    pub powers: Vec<String>,
+    pub powers: Option<Vec<String>>,
 
     #[serde(rename = "PowerplayState")]
-    pub powerplay_state: String,
+    pub powerplay_state: Option<String>,
 
     #[serde(rename = "PowerplayStateControlProgress")]
-    pub powerplay_state_control_progress: f64,
+    pub powerplay_state_control_progress: Option<f64>,
 
     #[serde(rename = "PowerplayStateReinforcement")]
-    pub powerplay_state_reinforcement: u64,
+    pub powerplay_state_reinforcement: Option<u64>,
 
     #[serde(rename = "PowerplayStateUndermining")]
-    pub powerplay_state_undermining: u64,
+    pub powerplay_state_undermining: Option<u64>,
 
     #[serde(rename = "Factions")]
-    pub factions: Vec<Faction>,
+    pub factions: Option<Vec<Faction>>,
 
     #[serde(rename = "SystemFaction")]
-    pub system_faction: StationFaction
+    pub system_faction: Option<SystemFaction>
 }
 
 #[derive(Deserialize, Debug, Clone)]
@@ -134,55 +135,11 @@ pub struct StationEconomy {
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
-pub struct StationFaction {
+pub struct SystemFaction {
 
     #[serde(rename = "Name")]
     pub name: String,
 
     #[serde(rename = "FactionState")]
-    pub faction_state: String,
-}
-
-#[derive(Deserialize, Debug, Clone)]
-pub struct Faction {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "FactionState")]
-    pub faction_state: String,
-
-    #[serde(rename = "Government")]
-    pub government: String,
-
-    #[serde(rename = "Influence")]
-    pub influence: f64,
-
-    #[serde(rename = "Allegiance")]
-    pub allegiance: String,
-
-    #[serde(rename = "Happiness")]
-    pub happiness: String,
-
-    #[serde(rename = "Happiness_Localised")]
-    pub happiness_localised: String,
-
-    #[serde(rename = "MyReputation")]
-    pub my_reputation: f64,
-
-    #[serde(rename = "RecoveringStates")]
-    pub recovering_states: Option<Vec<FactionState>>,
-
-    #[serde(rename = "ActiveStates")]
-    pub active_states: Option<Vec<FactionState>>
-}
-
-#[derive(Deserialize, Debug, Clone)]
-pub struct FactionState {
-
-    #[serde(rename = "State")]
-    pub state: String,
-
-    #[serde(rename = "Trend")]
-    pub trend: Option<u8>,
+    pub faction_state: Option<String>,
 }

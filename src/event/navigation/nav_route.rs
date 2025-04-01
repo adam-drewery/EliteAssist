@@ -1,7 +1,7 @@
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
-pub struct SuitLoadout {
-
-    pub timestamp: String
+pub struct NavRoute {
+    
+    pub timestamp: String,
 }

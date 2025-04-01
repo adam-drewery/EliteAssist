@@ -27,12 +27,15 @@ pub struct JournalWatcher {
     snapshot_files: Vec<FileDetails>,
     watcher_tx: mpsc::Sender<()>,
     watcher_rx: mpsc::Receiver<()>,
+    journal_files: Vec<PathBuf>,
+    current_file_index: usize,
 }
 
 impl JournalWatcher {
     pub fn new() -> Self {
         let dir_path = Path::new(JOURNAL_DIRECTORY);
-        let current_journal_path = get_latest_journal_path(dir_path).unwrap();
+        let journal_files = get_journal_paths(dir_path).unwrap();
+        let current_journal_path = journal_files[0].clone();
         let file = OpenOptions::new()
             .read(true)
             .open(&current_journal_path)
@@ -56,6 +59,8 @@ impl JournalWatcher {
             snapshot_files,
             watcher_tx,
             watcher_rx,
+            journal_files,
+            current_file_index: 0,
         };
 
         poller.spawn_watcher();
@@ -87,6 +92,38 @@ impl JournalWatcher {
 
     pub async fn next(&mut self) -> Event {
         loop {
+            // Try to read next line from current file
+            let mut buffer = String::new();
+            let bytes_read = self.reader.read_line(&mut buffer).unwrap();
+
+            if bytes_read > 0 {
+                let line = buffer.as_str();
+                let deserialize_result = serde_json::from_str(line);
+
+                if let Ok(event) = deserialize_result {
+                    return event;
+                }
+                else if let Err(e) = deserialize_result {
+                    eprintln!("Failed to parse journal entry: {}", &line);
+                    eprintln!("{}\n", &e);
+                }
+            }
+
+            // Reached end of current file
+            if self.current_file_index < self.journal_files.len() - 1 {
+                // Move to next journal file
+                self.current_file_index += 1;
+                self.current_journal_path = self.journal_files[self.current_file_index].clone();
+                let new_file = OpenOptions::new()
+                    .read(true)
+                    .open(&self.current_journal_path)
+                    .unwrap();
+                self.reader = BufReader::new(new_file);
+                //println!("\nMoving to next journal file: {}\n", self.current_journal_path.display());
+                continue;
+            }
+
+            // On latest file, wait for changes
             select! {
                 _ = self.watcher_rx.recv() => {
                     // Check snapshot files
@@ -95,38 +132,14 @@ impl JournalWatcher {
                             return event;
                         }
                     }
-
-                    // Check latest journal
+    
+                    // Check for new journal files
                     let dir_path = Path::new(JOURNAL_DIRECTORY);
-                    let latest_path = get_latest_journal_path(dir_path).unwrap();
+                    let journal_files = get_journal_paths(dir_path).unwrap();
                     
-                    if latest_path != self.current_journal_path {
-                        println!(
-                            "\nNewer log file detected! Switching to: {}\n",
-                            latest_path.display()
-                        );
-                        
-                        self.current_journal_path = latest_path;
-                        let new_file = OpenOptions::new()
-                            .read(true)
-                            .open(&self.current_journal_path)
-                            .unwrap();
-                        
-                        self.reader = BufReader::new(new_file);
-                        self.reader.seek(SeekFrom::Start(0)).unwrap();
-                    }
-
-                    let mut buffer = String::new();
-                    let bytes_read = self.reader.read_line(&mut buffer).unwrap();
-
-                    if bytes_read > 0 {
-                        let line = buffer.as_str();
-                        if let Ok(event) = serde_json::from_str(&line) {
-                            println!("Handling {}", line);
-                            return event;
-                        } else {
-                            eprintln!("Failed to parse journal file: {}", &line);
-                        }
+                    if journal_files.len() > self.journal_files.len() {
+                        println!("\nNew journal file detected!\n");
+                        self.journal_files = journal_files;
                     }
                 }
             }
@@ -135,12 +148,11 @@ impl JournalWatcher {
 }
 
 /// Return the path to the newest `.log` file in `JOURNAL_DIRECTORY`.
-fn get_latest_journal_path(dir: &Path) -> io::Result<PathBuf> {
-    let newest = std::fs::read_dir(dir)?
+fn get_journal_paths(dir: &Path) -> io::Result<Vec<PathBuf>> {
+    let mut files: Vec<_> = std::fs::read_dir(dir)?
         .filter_map(|entry| {
             let entry = entry.ok()?;
             let path = entry.path();
-            // Check extension == ".log"  
             let is_log = path
                 .extension()
                 .and_then(|ext| ext.to_str())
@@ -149,15 +161,15 @@ fn get_latest_journal_path(dir: &Path) -> io::Result<PathBuf> {
 
             if is_log { Some(path) } else { None }
         })
-        // Compare by last modification time
-        .max_by_key(|path| {
-            std::fs::metadata(path)
-                .and_then(|m| m.modified())
-                .unwrap_or(SystemTime::UNIX_EPOCH)
-        })
-        .ok_or_else(|| io::Error::new(io::ErrorKind::NotFound, "No .log files found"))?;
+        .collect();
 
-    Ok(newest)
+    files.sort_by_key(|path| {
+        std::fs::metadata(path)
+            .and_then(|m| m.modified())
+            .unwrap_or(SystemTime::UNIX_EPOCH)
+    });
+
+    Ok(files)
 }
 
 fn check_snapshot_file(file_details: &mut FileDetails) -> Option<Event> {
@@ -170,11 +182,14 @@ fn check_snapshot_file(file_details: &mut FileDetails) -> Option<Event> {
         let mut file = File::open(&file_details.path).unwrap();
         if file.read_to_string(&mut content).is_ok() {
             file_details.last_modified = modified;
-            if let Ok(event) = serde_json::from_str(&content) {
-                println!("Handling {}\n", content);
+            
+            let deserizlize_result = serde_json::from_str(&content);
+            if let Ok(event) = deserizlize_result {
+                //println!("Handling {}\n", content);
                 return event;
-            } else {
-                eprintln!("Failed to parse snapshot file: {}", &content);
+            } else if let Err(e) = deserizlize_result {
+                eprintln!("Failed to parse snapshot entry: {}", &content);
+                eprintln!("{}\n", &e);
             }
         }
     }

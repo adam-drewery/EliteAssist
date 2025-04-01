@@ -1,66 +1,16 @@
-mod backpack;
-mod buy_ammo;
-mod buy_micro_resources;
-mod cargo;
-mod commander;
-mod disembark;
-mod embark;
-mod engineer_progress;
-mod file_header;
-mod load_game;
-mod loadout;
-mod location;
-mod market;
-mod materials;
-mod missions;
-mod music;
-mod npc_crew_paid_wage;
-mod powerplay;
-mod progress;
-mod rank;
-mod receive_text;
-mod reputation;
-mod restock_vehicle;
-mod ship_locker;
-mod shutdown;
-mod squadron_startup;
-mod statistics;
-mod status;
-mod suit_loadout;
-mod docked;
+mod economy;
+mod inventory;
+mod navigation;
+mod personal;
+mod session;
 
-pub use backpack::*;
-pub use buy_ammo::*;
-pub use buy_micro_resources::*;
-pub use cargo::*;
-pub use commander::*;
-pub use disembark::*;
-pub use docked::*;
-pub use embark::*;
-pub use engineer_progress::*;
-pub use file_header::*;
-pub use load_game::*;
-pub use loadout::*;
-pub use location::*;
-pub use market::*;
-pub use materials::*;
-pub use missions::*;
-pub use music::*;
-pub use npc_crew_paid_wage::*;
-pub use powerplay::*;
-pub use progress::*;
-pub use rank::*;
-pub use receive_text::*;
-pub use reputation::*;
-pub use restock_vehicle::*;
-pub use ship_locker::*;
-pub use shutdown::*;
-pub use squadron_startup::*;
-pub use statistics::*;
-pub use status::*;
+pub use economy::*;
+pub use inventory::*;
+pub use navigation::*;
+pub use personal::*;
+pub use session::*;
 
-use crate::event::suit_loadout::SuitLoadout;
-use crate::state::ActiveScreen;
+use crate::state::*;
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -97,6 +47,49 @@ pub enum Event {
     Cargo(Cargo),
     Market(Market),
     Docked(Docked),
+    BookDropship(BookDropship),
+    StartJump(StartJump),
+    LaunchDrone(LaunchDrone),
+    SupercruiseEntry(SupercruiseEntry),
+    SupercruiseExit(SupercruiseExit),
+    Resurrect(Resurrect),
+    FSSSignalDiscovered(FSSSignalDiscovered),
+    NavRoute(NavRoute),
+    Shipyard(Shipyard),
+    ApproachSettlement(ApproachSettlement),
+    StoredShips(StoredShips),
+    SwitchSuitLoadout(SwitchSuitLoadout),
+    MissionAccepted(MissionAccepted),
+    FSDTarget(FSDTarget),
+    ShipyardSwap(ShipyardSwap),
+    ShipyardTransfer(ShipyardTransfer),
+    RefuelAll(RefuelAll),
+    ClearImpound(ClearImpound),
+    ModuleInfo(ModuleInfo),
+    Undocked(Undocked),
+    CommitCrime(CommitCrime),
+    UnderAttack(UnderAttack),
+    CollectItems(CollectItems),
+    LeaveBody(LeaveBody),
+    FSDJump(FSDJump),
+    NavRouteClear(NavRouteClear),
+    Bounty(Bounty),
+    ReservoirReplenished(ReservoirReplenished),
+    UseConsumable(UseConsumable),
+    Outfitting(Outfitting),
+    DockingDenied(DockingDenied),
+    MissionFailed(MissionFailed),
+    SupercruiseDestinationDrop(SupercruiseDestinationDrop),
+    MissionAbandoned(MissionAbandoned),
+    EngineerCraft(EngineerCraft),
+    DropshipDeploy(DropshipDeploy),
+    FuelScoop(FuelScoop),
+    ApproachBody(ApproachBody),
+    Scan(Scan),
+    StoredModules(StoredModules),
+    SAASignalsFound(SAASignalsFound),
+    DockingRequested(DockingRequested),
+    DockingGranted(DockingGranted),
 
     NavigateTo(ActiveScreen),
 

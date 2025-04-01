@@ -1,7 +1,7 @@
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
-pub struct Missions {
+pub struct ModuleInfo {
 
-    pub timestamp: String
+    pub timestamp: String,
 }

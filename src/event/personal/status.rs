@@ -2,13 +2,14 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Status {
+    
     pub timestamp: String,
 
     #[serde(rename = "Flags")]
     pub flags: i32,
 
     #[serde(rename = "Flags2")]
-    pub flags2: i32,
+    pub flags2: Option<i32>,
 
     #[serde(rename = "Oxygen")]
     pub oxygen: Option<f64>,
@@ -23,7 +24,7 @@ pub struct Status {
     pub selected_weapon: Option<String>,
 
     #[serde(rename = "LegalState")]
-    pub legal_state: String,
+    pub legal_state: Option<String>,
 
     #[serde(rename = "BodyName")]
     pub body_name: Option<String>,
@@ -41,7 +42,7 @@ pub struct Status {
     pub fuel: Option<Fuel>,
 
     #[serde(rename = "Balance")]
-    pub balance: i64,
+    pub balance: Option<i64>,
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]

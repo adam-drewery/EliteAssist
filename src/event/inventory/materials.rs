@@ -1,7 +1,7 @@
 use crate::material_detail::{find_material, MaterialDetail};
 use crate::text::title_case;
 use once_cell::sync::Lazy;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Materials {
@@ -29,6 +29,24 @@ pub struct Material {
 
     #[serde(rename = "Count")]
     pub count: u16,
+}
+
+#[derive(Serialize, Deserialize)]
+struct MaterialCollected {
+    
+    pub timestamp: String,
+    
+    #[serde(rename = "Category")]
+    pub category: String,
+    
+    #[serde(rename = "Name")]
+    pub name: String,
+    
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: String,
+    
+    #[serde(rename = "Count")]
+    pub count: i64,
 }
 
 impl Material {
