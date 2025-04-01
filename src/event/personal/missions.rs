@@ -83,3 +83,78 @@ pub struct MissionAbandoned {
     #[serde(rename = "MissionID")]
     pub mission_id: i64,
 }
+
+#[derive(Deserialize, Debug, Default, Clone)]
+pub struct SystemInfluence {
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: i64,
+
+    #[serde(rename = "Trend")]
+    pub trend: String,
+
+    #[serde(rename = "Influence")]
+    pub influence: String,
+}
+
+#[derive(Deserialize, Debug, Default, Clone)]
+pub struct Effect {
+
+    #[serde(rename = "Effect")]
+    pub effect: String,
+
+    #[serde(rename = "Effect_Localised")]
+    pub effect_localised: String,
+
+    #[serde(rename = "Trend")]
+    pub trend: String,
+}
+
+#[derive(Deserialize, Debug, Default, Clone)]
+pub struct FactionEffect {
+
+    #[serde(rename = "Faction")]
+    pub faction: String,
+
+    #[serde(rename = "Effects")]
+    pub effects: Vec<Effect>,
+
+    #[serde(rename = "Influence")]
+    pub influence: Vec<SystemInfluence>,
+
+    #[serde(rename = "ReputationTrend")]
+    pub reputation_trend: String,
+
+    #[serde(rename = "Reputation")]
+    pub reputation: String,
+}
+
+#[derive(Deserialize, Debug, Default, Clone)]
+pub struct MissionCompleted {
+
+    pub timestamp: String,
+
+    #[serde(rename = "Faction")]
+    pub faction: String,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "LocalisedName")]
+    pub localised_name: String,
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: i64,
+
+    #[serde(rename = "DestinationSystem")]
+    pub destination_system: String,
+
+    #[serde(rename = "DestinationStation")]
+    pub destination_station: String,
+
+    #[serde(rename = "Reward")]
+    pub reward: i64,
+
+    #[serde(rename = "FactionEffects")]
+    pub faction_effects: Vec<FactionEffect>,
+}

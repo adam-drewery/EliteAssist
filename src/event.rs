@@ -90,6 +90,9 @@ pub enum Event {
     SAASignalsFound(SAASignalsFound),
     DockingRequested(DockingRequested),
     DockingGranted(DockingGranted),
+    HeatWarning(HeatWarning),
+    ShieldState(ShieldState),
+    MissionCompleted(MissionCompleted),
 
     NavigateTo(ActiveScreen),
 
