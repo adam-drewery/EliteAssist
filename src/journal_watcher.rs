@@ -1,5 +1,5 @@
 use crate::event::Event;
-use log::{debug, error, info, warn};
+use log::{error, info};
 use std::fs::{File, OpenOptions};
 use std::io;
 use std::io::{BufRead, BufReader, Read, Seek, SeekFrom};

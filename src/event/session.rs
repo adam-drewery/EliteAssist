@@ -2,7 +2,7 @@ mod file_header;
 mod load_game;
 mod music;
 mod receive_text;
-pub mod send_text;
+mod send_text;
 mod shutdown;
 mod squadron_startup;
 
