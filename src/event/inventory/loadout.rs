@@ -42,11 +42,11 @@ pub struct Loadout {
     pub rebuy: u64,
 
     #[serde(rename = "Modules")]
-    pub modules: Vec<Module>
+    pub modules: Vec<SuitModule>
 }
 
 #[derive(Deserialize, Debug, Clone)]
-pub struct Module {
+pub struct SuitModule {
 
     #[serde(rename = "Slot")]
     pub slot: String,

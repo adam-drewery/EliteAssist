@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use crate::event::Module;
+use crate::event::SuitModule;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct CreateSuitLoadout {
@@ -25,7 +25,7 @@ pub struct CreateSuitLoadout {
     pub loadout_name: String,
 
     #[serde(rename = "Modules")]
-    pub modules: Vec<Module>,
+    pub modules: Vec<SuitModule>,
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -79,7 +79,7 @@ pub struct SwitchSuitLoadout {
     pub loadout_name: String,
 
     #[serde(rename = "Modules")]
-    pub modules: Vec<Module>,
+    pub modules: Vec<SuitModule>,
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
