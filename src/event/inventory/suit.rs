@@ -1,5 +1,26 @@
 use serde::Deserialize;
-use crate::event::SuitModule;
+
+#[derive(Deserialize, Debug, Default, Clone)]
+pub struct SuitModule {
+
+    #[serde(rename = "SlotName")]
+    pub slot_name: String,
+
+    #[serde(rename = "SuitModuleID")]
+    pub suit_module_id: i64,
+
+    #[serde(rename = "ModuleName")]
+    pub module_name: String,
+
+    #[serde(rename = "ModuleName_Localised")]
+    pub module_name_localised: String,
+
+    #[serde(rename = "Class")]
+    pub class: i64,
+
+    #[serde(rename = "WeaponMods")]
+    pub weapon_mods: Vec<String>,
+}
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct CreateSuitLoadout {
