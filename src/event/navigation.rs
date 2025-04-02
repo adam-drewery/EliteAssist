@@ -9,7 +9,7 @@ mod interdiction;
 mod liftoff;
 mod location;
 mod saa;
-pub mod scan;
+mod scan;
 mod search_and_rescue;
 mod settlement;
 mod shield;
