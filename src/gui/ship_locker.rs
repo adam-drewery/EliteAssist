@@ -1,5 +1,5 @@
-use crate::control::locker_item_list;
 use crate::event::Event;
+use crate::gui::locker_item_list;
 use crate::state::State;
 use iced::widget::{row, Row};
 use iced::{Fill, Top};

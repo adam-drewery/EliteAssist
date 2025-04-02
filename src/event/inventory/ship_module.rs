@@ -92,12 +92,6 @@ pub struct ModuleSwap {
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
-pub struct ModuleInfo {
-
-    pub timestamp: String,
-}
-
-#[derive(Deserialize, Debug, Default, Clone)]
 pub struct FetchRemoteModule {
 
     pub timestamp: String,

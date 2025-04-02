@@ -23,62 +23,8 @@ pub struct SuitModule {
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
-pub struct CreateSuitLoadout {
-
-    pub timestamp: String,
-
-    #[serde(rename = "SuitID")]
-    pub suit_id: u64,
-
-    #[serde(rename = "SuitName")]
-    pub suit_name: String,
-
-    #[serde(rename = "SuitName_Localised")]
-    pub suit_name_localised: String,
-
-    #[serde(rename = "SuitMods")]
-    pub suit_mods: Vec<String>,
-
-    #[serde(rename = "LoadoutID")]
-    pub loadout_id: u64,
-
-    #[serde(rename = "LoadoutName")]
-    pub loadout_name: String,
-
-    #[serde(rename = "Modules")]
-    pub modules: Vec<SuitModule>,
-}
-
-#[derive(Deserialize, Debug, Default, Clone)]
-pub struct DeleteSuitLoadout {
-
-    pub timestamp: String,
-
-    #[serde(rename = "SuitID")]
-    pub suit_id: i64,
-
-    #[serde(rename = "SuitName")]
-    pub suit_name: String,
-
-    #[serde(rename = "SuitName_Localised")]
-    pub suit_name_localised: String,
-
-    #[serde(rename = "LoadoutID")]
-    pub loadout_id: i64,
-
-    #[serde(rename = "LoadoutName")]
-    pub loadout_name: String,
-}
-
-#[derive(Deserialize, Debug, Default, Clone)]
 pub struct SuitLoadout {
 
-    pub timestamp: String
-}
-
-#[derive(Deserialize, Debug, Default, Clone)]
-pub struct SwitchSuitLoadout {
-
     pub timestamp: String,
 
     #[serde(rename = "SuitID")]
@@ -91,7 +37,7 @@ pub struct SwitchSuitLoadout {
     pub suit_name_localised: String,
 
     #[serde(rename = "SuitMods")]
-    pub suit_mods: Vec<String>,
+    pub suit_mods: Option<Vec<String>>,
 
     #[serde(rename = "LoadoutID")]
     pub loadout_id: u64,
@@ -100,28 +46,7 @@ pub struct SwitchSuitLoadout {
     pub loadout_name: String,
 
     #[serde(rename = "Modules")]
-    pub modules: Vec<SuitModule>,
-}
-
-#[derive(Deserialize, Debug, Default, Clone)]
-pub struct RenameSuitLoadout {
-
-    pub timestamp: String,
-
-    #[serde(rename = "SuitID")]
-    pub suit_id: u64,
-
-    #[serde(rename = "SuitName")]
-    pub suit_name: String,
-
-    #[serde(rename = "SuitName_Localised")]
-    pub suit_name_localised: String,
-
-    #[serde(rename = "LoadoutID")]
-    pub loadout_id: u64,
-
-    #[serde(rename = "LoadoutName")]
-    pub loadout_name: String,
+    pub modules: Option<Vec<SuitModule>>,
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]

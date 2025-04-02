@@ -1,4 +1,5 @@
 use crate::event::Event;
+use log::{debug, error, info, warn};
 use std::fs::{File, OpenOptions};
 use std::io;
 use std::io::{BufRead, BufReader, Read, Seek, SeekFrom};
@@ -7,7 +8,6 @@ use std::time::{Duration, SystemTime};
 use tokio::fs;
 use tokio::select;
 use tokio::sync::mpsc;
-use log::debug;
 
 const JOURNAL_DIRECTORY: &str = "/home/adam/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/";
 
@@ -93,6 +93,7 @@ impl JournalWatcher {
 
     pub async fn next(&mut self) -> Event {
         loop {
+
             // Try to read next line from current file
             let mut buffer = String::new();
             let bytes_read = self.reader.read_line(&mut buffer).unwrap();
@@ -108,12 +109,10 @@ impl JournalWatcher {
                     let error_msg = e.to_string();
                     if error_msg.starts_with("unknown variant") {
                         if let Some(first_part) = error_msg.split(',').next() {
-                            eprintln!("Failed to parse journal entry: {}", &line);
-                            eprintln!("{}\n", first_part);
+                            error!("Failed to parse journal entry: {}\n{}", first_part, &line);
                         }
                     } else {
-                        eprintln!("Failed to parse journal entry: {}", &line);
-                        eprintln!("{}\n", &e);
+                        error!("Failed to parse journal entry: {}\n{}", &e, &line);
                     }
                 }
             }
@@ -128,7 +127,7 @@ impl JournalWatcher {
                     .open(&self.current_journal_path)
                     .unwrap();
                 self.reader = BufReader::new(new_file);
-                //println!("\nMoving to next journal file: {}\n", self.current_journal_path.display());
+                info!("Scanning journal file: {}", self.current_journal_path.display());
                 continue;
             }
 
@@ -136,6 +135,7 @@ impl JournalWatcher {
             select! {
                 _ = self.watcher_rx.recv() => {
                     // Check snapshot files
+
                     for file_details in &mut self.snapshot_files {
                         if let Some(event) = check_snapshot_file(file_details) {
                             return event;
@@ -147,7 +147,7 @@ impl JournalWatcher {
                     let journal_files = get_journal_paths(dir_path).unwrap();
                     
                     if journal_files.len() > self.journal_files.len() {
-                        println!("\nNew journal file detected!\n");
+                        info!("New journal file detected!");
                         self.journal_files = journal_files;
                     }
                 }
@@ -194,18 +194,15 @@ fn check_snapshot_file(file_details: &mut FileDetails) -> Option<Event> {
 
             let deserizlize_result = serde_json::from_str(&line);
             if let Ok(event) = deserizlize_result {
-                debug!("Handling {}\n", &line);
                 return event;
             } else if let Err(e) = deserizlize_result {
                 let error_msg = e.to_string();
                 if error_msg.starts_with("unknown variant") {
                     if let Some(first_part) = error_msg.split(',').next() {
-                        eprintln!("Failed to parse journal entry: {}", &line);
-                        eprintln!("{}\n", first_part);
+                        error!("Failed to parse journal entry: {}\n{}", first_part, &line);
                     }
                 } else {
-                    eprintln!("Failed to parse journal entry: {}", &line);
-                    eprintln!("{}\n", &e);
+                    error!("Failed to parse journal entry: {}\n{}", &e, &line);
                 }
             }
         }

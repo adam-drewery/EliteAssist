@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::event::navigation::faction::Faction;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct SystemFaction {

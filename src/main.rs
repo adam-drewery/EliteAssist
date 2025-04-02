@@ -3,9 +3,8 @@ use crate::subscription::subscription;
 use crate::theme::theme;
 use iced::Font;
 
-mod control;
-mod event;
 mod gui;
+mod event;
 mod journal_watcher;
 mod state;
 mod subscription;
@@ -20,6 +19,11 @@ pub const FONT: Font = Font::with_name("Eurostile");
 
 #[tokio::main]
 async fn main() {
+
+    let mut clog = colog::default_builder();
+    clog.filter(None, log::LevelFilter::Info);
+    clog.init();
+
     iced::application("EliteAssist", Gui::update, Gui::view)
         .font(FONT_BYTES)
         .default_font(FONT)

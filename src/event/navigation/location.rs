@@ -109,10 +109,10 @@ pub struct Location {
     pub powerplay_state_control_progress: Option<f64>,
 
     #[serde(rename = "PowerplayStateReinforcement")]
-    pub powerplay_state_reinforcement: Option<u64>,
+    pub powerplay_state_reinforcement: Option<u32>,
 
     #[serde(rename = "PowerplayStateUndermining")]
-    pub powerplay_state_undermining: Option<u64>,
+    pub powerplay_state_undermining: Option<u32>,
 
     #[serde(rename = "Factions")]
     pub factions: Option<Vec<Faction>>,

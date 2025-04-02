@@ -1,3 +1,4 @@
+use crate::event::Material;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Clone)]
@@ -17,19 +18,6 @@ pub struct Modifier {
 }
 
 #[derive(Debug, Deserialize, Clone)]
-pub struct Ingredient {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: u32,
-}
-
-#[derive(Debug, Deserialize, Clone)]
 pub struct EngineerCraft {
 
     pub timestamp: String,
@@ -44,7 +32,7 @@ pub struct EngineerCraft {
     pub apply_experimental_effect: Option<String>,
 
     #[serde(rename = "Ingredients")]
-    pub ingredients: Vec<Ingredient>,
+    pub ingredients: Vec<Material>,
 
     #[serde(rename = "Engineer")]
     pub engineer: String,
@@ -121,4 +109,35 @@ pub struct Engineer {
 
     #[serde(rename = "Rank")]
     pub rank: Option<u8>,
+}
+
+#[derive(Deserialize, Debug, Clone)]
+pub struct Engineering {
+
+    #[serde(rename = "Engineer")]
+    pub engineer: String,
+
+    #[serde(rename = "EngineerID")]
+    pub engineer_id: u64,
+
+    #[serde(rename = "BlueprintID")]
+    pub blueprint_id: u64,
+
+    #[serde(rename = "BlueprintName")]
+    pub blueprint_name: String,
+
+    #[serde(rename = "Level")]
+    pub level: u8,
+
+    #[serde(rename = "Quality")]
+    pub quality: f64,
+
+    #[serde(rename = "ExperimentalEffect")]
+    pub experimental_effect: Option<String>,
+
+    #[serde(rename = "ExperimentalEffect_Localised")]
+    pub experimental_effect_localised: Option<String>,
+
+    #[serde(rename = "Modifiers")]
+    pub modifiers: Vec<Modifier>,
 }

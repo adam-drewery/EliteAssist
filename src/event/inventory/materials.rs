@@ -1,5 +1,6 @@
 use crate::material_detail::{find_material, MaterialDetail};
 use crate::text::title_case;
+use log::warn;
 use once_cell::sync::Lazy;
 use serde::Deserialize;
 
@@ -79,13 +80,10 @@ impl Material {
 
         static DEFAULT_MATERIAL: Lazy<MaterialDetail> = Lazy::new(|| MaterialDetail::default());
         let display_name = self.display_name();
-        
-        match find_material(&display_name) {
-            Some(material) => material,
-            None => { 
-                //eprintln!("Material not found: {}", display_name);
-                &*DEFAULT_MATERIAL
-            }
-        }
+
+        find_material(&display_name).unwrap_or_else(|| {
+            warn!("Material not found: {}", display_name);
+            &*DEFAULT_MATERIAL
+        })
     }
 }
