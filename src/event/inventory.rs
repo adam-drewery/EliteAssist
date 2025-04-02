@@ -26,6 +26,7 @@ mod loadout_equip_module;
 mod rename_suit_loadout;
 mod mining_refined;
 mod upgrade_suit;
+mod delete_suit_loadout;
 
 pub use backpack::*;
 pub use cargo::*;
@@ -55,3 +56,4 @@ pub use synthesis::*;
 pub use upgrade_suit::*;
 pub use upgrade_weapon::*;
 pub use use_consumable::*;
+pub use delete_suit_loadout::*;

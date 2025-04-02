@@ -36,7 +36,7 @@ pub struct MissionAccepted {
     pub destination_settlement: Option<String>,
 
     #[serde(rename = "Expiry")]
-    pub expiry: String,
+    pub expiry: Option<String>,
 
     #[serde(rename = "Wing")]
     pub wing: bool,

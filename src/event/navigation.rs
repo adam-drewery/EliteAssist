@@ -47,6 +47,7 @@ mod fighter_rebuilt;
 mod book_taxi;
 mod crew_launch_fighter;
 mod cancel_taxi;
+mod interdiction;
 
 pub use approach_body::*;
 pub use approach_settlement::*;
@@ -95,3 +96,4 @@ pub use touchdown::*;
 pub use under_attack::*;
 pub use uss_drop::*;
 pub use vehicle_switch::*;
+pub use interdiction::*;

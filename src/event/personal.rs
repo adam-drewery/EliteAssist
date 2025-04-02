@@ -38,6 +38,10 @@ mod systems_shutdown;
 mod discovery_scan;
 mod engineer_contribution;
 mod applied_to_squadron;
+mod crew_member_quits;
+mod change_crew_role;
+mod datalink_voucher;
+mod end_crew_session;
 
 pub use afmu_repairs::*;
 pub use applied_to_squadron::*;
@@ -79,3 +83,7 @@ pub use statistics::*;
 pub use status::*;
 pub use stored_ships::*;
 pub use systems_shutdown::*;
+pub use crew_member_quits::*;
+pub use change_crew_role::*;
+pub use datalink_voucher::*;
+pub use end_crew_session::*;

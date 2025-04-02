@@ -32,6 +32,10 @@ mod sell_weapon;
 mod prospected_asteroid;
 mod buy_weapon;
 mod sell_micro_resources;
+mod asteroid_cracked;
+mod deliver_power_micro_resources;
+mod buy_suit;
+mod sell_suit;
 
 pub use bounty::*;
 pub use buy_ammo::*;
@@ -67,3 +71,7 @@ pub use sell_weapon::*;
 pub use shipyard_buy::*;
 pub use shipyard_sell::*;
 pub use trade_micro_resources::*;
+pub use asteroid_cracked::*;
+pub use deliver_power_micro_resources::*;
+pub use buy_suit::*;
+pub use sell_suit::*;

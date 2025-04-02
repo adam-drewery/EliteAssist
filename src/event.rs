@@ -188,6 +188,16 @@ pub enum Event {
     SellMicroResources(SellMicroResources),
     UpgradeSuit(UpgradeSuit),
     AppliedToSquadron(AppliedToSquardon),
+    CrewMemberQuits(CrewMemberQuits),
+    ChangeCrewRole(ChangeCrewRole),
+    AsteroidCracked(AsteroidCracked),
+    DatalinkVoucher(DatalinkVoucher),
+    DeliverPowerMicroResources(DeliverPowerMicroResources),
+    Interdiction(Interdiction),
+    EndCrewSession(EndCrewSession),
+    BuySuit(BuySuit),
+    SellSuit(SellSuit),
+    DeleteSuitLoadout(DeleteSuitLoadout),
 
     NavigateTo(ActiveScreen),
 
