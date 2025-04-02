@@ -9,7 +9,7 @@ pub struct MarketItem {
     pub name: String,
 
     #[serde(rename = "Name_Localised")]
-    pub name_localised: String,
+    pub name_localised: Option<String>,
 
     #[serde(rename = "Category")]
     pub category: String,
@@ -67,4 +67,52 @@ pub struct Market {
 
     #[serde(rename = "Items")]
     pub items: Option<Vec<MarketItem>>,
+}
+
+#[derive(Deserialize, Debug, Default, Clone)]
+pub struct MarketBuy {
+
+    pub timestamp: String,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+    #[serde(rename = "Count")]
+    pub count: u32,
+
+    #[serde(rename = "BuyPrice")]
+    pub buy_price: u32,
+
+    #[serde(rename = "TotalCost")]
+    pub total_cost: u32,
+}
+
+#[derive(Deserialize, Debug, Default, Clone)]
+pub struct MarketSell {
+
+    pub timestamp: String,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+    #[serde(rename = "Type_Localised")]
+    pub type_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: u32,
+
+    #[serde(rename = "SellPrice")]
+    pub sell_price: u32,
+
+    #[serde(rename = "TotalSale")]
+    pub total_sale: u32,
+
+    #[serde(rename = "AvgPricePaid")]
+    pub avg_price_paid: u64,
 }

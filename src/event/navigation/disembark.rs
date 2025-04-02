@@ -1,10 +1,10 @@
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize, Clone)]
-pub struct Embark {
+#[derive(Deserialize, Debug, Clone)]
+pub struct Disembark {
 
     pub timestamp: String,
-    
+
     #[serde(rename = "SRV")]
     pub srv: bool,
 
@@ -15,7 +15,7 @@ pub struct Embark {
     pub multicrew: bool,
 
     #[serde(rename = "ID")]
-    pub id: Option<u32>,
+    pub id: Option<u64>,
 
     #[serde(rename = "StarSystem")]
     pub star_system: String,
@@ -42,5 +42,5 @@ pub struct Embark {
     pub station_type: Option<String>,
 
     #[serde(rename = "MarketID")]
-    pub market_id: Option<u32>,
+    pub market_id: Option<u64>
 }

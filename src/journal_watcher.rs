@@ -7,6 +7,7 @@ use std::time::{Duration, SystemTime};
 use tokio::fs;
 use tokio::select;
 use tokio::sync::mpsc;
+use log::debug;
 
 const JOURNAL_DIRECTORY: &str = "/home/adam/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/";
 
@@ -190,10 +191,10 @@ fn check_snapshot_file(file_details: &mut FileDetails) -> Option<Event> {
         let mut file = File::open(&file_details.path).unwrap();
         if file.read_to_string(&mut line).is_ok() {
             file_details.last_modified = modified;
-            
+
             let deserizlize_result = serde_json::from_str(&line);
             if let Ok(event) = deserizlize_result {
-                //println!("Handling {}\n", content);
+                debug!("Handling {}\n", &line);
                 return event;
             } else if let Err(e) = deserizlize_result {
                 let error_msg = e.to_string();

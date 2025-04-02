@@ -128,7 +128,7 @@ pub struct StationEconomy {
     pub name: String,
 
     #[serde(rename = "Name_Localised")]
-    pub name_localised: String,
+    pub name_localised: Option<String>,
 
     #[serde(rename = "Proportion")]
     pub proportion: f64,

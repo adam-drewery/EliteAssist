@@ -11,3 +11,12 @@ pub struct Repair {
     #[serde(rename = "Cost")]
     pub cost: u32,
 }
+
+#[derive(Deserialize, Debug, Default, Clone)]
+pub struct RepairAll {
+
+    pub timestamp: String,
+
+    #[serde(rename = "Cost")]
+    pub cost: u32,
+}

@@ -3,12 +3,14 @@ mod inventory;
 mod navigation;
 mod personal;
 mod session;
+mod vehicle;
 
 pub use economy::*;
 pub use inventory::*;
 pub use navigation::*;
 pub use personal::*;
 pub use session::*;
+pub use vehicle::*;
 
 use crate::state::*;
 use serde::Deserialize;
@@ -150,7 +152,7 @@ pub enum Event {
     DockingCancelled(DockingCancelled),
     FetchRemoteModule(FetchRemoteModule),
     PayFines(PayFines),
-    SearchAndRescue(SearchAndRescue),
+    SearchAndRescue(navigation::SearchAndRescue),
     ShipyardNew(ShipyardNew),
     CommunityGoalReward(CommunityGoalReward),
     CrewMemberJoins(CrewMemberJoins),

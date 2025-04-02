@@ -12,7 +12,7 @@ pub struct SearchAndRescue {
     pub name: String,
 
     #[serde(rename = "Name_Localised")]
-    pub name_localised: String,
+    pub name_localised: Option<String>,
 
     #[serde(rename = "Count")]
     pub count: u32,

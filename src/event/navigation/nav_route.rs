@@ -5,3 +5,9 @@ pub struct NavRoute {
     
     pub timestamp: String,
 }
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct NavRouteClear {
+
+    pub timestamp: String,
+}

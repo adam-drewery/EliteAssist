@@ -38,6 +38,11 @@ impl State {
                 self.commander_name = "CMDR ".to_owned() + &commander.name.to_uppercase();
             }
             Event::Materials(materials) => {
+                let empty = materials.encoded.is_empty() 
+                    && materials.raw.is_empty() 
+                    && materials.manufactured.is_empty();
+                
+                if empty { return; }
                 self.materials = materials;
             }
             Event::Location(location) => {

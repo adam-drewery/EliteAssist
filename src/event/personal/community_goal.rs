@@ -61,3 +61,36 @@ pub struct CommunityGoal {
     #[serde(rename = "CurrentGoals")]
     pub current_goals: Vec<CurrentGoal>,
 }
+
+#[derive(Deserialize, Debug, Default, Clone)]
+pub struct CommunityGoalJoin {
+
+    pub timestamp: String,
+
+    #[serde(rename = "CGID")]
+    pub cgid: u64,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "System")]
+    pub system: String,
+}
+
+#[derive(Deserialize, Debug, Default, Clone)]
+pub struct CommunityGoalReward {
+
+    pub timestamp: String,
+
+    #[serde(rename = "CGID")]
+    pub cgid: u64,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "System")]
+    pub system: String,
+
+    #[serde(rename = "Reward")]
+    pub reward: u32,
+}
