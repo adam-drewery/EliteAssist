@@ -9,7 +9,7 @@ pub struct ShipyardNew {
     pub ship_type: String,
 
     #[serde(rename = "ShipType_Localised")]
-    pub ship_type_localised: String,
+    pub ship_type_localised: Option<String>,
 
     #[serde(rename = "NewShipID")]
     pub new_ship_id: i64,

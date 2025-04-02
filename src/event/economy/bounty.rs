@@ -19,10 +19,10 @@ pub struct Bounty {
     pub rewards: Vec<Reward>,
 
     #[serde(rename = "PilotName")]
-    pub pilot_name: String,
+    pub pilot_name: Option<String>,
 
     #[serde(rename = "PilotName_Localised")]
-    pub pilot_name_localised: String,
+    pub pilot_name_localised: Option<String>,
 
     #[serde(rename = "Target")]
     pub target: String,

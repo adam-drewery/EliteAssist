@@ -51,13 +51,13 @@ pub struct ShipyardTransfer {
     pub ship_type_localised: Option<String>,
 
     #[serde(rename = "ShipID")]
-    pub ship_id: i64,
+    pub ship_id: u64,
 
     #[serde(rename = "System")]
     pub system: String,
 
     #[serde(rename = "ShipMarketID")]
-    pub ship_market_id: i64,
+    pub ship_market_id: u64,
 
     #[serde(rename = "Distance")]
     pub distance: f64,

@@ -12,7 +12,7 @@ pub struct MarketSell {
     pub r#type: String,
 
     #[serde(rename = "Type_Localised")]
-    pub type_localised: String,
+    pub type_localised: Option<String>,
 
     #[serde(rename = "Count")]
     pub count: i64,
