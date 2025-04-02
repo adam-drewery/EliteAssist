@@ -10,7 +10,7 @@ pub struct TradedMaterial {
     pub category: String,
 
     #[serde(rename = "Quantity")]
-    pub quantity: i64,
+    pub quantity: u32,
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -19,7 +19,7 @@ pub struct MaterialTrade {
     pub timestamp: String,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 
     #[serde(rename = "TraderType")]
     pub trader_type: String,

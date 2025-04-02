@@ -6,10 +6,10 @@ pub struct Status {
     pub timestamp: String,
 
     #[serde(rename = "Flags")]
-    pub flags: i32,
+    pub flags: u16,
 
     #[serde(rename = "Flags2")]
-    pub flags2: Option<i32>,
+    pub flags2: Option<u16>,
 
     #[serde(rename = "Oxygen")]
     pub oxygen: Option<f64>,
@@ -30,10 +30,10 @@ pub struct Status {
     pub body_name: Option<String>,
 
     #[serde(rename = "FireGroup")]
-    pub fire_group: Option<i32>,
+    pub fire_group: Option<u16>,
 
     #[serde(rename = "GuiFocus")]
-    pub gui_focus: Option<i32>,
+    pub gui_focus: Option<u16>,
 
     #[serde(rename = "Cargo")]
     pub cargo: Option<f64>,
@@ -42,7 +42,7 @@ pub struct Status {
     pub fuel: Option<Fuel>,
 
     #[serde(rename = "Balance")]
-    pub balance: Option<i64>,
+    pub balance: Option<u32>,
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]

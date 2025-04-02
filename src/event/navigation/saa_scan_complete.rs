@@ -9,14 +9,14 @@ pub struct SAAScanComplete {
     pub body_name: String,
 
     #[serde(rename = "SystemAddress")]
-    pub system_address: i64,
+    pub system_address: u64,
 
     #[serde(rename = "BodyID")]
-    pub body_id: i64,
+    pub body_id: u64,
 
     #[serde(rename = "ProbesUsed")]
-    pub probes_used: i64,
+    pub probes_used: u32,
 
     #[serde(rename = "EfficiencyTarget")]
-    pub efficiency_target: i64,
+    pub efficiency_target: u32,
 }

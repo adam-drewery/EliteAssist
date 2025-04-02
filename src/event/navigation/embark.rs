@@ -15,19 +15,19 @@ pub struct Embark {
     pub multicrew: bool,
 
     #[serde(rename = "ID")]
-    pub id: Option<i64>,
+    pub id: Option<u32>,
 
     #[serde(rename = "StarSystem")]
     pub star_system: String,
 
     #[serde(rename = "SystemAddress")]
-    pub system_address: i64,
+    pub system_address: u64,
 
     #[serde(rename = "Body")]
     pub body: String,
 
     #[serde(rename = "BodyID")]
-    pub body_id: i64,
+    pub body_id: u64,
 
     #[serde(rename = "OnStation")]
     pub on_station: bool,
@@ -42,7 +42,7 @@ pub struct Embark {
     pub station_type: Option<String>,
 
     #[serde(rename = "MarketID")]
-    pub market_id: Option<i64>,
+    pub market_id: Option<u32>,
 }
 
 #[derive(Deserialize, Debug, Clone)]

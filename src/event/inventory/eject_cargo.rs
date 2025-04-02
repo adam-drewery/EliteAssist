@@ -12,7 +12,7 @@ pub struct EjectCargo {
     pub type_localised: Option<String>,
 
     #[serde(rename = "Count")]
-    pub count: i64,
+    pub count: u32,
 
     #[serde(rename = "Abandoned")]
     pub abandoned: bool,

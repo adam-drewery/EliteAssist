@@ -12,5 +12,5 @@ pub struct DockSRV {
     pub srvtype_localised: String,
 
     #[serde(rename = "ID")]
-    pub id: i64,
+    pub id: u64,
 }

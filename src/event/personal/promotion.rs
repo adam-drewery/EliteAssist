@@ -6,5 +6,5 @@ pub struct Promotion {
     pub timestamp: String,
 
     #[serde(rename = "Soldier")]
-    pub soldier: Option<i64>,
+    pub soldier: Option<u32>,
 }

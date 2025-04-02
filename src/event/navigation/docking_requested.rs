@@ -4,13 +4,13 @@ use serde::Deserialize;
 pub struct LandingPadSize {
 
     #[serde(rename = "Small")]
-    pub small: i64,
+    pub small: u32,
 
     #[serde(rename = "Medium")]
-    pub medium: i64,
+    pub medium: u32,
 
     #[serde(rename = "Large")]
-    pub large: i64,
+    pub large: u32,
 }
 
 #[derive(Deserialize, Debug, Clone)]
@@ -19,7 +19,7 @@ pub struct DockingRequested {
     pub timestamp: String,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 
     #[serde(rename = "StationName")]
     pub station_name: String,

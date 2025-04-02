@@ -6,7 +6,7 @@ pub struct RefuelAll {
     pub timestamp: String,
 
     #[serde(rename = "Cost")]
-    pub cost: i64,
+    pub cost: u32,
 
     #[serde(rename = "Amount")]
     pub amount: f64,

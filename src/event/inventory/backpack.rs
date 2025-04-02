@@ -16,10 +16,10 @@ pub struct BackpackItem {
     pub name_localised: Option<String>,
 
     #[serde(rename = "OwnerID")]
-    pub owner_id: i64,
+    pub owner_id: u64,
 
     #[serde(rename = "Count")]
-    pub count: i64,
+    pub count: u32,
 
     #[serde(rename = "Type")]
     pub r#type: String,

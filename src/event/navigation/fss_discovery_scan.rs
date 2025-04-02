@@ -9,14 +9,14 @@ pub struct FSSDiscoveryScan {
     pub progress: f64,
 
     #[serde(rename = "BodyCount")]
-    pub body_count: i64,
+    pub body_count: u32,
 
     #[serde(rename = "NonBodyCount")]
-    pub non_body_count: i64,
+    pub non_body_count: u32,
 
     #[serde(rename = "SystemName")]
     pub system_name: String,
 
     #[serde(rename = "SystemAddress")]
-    pub system_address: i64,
+    pub system_address: u64,
 }

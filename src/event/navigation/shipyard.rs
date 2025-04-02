@@ -6,7 +6,7 @@ pub struct Shipyard {
     pub timestamp: String,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 
     #[serde(rename = "StationName")]
     pub station_name: String,
@@ -27,16 +27,16 @@ pub struct ShipyardSwap {
     pub ship_type_localised: Option<String>,
 
     #[serde(rename = "ShipID")]
-    pub ship_id: i64,
+    pub ship_id: u64,
 
     #[serde(rename = "StoreOldShip")]
     pub store_old_ship: String,
 
     #[serde(rename = "StoreShipID")]
-    pub store_ship_id: i64,
+    pub store_ship_id: u64,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -63,11 +63,11 @@ pub struct ShipyardTransfer {
     pub distance: f64,
 
     #[serde(rename = "TransferPrice")]
-    pub transfer_price: i64,
+    pub transfer_price: u32,
 
     #[serde(rename = "TransferTime")]
-    pub transfer_time: i64,
+    pub transfer_time: u32,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 }

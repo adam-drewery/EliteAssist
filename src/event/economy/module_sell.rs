@@ -6,7 +6,7 @@ pub struct ModuleSell {
     pub timestamp: String,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 
     #[serde(rename = "Slot")]
     pub slot: String,
@@ -18,11 +18,11 @@ pub struct ModuleSell {
     pub sell_item_localised: String,
 
     #[serde(rename = "SellPrice")]
-    pub sell_price: i64,
+    pub sell_price: u32,
 
     #[serde(rename = "Ship")]
     pub ship: String,
 
     #[serde(rename = "ShipID")]
-    pub ship_id: i64,
+    pub ship_id: u64,
 }

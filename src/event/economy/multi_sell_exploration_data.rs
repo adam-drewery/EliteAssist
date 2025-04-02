@@ -7,7 +7,7 @@ pub struct SystemExplorationData {
     pub system_name: String,
 
     #[serde(rename = "NumBodies")]
-    pub num_bodies: i64,
+    pub num_bodies: u32,
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -19,11 +19,11 @@ pub struct MultiSellExplorationData {
     pub discovered: Vec<SystemExplorationData>,
 
     #[serde(rename = "BaseValue")]
-    pub base_value: i64,
+    pub base_value: u32,
 
     #[serde(rename = "Bonus")]
-    pub bonus: i64,
+    pub bonus: u32,
 
     #[serde(rename = "TotalEarnings")]
-    pub total_earnings: i64,
+    pub total_earnings: u32,
 }

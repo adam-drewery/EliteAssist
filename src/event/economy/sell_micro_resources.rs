@@ -13,7 +13,7 @@ pub struct MicroResource {
     pub category: String,
 
     #[serde(rename = "Count")]
-    pub count: i64,
+    pub count: u32,
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -22,14 +22,14 @@ pub struct SellMicroResources {
     pub timestamp: String,
 
     #[serde(rename = "TotalCount")]
-    pub total_count: i64,
+    pub total_count: u32,
 
     #[serde(rename = "MicroResources")]
     pub micro_resources: Vec<MicroResource>,
 
     #[serde(rename = "Price")]
-    pub price: i64,
+    pub price: u32,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 }

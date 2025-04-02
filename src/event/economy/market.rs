@@ -3,7 +3,7 @@ use serde::Deserialize;
 #[derive(Debug, Deserialize, Clone)]
 pub struct MarketItem {
 
-    pub id: i64,
+    pub id: u64,
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -18,25 +18,25 @@ pub struct MarketItem {
     pub category_localised: String,
 
     #[serde(rename = "BuyPrice")]
-    pub buy_price: i64,
+    pub buy_price: u32,
 
     #[serde(rename = "SellPrice")]
-    pub sell_price: i64,
+    pub sell_price: u32,
 
     #[serde(rename = "MeanPrice")]
-    pub mean_price: i64,
+    pub mean_price: u32,
 
     #[serde(rename = "StockBracket")]
-    pub stock_bracket: i64,
+    pub stock_bracket: u32,
 
     #[serde(rename = "DemandBracket")]
-    pub demand_bracket: i64,
+    pub demand_bracket: u32,
 
     #[serde(rename = "Stock")]
-    pub stock: i64,
+    pub stock: u32,
 
     #[serde(rename = "Demand")]
-    pub demand: i64,
+    pub demand: u32,
 
     #[serde(rename = "Consumer")]
     pub consumer: bool,
@@ -54,7 +54,7 @@ pub struct Market {
     pub timestamp: String,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 
     #[serde(rename = "StationName")]
     pub station_name: String,

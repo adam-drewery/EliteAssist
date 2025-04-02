@@ -6,7 +6,7 @@ pub struct CommunityGoalReward {
     pub timestamp: String,
 
     #[serde(rename = "CGID")]
-    pub cgid: i64,
+    pub cgid: u64,
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -15,5 +15,5 @@ pub struct CommunityGoalReward {
     pub system: String,
 
     #[serde(rename = "Reward")]
-    pub reward: i64,
+    pub reward: u32,
 }

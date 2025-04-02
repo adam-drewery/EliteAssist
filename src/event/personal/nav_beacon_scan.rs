@@ -6,8 +6,8 @@ pub struct NavBeaconScan {
     pub timestamp: String,
 
     #[serde(rename = "SystemAddress")]
-    pub system_address: i64,
+    pub system_address: u64,
 
     #[serde(rename = "NumBodies")]
-    pub num_bodies: i64,
+    pub num_bodies: u32,
 }

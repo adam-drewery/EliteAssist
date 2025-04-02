@@ -12,5 +12,5 @@ pub struct CrimeVictim {
     pub crime_type: String,
 
     #[serde(rename = "Fine")]
-    pub fine: Option<i64>,
+    pub fine: Option<u32>,
 }

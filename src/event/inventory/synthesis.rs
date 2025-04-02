@@ -5,7 +5,7 @@ pub struct SynthesisMaterial {
     #[serde(rename = "Name")]
     pub name: String,
     #[serde(rename = "Count")]
-    pub count: i64,
+    pub count: u32,
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]

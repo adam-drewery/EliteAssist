@@ -6,7 +6,7 @@ pub struct MarketSell {
     pub timestamp: String,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 
     #[serde(rename = "Type")]
     pub r#type: String,
@@ -15,14 +15,14 @@ pub struct MarketSell {
     pub type_localised: Option<String>,
 
     #[serde(rename = "Count")]
-    pub count: i64,
+    pub count: u32,
 
     #[serde(rename = "SellPrice")]
-    pub sell_price: i64,
+    pub sell_price: u32,
 
     #[serde(rename = "TotalSale")]
-    pub total_sale: i64,
+    pub total_sale: u32,
 
     #[serde(rename = "AvgPricePaid")]
-    pub avg_price_paid: i64,
+    pub avg_price_paid: u64,
 }

@@ -27,8 +27,8 @@ pub struct ScanOrganic {
     pub variant_localised: String,
 
     #[serde(rename = "SystemAddress")]
-    pub system_address: i64,
+    pub system_address: u64,
 
     #[serde(rename = "Body")]
-    pub body: i64,
+    pub body: u32,
 }

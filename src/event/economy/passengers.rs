@@ -4,7 +4,7 @@ use serde::Deserialize;
 pub struct Passenger {
 
     #[serde(rename = "MissionID")]
-    pub mission_id: i64,
+    pub mission_id: u64,
 
     #[serde(rename = "Type")]
     pub r#type: String,
@@ -16,7 +16,7 @@ pub struct Passenger {
     pub wanted: bool,
 
     #[serde(rename = "Count")]
-    pub count: i64,
+    pub count: u32,
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]

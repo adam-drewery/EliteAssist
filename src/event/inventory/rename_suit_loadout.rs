@@ -6,7 +6,7 @@ pub struct RenameSuitLoadout {
     pub timestamp: String,
 
     #[serde(rename = "SuitID")]
-    pub suit_id: i64,
+    pub suit_id: u64,
 
     #[serde(rename = "SuitName")]
     pub suit_name: String,
@@ -15,7 +15,7 @@ pub struct RenameSuitLoadout {
     pub suit_name_localised: String,
 
     #[serde(rename = "LoadoutID")]
-    pub loadout_id: i64,
+    pub loadout_id: u64,
 
     #[serde(rename = "LoadoutName")]
     pub loadout_name: String,

@@ -9,7 +9,7 @@ pub struct SetUserShipName {
     pub ship: String,
 
     #[serde(rename = "ShipID")]
-    pub ship_id: i64,
+    pub ship_id: u64,
 
     #[serde(rename = "UserShipName")]
     pub user_ship_name: String,

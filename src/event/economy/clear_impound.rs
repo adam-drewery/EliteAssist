@@ -9,11 +9,11 @@ pub struct ClearImpound {
     pub ship_type: String,
 
     #[serde(rename = "ShipID")]
-    pub ship_id: i64,
+    pub ship_id: u64,
 
     #[serde(rename = "ShipMarketID")]
-    pub ship_market_id: i64,
+    pub ship_market_id: u64,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 }

@@ -4,7 +4,7 @@ use serde::Deserialize;
 pub struct Ship {
 
     #[serde(rename = "ShipID")]
-    pub ship_id: i64,
+    pub ship_id: u64,
 
     #[serde(rename = "ShipType")]
     pub ship_type: String,
@@ -13,7 +13,7 @@ pub struct Ship {
     pub name: Option<String>,
 
     #[serde(rename = "Value")]
-    pub value: i64,
+    pub value: u32,
 
     #[serde(rename = "Hot")]
     pub hot: bool,
@@ -31,7 +31,7 @@ pub struct StoredShips {
     pub station_name: String,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 
     #[serde(rename = "StarSystem")]
     pub star_system: String,

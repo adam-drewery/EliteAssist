@@ -15,10 +15,10 @@ pub struct CollectItems {
     pub r#type: String,
 
     #[serde(rename = "OwnerID")]
-    pub owner_id: i64,
+    pub owner_id: u64,
 
     #[serde(rename = "Count")]
-    pub count: i64,
+    pub count: u32,
 
     #[serde(rename = "Stolen")]
     pub stolen: bool,

@@ -6,5 +6,5 @@ pub struct DockFighter {
     pub timestamp: String,
 
     #[serde(rename = "ID")]
-    pub id: i64,
+    pub id: u64,
 }

@@ -9,7 +9,7 @@ pub struct BookDropship {
     pub retreat: bool,
 
     #[serde(rename = "Cost")]
-    pub cost: i64,
+    pub cost: u32,
 
     #[serde(rename = "DestinationSystem")]
     pub destination_system: String,

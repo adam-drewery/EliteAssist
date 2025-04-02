@@ -15,7 +15,7 @@ pub struct LaunchSRV {
     pub loadout: String,
 
     #[serde(rename = "ID")]
-    pub id: i64,
+    pub id: u64,
 
     #[serde(rename = "PlayerControlled")]
     pub player_controlled: bool,

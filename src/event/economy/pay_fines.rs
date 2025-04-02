@@ -6,11 +6,11 @@ pub struct PayFines {
     pub timestamp: String,
 
     #[serde(rename = "Amount")]
-    pub amount: i64,
+    pub amount: u32,
 
     #[serde(rename = "AllFines")]
     pub all_fines: bool,
 
     #[serde(rename = "ShipID")]
-    pub ship_id: i64,
+    pub ship_id: u64,
 }

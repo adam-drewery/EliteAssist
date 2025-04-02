@@ -9,5 +9,5 @@ pub struct FighterRebuilt {
     pub loadout: String,
 
     #[serde(rename = "ID")]
-    pub id: i64,
+    pub id: u64,
 }

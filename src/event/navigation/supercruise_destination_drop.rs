@@ -10,5 +10,5 @@ pub struct SupercruiseDestinationDrop {
     pub r#type: String,
 
     #[serde(rename = "Threat")]
-    pub threat: i64,
+    pub threat: u32,
 }

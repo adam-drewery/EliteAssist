@@ -9,7 +9,7 @@ pub struct Resurrect {
     pub option: String,
 
     #[serde(rename = "Cost")]
-    pub cost: i64,
+    pub cost: u32,
 
     #[serde(rename = "Bankrupt")]
     pub bankrupt: bool,

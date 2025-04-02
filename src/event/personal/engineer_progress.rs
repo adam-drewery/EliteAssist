@@ -16,7 +16,7 @@ pub struct Engineer {
     pub engineer: String,
 
     #[serde(rename = "EngineerID")]
-    pub engineer_id: u32,
+    pub engineer_id: u64,
 
     #[serde(rename = "Progress")]
     pub progress: String,

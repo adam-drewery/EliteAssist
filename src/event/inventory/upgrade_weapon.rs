@@ -10,7 +10,7 @@ pub struct UpgradeResource {
     pub name_localised: Option<String>,
 
     #[serde(rename = "Count")]
-    pub count: i64,
+    pub count: u32,
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -25,13 +25,13 @@ pub struct UpgradeWeapon {
     pub name_localised: String,
 
     #[serde(rename = "Class")]
-    pub class: i64,
+    pub class: u32,
 
     #[serde(rename = "SuitModuleID")]
-    pub suit_module_id: i64,
+    pub suit_module_id: u64,
 
     #[serde(rename = "Cost")]
-    pub cost: i64,
+    pub cost: u32,
 
     #[serde(rename = "Resources")]
     pub resources: Vec<UpgradeResource>,

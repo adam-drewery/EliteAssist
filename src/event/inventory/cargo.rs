@@ -10,13 +10,13 @@ pub struct CargoItem {
     pub name_localised: Option<String>,
 
     #[serde(rename = "Count")]
-    pub count: i64,
+    pub count: u32,
 
     #[serde(rename = "Stolen")]
-    pub stolen: i64,
+    pub stolen: u32,
 
     #[serde(rename = "MissionID")]
-    pub mission_id: Option<i64>,
+    pub mission_id: Option<u32>,
 }
 
 #[derive(Deserialize, Debug, Clone)]
@@ -28,7 +28,7 @@ pub struct Cargo {
     pub vessel: String,
 
     #[serde(rename = "Count")]
-    pub count: i64,
+    pub count: u32,
 
     #[serde(rename = "Inventory")]
     pub inventory: Option<Vec<CargoItem>>,
@@ -49,5 +49,5 @@ pub struct CollectCargo {
     pub stolen: bool,
 
     #[serde(rename = "MissionID")]
-    pub mission_id: Option<i64>,
+    pub mission_id: Option<u32>,
 }

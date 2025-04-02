@@ -6,7 +6,7 @@ pub struct ModuleRetrieve {
     pub timestamp: String,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 
     #[serde(rename = "Slot")]
     pub slot: String,
@@ -21,7 +21,7 @@ pub struct ModuleRetrieve {
     pub ship: String,
 
     #[serde(rename = "ShipID")]
-    pub ship_id: i64,
+    pub ship_id: u64,
 
     #[serde(rename = "Hot")]
     pub hot: bool,
@@ -30,7 +30,7 @@ pub struct ModuleRetrieve {
     pub engineer_modifications: Option<String>,
 
     #[serde(rename = "Level")]
-    pub level: Option<i64>,
+    pub level: Option<u32>,
 
     #[serde(rename = "Quality")]
     pub quality: Option<f64>,

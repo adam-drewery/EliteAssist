@@ -13,7 +13,7 @@ pub struct Modifier {
     pub original_value: f64,
 
     #[serde(rename = "LessIsGood")]
-    pub less_is_good: i64,
+    pub less_is_good: u32,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -26,7 +26,7 @@ pub struct Ingredient {
     pub name_localised: Option<String>,
 
     #[serde(rename = "Count")]
-    pub count: i64,
+    pub count: u32,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -50,16 +50,16 @@ pub struct EngineerCraft {
     pub engineer: String,
 
     #[serde(rename = "EngineerID")]
-    pub engineer_id: i64,
+    pub engineer_id: u64,
 
     #[serde(rename = "BlueprintID")]
-    pub blueprint_id: i64,
+    pub blueprint_id: u64,
 
     #[serde(rename = "BlueprintName")]
     pub blueprint_name: String,
 
     #[serde(rename = "Level")]
-    pub level: i64,
+    pub level: u32,
 
     #[serde(rename = "Quality")]
     pub quality: f64,

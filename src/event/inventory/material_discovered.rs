@@ -15,5 +15,5 @@ pub struct MaterialDiscovered {
     pub name_localised: Option<String>,
 
     #[serde(rename = "DiscoveryNumber")]
-    pub discovery_number: i64,
+    pub discovery_number: u32,
 }

@@ -9,10 +9,10 @@ pub struct ScanBaryCentre {
     pub star_system: String,
 
     #[serde(rename = "SystemAddress")]
-    pub system_address: i64,
+    pub system_address: u64,
 
     #[serde(rename = "BodyID")]
-    pub body_id: i64,
+    pub body_id: u64,
 
     #[serde(rename = "SemiMajorAxis")]
     pub semi_major_axis: f64,

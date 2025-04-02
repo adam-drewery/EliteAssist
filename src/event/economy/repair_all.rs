@@ -6,5 +6,5 @@ pub struct RepairAll {
     pub timestamp: String,
 
     #[serde(rename = "Cost")]
-    pub cost: i64,
+    pub cost: u32,
 }

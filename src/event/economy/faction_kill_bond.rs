@@ -6,7 +6,7 @@ pub struct FactionKillBond {
     pub timestamp: String,
 
     #[serde(rename = "Reward")]
-    pub reward: i64,
+    pub reward: u32,
 
     #[serde(rename = "AwardingFaction")]
     pub awarding_faction: String,

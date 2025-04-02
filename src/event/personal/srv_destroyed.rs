@@ -6,7 +6,7 @@ pub struct SrvDestroyed {
     pub timestamp: String,
 
     #[serde(rename = "ID")]
-    pub id: i64,
+    pub id: u64,
 
     #[serde(rename = "SRVType")]
     pub srvtype: String,

@@ -9,5 +9,5 @@ pub struct Repair {
     pub items: Vec<String>,
 
     #[serde(rename = "Cost")]
-    pub cost: i64,
+    pub cost: u32,
 }

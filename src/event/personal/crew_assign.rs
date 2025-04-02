@@ -9,7 +9,7 @@ pub struct CrewAssign {
     pub name: String,
 
     #[serde(rename = "CrewID")]
-    pub crew_id: i64,
+    pub crew_id: u64,
 
     #[serde(rename = "Role")]
     pub role: String,

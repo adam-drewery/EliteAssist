@@ -9,13 +9,13 @@ pub struct DropshipDeploy {
     pub star_system: String,
 
     #[serde(rename = "SystemAddress")]
-    pub system_address: i64,
+    pub system_address: u64,
 
     #[serde(rename = "Body")]
     pub body: String,
 
     #[serde(rename = "BodyID")]
-    pub body_id: i64,
+    pub body_id: u64,
 
     #[serde(rename = "OnStation")]
     pub on_station: bool,

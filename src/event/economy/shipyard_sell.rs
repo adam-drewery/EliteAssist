@@ -9,11 +9,11 @@ pub struct ShipyardSell {
     pub ship_type: String,
 
     #[serde(rename = "SellShipID")]
-    pub sell_ship_id: i64,
+    pub sell_ship_id: u64,
 
     #[serde(rename = "ShipPrice")]
-    pub ship_price: i64,
+    pub ship_price: u32,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 }

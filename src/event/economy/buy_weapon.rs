@@ -12,13 +12,13 @@ pub struct BuyWeapon {
     pub name_localised: String,
 
     #[serde(rename = "Class")]
-    pub class: i64,
+    pub class: u32,
 
     #[serde(rename = "Price")]
-    pub price: i64,
+    pub price: u32,
 
     #[serde(rename = "SuitModuleID")]
-    pub suit_module_id: i64,
+    pub suit_module_id: u64,
 
     #[serde(rename = "WeaponMods")]
     pub weapon_mods: Vec<String>,

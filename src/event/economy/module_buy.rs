@@ -21,14 +21,14 @@ pub struct ModuleBuy {
     pub buy_item_localised: String,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 
     #[serde(rename = "BuyPrice")]
-    pub buy_price: i64,
+    pub buy_price: u32,
 
     #[serde(rename = "Ship")]
     pub ship: String,
 
     #[serde(rename = "ShipID")]
-    pub ship_id: i64,
+    pub ship_id: u64,
 }

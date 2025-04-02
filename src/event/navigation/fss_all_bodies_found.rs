@@ -9,8 +9,8 @@ pub struct FFSSAllBodiesFound {
     pub system_name: String,
 
     #[serde(rename = "SystemAddress")]
-    pub system_address: i64,
+    pub system_address: u64,
 
     #[serde(rename = "Count")]
-    pub count: i64,
+    pub count: u32,
 }

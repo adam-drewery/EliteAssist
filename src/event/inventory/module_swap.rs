@@ -6,7 +6,7 @@ pub struct ModuleSwap {
     pub timestamp: String,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 
     #[serde(rename = "FromSlot")]
     pub from_slot: String,
@@ -30,5 +30,5 @@ pub struct ModuleSwap {
     pub ship: String,
 
     #[serde(rename = "ShipID")]
-    pub ship_id: i64,
+    pub ship_id: u64,
 }

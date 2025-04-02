@@ -9,11 +9,11 @@ pub struct BuyDrones {
     pub r#type: String,
 
     #[serde(rename = "Count")]
-    pub count: i64,
+    pub count: u32,
 
     #[serde(rename = "BuyPrice")]
-    pub buy_price: i64,
+    pub buy_price: u32,
 
     #[serde(rename = "TotalCost")]
-    pub total_cost: i64,
+    pub total_cost: u32,
 }

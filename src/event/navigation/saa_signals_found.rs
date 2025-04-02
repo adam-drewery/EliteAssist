@@ -20,7 +20,7 @@ pub struct Signal {
     pub type_localised: Option<String>,
 
     #[serde(rename = "Count")]
-    pub count: i64,
+    pub count: u32,
 }
 
 #[derive(Deserialize, Debug, Clone)]
@@ -32,10 +32,10 @@ pub struct SAASignalsFound {
     pub body_name: String,
 
     #[serde(rename = "SystemAddress")]
-    pub system_address: i64,
+    pub system_address: u64,
 
     #[serde(rename = "BodyID")]
-    pub body_id: i64,
+    pub body_id: u64,
 
     #[serde(rename = "Signals")]
     pub signals: Vec<Signal>,

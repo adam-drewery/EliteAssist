@@ -6,8 +6,8 @@ pub struct DiscoveryScan {
     pub timestamp: String,
 
     #[serde(rename = "SystemAddress")]
-    pub system_address: i64,
+    pub system_address: u64,
 
     #[serde(rename = "Bodies")]
-    pub bodies: i64,
+    pub bodies: u32,
 }

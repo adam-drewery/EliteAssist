@@ -12,5 +12,5 @@ pub struct CommitCrime {
     pub faction: String,
 
     #[serde(rename = "Fine")]
-    pub fine: Option<i64>,
+    pub fine: Option<u32>,
 }

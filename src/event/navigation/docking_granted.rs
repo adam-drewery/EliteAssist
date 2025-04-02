@@ -6,10 +6,10 @@ pub struct DockingGranted {
     pub timestamp: String,
 
     #[serde(rename = "LandingPad")]
-    pub landing_pad: i64,
+    pub landing_pad: u32,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 
     #[serde(rename = "StationName")]
     pub station_name: String,

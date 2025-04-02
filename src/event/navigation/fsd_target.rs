@@ -9,11 +9,11 @@ pub struct FSDTarget {
     pub name: String,
 
     #[serde(rename = "SystemAddress")]
-    pub system_address: i64,
+    pub system_address: u64,
 
     #[serde(rename = "StarClass")]
     pub star_class: String,
 
     #[serde(rename = "RemainingJumpsInRoute")]
-    pub remaining_jumps_in_route: Option<i64>,
+    pub remaining_jumps_in_route: Option<u32>,
 }

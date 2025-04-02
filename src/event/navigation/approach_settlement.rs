@@ -10,7 +10,7 @@ pub struct ApproachSettlement {
     pub name: String,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 
     #[serde(rename = "StationFaction")]
     pub station_faction: StationFaction,
@@ -34,10 +34,10 @@ pub struct ApproachSettlement {
     pub station_economies: Vec<StationEconomy>,
 
     #[serde(rename = "SystemAddress")]
-    pub system_address: i64,
+    pub system_address: u64,
 
     #[serde(rename = "BodyID")]
-    pub body_id: i64,
+    pub body_id: u64,
 
     #[serde(rename = "BodyName")]
     pub body_name: String,

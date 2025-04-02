@@ -6,7 +6,7 @@ pub struct SearchAndRescue {
     pub timestamp: String,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -15,8 +15,8 @@ pub struct SearchAndRescue {
     pub name_localised: String,
 
     #[serde(rename = "Count")]
-    pub count: i64,
+    pub count: u32,
 
     #[serde(rename = "Reward")]
-    pub reward: i64,
+    pub reward: u32,
 }

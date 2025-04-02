@@ -6,7 +6,7 @@ pub struct CodexEntry {
     pub timestamp: String,
 
     #[serde(rename = "EntryID")]
-    pub entry_id: i64,
+    pub entry_id: u64,
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -36,10 +36,10 @@ pub struct CodexEntry {
     pub system: String,
 
     #[serde(rename = "SystemAddress")]
-    pub system_address: i64,
+    pub system_address: u64,
 
     #[serde(rename = "BodyID")]
-    pub body_id: i64,
+    pub body_id: u64,
 
     #[serde(rename = "Latitude")]
     pub latitude: Option<f64>,

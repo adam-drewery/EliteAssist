@@ -6,5 +6,5 @@ pub struct CancelTaxi {
     pub timestamp: String,
 
     #[serde(rename = "Refund")]
-    pub refund: i64,
+    pub refund: u32,
 }

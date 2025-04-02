@@ -43,7 +43,7 @@ pub struct FSDJump {
     pub star_system: String,
 
     #[serde(rename = "SystemAddress")]
-    pub system_address: i64,
+    pub system_address: u64,
 
     #[serde(rename = "StarPos")]
     pub star_pos: Vec<f64>,
@@ -76,13 +76,13 @@ pub struct FSDJump {
     pub system_security_localised: String,
 
     #[serde(rename = "Population")]
-    pub population: i64,
+    pub population: u64,
 
     #[serde(rename = "Body")]
     pub body: String,
 
     #[serde(rename = "BodyID")]
-    pub body_id: i64,
+    pub body_id: u64,
 
     #[serde(rename = "BodyType")]
     pub body_type: String,

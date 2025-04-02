@@ -6,7 +6,7 @@ pub struct CommunityGoalJoin {
     pub timestamp: String,
 
     #[serde(rename = "CGID")]
-    pub cgid: i64,
+    pub cgid: u64,
 
     #[serde(rename = "Name")]
     pub name: String,

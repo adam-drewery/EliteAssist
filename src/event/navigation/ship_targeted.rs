@@ -12,5 +12,5 @@ pub struct ShipTargeted {
     pub ship: Option<String>,
 
     #[serde(rename = "ScanStage")]
-    pub scan_stage: Option<i64>,
+    pub scan_stage: Option<u32>,
 }

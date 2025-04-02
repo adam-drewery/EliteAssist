@@ -7,7 +7,7 @@ pub struct FactionVoucher {
     pub faction: String,
 
     #[serde(rename = "Amount")]
-    pub amount: i64,
+    pub amount: u32,
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -19,7 +19,7 @@ pub struct RedeemVoucher {
     pub r#type: String,
 
     #[serde(rename = "Amount")]
-    pub amount: i64,
+    pub amount: u32,
 
     #[serde(rename = "Factions")]
     pub factions: Option<Vec<FactionVoucher>>,

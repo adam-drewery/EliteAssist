@@ -28,7 +28,7 @@ pub struct Material {
     pub name_localised: Option<String>,
 
     #[serde(rename = "Count")]
-    pub count: u16,
+    pub count: u32,
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -46,7 +46,7 @@ pub struct MaterialCollected {
     pub name_localised: Option<String>,
     
     #[serde(rename = "Count")]
-    pub count: i64,
+    pub count: u32,
 }
 
 impl Material {

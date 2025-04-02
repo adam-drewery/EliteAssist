@@ -46,10 +46,10 @@ pub struct ScanMaterial {
 pub struct Parent {
 
     #[serde(rename = "Planet")]
-    pub planet: Option<i64>,
+    pub planet: Option<u32>,
 
     #[serde(rename = "Star")]
-    pub star: Option<i64>,
+    pub star: Option<u32>,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -64,7 +64,7 @@ pub struct Scan {
     pub body_name: String,
 
     #[serde(rename = "BodyID")]
-    pub body_id: i64,
+    pub body_id: u64,
 
     #[serde(rename = "Parents")]
     pub parents: Option<Vec<Parent>>,
@@ -73,7 +73,7 @@ pub struct Scan {
     pub star_system: String,
 
     #[serde(rename = "SystemAddress")]
-    pub system_address: i64,
+    pub system_address: u64,
 
     #[serde(rename = "DistanceFromArrivalLS")]
     pub distance_from_arrival_ls: f64,

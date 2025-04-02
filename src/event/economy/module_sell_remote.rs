@@ -6,7 +6,7 @@ pub struct ModuleSellRemote {
     pub timestamp: String,
 
     #[serde(rename = "StorageSlot")]
-    pub storage_slot: i64,
+    pub storage_slot: u32,
 
     #[serde(rename = "SellItem")]
     pub sell_item: String,
@@ -15,14 +15,14 @@ pub struct ModuleSellRemote {
     pub sell_item_localised: String,
 
     #[serde(rename = "ServerId")]
-    pub server_id: i64,
+    pub server_id: u64,
 
     #[serde(rename = "SellPrice")]
-    pub sell_price: i64,
+    pub sell_price: u32,
 
     #[serde(rename = "Ship")]
     pub ship: String,
 
     #[serde(rename = "ShipID")]
-    pub ship_id: i64,
+    pub ship_id: u64,
 }

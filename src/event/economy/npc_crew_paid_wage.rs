@@ -9,8 +9,8 @@ pub struct NpcCrewPaidWage {
     pub npc_crew_name: String,
 
     #[serde(rename = "NpcCrewId")]
-    pub npc_crew_id: i64,
+    pub npc_crew_id: u64,
 
     #[serde(rename = "Amount")]
-    pub amount: i64,
+    pub amount: u32,
 }

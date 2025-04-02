@@ -9,7 +9,7 @@ pub struct LoadoutEquipModule {
     pub loadout_name: String,
 
     #[serde(rename = "SuitID")]
-    pub suit_id: i64,
+    pub suit_id: u64,
 
     #[serde(rename = "SuitName")]
     pub suit_name: String,
@@ -18,7 +18,7 @@ pub struct LoadoutEquipModule {
     pub suit_name_localised: String,
 
     #[serde(rename = "LoadoutID")]
-    pub loadout_id: i64,
+    pub loadout_id: u64,
 
     #[serde(rename = "SlotName")]
     pub slot_name: String,
@@ -30,11 +30,11 @@ pub struct LoadoutEquipModule {
     pub module_name_localised: String,
 
     #[serde(rename = "Class")]
-    pub class: i64,
+    pub class: u32,
 
     #[serde(rename = "WeaponMods")]
     pub weapon_mods: Vec<String>,
 
     #[serde(rename = "SuitModuleID")]
-    pub suit_module_id: i64,
+    pub suit_module_id: u64,
 }

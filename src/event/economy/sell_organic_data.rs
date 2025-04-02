@@ -22,10 +22,10 @@ pub struct BioData {
     pub variant_localised: String,
 
     #[serde(rename = "Value")]
-    pub value: i64,
+    pub value: u32,
 
     #[serde(rename = "Bonus")]
-    pub bonus: i64,
+    pub bonus: u32,
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -34,7 +34,7 @@ pub struct SellOrganicData {
     pub timestamp: String,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: u64,
 
     #[serde(rename = "BioData")]
     pub bio_data: Vec<BioData>,
