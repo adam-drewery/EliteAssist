@@ -7,7 +7,7 @@ pub struct Genus {
     pub genus: String,
 
     #[serde(rename = "Genus_Localised")]
-    pub genus_localised: String,
+    pub genus_localised: Option<String>,
 }
 
 #[derive(Deserialize, Debug, Clone)]
@@ -17,7 +17,7 @@ pub struct Signal {
     pub r#type: String,
 
     #[serde(rename = "Type_Localised")]
-    pub type_localised: String,
+    pub type_localised: Option<String>,
 
     #[serde(rename = "Count")]
     pub count: i64,

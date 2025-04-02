@@ -6,7 +6,7 @@ pub struct EngineerProgress {
     pub timestamp: String,
 
     #[serde(rename = "Engineers")]
-    pub engineers: Vec<Engineer>,
+    pub engineers: Option<Vec<Engineer>>,
 }
 
 #[derive(Deserialize, Debug, Clone)]

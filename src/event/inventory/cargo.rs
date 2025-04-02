@@ -43,11 +43,11 @@ pub struct CollectCargo {
     pub r#type: String,
 
     #[serde(rename = "Type_Localised")]
-    pub type_localised: String,
+    pub type_localised: Option<String>,
 
     #[serde(rename = "Stolen")]
     pub stolen: bool,
 
     #[serde(rename = "MissionID")]
-    pub mission_id: i64,
+    pub mission_id: Option<i64>,
 }

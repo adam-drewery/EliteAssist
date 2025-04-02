@@ -65,10 +65,10 @@ pub struct EngineerCraft {
     pub quality: f64,
 
     #[serde(rename = "ExperimentalEffect")]
-    pub experimental_effect: String,
+    pub experimental_effect: Option<String>,
 
     #[serde(rename = "ExperimentalEffect_Localised")]
-    pub experimental_effect_localised: String,
+    pub experimental_effect_localised: Option<String>,
 
     #[serde(rename = "Modifiers")]
     pub modifiers: Vec<Modifier>,

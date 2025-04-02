@@ -507,7 +507,7 @@ pub struct Passengers {
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
-pub struct SearchAndRescue {
+struct SearchAndRescue {
 
     #[serde(rename = "SearchRescue_Traded")]
     pub search_rescue_traded: u64,

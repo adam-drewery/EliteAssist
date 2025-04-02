@@ -104,8 +104,16 @@ impl JournalWatcher {
                     return event;
                 }
                 else if let Err(e) = deserialize_result {
-                    eprintln!("Failed to parse journal entry: {}", &line);
-                    eprintln!("{}\n", &e);
+                    let error_msg = e.to_string();
+                    if error_msg.starts_with("unknown variant") {
+                        if let Some(first_part) = error_msg.split(',').next() {
+                            eprintln!("Failed to parse journal entry: {}", &line);
+                            eprintln!("{}\n", first_part);
+                        }
+                    } else {
+                        eprintln!("Failed to parse journal entry: {}", &line);
+                        eprintln!("{}\n", &e);
+                    }
                 }
             }
 
@@ -178,18 +186,26 @@ fn check_snapshot_file(file_details: &mut FileDetails) -> Option<Event> {
     let modified = metadata.modified().unwrap();
 
     if modified > file_details.last_modified {
-        let mut content = String::new();
+        let mut line = String::new();
         let mut file = File::open(&file_details.path).unwrap();
-        if file.read_to_string(&mut content).is_ok() {
+        if file.read_to_string(&mut line).is_ok() {
             file_details.last_modified = modified;
             
-            let deserizlize_result = serde_json::from_str(&content);
+            let deserizlize_result = serde_json::from_str(&line);
             if let Ok(event) = deserizlize_result {
                 //println!("Handling {}\n", content);
                 return event;
             } else if let Err(e) = deserizlize_result {
-                eprintln!("Failed to parse snapshot entry: {}", &content);
-                eprintln!("{}\n", &e);
+                let error_msg = e.to_string();
+                if error_msg.starts_with("unknown variant") {
+                    if let Some(first_part) = error_msg.split(',').next() {
+                        eprintln!("Failed to parse journal entry: {}", &line);
+                        eprintln!("{}\n", first_part);
+                    }
+                } else {
+                    eprintln!("Failed to parse journal entry: {}", &line);
+                    eprintln!("{}\n", &e);
+                }
             }
         }
     }

@@ -66,5 +66,5 @@ pub struct Market {
     pub star_system: String,
 
     #[serde(rename = "Items")]
-    pub items: Vec<MarketItem>,
+    pub items: Option<Vec<MarketItem>>,
 }

@@ -48,7 +48,7 @@ pub struct MissionAccepted {
     pub reputation: String,
 
     #[serde(rename = "Reward")]
-    pub reward: i64,
+    pub reward: Option<i64>,
 
     #[serde(rename = "MissionID")]
     pub mission_id: i64,
@@ -147,14 +147,41 @@ pub struct MissionCompleted {
     pub mission_id: i64,
 
     #[serde(rename = "DestinationSystem")]
-    pub destination_system: String,
+    pub destination_system: Option<String>,
 
     #[serde(rename = "DestinationStation")]
-    pub destination_station: String,
+    pub destination_station: Option<String>,
 
     #[serde(rename = "Reward")]
-    pub reward: i64,
+    pub reward: Option<i64>,
 
     #[serde(rename = "FactionEffects")]
     pub faction_effects: Vec<FactionEffect>,
+}
+
+#[derive(Deserialize, Debug, Default, Clone)]
+pub struct MissionRedirected {
+
+    pub timestamp: String,
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: i64,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "LocalisedName")]
+    pub localised_name: String,
+
+    #[serde(rename = "NewDestinationStation")]
+    pub new_destination_station: String,
+
+    #[serde(rename = "NewDestinationSystem")]
+    pub new_destination_system: String,
+
+    #[serde(rename = "OldDestinationStation")]
+    pub old_destination_station: String,
+
+    #[serde(rename = "OldDestinationSystem")]
+    pub old_destination_system: String,
 }

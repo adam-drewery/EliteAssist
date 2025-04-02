@@ -13,16 +13,16 @@ pub struct StoredModule {
     pub storage_slot: i64,
 
     #[serde(rename = "StarSystem")]
-    pub star_system: String,
+    pub star_system: Option<String>,
 
     #[serde(rename = "MarketID")]
-    pub market_id: i64,
+    pub market_id: Option<i64>,
 
     #[serde(rename = "TransferCost")]
-    pub transfer_cost: i64,
+    pub transfer_cost: Option<i64>,
 
     #[serde(rename = "TransferTime")]
-    pub transfer_time: i64,
+    pub transfer_time: Option<i64>,
 
     #[serde(rename = "BuyPrice")]
     pub buy_price: i64,
