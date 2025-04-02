@@ -49,6 +49,14 @@ impl State {
                 self.current_system = location.star_system;
             },
             Event::ShipLocker(ship_locker) => {
+
+                if ship_locker.consumables.is_none()
+                    && ship_locker.components.is_none()
+                    && ship_locker.items.is_none()
+                    && ship_locker.data.is_none() {
+                    return;
+                }
+                
                 self.ship_locker = ship_locker;
             }
             Event::Status(status) => {
