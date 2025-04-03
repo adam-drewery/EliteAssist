@@ -127,7 +127,10 @@ impl JournalWatcher {
                     .open(&self.current_journal_path)
                     .unwrap();
                 self.reader = BufReader::new(new_file);
-                info!("Scanning journal file: {}", self.current_journal_path.display());
+
+                let file_name = self.current_journal_path.file_name().unwrap().to_str().unwrap();
+
+                info!("Scanning journal file: {}", file_name);
                 continue;
             }
 

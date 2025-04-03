@@ -1,4 +1,7 @@
+mod message;
+
 use crate::event::{Event, Materials, ShipLocker};
+pub use crate::state::message::*;
 use serde::Deserialize;
 use thousands::Separable;
 
@@ -11,6 +14,7 @@ pub struct State {
     pub ship_locker: ShipLocker,
     pub active_screen: ActiveScreen,
     pub materials: Materials,
+    pub messages: Vec<Message>,
     pub legal_state: String,
     pub active_fine : bool,
     pub wanted : bool,
@@ -19,15 +23,13 @@ pub struct State {
 #[derive(Deserialize, Default, Clone, Debug)]
 pub enum ActiveScreen {
 
-    Commander,
-
     #[default]
+    Commander,
     ShipLocker,
-
     Navigation,
-
     Market,
     Materials,
+    Messages,
 }
 
 impl State {
@@ -91,6 +93,9 @@ impl State {
                     self.wanted = wanted;
                 }
             },
+            Event::ReceiveText(text) => {
+                self.messages.push(text.into());
+            }
             _ => {}
         }
     }

@@ -8,3 +8,15 @@ pub struct AppliedToSquardon {
     #[serde(rename = "SquadronName")]
     pub squadron_name: String,
 }
+
+#[derive(Deserialize, Debug, Default, Clone)]
+pub struct SquadronStartup {
+
+    pub timestamp: String,
+
+    #[serde(rename = "SquadronName")]
+    pub squadron_name: String,
+
+    #[serde(rename = "CurrentRank")]
+    pub current_rank: u8,
+}

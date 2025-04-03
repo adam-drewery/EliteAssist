@@ -23,7 +23,7 @@ const RAW_CSV: &[u8] = include_bytes!("material_detail/raw.tsv");
 
 fn parse_csv(data: &[u8]) -> HashSet<MaterialDetail> {
     str::from_utf8(data)
-        .unwrap_or_default()
+        .unwrap()
         .lines()
         .filter(|line| !line.is_empty())
         .map(|line| {

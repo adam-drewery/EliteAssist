@@ -13,6 +13,7 @@ pub fn navigation_bar(state: &State) -> Row<Event> {
         navigation_button(state, "MATERIALS", ActiveScreen::Materials),
         navigation_button(state, "SHIP LOCKER", ActiveScreen::ShipLocker),
         navigation_button(state, "MARKET", ActiveScreen::Market),
+        navigation_button(state, "LOG", ActiveScreen::Messages),
     ]
 }
 
