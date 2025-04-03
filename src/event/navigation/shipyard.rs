@@ -1,9 +1,11 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Shipyard {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
     pub market_id: u64,
@@ -18,7 +20,8 @@ pub struct Shipyard {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct ShipyardSwap {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ShipType")]
     pub ship_type: String,
@@ -42,7 +45,8 @@ pub struct ShipyardSwap {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct ShipyardTransfer {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ShipType")]
     pub ship_type: String,

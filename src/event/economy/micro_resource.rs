@@ -1,9 +1,11 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Default, Clone)]
 pub struct BuyMicroResources {
-    
-    pub timestamp: String,
+
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
     
     #[serde(rename = "Name")]
     pub name: String,
@@ -43,7 +45,8 @@ pub struct MicroResource {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct DeliverPowerMicroResources {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "TotalCount")]
     pub total_count: i64,
@@ -74,7 +77,8 @@ pub struct OfferedMicroResource {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct TradeMicroResources {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Offered")]
     pub offered: Vec<OfferedMicroResource>,
@@ -98,7 +102,8 @@ pub struct TradeMicroResources {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct SellMicroResources {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "TotalCount")]
     pub total_count: u32,

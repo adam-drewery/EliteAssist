@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -22,7 +23,8 @@ pub struct Passenger {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Passengers {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Manifest")]
     pub manifest: Vec<Passenger>,

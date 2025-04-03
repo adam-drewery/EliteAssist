@@ -1,15 +1,11 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
-
-#[derive(Deserialize, Debug, Default, Clone)]
-pub struct Missions {
-
-    pub timestamp: String
-}
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct MissionAccepted {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Faction")]
     pub faction: String,
@@ -57,7 +53,8 @@ pub struct MissionAccepted {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct MissionFailed {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -72,7 +69,8 @@ pub struct MissionFailed {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct MissionAbandoned {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -132,7 +130,8 @@ pub struct FactionEffect {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct MissionCompleted {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Faction")]
     pub faction: String,
@@ -162,7 +161,8 @@ pub struct MissionCompleted {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct MissionRedirected {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MissionID")]
     pub mission_id: u64,

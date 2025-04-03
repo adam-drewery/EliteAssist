@@ -1,8 +1,9 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
-pub struct BookTaxi {
-    pub timestamp: String,
+pub struct BookTaxi {#[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Cost")]
     pub cost: u32,
@@ -17,7 +18,8 @@ pub struct BookTaxi {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct CancelTaxi {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Refund")]
     pub refund: u32,

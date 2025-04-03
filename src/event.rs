@@ -4,6 +4,7 @@ mod navigation;
 mod personal;
 mod session;
 mod vehicle;
+mod format;
 
 pub use economy::*;
 pub use inventory::*;
@@ -13,6 +14,8 @@ pub use session::*;
 pub use vehicle::*;
 
 use crate::state::*;
+
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -35,10 +38,10 @@ pub enum Event {
     Powerplay(Powerplay),
     Music(Music),
     SuitLoadout(Empty),
-    Backpack(Backpack),
+    Backpack(Empty),
     ShipLocker(ShipLocker),
-    Missions(Missions),
-    Shutdown(Shutdown),
+    Missions(Empty),
+    Shutdown(Empty),
     Loadout(ShipLoadout),
     BuyAmmo(BuyAmmo),
     RestockVehicle(RestockVehicle),
@@ -117,7 +120,7 @@ pub enum Event {
     Passengers(economy::Passengers),
     MissionRedirected(MissionRedirected),
     UpgradeWeapon(UpgradeWeapon),
-    Resupply(Resupply),
+    Resupply(Empty),
     Died(Died),
     SrvDestroyed(SrvDestroyed),
     CodexEntry(CodexEntry),
@@ -208,7 +211,11 @@ pub enum Event {
     None,
 }
 
+const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S";
+
 #[derive(Deserialize, Debug, Default, Clone)]
-pub struct Empty{
-    pub timestamp: String
+pub struct Empty {
+
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 }

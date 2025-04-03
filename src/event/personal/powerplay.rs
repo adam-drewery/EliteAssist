@@ -1,9 +1,11 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Powerplay {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Power")]
     pub power: String,
@@ -21,7 +23,8 @@ pub struct Powerplay {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct PowerplayJoin {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Power")]
     pub power: String,

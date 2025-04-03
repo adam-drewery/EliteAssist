@@ -1,4 +1,5 @@
 use crate::event::Material;
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Clone)]
@@ -20,7 +21,8 @@ pub struct Modifier {
 #[derive(Debug, Deserialize, Clone)]
 pub struct EngineerCraft {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Slot")]
     pub slot: String,
@@ -65,7 +67,8 @@ pub struct EngineerCraft {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct EngineerContribution {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Engineer")]
     pub engineer: String,
@@ -86,7 +89,8 @@ pub struct EngineerContribution {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct EngineerProgress {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Engineers")]
     pub engineers: Option<Vec<Engineer>>,

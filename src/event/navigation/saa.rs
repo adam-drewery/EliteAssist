@@ -1,9 +1,11 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct SAAScanComplete {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BodyName")]
     pub body_name: String,
@@ -47,7 +49,8 @@ pub struct Signal {
 #[derive(Deserialize, Debug, Clone)]
 pub struct SAASignalsFound {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BodyName")]
     pub body_name: String,

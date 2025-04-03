@@ -1,4 +1,5 @@
 use crate::event::navigation::faction::Faction;
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Clone)]
@@ -31,7 +32,8 @@ pub struct Power {
 #[derive(Debug, Deserialize, Clone)]
 pub struct FSDJump {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Taxi")]
     pub taxi: bool,
@@ -115,7 +117,8 @@ pub struct FSDJump {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct FSDTarget {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -133,7 +136,8 @@ pub struct FSDTarget {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct SupercruiseEntry {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Taxi")]
     pub taxi: bool,
@@ -151,7 +155,8 @@ pub struct SupercruiseEntry {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct SupercruiseExit {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Taxi")]
     pub taxi: bool,
@@ -178,7 +183,8 @@ pub struct SupercruiseExit {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct SupercruiseDestinationDrop {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
 
     #[serde(rename = "Type")]
@@ -191,7 +197,8 @@ pub struct SupercruiseDestinationDrop {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct StartJump {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "JumpType")]
     pub jump_type: String,
@@ -203,7 +210,8 @@ pub struct StartJump {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct JetConeBoost {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BoostValue")]
     pub boost_value: f64,

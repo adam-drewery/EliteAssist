@@ -1,9 +1,11 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct LaunchSRV {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "SRVType")]
     pub srvtype: String,
@@ -24,7 +26,8 @@ pub struct LaunchSRV {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct DockSRV {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "SRVType")]
     pub srvtype: String,
@@ -39,7 +42,8 @@ pub struct DockSRV {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct SrvDestroyed {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ID")]
     pub id: u64,

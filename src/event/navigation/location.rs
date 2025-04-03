@@ -1,10 +1,12 @@
 use crate::event::navigation::faction::Faction;
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Location {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "DistFromStarLS")]
     pub dist_from_star_ls: Option<f64>,

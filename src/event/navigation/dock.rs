@@ -1,9 +1,11 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct DockingCancelled {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
     pub market_id: u64,
@@ -41,7 +43,8 @@ pub struct StationFaction {
 #[derive(Deserialize, Clone, Debug)]
 pub struct Docked {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "StationName")]
     pub station_name: String,
@@ -95,7 +98,8 @@ pub struct Docked {
 #[derive(Deserialize, Clone, Debug)]
 pub struct Undocked {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "StationName")]
     pub station_name: String,
@@ -116,7 +120,8 @@ pub struct Undocked {
 #[derive(Deserialize, Debug, Clone)]
 pub struct DockingDenied {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Reason")]
     pub reason: String,
@@ -134,7 +139,8 @@ pub struct DockingDenied {
 #[derive(Deserialize, Debug, Clone)]
 pub struct DockingGranted {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "LandingPad")]
     pub landing_pad: u32,
@@ -165,7 +171,8 @@ pub struct LandingPadSize {
 #[derive(Deserialize, Debug, Clone)]
 pub struct DockingRequested {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
     pub market_id: u64,

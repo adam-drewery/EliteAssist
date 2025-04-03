@@ -1,9 +1,11 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct ApproachBody {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "StarSystem")]
     pub star_system: String,
@@ -21,7 +23,8 @@ pub struct ApproachBody {
 #[derive(Debug, Deserialize, Clone)]
 pub struct LeaveBody {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "StarSystem")]
     pub star_system: String,

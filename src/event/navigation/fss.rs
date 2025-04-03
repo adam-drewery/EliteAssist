@@ -1,9 +1,11 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct FFSSAllBodiesFound {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "SystemName")]
     pub system_name: String,
@@ -18,7 +20,8 @@ pub struct FFSSAllBodiesFound {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct FSSDiscoveryScan {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Progress")]
     pub progress: f64,
@@ -39,7 +42,8 @@ pub struct FSSDiscoveryScan {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct FSSSignalDiscovered {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "SystemAddress")]
     pub system_address: u64,

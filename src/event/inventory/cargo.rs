@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Clone)]
@@ -22,7 +23,8 @@ pub struct CargoItem {
 #[derive(Deserialize, Debug, Clone)]
 pub struct Cargo {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Vessel")]
     pub vessel: String,
@@ -37,7 +39,8 @@ pub struct Cargo {
 #[derive(Deserialize, Debug, Clone)]
 pub struct CollectCargo {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Type")]
     pub r#type: String,
@@ -55,7 +58,8 @@ pub struct CollectCargo {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct EjectCargo {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Type")]
     pub r#type: String,

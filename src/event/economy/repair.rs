@@ -1,9 +1,11 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Repair {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Items")]
     pub items: Vec<String>,
@@ -15,7 +17,8 @@ pub struct Repair {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct RepairAll {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Cost")]
     pub cost: u32,

@@ -1,9 +1,10 @@
 use crate::event::ReceiveText;
+use chrono::{DateTime, Utc};
 use once_cell::sync::Lazy;
 use regex::Regex;
 
 pub struct Message {
-    pub time: String,
+    pub time: DateTime<Utc>,
     pub from: String,
     pub text: String,
     pub kind: MessageKind,
@@ -26,7 +27,7 @@ impl From<ReceiveText> for Message {
             time: input.timestamp,
             text: input.message_localised.unwrap_or(input.message),
             from: text,
-            kind: kind,
+            kind,
             channel: input.channel,
         }
     }

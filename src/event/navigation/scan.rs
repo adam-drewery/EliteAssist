@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Clone)]
@@ -55,7 +56,8 @@ pub struct Parent {
 #[derive(Debug, Deserialize, Clone)]
 pub struct Scan {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ScanType")]
     pub scan_type: String,
@@ -163,7 +165,8 @@ pub struct Scan {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct ScanBaryCentre {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "StarSystem")]
     pub star_system: String,
@@ -199,7 +202,8 @@ pub struct ScanBaryCentre {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct ScanOrganic {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ScanType")]
     pub scan_type: String,
@@ -232,7 +236,8 @@ pub struct ScanOrganic {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Scanned {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ScanType")]
     pub scan_type: String,
@@ -241,7 +246,8 @@ pub struct Scanned {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct DataScanned {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Type")]
     pub r#type: String,
@@ -253,7 +259,8 @@ pub struct DataScanned {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct DiscoveryScan {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "SystemAddress")]
     pub system_address: u64,
@@ -265,7 +272,8 @@ pub struct DiscoveryScan {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct NavBeaconScan {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "SystemAddress")]
     pub system_address: u64,

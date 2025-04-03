@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -25,7 +26,8 @@ pub struct SuitModule {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct SuitLoadout {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "SuitID")]
     pub suit_id: u64,
@@ -65,7 +67,8 @@ pub struct SuitUpgradeResource {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct UpgradeSuit {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -90,7 +93,8 @@ pub struct UpgradeSuit {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct LoadoutEquipModule {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "LoadoutName")]
     pub loadout_name: String,

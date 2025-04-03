@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -13,7 +14,8 @@ pub struct SystemExplorationData {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct MultiSellExplorationData {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Discovered")]
     pub discovered: Vec<SystemExplorationData>,

@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Clone)]
@@ -51,7 +52,8 @@ pub struct MarketItem {
 #[derive(Deserialize, Debug, Clone)]
 pub struct Market {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
     pub market_id: u64,
@@ -72,7 +74,8 @@ pub struct Market {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct MarketBuy {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
     pub market_id: u64,
@@ -96,7 +99,8 @@ pub struct MarketBuy {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct MarketSell {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
     pub market_id: u64,

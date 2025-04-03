@@ -1,9 +1,11 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct ModuleBuy {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Slot")]
     pub slot: String,
@@ -36,7 +38,8 @@ pub struct ModuleBuy {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct ModuleRetrieve {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
     pub market_id: u64,
@@ -72,7 +75,8 @@ pub struct ModuleRetrieve {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct ModuleSell {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
     pub market_id: u64,
@@ -99,7 +103,8 @@ pub struct ModuleSell {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct ModuleSellRemote {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "StorageSlot")]
     pub storage_slot: u32,
@@ -126,7 +131,8 @@ pub struct ModuleSellRemote {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct ModuleStore {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
     pub market_id: u64,

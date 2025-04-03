@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Clone)]
@@ -43,7 +44,8 @@ pub struct StoredModule {
 #[derive(Deserialize, Debug, Clone)]
 pub struct StoredModules {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
     pub market_id: u64,
@@ -61,7 +63,8 @@ pub struct StoredModules {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct ModuleSwap {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
     pub market_id: u64,
@@ -94,7 +97,8 @@ pub struct ModuleSwap {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct FetchRemoteModule {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "StorageSlot")]
     pub storage_slot: u32,

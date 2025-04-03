@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -13,7 +14,8 @@ pub struct Reward {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Bounty {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Rewards")]
     pub rewards: Vec<Reward>,
@@ -40,7 +42,8 @@ pub struct Bounty {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct PayBounties {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Amount")]
     pub amount: u32,

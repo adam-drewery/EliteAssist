@@ -1,9 +1,11 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct CrewAssign {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -18,7 +20,8 @@ pub struct CrewAssign {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct CrewMemberJoins {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Crew")]
     pub crew: String,
@@ -30,7 +33,8 @@ pub struct CrewMemberJoins {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct CrewMemberQuits {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Crew")]
     pub crew: String,
@@ -42,7 +46,8 @@ pub struct CrewMemberQuits {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct CrewMemberRoleChange {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Crew")]
     pub crew: String,
@@ -57,7 +62,8 @@ pub struct CrewMemberRoleChange {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct EndCrewSession {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "OnCrime")]
     pub on_crime: bool,
@@ -69,7 +75,8 @@ pub struct EndCrewSession {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct NpcCrewRank {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "NpcCrewName")]
     pub npc_crew_name: String,
@@ -84,7 +91,8 @@ pub struct NpcCrewRank {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct ChangeCrewRole {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Role")]
     pub role: String,
@@ -96,7 +104,8 @@ pub struct ChangeCrewRole {
 #[derive(Debug, Deserialize, Clone)]
 pub struct NpcCrewPaidWage {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "NpcCrewName")]
     pub npc_crew_name: String,

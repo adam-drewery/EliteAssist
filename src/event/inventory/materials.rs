@@ -1,5 +1,6 @@
 use crate::material_detail::{find_material, MaterialDetail};
 use crate::text::title_case;
+use chrono::{DateTime, Utc};
 use log::warn;
 use once_cell::sync::Lazy;
 use serde::Deserialize;
@@ -7,7 +8,8 @@ use serde::Deserialize;
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Materials {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Raw")]
     pub raw: Vec<Material>,
@@ -34,8 +36,8 @@ pub struct Material {
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct MaterialCollected {
-    
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
     
     #[serde(rename = "Category")]
     pub category: String,
@@ -53,7 +55,8 @@ pub struct MaterialCollected {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct MaterialDiscovered {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Category")]
     pub category: String,

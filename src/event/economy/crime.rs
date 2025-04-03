@@ -1,9 +1,11 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct CommitCrime {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "CrimeType")]
     pub crime_type: String,
@@ -18,7 +20,8 @@ pub struct CommitCrime {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct PayFines {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Amount")]
     pub amount: u32,
@@ -33,7 +36,8 @@ pub struct PayFines {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct ClearImpound {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ShipType")]
     pub ship_type: String,

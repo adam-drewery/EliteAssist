@@ -1,10 +1,12 @@
 use crate::event::Engineering;
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct SetUserShipName {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Ship")]
     pub ship: String,
@@ -22,7 +24,8 @@ pub struct SetUserShipName {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct AfmuRepairs {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Module")]
     pub module: String,
@@ -40,7 +43,8 @@ pub struct AfmuRepairs {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct HullDamage {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Health")]
     pub health: f64,
@@ -77,7 +81,8 @@ pub struct Ship {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct StoredShips {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "StationName")]
     pub station_name: String,
@@ -98,7 +103,8 @@ pub struct StoredShips {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct ShipLoadout {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Ship")]
     pub ship: String,

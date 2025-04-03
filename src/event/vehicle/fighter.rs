@@ -1,9 +1,11 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct FighterDestroyed {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ID")]
     pub id: u64,
@@ -12,7 +14,8 @@ pub struct FighterDestroyed {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct FighterRebuilt {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Loadout")]
     pub loadout: String,
@@ -24,7 +27,8 @@ pub struct FighterRebuilt {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct DockFighter {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ID")]
     pub id: u64,
@@ -33,7 +37,8 @@ pub struct DockFighter {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct CrewLaunchFighter {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Telepresence")]
     pub telepresence: bool,
@@ -45,7 +50,8 @@ pub struct CrewLaunchFighter {
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct LaunchFighter {
 
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Loadout")]
     pub loadout: String,

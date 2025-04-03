@@ -1,9 +1,10 @@
+use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct DropshipDeploy {
-    
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "StarSystem")]
     pub star_system: String,
@@ -26,8 +27,8 @@ pub struct DropshipDeploy {
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct BookDropship {
-    
-    pub timestamp: String,
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Retreat")]
     pub retreat: bool,
