@@ -171,11 +171,16 @@ fn parse_csv(data: &[u8]) -> Vec<MaterialGroup> {
         }
     }
 
-    groups.into_iter()
-        .map(|(name, materials)| MaterialGroup { name, materials })
-        .collect()
-}
+    let mut result: Vec<MaterialGroup> = groups.into_iter()
+        .map(|(name, mut materials)| {
+            materials.sort_by(|a, b| a.rarity.cmp(&b.rarity));
+            MaterialGroup { name, materials }
+        })
+        .collect();
 
+    result.sort_by(|a, b| a.name.cmp(&b.name));
+    result
+}
 fn apply_category_names(material_groups: &mut [MaterialGroup]) {
     for group in material_groups {
         group.name = CATEGORY_NAMES
