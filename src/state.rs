@@ -1,9 +1,11 @@
 mod message;
 mod ship_locker;
 mod material;
+mod market;
 
 pub use material::*;
 pub use ship_locker::*;
+pub use market::*;
 
 use crate::event::Event;
 pub use crate::state::message::*;
@@ -20,7 +22,8 @@ pub struct State {
     pub active_screen: ActiveScreen,
     pub materials: Materials,
     pub messages: Vec<ChatMessage>,
-    pub crime: CrimeStats
+    pub crime: CrimeStats,
+    pub market: Market
 }
 
 #[derive(Default)]
@@ -94,8 +97,14 @@ impl State {
                     self.crime.wanted = wanted;
                 }
             },
+            
             Event::ReceiveText(text) => {
                 self.messages.push(text.into());
+            },
+            
+            Event::Market(market) => {
+                if market.items.is_none() { return; }
+                self.market = market.into();
             }
             _ => {}
         }

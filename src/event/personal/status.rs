@@ -7,7 +7,7 @@ pub struct Status {
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Flags")]
-    pub flags: u16,
+    pub flags: u32,
 
     #[serde(rename = "Flags2")]
     pub flags2: Option<u16>,

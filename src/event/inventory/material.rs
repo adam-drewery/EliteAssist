@@ -12,9 +12,9 @@ use std::collections::HashMap;
   https://elite-dangerous.fandom.com/wiki/Encoded_Materials#List_of_Encoded_Materials
 */
 
-const ENCODED_CSV: &[u8] = include_bytes!("../../material_detail/encoded.tsv");
-const MANUFACTURED_CSV: &[u8] = include_bytes!("../../material_detail/manufactured.tsv");
-const RAW_CSV: &[u8] = include_bytes!("../../material_detail/raw.tsv");
+const ENCODED_CSV: &[u8] = include_bytes!("material/encoded.tsv");
+const MANUFACTURED_CSV: &[u8] = include_bytes!("material/manufactured.tsv");
+const RAW_CSV: &[u8] = include_bytes!("material/raw.tsv");
 
 static BASE_MATERIALS: Lazy<state::Materials> = Lazy::new(|| {
     let mut materials = state::Materials {
@@ -40,35 +40,6 @@ pub struct Materials {
 
     #[serde(rename = "Encoded")]
     pub encoded: Vec<Material>,
-}
-
-impl Materials {
-    fn apply_counts(&self, target: &mut Vec<MaterialGroup>) {
-
-        let count_map: HashMap<String, u16> = self.raw
-            .iter()
-            .chain(self.manufactured.iter())
-            .chain(self.encoded.iter())
-            .map(|m| (m.display_name(), m.count))
-            .collect();
-
-        for group in target {
-            for material in &mut group.materials {
-                if let Some(&count) = count_map.get(material.name.as_str()) {
-                    material.count = count;
-                } else {
-                    material.count = 0;
-                }
-            }
-        }
-    }
-    
-    pub(crate) fn is_empty(&self) -> bool {
-        self.encoded.is_empty()
-            && self.raw.is_empty()
-            && self.manufactured.is_empty()
-    }
-    
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -105,7 +76,7 @@ pub struct MaterialCollected {
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct MaterialDiscovered {
-
+    
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -120,6 +91,32 @@ pub struct MaterialDiscovered {
 
     #[serde(rename = "DiscoveryNumber")]
     pub discovery_number: u32,
+}
+
+impl Materials {
+    fn apply_counts(&self, target: &mut Vec<MaterialGroup>) {
+        let count_map: HashMap<String, u16> = self
+            .raw
+            .iter()
+            .chain(self.manufactured.iter())
+            .chain(self.encoded.iter())
+            .map(|m| (m.display_name(), m.count))
+            .collect();
+
+        for group in target {
+            for material in &mut group.materials {
+                if let Some(&count) = count_map.get(material.name.as_str()) {
+                    material.count = count;
+                } else {
+                    material.count = 0;
+                }
+            }
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.encoded.is_empty() && self.raw.is_empty() && self.manufactured.is_empty()
+    }
 }
 
 impl Material {
@@ -151,9 +148,15 @@ fn parse_csv(data: &[u8]) -> Vec<MaterialGroup> {
             let name = parts.next().unwrap_or("").trim().to_string();
             let category = parts.next().unwrap_or("").trim().to_string();
             let rarity = parts.next().unwrap_or("").trim().to_string();
-            let locations = parts.next().map(|s| s.trim().to_string());
+            let locations = parts.next()
+                .map(|s| s.trim().to_string())
+                .unwrap_or_default()
+                .split(',')
+                .map(|s| s.trim().to_string())
+                .collect::<Vec<String>>();
 
-            groups.entry(category.clone())
+            groups
+                .entry(category.clone())
                 .or_default()
                 .push(state::Material {
                     name,
@@ -165,13 +168,14 @@ fn parse_csv(data: &[u8]) -> Vec<MaterialGroup> {
                         "Standard" => 3,
                         "Rare" => 4,
                         "Very Rare" => 5,
-                        _ => 0
+                        _ => 0,
                     },
                 });
         }
     }
 
-    let mut result: Vec<MaterialGroup> = groups.into_iter()
+    let mut result: Vec<MaterialGroup> = groups
+        .into_iter()
         .map(|(name, mut materials)| {
             materials.sort_by(|a, b| a.rarity.cmp(&b.rarity));
             MaterialGroup { name, materials }
@@ -202,4 +206,3 @@ static CATEGORY_NAMES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| 
     m.insert("7", "Diverse Utility Elements");
     m
 });
-

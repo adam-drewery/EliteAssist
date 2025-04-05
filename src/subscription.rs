@@ -1,5 +1,5 @@
 use crate::event::Event;
-use crate::journal_watcher::JournalWatcher;
+use crate::journal::JournalWatcher;
 use crate::state::State;
 use iced::futures::Stream;
 use iced::Subscription;

@@ -1,5 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
+use crate::state;
+use crate::text::title_case;
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct MarketItem {
@@ -122,4 +124,42 @@ pub struct MarketSell {
 
     #[serde(rename = "AvgPricePaid")]
     pub avg_price_paid: u64,
+}
+
+impl Into<state::Market> for Market {
+
+    fn into(self) -> state::Market {
+        state::Market {
+            id: self.market_id,
+            items: self.items
+                .map(|item| item.into_iter().map(|item| item.into()).collect())
+                .unwrap_or_default(),
+        }
+    }
+}
+
+impl Into<state::MarketItem> for MarketItem {
+
+    fn into(self) -> state::MarketItem {
+
+        let category = title_case(self.category
+            .trim_start_matches("$MARKET_category_")
+            .trim_end_matches(";"));
+        
+        state::MarketItem {
+            id: self.id,
+            name: self.name_localised.unwrap_or(title_case(&self.name)),
+            buy_price: self.buy_price,
+            sell_price: self.sell_price,
+            mean_price: self.mean_price,
+            category,
+            demand: self.demand,
+            consumer: self.consumer,
+            producer: self.producer,
+            demand_bracket: self.demand_bracket,
+            stock_bracket: self.stock_bracket,
+            stock: self.stock,
+            rare: self.rare,
+        }
+    }
 }

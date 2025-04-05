@@ -51,7 +51,7 @@ pub enum Event {
     Disembark(Disembark),
     NpcCrewPaidWage(NpcCrewPaidWage),
     Cargo(Cargo),
-    Market(Market),
+    Market(economy::Market),
     Docked(Docked),
     BookDropship(BookDropship),
     StartJump(StartJump),

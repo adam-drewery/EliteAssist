@@ -5,7 +5,7 @@ use iced::Font;
 
 mod gui;
 mod event;
-mod journal_watcher;
+mod journal;
 mod state;
 mod subscription;
 mod theme;

@@ -195,6 +195,7 @@ fn check_snapshot_file(file_details: &mut FileDetails) -> Option<Event> {
         if file.read_to_string(&mut line).is_ok() {
             file_details.last_modified = modified;
 
+            info!("Snapshot file updated: {}", &line);
             let deserizlize_result = serde_json::from_str(&line);
             if let Ok(event) = deserizlize_result {
                 return event;
@@ -202,10 +203,10 @@ fn check_snapshot_file(file_details: &mut FileDetails) -> Option<Event> {
                 let error_msg = e.to_string();
                 if error_msg.starts_with("unknown variant") {
                     if let Some(first_part) = error_msg.split(',').next() {
-                        error!("Failed to parse journal entry: {}\n{}", first_part, &line);
+                        error!("Failed to parse snapshot entry: {}\n{}", first_part, &line);
                     }
                 } else {
-                    error!("Failed to parse journal entry: {}\n{}", &e, &line);
+                    error!("Failed to parse snapshot entry: {}\n{}", &e, &line);
                 }
             }
         }

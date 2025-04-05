@@ -4,6 +4,7 @@ mod materials;
 mod navigation_bar;
 mod ship_locker;
 mod messages;
+mod market;
 
 use crate::event::Event;
 use crate::state::{ActiveScreen, State};
@@ -14,6 +15,7 @@ use materials::materials;
 use messages::messages;
 use navigation_bar::navigation_bar;
 use ship_locker::ship_locker;
+use crate::gui::market::market;
 
 pub struct Gui;
 
@@ -26,7 +28,7 @@ impl Gui {
                 ActiveScreen::Navigation => row![text("navigation shit")],
                 ActiveScreen::Materials => materials(state),
                 ActiveScreen::ShipLocker => ship_locker(state),
-                ActiveScreen::Market => row![text("market shit")],
+                ActiveScreen::Market => market(state),
                 ActiveScreen::Messages => messages(state),
             }
             .height(Fill),

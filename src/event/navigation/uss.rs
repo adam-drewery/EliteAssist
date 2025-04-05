@@ -8,11 +8,11 @@ pub struct USSDrop {
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "USSType")]
-    pub usstype: String,
+    pub uss_type: String,
 
     #[serde(rename = "USSType_Localised")]
-    pub usstype_localised: String,
+    pub uss_type_localised: String,
 
     #[serde(rename = "USSThreat")]
-    pub ussthreat: u32,
+    pub uss_threat: u32,
 }

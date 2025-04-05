@@ -13,6 +13,7 @@ pub fn messages(state: &State) -> Row<Event> {
                 state
                     .messages
                     .iter()
+                    .filter(|item| !item.from.is_empty())
                     .map(|item| {
 
                         row![
