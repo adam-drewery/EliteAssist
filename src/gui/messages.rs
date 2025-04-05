@@ -14,7 +14,6 @@ pub fn messages(state: &State) -> Row<Event> {
                     .messages
                     .iter()
                     .map(|item| {
-                        let time = item.time.to_rfc2822().trim_end_matches("+0000").to_string();
 
                         row![
                             text(&item.from)
@@ -29,7 +28,7 @@ pub fn messages(state: &State) -> Row<Event> {
                                 .width(Fill)
                                 .align_x(Left),
                             column![
-                                text(time)
+                                text(&item.time_display)
                                     .size(12)
                                     .color(GRAY)
                                     .width(192)

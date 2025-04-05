@@ -6,12 +6,12 @@ mod session;
 mod vehicle;
 mod format;
 
-pub use economy::*;
-pub use inventory::*;
-pub use navigation::*;
-pub use personal::*;
-pub use session::*;
-pub use vehicle::*;
+use economy::*;
+use inventory::*;
+use navigation::*;
+use personal::*;
+use session::*;
+use vehicle::*;
 
 use crate::state::*;
 
@@ -25,7 +25,7 @@ pub enum Event {
     #[serde(rename = "Fileheader")]
     FileHeader(FileHeader),
     Commander(Commander),
-    Materials(Materials),
+    Materials(inventory::Materials),
     Rank(Rank),
     Progress(Progress),
     Reputation(Reputation),
@@ -39,7 +39,7 @@ pub enum Event {
     Music(Music),
     SuitLoadout(Empty),
     Backpack(Empty),
-    ShipLocker(ShipLocker),
+    ShipLocker(inventory::ShipLocker),
     Missions(Empty),
     Shutdown(Empty),
     Loadout(ShipLoadout),
@@ -217,5 +217,5 @@ const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S";
 pub struct Empty {
 
     #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    pub timestamp: DateTime<Utc>
 }

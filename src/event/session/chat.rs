@@ -1,4 +1,7 @@
+use crate::state::{ChatMessage, MessageKind};
 use chrono::{DateTime, Utc};
+use once_cell::sync::Lazy;
+use regex::Regex;
 use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
@@ -34,4 +37,39 @@ pub struct ReceiveText {
 
     #[serde(rename = "Channel")]
     pub channel: String
+}
+
+impl Into<ChatMessage> for ReceiveText {
+    fn into(self) -> ChatMessage {
+        let (text, kind) = sanitize_name(&self.from);
+
+        ChatMessage {
+            time: self.timestamp,
+            time_display: self.timestamp.to_rfc2822().trim_end_matches("+0000").to_string(),
+            text: self.message_localised.unwrap_or(self.message),
+            from: text,
+            kind,
+            channel: self.channel,
+        }
+    }
+}
+
+static NPC_NAME: Lazy<Regex> = Lazy::new(|| Regex::new(r"^\$npc_name_decorate:#name=([^;]+);$").unwrap());
+static SYSTEM_NAME: Lazy<Regex> = Lazy::new(|| Regex::new(r"^\$CHAT_([^;]+);$").unwrap());
+static SHIP_NAME: Lazy<Regex> = Lazy::new(|| Regex::new(r"^\$ShipName_([^;]+);$").unwrap());
+
+fn sanitize_name(name: &String) -> (String, MessageKind) {
+    if let Some(caps) = NPC_NAME.captures(name) {
+        return (caps.get(1).unwrap().as_str().to_string(), MessageKind::Npc);
+    }
+
+    if let Some(caps) = SYSTEM_NAME.captures(name) {
+        return (caps.get(1).unwrap().as_str().to_string(), MessageKind::System);
+    }
+
+    if let Some(caps) = SHIP_NAME.captures(name) {
+        return (caps.get(1).unwrap().as_str().to_string().replace("_", ": "), MessageKind::Ship);
+    }
+
+    (name.to_string(),  MessageKind::Chat)
 }

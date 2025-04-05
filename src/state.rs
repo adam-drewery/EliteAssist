@@ -1,6 +1,11 @@
 mod message;
+mod ship_locker;
+mod material;
 
-use crate::event::{Event, Materials, ShipLocker};
+pub use material::*;
+pub use ship_locker::*;
+
+use crate::event::Event;
 pub use crate::state::message::*;
 use serde::Deserialize;
 use thousands::Separable;
@@ -14,7 +19,12 @@ pub struct State {
     pub ship_locker: ShipLocker,
     pub active_screen: ActiveScreen,
     pub materials: Materials,
-    pub messages: Vec<Message>,
+    pub messages: Vec<ChatMessage>,
+    pub crime: CrimeStats
+}
+
+#[derive(Default)]
+pub struct CrimeStats {
     pub legal_state: String,
     pub active_fine : bool,
     pub wanted : bool,
@@ -40,26 +50,17 @@ impl State {
                 self.commander_name = "CMDR ".to_owned() + &commander.name.to_uppercase();
             }
             Event::Materials(materials) => {
-                let empty = materials.encoded.is_empty() 
-                    && materials.raw.is_empty() 
-                    && materials.manufactured.is_empty();
                 
-                if empty { return; }
-                self.materials = materials;
+                if materials.is_empty() { return; }
+                self.materials = materials.into();
             }
             Event::Location(location) => {
                 self.current_system = location.star_system;
             },
             Event::ShipLocker(ship_locker) => {
 
-                if ship_locker.consumables.is_none()
-                    && ship_locker.components.is_none()
-                    && ship_locker.items.is_none()
-                    && ship_locker.data.is_none() {
-                    return;
-                }
-                
-                self.ship_locker = ship_locker;
+                if ship_locker.is_empty() { return; }
+                self.ship_locker = ship_locker.into();
             }
             Event::Status(status) => {
                 if let Some(balance) = status.balance {
@@ -67,7 +68,7 @@ impl State {
                 }
                 
                 if let Some(legal_state) = status.legal_state {
-                    self.legal_state = legal_state;
+                    self.crime.legal_state = legal_state;
                 }
 
                 if status.body_name.is_some() {
@@ -87,10 +88,10 @@ impl State {
 
             Event::Docked(docked) => {
                 if let Some(active_fine) = docked.active_fine {
-                    self.active_fine = active_fine;
+                    self.crime.active_fine = active_fine;
                 }
                 if let Some(wanted) = docked.wanted {
-                    self.wanted = wanted;
+                    self.crime.wanted = wanted;
                 }
             },
             Event::ReceiveText(text) => {

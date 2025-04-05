@@ -1,4 +1,3 @@
-use crate::event::Material;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
@@ -34,7 +33,7 @@ pub struct EngineerCraft {
     pub apply_experimental_effect: Option<String>,
 
     #[serde(rename = "Ingredients")]
-    pub ingredients: Vec<Material>,
+    pub ingredients: Vec<super::Material>,
 
     #[serde(rename = "Engineer")]
     pub engineer: String,
