@@ -1,42 +1,38 @@
 use crate::event::Event;
-use crate::state::State;
-use crate::theme::{BLACK, GRAY, ORANGE, WHITE, YELLOW};
+use crate::state::{MarketItem, State};
+use crate::theme::{BLACK, ORANGE, WHITE, YELLOW};
 use iced::widget::button::{Status, Style};
-use iced::widget::{button, scrollable};
+use iced::widget::{button, scrollable, Button};
 use iced::widget::{column, row, text, Row};
 use iced::Background::Color;
-use iced::{Fill, Theme};
+use iced::{Element, Fill, Theme};
 
 pub fn market(state: &State) -> Row<Event> {
     row![
         column![
             row![
-                button("NAME").width(Fill).style(column_title_style),
-                button("BUY").width(Fill).style(column_title_style),
-                button("SELL").width(Fill).style(column_title_style),
-                button("STOCK").width(Fill).style(column_title_style),
-                button("DEMAND").width(Fill).style(column_title_style),
-                button("CATEGORY").width(Fill).style(column_title_style),
-                button("PRODUCER").width(Fill).style(column_title_style),
-                button("CONSUMER").width(Fill).style(column_title_style),
+                header("NAME"),
+                header("BUY"),
+                header("SELL"),
+                header("STOCK"),
+                header("DEMAND"),
+                header("CATEGORY"),
+                header("PRODUCER"),
+                header("CONSUMER"),
             ]
             .spacing(20)
             .padding(2)
             .width(Fill),
             scrollable(column(state.market.items.iter().map(|item| {
                 row![
-                    text(&item.name)
-                        .size(20)
-                        .color(if item.rare { YELLOW } else { ORANGE })
-                        .width(Fill),
-                    text(item.buy_price).size(20).color(WHITE).width(Fill),
-                    text(item.sell_price).size(20).color(WHITE).width(Fill),
-                    text(item.stock).size(20).color(GRAY).width(Fill),
-                    text(item.demand).size(20).color(WHITE).width(Fill),
-                    text(&item.category).size(20).color(GRAY).width(Fill),
-                    text(item.producer).size(20).color(GRAY).width(Fill),
-                    text(item.consumer).size(20).color(GRAY).width(Fill),
-                    
+                    name_cell(&item),
+                    cell(item.buy_price),
+                    cell(item.sell_price),
+                    cell(item.stock),
+                    cell(item.demand),
+                    cell(&item.category),
+                    cell(item.producer),
+                    cell(item.consumer),
                 ]
                 .spacing(20)
                 .padding(2)
@@ -46,6 +42,22 @@ pub fn market(state: &State) -> Row<Event> {
         ]
         .width(Fill)
     ]
+}
+
+fn header(name: &str) -> Button<Event> {
+    button(name).width(Fill).style(column_title_style)
+}
+
+fn cell<'a>(value: impl text::IntoFragment<'a>) -> Element<'a, Event> {
+    text(value).size(20).color(WHITE).width(Fill).into()
+}
+
+fn name_cell(item: &MarketItem) -> Element<Event> {
+    text(&item.name)
+        .size(20)
+        .color(if item.rare { YELLOW } else { ORANGE })
+        .width(Fill)
+        .into()
 }
 
 fn column_title_style(_theme: &Theme, _status: Status) -> Style {
