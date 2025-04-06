@@ -1,8 +1,6 @@
 use crate::event::navigation::faction::Faction;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
-use crate::event::format::prettify_date;
-use crate::state::JournalEntry;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct Location {
@@ -146,18 +144,4 @@ pub struct SystemFaction {
 
     #[serde(rename = "FactionState")]
     pub faction_state: Option<String>,
-}
-
-impl Into<JournalEntry> for Location {
-
-    fn into(self) -> JournalEntry {
-        JournalEntry {
-            time: self.timestamp,
-            time_display : prettify_date(&self.timestamp),
-            star_system: self.star_system,
-            station: self.station_name.clone(),
-            body: self.body,
-            text: format!("New location {}", self.station_name.unwrap_or("Unknown Station".to_string())),
-        }
-    }
 }

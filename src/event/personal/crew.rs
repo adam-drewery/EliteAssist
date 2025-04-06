@@ -1,5 +1,8 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
+use thousands::Separable;
+use crate::event::format::prettify_date;
+use crate::state::JournalEntry;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct CrewAssign {
@@ -115,4 +118,91 @@ pub struct NpcCrewPaidWage {
 
     #[serde(rename = "Amount")]
     pub amount: u32,
+}
+
+impl Into<JournalEntry> for CrewAssign {
+    fn into(self) -> JournalEntry {
+        JournalEntry {
+            time: self.timestamp,
+            time_display: prettify_date(&self.timestamp),
+            verb: "Assigned".into(),
+            noun: format!("{} as {}", self.name, self.role)
+        }
+    }
+}
+
+impl Into<JournalEntry> for CrewMemberJoins {
+    fn into(self) -> JournalEntry {
+        JournalEntry {
+            time: self.timestamp,
+            time_display: prettify_date(&self.timestamp),
+            verb: "Crew Joined".into(),
+            noun: format!("{} {}", self.crew, if self.telepresence { "remotely" } else { "to crew" }),
+        }
+    }
+}
+
+impl Into<JournalEntry> for CrewMemberQuits {
+    fn into(self) -> JournalEntry {
+        JournalEntry {
+            time: self.timestamp,
+            time_display: prettify_date(&self.timestamp),
+            verb: "Crew Left".into(),
+            noun: format!("{} {}", self.crew, if self.telepresence { "remote session" } else { "crew" }),
+        }
+    }
+}
+impl Into<JournalEntry> for CrewMemberRoleChange {
+    fn into(self) -> JournalEntry {
+        JournalEntry {
+            time: self.timestamp,
+            time_display: prettify_date(&self.timestamp),
+            verb: "Assigned role".into(),
+            noun: format!("{} to {}", self.role, self.crew)
+        }
+    }
+}
+
+impl Into<JournalEntry> for EndCrewSession {
+    fn into(self) -> JournalEntry {
+        JournalEntry {
+            time: self.timestamp,
+            time_display: prettify_date(&self.timestamp),
+            verb: "Ended".into(),
+            noun: if self.telepresence { "remote session".into() } else { "crew session".into() },
+        }
+    }
+}
+
+impl Into<JournalEntry> for NpcCrewRank {
+    fn into(self) -> JournalEntry {
+        JournalEntry {
+            time: self.timestamp,
+            time_display: prettify_date(&self.timestamp),
+            verb: "Promoted crew member".into(),
+            noun: self.npc_crew_name,
+        }
+    }
+}
+
+impl Into<JournalEntry> for ChangeCrewRole {
+    fn into(self) -> JournalEntry {
+        JournalEntry {
+            time: self.timestamp,
+            time_display: prettify_date(&self.timestamp),
+            verb: "Changed role to".into(),
+            noun: self.role,
+        }
+    }
+}
+
+impl Into<JournalEntry> for NpcCrewPaidWage {
+    fn into(self) -> JournalEntry {
+        JournalEntry {
+            time: self.timestamp,
+            time_display: prettify_date(&self.timestamp),
+            verb: "Paid".into(),
+            noun: format!("{} to {}", self.amount.separate_with_commas(), self.npc_crew_name)
+        }
+    }
 }

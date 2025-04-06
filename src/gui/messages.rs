@@ -64,22 +64,6 @@ fn messages_column(state: &State) -> Column<Event> {
         .align_x(Left)
 }
 
-fn join_location_parts(system: &str, body: &str, station: &Option<String>) -> String {
-    let mut parts = Vec::new();
-    if !system.is_empty() {
-        parts.push(system);
-    }
-    if !body.is_empty() {
-        parts.push(body);
-    }
-    if let Some(station) = station {
-        if !station.is_empty() && !station.eq(body) {
-            parts.push(station);
-        }
-    }
-    parts.join(" | ")
-}
-
 fn journal_column(state: &State) -> Column<Event> {
     column![
             text("JOURNAL").size(20).color(ORANGE),
@@ -88,19 +72,20 @@ fn journal_column(state: &State) -> Column<Event> {
                     .journal
                     .iter()
                     .map(|item| {
-                        let location = join_location_parts(&item.star_system, &item.body, &item.station);
                         row![
-                            text(location)
+                            column![text(&item.verb).color(ORANGE).size(16)]
+                                .padding([0, 4])
+                                .width(192)
+                                .align_x(Right),
+
+                            text(&item.noun)
                                 .size(16)
-                                .color(GRAY)
-                                .width(384)
-                                .height(16)
-                                .align_x(Right)
-                                .wrapping(Wrapping::None),
-                            column![text(&item.text).color(WHITE).size(16)]
-                                .padding([0, 8])
+                                .color(WHITE)
                                 .width(Fill)
-                                .align_x(Left),
+                                .height(16)
+                                .align_x(Left)
+                                .wrapping(Wrapping::None),
+
                             text(&item.time_display)
                                 .size(12)
                                     .color(GRAY)

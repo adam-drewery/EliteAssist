@@ -5,10 +5,9 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct Embark {
-
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
-    
+
     #[serde(rename = "SRV")]
     pub srv: bool,
 
@@ -49,17 +48,30 @@ pub struct Embark {
     pub market_id: Option<u64>,
 }
 
-impl Into<JournalEntry> for Embark {
-
-    fn into(self) -> JournalEntry {
-
+impl Embark {
+    pub fn into(self, verb: &str) -> JournalEntry {
         JournalEntry {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
-            text: "Disembarked".to_owned(),
-            star_system: self.star_system,
-            station: self.station_name,
-            body: self.body,
+            verb: verb.to_owned(),
+            noun: join_location_parts(&self.star_system, &self.body, &self.station_name),
         }
     }
+}
+
+fn join_location_parts(system: &String, body: &String, station: &Option<String>) -> String {
+    let mut parts = Vec::new();
+
+    if !system.is_empty() {
+        parts.push(system.as_str());
+    }
+    if !body.is_empty() {
+        parts.push(body.as_str());
+    }
+    if let Some(station) = station {
+        if !station.is_empty() && !Some(station.to_string()).eq(&Some(body.to_string())) {
+            parts.push(station.as_str());
+        }
+    }
+    parts.join(" | ")
 }
