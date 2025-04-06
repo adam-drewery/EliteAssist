@@ -10,7 +10,7 @@ pub struct Status {
     pub flags: u32,
 
     #[serde(rename = "Flags2")]
-    pub flags2: Option<u16>,
+    pub flags2: Option<u32>,
 
     #[serde(rename = "Oxygen")]
     pub oxygen: Option<f64>,

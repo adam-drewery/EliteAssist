@@ -1,5 +1,5 @@
 use crate::event::format::prettify_date;
-use crate::state::{ChatMessage, MessageKind};
+use crate::state::{Channel, ChatMessage, Kind};
 use chrono::{DateTime, Utc};
 use once_cell::sync::Lazy;
 use regex::Regex;
@@ -50,7 +50,14 @@ impl Into<ChatMessage> for ReceiveText {
             text: self.message_localised.unwrap_or(self.message),
             from: text,
             kind,
-            channel: self.channel,
+            channel: match self.channel.as_str() {
+                "local" => Channel::Local,
+                "npc" => Channel::Npc,
+                "starsystem" => Channel::StarSystem,
+                "squadron" => Channel::Squadron,
+                "squadleaders" => Channel::SquadLeaders,
+                _ => panic!("Unknown message channel: {}", self.channel)
+            },
         }
     }
 }
@@ -59,18 +66,18 @@ static NPC_NAME: Lazy<Regex> = Lazy::new(|| Regex::new(r"^\$npc_name_decorate:#n
 static SYSTEM_NAME: Lazy<Regex> = Lazy::new(|| Regex::new(r"^\$CHAT_([^;]+);$").unwrap());
 static SHIP_NAME: Lazy<Regex> = Lazy::new(|| Regex::new(r"^\$ShipName_([^;]+);$").unwrap());
 
-fn sanitize_name(name: &String) -> (String, MessageKind) {
+fn sanitize_name(name: &String) -> (String, Kind) {
     if let Some(caps) = NPC_NAME.captures(name) {
-        return (caps.get(1).unwrap().as_str().to_string(), MessageKind::Npc);
+        return (caps.get(1).unwrap().as_str().to_string(), Kind::Npc);
     }
 
     if let Some(caps) = SYSTEM_NAME.captures(name) {
-        return (caps.get(1).unwrap().as_str().to_string(), MessageKind::System);
+        return (caps.get(1).unwrap().as_str().to_string(), Kind::System);
     }
 
     if let Some(caps) = SHIP_NAME.captures(name) {
-        return (caps.get(1).unwrap().as_str().to_string().replace("_", ": "), MessageKind::Ship);
+        return (caps.get(1).unwrap().as_str().to_string().replace("_", ": "), Kind::Ship);
     }
 
-    (name.to_string(),  MessageKind::Chat)
+    (name.to_string(), Kind::Chat)
 }

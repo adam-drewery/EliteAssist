@@ -1,7 +1,7 @@
-use chrono::{DateTime, Utc};
-use serde::Deserialize;
 use crate::event::format::prettify_date;
 use crate::state::JournalEntry;
+use chrono::{DateTime, Utc};
+use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct FighterDestroyed {

@@ -5,13 +5,21 @@ pub struct ChatMessage {
     pub time_display: String,
     pub from: String,
     pub text: String,
-    pub kind: MessageKind,
-    pub channel: String,
+    pub kind: Kind,
+    pub channel: Channel,
 }
 
-pub enum MessageKind {
+pub enum Kind {
     Chat,
     System,
     Ship,
     Npc
+}
+
+pub enum Channel {
+    Local,
+    Npc,
+    StarSystem,
+    Squadron,
+    SquadLeaders
 }

@@ -1,29 +1,46 @@
 use crate::event::Event;
 use crate::state::State;
-use iced::widget::{column, row, Row};
+use crate::theme::styles::header_style;
+use crate::theme::{GRAY, RED};
+use iced::widget::{button, column, row, text, Column, Row};
 use iced::{Fill, Top};
 
 pub fn commander_details(state: &State) -> Row<Event> {
 
     row![
-        column![
         legal_status(state),
         missions(state),
         messages(state),
-        ],
+        
     ]
     .align_y(Top)
     .height(Fill)
 }
 
-fn legal_status(state: &State) -> Row<Event> {
-    row![ state.commander_name.as_ref() ]
+fn legal_status(state: &State) -> Column<Event> {
+    column![ 
+        button("LEGAL").style(header_style).width(Fill),
+        row!["Legal State: ", text(&state.crime.legal_state)],
+        if state.crime.active_fine { text("Active Fine").color(RED).width(Fill) }
+            else { text("No Active Fine").color(GRAY).width(Fill) },
+        if state.crime.wanted { text("Wanted").color(RED).width(Fill) }
+            else { text("Not Wanted").color(GRAY).width(Fill) },
+    ]
+    .padding(8)
 }
 
-fn missions(state: &State) -> Row<Event> {
-    row![ state.commander_name.as_ref() ]
+fn missions(state: &State) -> Column<Event> {
+    column![ 
+        button("SHIP").style(header_style).width(Fill),
+        text(&state.commander_name),
+    ]
+    .padding(8)
 }
 
-fn messages(state: &State) -> Row<Event> {
-    row![ state.commander_name.as_ref() ]
+fn messages(state: &State) -> Column<Event> {
+    column![ 
+        button("LOCATION").style(header_style).width(Fill),
+        text(&state.commander_name),
+    ]
+    .padding(8)
 }

@@ -1,6 +1,6 @@
 use crate::event::Event;
-use crate::state::{MessageKind, State};
-use crate::theme::{GRAY, ORANGE, WHITE};
+use crate::state::{Channel, State};
+use crate::theme::{GRAY, ORANGE, WHITE, YELLOW};
 use iced::widget::text::Wrapping;
 use iced::widget::{column, row, scrollable, text, Column, Row};
 use iced::{Color, Element, Fill, Left, Right};
@@ -13,12 +13,12 @@ pub fn messages(state: &State) -> Row<Event> {
     .padding([0, 10])
 }
 
-pub fn name_color(kind: &MessageKind) -> Color {
+pub fn name_color(kind: &Channel) -> Color {
     match kind {
-        MessageKind::Chat => ORANGE,
-        MessageKind::System => GRAY,
-        MessageKind::Ship => GRAY,
-        MessageKind::Npc => GRAY,
+        Channel::Local => GRAY,
+        Channel::Squadron => ORANGE,
+        Channel::SquadLeaders => YELLOW,
+        _ => GRAY,
     }
 }
 
@@ -35,7 +35,7 @@ fn messages_column(state: &State) -> Column<Event> {
                         row![
                             text(&item.from)
                                 .size(16)
-                                .color(name_color(&item.kind))
+                                .color(name_color(&item.channel))
                                 .width(192)
                                 .height(16)
                                 .align_x(Right)

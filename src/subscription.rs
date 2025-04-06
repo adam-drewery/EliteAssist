@@ -10,9 +10,9 @@ fn stream_events() -> impl Stream<Item =Event> {
     let (sender, receiver) = mpsc::channel(16);
 
     tokio::spawn(async move {
-        let mut poller = JournalWatcher::new();
+        let mut watcher = JournalWatcher::new();
         loop {
-            let input = poller.next().await;
+            let input = watcher.next().await;
             sender.send(input).await.unwrap();
         }
     });

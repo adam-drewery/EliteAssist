@@ -1,8 +1,8 @@
+use crate::event::format::prettify_date;
+use crate::state::JournalEntry;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 use thousands::Separable;
-use crate::event::format::prettify_date;
-use crate::state::JournalEntry;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct CrewAssign {

@@ -29,3 +29,19 @@ pub const PALETTE: Palette = Palette {
 pub fn theme(_state: &State) -> Theme {
     Theme::custom("Elite".into(), PALETTE)
 }
+
+pub mod styles {
+    use crate::theme::{BLACK, ORANGE};
+    use iced::widget::button::{Status, Style};
+    use iced::Background::Color;
+    use iced::Theme;
+
+    pub fn header_style(_theme: &Theme, _status: Status) -> Style {
+        Style {
+            background: Some(Color(ORANGE)),
+            text_color: BLACK,
+            border: Default::default(),
+            shadow: Default::default(),
+        }
+    }
+}

@@ -108,6 +108,7 @@ impl State {
             }
 
             Event::ReceiveText(e) => {
+                if e.channel == "npc" || e.channel == "starsystem" { return; }
                 self.messages.push(e.into());
             }
 

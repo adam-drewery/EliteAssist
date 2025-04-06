@@ -192,7 +192,7 @@ fn check_snapshot_file(file_details: &mut FileDetails) -> Option<Event> {
     if modified > file_details.last_modified {
         let mut line = String::new();
         let mut file = File::open(&file_details.path).unwrap();
-        if file.read_to_string(&mut line).is_ok() {
+        if file.read_to_string(&mut line).is_ok() && !line.is_empty() {
             file_details.last_modified = modified;
 
             info!("Snapshot file updated: {}", &line);

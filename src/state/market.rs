@@ -1,13 +1,17 @@
 #[derive(Default)]
 pub struct Market {
     pub id: u64,
+    pub groups: Vec<MarketItemGroup>,
+}
+
+pub struct MarketItemGroup {
+    pub name: String,
     pub items: Vec<MarketItem>,
 }
 
 pub struct MarketItem {
     pub id: u64,
     pub name: String,
-    pub category: String,
     pub buy_price: u32,
     pub sell_price: u32,
     pub mean_price: u32,
