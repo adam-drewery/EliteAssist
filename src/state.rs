@@ -3,12 +3,16 @@ mod market;
 mod material;
 mod message;
 mod ship_locker;
+mod ship_loadout;
+mod suit_loadout;
 
 pub use journal_entry::*;
 pub use market::*;
 pub use material::*;
 pub use message::*;
 pub use ship_locker::*;
+pub use ship_loadout::*;
+pub use suit_loadout::*;
 
 use crate::event::Event;
 use serde::Deserialize;
@@ -21,6 +25,8 @@ pub struct State {
     pub current_system: String,
     pub current_body: String,
     pub ship_locker: ShipLocker,
+    pub ship_loadout: ShipLoadout,
+    pub suit_loadout: SuitLoadout,
     pub active_screen: ActiveScreen,
     pub materials: Materials,
     pub messages: Vec<ChatMessage>,
@@ -127,11 +133,15 @@ impl State {
             Event::Statistics(_) => {}
             Event::Powerplay(_) => {}
             Event::Music(_) => {}
-            Event::SuitLoadout(_) => {}
+            Event::SuitLoadout(e) => {
+                self.suit_loadout = e.into();
+            }
             Event::Backpack(_) => {}
             Event::Missions(_) => {}
             Event::Shutdown(_) => {}
-            Event::Loadout(_) => {}
+            Event::Loadout(e) => {
+                self.ship_loadout = e.into();
+            }
             Event::BuyAmmo(e) => {
                 self.journal.push(e.into())
             }

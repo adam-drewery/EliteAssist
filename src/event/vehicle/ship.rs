@@ -1,4 +1,3 @@
-use crate::event::Engineering;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
@@ -102,7 +101,6 @@ pub struct StoredShips {
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct ShipLoadout {
-
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -146,9 +144,29 @@ pub struct ShipLoadout {
     pub modules: Vec<ShipModule>
 }
 
+impl Into<crate::state::ShipLoadout> for ShipLoadout {
+    fn into(self) -> crate::state::ShipLoadout {
+        crate::state::ShipLoadout {
+            timestamp: self.timestamp,
+            ship: self.ship,
+            ship_id: self.ship_id,
+            ship_name: self.ship_name,
+            ship_ident: self.ship_ident,
+            hull_value: self.hull_value,
+            modules_value: self.modules_value,
+            hull_health: self.hull_health,
+            unladen_mass: self.unladen_mass,
+            cargo_capacity: self.cargo_capacity,
+            max_jump_range: self.max_jump_range,
+            fuel_capacity: self.fuel_capacity.into(),
+            rebuy: self.rebuy,
+            modules: self.modules.into_iter().map(|m| m.into()).collect(),
+        }
+    }
+}
+
 #[derive(Deserialize, Debug, Clone)]
 pub struct ShipModule {
-
     #[serde(rename = "Slot")]
     pub slot: String,
 
@@ -174,15 +192,41 @@ pub struct ShipModule {
     pub ammo_in_hopper: Option<u64>,
 
     #[serde(rename = "Engineering")]
-    pub engineering: Option<Engineering>,
+    pub engineering: Option<crate::event::inventory::Engineering>,
+}
+
+impl Into<crate::state::ShipModule> for ShipModule {
+    fn into(self) -> crate::state::ShipModule {
+        crate::state::ShipModule {
+            slot: self.slot,
+            item: self.item,
+            on: self.on,
+            priority: self.priority,
+            health: self.health,
+            value: self.value,
+            ammo_in_clip: self.ammo_in_clip,
+            ammo_in_hopper: self.ammo_in_hopper,
+            engineering: self.engineering.map(|e| e.into()),
+        }
+    }
 }
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct FuelCapacity {
-
     #[serde(rename = "Main")]
     pub main: f64,
 
     #[serde(rename = "Reserve")]
     pub reserve: f64,
 }
+
+impl Into<crate::state::FuelCapacity> for FuelCapacity {
+    fn into(self) -> crate::state::FuelCapacity {
+        crate::state::FuelCapacity {
+            main: self.main,
+            reserve: self.reserve,
+        }
+    }
+}
+
+

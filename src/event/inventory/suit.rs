@@ -3,7 +3,6 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Default, Clone)]
 pub struct SuitModule {
-
     #[serde(rename = "SlotName")]
     pub slot_name: String,
 
@@ -128,4 +127,36 @@ pub struct LoadoutEquipModule {
 
     #[serde(rename = "SuitModuleID")]
     pub suit_module_id: u64,
+}
+
+impl Into<crate::state::SuitLoadout> for SuitLoadout {
+    
+    fn into(self) -> crate::state::SuitLoadout {
+        crate::state::SuitLoadout {
+            timestamp: self.timestamp,
+            suit_id: self.suit_id,
+            suit_name: self.suit_name,
+            suit_name_localised: self.suit_name_localised,
+            suit_mods: self.suit_mods.unwrap_or_default(),
+            loadout_id: self.loadout_id,
+            loadout_name: self.loadout_name,
+            modules: self.modules.unwrap_or_default()
+                .into_iter()
+                .map(|module| module.into())
+                .collect(),
+        }
+    }
+}
+
+impl Into<crate::state::SuitModule> for SuitModule {
+    fn into(self) -> crate::state::SuitModule {
+        crate::state::SuitModule {
+            slot_name: self.slot_name,
+            suit_module_id: self.suit_module_id,
+            module_name: self.module_name,
+            module_name_localised: self.module_name_localised,
+            class: self.class,
+            weapon_mods: self.weapon_mods,
+        }
+    }
 }

@@ -1,5 +1,5 @@
 use crate::event::Event;
-use log::{error, info};
+use log::{debug, error, info};
 use std::fs::{File, OpenOptions};
 use std::io;
 use std::io::{BufRead, BufReader, Read, Seek, SeekFrom};
@@ -195,7 +195,7 @@ fn check_snapshot_file(file_details: &mut FileDetails) -> Option<Event> {
         if file.read_to_string(&mut line).is_ok() && !line.is_empty() {
             file_details.last_modified = modified;
 
-            info!("Snapshot file updated: {}", &line);
+            debug!("Snapshot file updated: {}", &line);
             let deserizlize_result = serde_json::from_str(&line);
             if let Ok(event) = deserizlize_result {
                 return event;

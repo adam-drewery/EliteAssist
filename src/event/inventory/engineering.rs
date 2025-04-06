@@ -3,7 +3,6 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct Modifier {
-
     #[serde(rename = "Label")]
     pub label: String,
 
@@ -97,7 +96,6 @@ pub struct EngineerProgress {
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct Engineer {
-
     #[serde(rename = "Engineer")]
     pub engineer: String,
 
@@ -143,4 +141,31 @@ pub struct Engineering {
 
     #[serde(rename = "Modifiers")]
     pub modifiers: Vec<Modifier>,
+}
+
+impl Into<crate::state::Engineering> for Engineering {
+    fn into(self) -> crate::state::Engineering {
+        crate::state::Engineering {
+            engineer: self.engineer,
+            engineer_id: self.engineer_id,
+            blueprint_id: self.blueprint_id,
+            blueprint_name: self.blueprint_name,
+            level: self.level,
+            quality: self.quality,
+            experimental_effect: self.experimental_effect,
+            experimental_effect_localised: self.experimental_effect_localised,
+            modifiers: self.modifiers.into_iter().map(|m| m.into()).collect(),
+        }
+    }
+}
+
+impl Into<crate::state::Modifier> for Modifier {
+    fn into(self) -> crate::state::Modifier {
+        crate::state::Modifier {
+            label: self.label,
+            value: self.value,
+            original_value: self.original_value,
+            less_is_good: self.less_is_good,
+        }
+    }
 }
