@@ -21,7 +21,7 @@ pub fn market(state: &State) -> Row<Event> {
             .padding(2)
             .width(Fill),
             scrollable(column(state.market.groups.iter().flat_map(|group| {
-                let mut rows = vec![text(&group.name)
+                let mut rows = vec![text(group.name.to_uppercase())
                     .size(20)
                     .color(GRAY)
                     .align_x(Left)
