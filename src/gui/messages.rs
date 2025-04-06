@@ -86,12 +86,13 @@ fn journal_column(state: &State) -> Column<Event> {
                                 .align_x(Left)
                                 .wrapping(Wrapping::None),
 
-                            text(&item.time_display)
+                            column![text(&item.time_display)
                                 .size(12)
                                     .color(GRAY)
                                     .width(192)
                                     .height(16)
-                                    .align_x(Right)
+                                    .align_x(Right)]
+                                .padding([0, 8])
                         ]
                         .padding(2)
                     })
