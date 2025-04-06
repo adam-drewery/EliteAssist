@@ -7,6 +7,7 @@ mod messages;
 mod market;
 
 use crate::event::Event;
+use crate::gui::market::market;
 use crate::state::{ActiveScreen, State};
 use header_bar::header_bar;
 use iced::widget::{column, row, text};
@@ -15,7 +16,6 @@ use materials::materials;
 use messages::messages;
 use navigation_bar::navigation_bar;
 use ship_locker::ship_locker;
-use crate::gui::market::market;
 
 pub struct Gui;
 

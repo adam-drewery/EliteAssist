@@ -26,8 +26,6 @@ fn navigation_button<'a>(state: &State, title: &'a str, screen: ActiveScreen) ->
     iced::widget::column![button(title).on_press(click_event).style(style)].padding(5)
 }
 
-// I'm sure there must be a better way to do this.
-
 fn selected_style(_theme: &Theme, _status: Status) -> Style {
 
     Style {

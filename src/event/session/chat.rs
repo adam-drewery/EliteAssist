@@ -1,3 +1,4 @@
+use crate::event::format::prettify_date;
 use crate::state::{ChatMessage, MessageKind};
 use chrono::{DateTime, Utc};
 use once_cell::sync::Lazy;
@@ -45,7 +46,7 @@ impl Into<ChatMessage> for ReceiveText {
 
         ChatMessage {
             time: self.timestamp,
-            time_display: self.timestamp.to_rfc2822().trim_end_matches("+0000").to_string(),
+            time_display: prettify_date(&self.timestamp),
             text: self.message_localised.unwrap_or(self.message),
             from: text,
             kind,

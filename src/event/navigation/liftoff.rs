@@ -39,4 +39,10 @@ pub struct Liftoff {
 
     #[serde(rename = "Longitude")]
     pub longitude: f64,
+
+    #[serde(rename = "NearestDestination")]
+    pub nearest_destination: Option<String>,
+
+    #[serde(rename = "NearestDestination_Localised")]
+    pub nearest_destination_localised: Option<String>,
 }

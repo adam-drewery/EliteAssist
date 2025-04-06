@@ -1,7 +1,7 @@
-use chrono::{DateTime, Utc};
-use serde::Deserialize;
 use crate::state;
 use crate::text::title_case;
+use chrono::{DateTime, Utc};
+use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct MarketItem {

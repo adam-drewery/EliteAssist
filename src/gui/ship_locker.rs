@@ -16,9 +16,9 @@ pub fn ship_locker(state: &State) -> Row<Event> {
     .height(Fill)
 }
 
-pub fn locker_item_list<'a>(title: &'a str, items: &[ShipLockerItem]) -> Column<'a, Event> {
+pub fn locker_item_list<'a>(title: &'a str, items: &'a [ShipLockerItem]) -> Column<'a, Event> {
 
-    iced::widget::column![
+    column![
         text(title).size(20).color(ORANGE),
         scrollable(column(
             items
@@ -27,7 +27,7 @@ pub fn locker_item_list<'a>(title: &'a str, items: &[ShipLockerItem]) -> Column<
                     let color = if item.for_mission { BLUE } else { Color::WHITE };
                     row![
                         text(item.count).size(16).color(YELLOW).width(36),
-                        text(item.display_name()).color(color).size(16)
+                        text(&item.name).color(color).size(16)
                     ]
                     .padding(2)
                 })

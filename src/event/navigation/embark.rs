@@ -1,3 +1,5 @@
+use crate::event::format::prettify_date;
+use crate::state::JournalEntry;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
@@ -17,7 +19,7 @@ pub struct Embark {
     pub multicrew: bool,
 
     #[serde(rename = "ID")]
-    pub id: Option<u32>,
+    pub id: Option<u64>,
 
     #[serde(rename = "StarSystem")]
     pub star_system: String,
@@ -44,5 +46,20 @@ pub struct Embark {
     pub station_type: Option<String>,
 
     #[serde(rename = "MarketID")]
-    pub market_id: Option<u32>,
+    pub market_id: Option<u64>,
+}
+
+impl Into<JournalEntry> for Embark {
+
+    fn into(self) -> JournalEntry {
+
+        JournalEntry {
+            time: self.timestamp,
+            time_display: prettify_date(&self.timestamp),
+            text: "Disembarked".to_owned(),
+            star_system: self.star_system,
+            station: self.station_name,
+            body: self.body,
+        }
+    }
 }

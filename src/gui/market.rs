@@ -1,11 +1,11 @@
 use crate::event::Event;
 use crate::state::State;
 use crate::theme::{BLACK, GRAY, ORANGE, WHITE, YELLOW};
+use iced::widget::button::{Status, Style};
 use iced::widget::{button, scrollable};
 use iced::widget::{column, row, text, Row};
-use iced::{Fill, Theme};
 use iced::Background::Color;
-use iced::widget::button::{Status, Style};
+use iced::{Fill, Theme};
 
 pub fn market(state: &State) -> Row<Event> {
     row![
