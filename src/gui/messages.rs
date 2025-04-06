@@ -102,12 +102,11 @@ fn journal_column(state: &State) -> Column<Event> {
                                 .width(Fill)
                                 .align_x(Left),
                             text(&item.time_display)
-                                .size(16)
-                                .color(GRAY)
-                                .width(384)
-                                .height(16)
-                                .align_x(Right)
-                                .wrapping(Wrapping::None),
+                                .size(12)
+                                    .color(GRAY)
+                                    .width(192)
+                                    .height(16)
+                                    .align_x(Right)
                         ]
                         .padding(2)
                     })
