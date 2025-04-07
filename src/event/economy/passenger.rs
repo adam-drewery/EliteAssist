@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Passenger {
 
     #[serde(rename = "MissionID")]
@@ -20,7 +20,7 @@ pub struct Passenger {
     pub count: u32,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Passengers {
 
     #[serde(with = "crate::event::format::date")]

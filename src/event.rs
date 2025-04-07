@@ -18,7 +18,7 @@ use crate::state::*;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 #[serde(tag = "event")]
 pub enum Event {
 
@@ -206,14 +206,11 @@ pub enum Event {
     DeleteSuitLoadout(inventory::SuitLoadout),
 
     NavigateTo(ActiveScreen),
-
-    #[default]
-    None,
 }
 
 const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S";
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Empty {
 
     #[serde(with = "crate::event::format::date")]

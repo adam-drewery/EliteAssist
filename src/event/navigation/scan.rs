@@ -162,7 +162,7 @@ pub struct Scan {
     pub was_mapped: bool,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ScanBaryCentre {
 
     #[serde(with = "crate::event::format::date")]
@@ -199,7 +199,7 @@ pub struct ScanBaryCentre {
     pub mean_anomaly: f64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ScanOrganic {
 
     #[serde(with = "crate::event::format::date")]
@@ -233,7 +233,7 @@ pub struct ScanOrganic {
     pub body: u32,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Scanned {
 
     #[serde(with = "crate::event::format::date")]
@@ -243,7 +243,7 @@ pub struct Scanned {
     pub scan_type: String,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct DataScanned {
 
     #[serde(with = "crate::event::format::date")]
@@ -256,7 +256,7 @@ pub struct DataScanned {
     pub type_localised: String,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct DiscoveryScan {
 
     #[serde(with = "crate::event::format::date")]
@@ -269,7 +269,7 @@ pub struct DiscoveryScan {
     pub bodies: u32,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct NavBeaconScan {
 
     #[serde(with = "crate::event::format::date")]

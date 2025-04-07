@@ -62,7 +62,7 @@ pub struct EngineerCraft {
     pub modifiers: Vec<Modifier>,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct EngineerContribution {
 
     #[serde(with = "crate::event::format::date")]
@@ -84,7 +84,7 @@ pub struct EngineerContribution {
     pub total_quantity: u32,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct EngineerProgress {
 
     #[serde(with = "crate::event::format::date")]

@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct TopTier {
 
     #[serde(rename = "Name")]
@@ -11,7 +11,7 @@ pub struct TopTier {
     pub bonus: String,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct CurrentGoal {
 
     #[serde(rename = "CGID")]
@@ -54,7 +54,7 @@ pub struct CurrentGoal {
     pub bonus: u32,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct CommunityGoal {
 
     #[serde(with = "crate::event::format::date")]
@@ -64,7 +64,7 @@ pub struct CommunityGoal {
     pub current_goals: Vec<CurrentGoal>,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct CommunityGoalJoin {
 
     #[serde(with = "crate::event::format::date")]
@@ -80,7 +80,7 @@ pub struct CommunityGoalJoin {
     pub system: String,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct CommunityGoalReward {
 
     #[serde(with = "crate::event::format::date")]

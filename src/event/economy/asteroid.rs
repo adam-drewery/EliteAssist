@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct AsteroidCracked {
 
     #[serde(with = "crate::event::format::date")]
@@ -11,7 +11,7 @@ pub struct AsteroidCracked {
     pub body: String,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct AsteroidMaterial {
 
     #[serde(rename = "Name")]
@@ -24,7 +24,7 @@ pub struct AsteroidMaterial {
     pub proportion: f64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ProspectedAsteroid {
 
     #[serde(with = "crate::event::format::date")]

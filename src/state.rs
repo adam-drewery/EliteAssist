@@ -56,6 +56,7 @@ pub enum ActiveScreen {
 impl State {
     pub fn update_from(&mut self, event: Event) {
         match event {
+
             Event::Commander(commander) => {
                 self.commander_name = "CMDR ".to_owned() + &commander.name.to_uppercase();
             }
@@ -133,27 +134,35 @@ impl State {
             Event::Statistics(_) => {}
             Event::Powerplay(_) => {}
             Event::Music(_) => {}
+
             Event::SuitLoadout(e) => {
                 self.suit_loadout = e.into();
             }
+
             Event::Backpack(_) => {}
             Event::Missions(_) => {}
             Event::Shutdown(_) => {}
+
             Event::Loadout(e) => {
                 self.ship_loadout = e.into();
             }
+
             Event::BuyAmmo(e) => {
                 self.journal.push(e.into())
             }
+
             Event::RestockVehicle(e) => {
                 self.journal.push(e.into())
             }
+
             Event::BuyMicroResources(_) => {}
+
             Event::NpcCrewPaidWage(e) => {
 
                 if e.amount == 0 { return; }
                 self.journal.push(e.into())
             }
+
             Event::Cargo(_) => {}
             Event::BookDropship(_) => {}
             Event::StartJump(_) => {}
@@ -232,16 +241,22 @@ impl State {
             Event::ShipTargeted(_) => {}
             Event::EjectCargo(_) => {}
             Event::HullDamage(_) => {}
+
             Event::CrewAssign(e) => {
                 self.journal.push(e.into())
+
             }
+
             Event::DockFighter(e) => {
                 self.journal.push(e.into())
             }
+
             Event::CommunityGoal(_) => {}
+
             Event::LaunchFighter(e) => {
                 self.journal.push(e.into())
             }
+
             Event::Scanned(_) => {}
             Event::Friends(_) => {}
             Event::BackpackChange(_) => {}
@@ -267,15 +282,19 @@ impl State {
             Event::SearchAndRescue(_) => {}
             Event::ShipyardNew(_) => {}
             Event::CommunityGoalReward(_) => {}
+
             Event::CrewMemberJoins(e) => {
                 self.journal.push(e.into())
             }
+
             Event::Interdicted(_) => {}
             Event::SellOrganicData(_) => {}
             Event::DockSRV(_) => {}
+
             Event::FighterDestroyed(e) => {
                 self.journal.push(e.into())
             }
+
             Event::ModuleSwap(_) => {}
             Event::MaterialDiscovered(_) => {}
             Event::DataScanned(_) => {}
@@ -284,17 +303,23 @@ impl State {
             Event::ModuleSellRemote(_) => {}
             Event::AfmuRepairs(_) => {}
             Event::CommunityGoalJoin(_) => {}
+
             Event::NpcCrewRank(e) => {
                 self.journal.push(e.into())
             }
+
             Event::LoadoutEquipModule(_) => {}
+
             Event::FighterRebuilt(e) => {
                 self.journal.push(e.into())
             }
+
             Event::PowerplayJoin(_) => {}
+
             Event::CrewMemberRoleChange(e) => {
                 self.journal.push(e.into())
             }
+
             Event::SelfDestruct(_) => {}
             Event::BookTaxi(_) => {}
             Event::MarketSell(_) => {}
@@ -303,9 +328,11 @@ impl State {
             Event::ProspectedAsteroid(_) => {}
             Event::SRVDestroyed(_) => {}
             Event::DiscoveryScan(_) => {}
+
             Event::CrewLaunchFighter(e) => {
                 self.journal.push(e.into())
             }
+
             Event::BuyWeapon(_) => {}
             Event::RenameSuitLoadout(_) => {}
             Event::MiningRefined(_) => {}
@@ -314,23 +341,27 @@ impl State {
             Event::SellMicroResources(_) => {}
             Event::UpgradeSuit(_) => {}
             Event::AppliedToSquadron(_) => {}
+
             Event::CrewMemberQuits(e) => {
                 self.journal.push(e.into())
             }
+
             Event::ChangeCrewRole(e) => {
                 self.journal.push(e.into())
             }
+
             Event::AsteroidCracked(_) => {}
             Event::DatalinkVoucher(_) => {}
             Event::DeliverPowerMicroResources(_) => {}
             Event::Interdiction(_) => {}
+
             Event::EndCrewSession(e) => {
                 self.journal.push(e.into())
             }
+
             Event::BuySuit(_) => {}
             Event::SellSuit(_) => {}
             Event::DeleteSuitLoadout(_) => {}
-            Event::None => {}
         }
     }
 }

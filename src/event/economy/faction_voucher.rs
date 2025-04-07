@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct FactionVoucher {
 
     #[serde(rename = "Faction")]
@@ -11,7 +11,7 @@ pub struct FactionVoucher {
     pub amount: u32,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct RedeemVoucher {
 
     #[serde(with = "crate::event::format::date")]

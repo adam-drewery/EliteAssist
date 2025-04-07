@@ -25,7 +25,7 @@ pub struct DropshipDeploy {
     pub on_planet: bool,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct BookDropship {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,

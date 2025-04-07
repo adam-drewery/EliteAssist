@@ -73,7 +73,7 @@ pub struct Market {
     pub items: Option<Vec<MarketItem>>,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct MarketBuy {
 
     #[serde(with = "crate::event::format::date")]
@@ -98,7 +98,7 @@ pub struct MarketBuy {
     pub total_cost: u32,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct MarketSell {
 
     #[serde(with = "crate::event::format::date")]

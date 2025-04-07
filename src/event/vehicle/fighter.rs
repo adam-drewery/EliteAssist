@@ -3,7 +3,7 @@ use crate::state::JournalEntry;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct FighterDestroyed {
 
     #[serde(with = "crate::event::format::date")]
@@ -24,7 +24,7 @@ impl Into<JournalEntry> for FighterDestroyed {
     }
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct FighterRebuilt {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
@@ -47,7 +47,7 @@ impl Into<JournalEntry> for FighterRebuilt {
     }
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct DockFighter {
 
     #[serde(with = "crate::event::format::date")]
@@ -68,7 +68,7 @@ impl Into<JournalEntry> for DockFighter {
     }
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct CrewLaunchFighter {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
@@ -91,7 +91,7 @@ impl Into<JournalEntry> for CrewLaunchFighter {
     }
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct LaunchFighter {
 
     #[serde(with = "crate::event::format::date")]

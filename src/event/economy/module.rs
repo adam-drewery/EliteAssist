@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ModuleBuy {
 
     #[serde(with = "crate::event::format::date")]
@@ -35,7 +35,7 @@ pub struct ModuleBuy {
     pub ship_id: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ModuleRetrieve {
 
     #[serde(with = "crate::event::format::date")]
@@ -72,7 +72,7 @@ pub struct ModuleRetrieve {
     pub quality: Option<f64>,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ModuleSell {
 
     #[serde(with = "crate::event::format::date")]
@@ -100,7 +100,7 @@ pub struct ModuleSell {
     pub ship_id: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ModuleSellRemote {
 
     #[serde(with = "crate::event::format::date")]
@@ -128,7 +128,7 @@ pub struct ModuleSellRemote {
     pub ship_id: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ModuleStore {
 
     #[serde(with = "crate::event::format::date")]

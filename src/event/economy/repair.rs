@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Repair {
 
     #[serde(with = "crate::event::format::date")]
@@ -14,7 +14,7 @@ pub struct Repair {
     pub cost: u32,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct RepairAll {
 
     #[serde(with = "crate::event::format::date")]

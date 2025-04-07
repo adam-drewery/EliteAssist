@@ -5,7 +5,7 @@ use once_cell::sync::Lazy;
 use regex::Regex;
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct SendText {
 
     #[serde(with = "crate::event::format::date")]
@@ -21,7 +21,7 @@ pub struct SendText {
     pub sent: bool,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ReceiveText {
 
     #[serde(with = "crate::event::format::date")]

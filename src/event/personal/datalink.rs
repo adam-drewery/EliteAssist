@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct DatalinkScan {
 
     #[serde(with = "crate::event::format::date")]
@@ -14,7 +14,7 @@ pub struct DatalinkScan {
     pub message_localised: String,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct DatalinkVoucher {
 
     #[serde(with = "crate::event::format::date")]

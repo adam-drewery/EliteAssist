@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct TradedMaterial {
 
     #[serde(rename = "Material")]
@@ -14,7 +14,7 @@ pub struct TradedMaterial {
     pub quantity: u32,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct MaterialTrade {
 
     #[serde(with = "crate::event::format::date")]

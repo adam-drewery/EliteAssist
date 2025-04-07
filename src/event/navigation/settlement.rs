@@ -2,7 +2,7 @@ use crate::event::navigation::station::*;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ApproachSettlement {
 
     #[serde(with = "crate::event::format::date")]

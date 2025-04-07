@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct SetUserShipName {
 
     #[serde(with = "crate::event::format::date")]
@@ -20,7 +20,7 @@ pub struct SetUserShipName {
     pub user_ship_id: String,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct AfmuRepairs {
 
     #[serde(with = "crate::event::format::date")]
@@ -39,7 +39,7 @@ pub struct AfmuRepairs {
     pub health: f64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct HullDamage {
 
     #[serde(with = "crate::event::format::date")]
@@ -55,7 +55,7 @@ pub struct HullDamage {
     pub fighter: Option<bool>,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Ship {
 
     #[serde(rename = "ShipID")]
@@ -77,7 +77,7 @@ pub struct Ship {
     pub ship_type_localised: Option<String>,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct StoredShips {
 
     #[serde(with = "crate::event::format::date")]
@@ -99,7 +99,7 @@ pub struct StoredShips {
     pub ships_remote: Vec<Ship>,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ShipLoadout {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
@@ -211,7 +211,7 @@ impl Into<crate::state::ShipModule> for ShipModule {
     }
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct FuelCapacity {
     #[serde(rename = "Main")]
     pub main: f64,

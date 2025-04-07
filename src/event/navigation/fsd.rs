@@ -114,7 +114,7 @@ pub struct FSDJump {
     pub system_faction: Option<SystemFaction>,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct FSDTarget {
 
     #[serde(with = "crate::event::format::date")]
@@ -133,7 +133,7 @@ pub struct FSDTarget {
     pub remaining_jumps_in_route: Option<u32>,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct SupercruiseEntry {
 
     #[serde(with = "crate::event::format::date")]
@@ -152,7 +152,7 @@ pub struct SupercruiseEntry {
     pub system_address: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct SupercruiseExit {
 
     #[serde(with = "crate::event::format::date")]
@@ -180,7 +180,7 @@ pub struct SupercruiseExit {
     pub body_type: String,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct SupercruiseDestinationDrop {
 
     #[serde(with = "crate::event::format::date")]
@@ -207,7 +207,7 @@ pub struct StartJump {
     pub taxi: bool,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct JetConeBoost {
 
     #[serde(with = "crate::event::format::date")]

@@ -3,7 +3,7 @@ use chrono::{DateTime, Utc};
 use serde::Deserialize;
 use std::collections::HashMap;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ShipLocker {
 
     #[serde(with = "crate::event::format::date")]
@@ -100,7 +100,7 @@ pub struct StoredModules {
     pub items: Vec<StoredModule>,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ModuleSwap {
 
     #[serde(with = "crate::event::format::date")]
@@ -134,7 +134,7 @@ pub struct ModuleSwap {
     pub ship_id: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct FetchRemoteModule {
 
     #[serde(with = "crate::event::format::date")]

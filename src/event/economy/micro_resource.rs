@@ -26,7 +26,7 @@ pub struct BuyMicroResources {
     pub market_id: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct MicroResource {
 
     #[serde(rename = "Name")]
@@ -42,7 +42,7 @@ pub struct MicroResource {
     pub count: i64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct DeliverPowerMicroResources {
 
     #[serde(with = "crate::event::format::date")]
@@ -58,7 +58,7 @@ pub struct DeliverPowerMicroResources {
     pub market_id: i64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct OfferedMicroResource {
 
     #[serde(rename = "Name")]
@@ -74,7 +74,7 @@ pub struct OfferedMicroResource {
     pub count: u32,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct TradeMicroResources {
 
     #[serde(with = "crate::event::format::date")]
@@ -99,7 +99,7 @@ pub struct TradeMicroResources {
     pub market_id: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct SellMicroResources {
 
     #[serde(with = "crate::event::format::date")]

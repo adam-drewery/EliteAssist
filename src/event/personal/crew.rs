@@ -4,7 +4,7 @@ use chrono::{DateTime, Utc};
 use serde::Deserialize;
 use thousands::Separable;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct CrewAssign {
 
     #[serde(with = "crate::event::format::date")]
@@ -20,7 +20,7 @@ pub struct CrewAssign {
     pub role: String,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct CrewMemberJoins {
 
     #[serde(with = "crate::event::format::date")]
@@ -33,7 +33,7 @@ pub struct CrewMemberJoins {
     pub telepresence: bool,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct CrewMemberQuits {
 
     #[serde(with = "crate::event::format::date")]
@@ -46,7 +46,7 @@ pub struct CrewMemberQuits {
     pub telepresence: bool,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct CrewMemberRoleChange {
 
     #[serde(with = "crate::event::format::date")]
@@ -62,7 +62,7 @@ pub struct CrewMemberRoleChange {
     pub telepresence: bool,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct EndCrewSession {
 
     #[serde(with = "crate::event::format::date")]
@@ -75,7 +75,7 @@ pub struct EndCrewSession {
     pub telepresence: bool,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct NpcCrewRank {
 
     #[serde(with = "crate::event::format::date")]
@@ -91,7 +91,7 @@ pub struct NpcCrewRank {
     pub rank_combat: u32,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct ChangeCrewRole {
 
     #[serde(with = "crate::event::format::date")]

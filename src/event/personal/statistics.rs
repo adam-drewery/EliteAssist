@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Statistics {
 
     #[serde(with = "crate::event::format::date")]
@@ -56,7 +56,7 @@ pub struct Statistics {
     pub exobiology: Exobiology
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Crafting {
 
     #[serde(rename = "Count_Of_Used_Engineers")]
@@ -105,7 +105,7 @@ pub struct Crafting {
     pub weapon_mods_applied_full: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Exobiology {
 
     #[serde(rename = "Organic_Genus_Encountered")]
@@ -142,7 +142,7 @@ pub struct Exobiology {
     pub organic_species: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct BankAccount {
 
     #[serde(rename = "Current_Wealth")]
@@ -194,7 +194,7 @@ pub struct BankAccount {
     pub premium_stock_bought: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Cqc {
 
     #[serde(rename = "CQC_Credits_Earned")]
@@ -213,7 +213,7 @@ pub struct Cqc {
     pub cqc_wl: f64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Combat {
 
     #[serde(rename = "Bounties_Claimed")]
@@ -298,7 +298,7 @@ pub struct Combat {
     pub on_foot_scavs_killed: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Crime {
 
     #[serde(rename = "Notoriety")]
@@ -371,7 +371,7 @@ pub struct Crime {
     pub profiles_cloned: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Smuggling {
 
     #[serde(rename = "Black_Markets_Traded_With")]
@@ -390,7 +390,7 @@ pub struct Smuggling {
     pub highest_single_transaction: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Trading {
 
     #[serde(rename = "Markets_Traded_With")]
@@ -418,7 +418,7 @@ pub struct Trading {
     pub assets_sold: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Mining {
 
     #[serde(rename = "Mining_Profits")]
@@ -431,7 +431,7 @@ pub struct Mining {
     pub materials_collected: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Exploration {
 
     #[serde(rename = "Systems_Visited")]
@@ -486,7 +486,7 @@ pub struct Exploration {
     pub settlements_visited: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Passengers {
 
     #[serde(rename = "Passengers_Missions_Accepted")]
@@ -508,7 +508,7 @@ pub struct Passengers {
     pub passengers_missions_ejected: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct SearchAndRescue {
 
     #[serde(rename = "SearchRescue_Traded")]
@@ -545,7 +545,7 @@ pub struct SearchAndRescue {
     pub settlements_state_reboot: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct TgEncounters {
 
     #[serde(rename = "TG_ENCOUNTER_KILLED")]
@@ -564,7 +564,7 @@ pub struct TgEncounters {
     pub tg_encounter_total_last_ship: Option<String>,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Crew {
 
     #[serde(rename = "NpcCrew_TotalWages")]
@@ -580,7 +580,7 @@ pub struct Crew {
     pub npc_crew_died: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct Multicrew {
 
     #[serde(rename = "Multicrew_Time_Total")]
@@ -599,7 +599,7 @@ pub struct Multicrew {
     pub multicrew_fines_total: u64,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct MaterialTraderStats {
 
     #[serde(rename = "Trades_Completed")]

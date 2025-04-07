@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct BackpackItem {
 
     #[serde(rename = "Name")]
@@ -20,7 +20,7 @@ pub struct BackpackItem {
     pub r#type: String,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct BackpackChange {
 
     #[serde(with = "crate::event::format::date")]

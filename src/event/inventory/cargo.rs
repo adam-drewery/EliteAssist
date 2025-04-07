@@ -55,7 +55,7 @@ pub struct CollectCargo {
     pub mission_id: Option<u32>,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct EjectCargo {
 
     #[serde(with = "crate::event::format::date")]

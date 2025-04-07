@@ -12,7 +12,7 @@ pub use ship::*;
 pub use srv::*;
 pub use taxi::*;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct VehicleSwitch {
     
     #[serde(with = "crate::event::format::date")]

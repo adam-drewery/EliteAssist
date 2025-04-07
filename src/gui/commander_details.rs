@@ -9,8 +9,8 @@ pub fn commander_details(state: &State) -> Row<Event> {
 
     row![
         legal_status(state),
-        missions(state),
-        messages(state),
+        ship(state),
+        location(state),
         
     ]
     .align_y(Top)
@@ -29,15 +29,17 @@ fn legal_status(state: &State) -> Column<Event> {
     .padding(8)
 }
 
-fn missions(state: &State) -> Column<Event> {
+fn ship(state: &State) -> Column<Event> {
     column![ 
         button("SHIP").style(header_style).width(Fill),
-        text(&state.commander_name),
+        text(&state.ship_loadout.hull_health),
+        text(&state.ship_loadout.ship_name),
+        text(&state.ship_loadout.ship_ident),
     ]
     .padding(8)
 }
 
-fn messages(state: &State) -> Column<Event> {
+fn location(state: &State) -> Column<Event> {
     column![ 
         button("LOCATION").style(header_style).width(Fill),
         text(&state.commander_name),

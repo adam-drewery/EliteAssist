@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct SuitModule {
     #[serde(rename = "SlotName")]
     pub slot_name: String,
@@ -22,7 +22,7 @@ pub struct SuitModule {
     pub weapon_mods: Vec<String>,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct SuitLoadout {
 
     #[serde(with = "crate::event::format::date")]
@@ -50,7 +50,7 @@ pub struct SuitLoadout {
     pub modules: Option<Vec<SuitModule>>,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct SuitUpgradeResource {
 
     #[serde(rename = "Name")]
@@ -63,7 +63,7 @@ pub struct SuitUpgradeResource {
     pub count: u32,
 }
 
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct UpgradeSuit {
 
     #[serde(with = "crate::event::format::date")]
@@ -89,7 +89,7 @@ pub struct UpgradeSuit {
 }
 
 /// Event raised when a module (suit or weapon) is added to the current loadout.
-#[derive(Deserialize, Debug, Default, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct LoadoutEquipModule {
 
     #[serde(with = "crate::event::format::date")]
@@ -130,7 +130,7 @@ pub struct LoadoutEquipModule {
 }
 
 impl Into<crate::state::SuitLoadout> for SuitLoadout {
-    
+
     fn into(self) -> crate::state::SuitLoadout {
         crate::state::SuitLoadout {
             timestamp: self.timestamp,
