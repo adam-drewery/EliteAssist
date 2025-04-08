@@ -1,5 +1,5 @@
 use crate::event::format::prettify_date;
-use crate::state::JournalEntry;
+use crate::state::GameActivity;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 use thousands::Separable;
@@ -120,9 +120,9 @@ pub struct NpcCrewPaidWage {
     pub amount: u32,
 }
 
-impl Into<JournalEntry> for CrewAssign {
-    fn into(self) -> JournalEntry {
-        JournalEntry {
+impl Into<GameActivity> for CrewAssign {
+    fn into(self) -> GameActivity {
+        GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Assigned".into(),
@@ -131,9 +131,9 @@ impl Into<JournalEntry> for CrewAssign {
     }
 }
 
-impl Into<JournalEntry> for CrewMemberJoins {
-    fn into(self) -> JournalEntry {
-        JournalEntry {
+impl Into<GameActivity> for CrewMemberJoins {
+    fn into(self) -> GameActivity {
+        GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Crew Joined".into(),
@@ -142,9 +142,9 @@ impl Into<JournalEntry> for CrewMemberJoins {
     }
 }
 
-impl Into<JournalEntry> for CrewMemberQuits {
-    fn into(self) -> JournalEntry {
-        JournalEntry {
+impl Into<GameActivity> for CrewMemberQuits {
+    fn into(self) -> GameActivity {
+        GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Crew Left".into(),
@@ -152,9 +152,9 @@ impl Into<JournalEntry> for CrewMemberQuits {
         }
     }
 }
-impl Into<JournalEntry> for CrewMemberRoleChange {
-    fn into(self) -> JournalEntry {
-        JournalEntry {
+impl Into<GameActivity> for CrewMemberRoleChange {
+    fn into(self) -> GameActivity {
+        GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Assigned role".into(),
@@ -163,9 +163,9 @@ impl Into<JournalEntry> for CrewMemberRoleChange {
     }
 }
 
-impl Into<JournalEntry> for EndCrewSession {
-    fn into(self) -> JournalEntry {
-        JournalEntry {
+impl Into<GameActivity> for EndCrewSession {
+    fn into(self) -> GameActivity {
+        GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Ended".into(),
@@ -174,9 +174,9 @@ impl Into<JournalEntry> for EndCrewSession {
     }
 }
 
-impl Into<JournalEntry> for NpcCrewRank {
-    fn into(self) -> JournalEntry {
-        JournalEntry {
+impl Into<GameActivity> for NpcCrewRank {
+    fn into(self) -> GameActivity {
+        GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Promoted crew member".into(),
@@ -185,9 +185,9 @@ impl Into<JournalEntry> for NpcCrewRank {
     }
 }
 
-impl Into<JournalEntry> for ChangeCrewRole {
-    fn into(self) -> JournalEntry {
-        JournalEntry {
+impl Into<GameActivity> for ChangeCrewRole {
+    fn into(self) -> GameActivity {
+        GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Changed role to".into(),
@@ -196,9 +196,9 @@ impl Into<JournalEntry> for ChangeCrewRole {
     }
 }
 
-impl Into<JournalEntry> for NpcCrewPaidWage {
-    fn into(self) -> JournalEntry {
-        JournalEntry {
+impl Into<GameActivity> for NpcCrewPaidWage {
+    fn into(self) -> GameActivity {
+        GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Paid".into(),

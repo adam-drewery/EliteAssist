@@ -84,33 +84,6 @@ pub struct EngineerContribution {
     pub total_quantity: u32,
 }
 
-#[derive(Deserialize, Debug, Clone)]
-pub struct EngineerProgress {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Engineers")]
-    pub engineers: Option<Vec<Engineer>>,
-}
-
-#[derive(Deserialize, Debug, Clone)]
-pub struct Engineer {
-    #[serde(rename = "Engineer")]
-    pub engineer: String,
-
-    #[serde(rename = "EngineerID")]
-    pub engineer_id: u64,
-
-    #[serde(rename = "Progress")]
-    pub progress: String,
-
-    #[serde(rename = "RankProgress")]
-    pub rank_progress: Option<u8>,
-
-    #[serde(rename = "Rank")]
-    pub rank: Option<u8>,
-}
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct Engineering {

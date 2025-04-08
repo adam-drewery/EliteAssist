@@ -1,5 +1,5 @@
 use crate::event::format::prettify_date;
-use crate::state::JournalEntry;
+use crate::state::GameActivity;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
@@ -13,9 +13,9 @@ pub struct FighterDestroyed {
     pub id: u64,
 }
 
-impl Into<JournalEntry> for FighterDestroyed {
-    fn into(self) -> JournalEntry {
-        JournalEntry {
+impl Into<GameActivity> for FighterDestroyed {
+    fn into(self) -> GameActivity {
+        GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Destroyed fighter".into(),
@@ -36,9 +36,9 @@ pub struct FighterRebuilt {
     pub id: u64,
 }
 
-impl Into<JournalEntry> for FighterRebuilt {
-    fn into(self) -> JournalEntry {
-        JournalEntry {
+impl Into<GameActivity> for FighterRebuilt {
+    fn into(self) -> GameActivity {
+        GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Rebuilt fighter".into(),
@@ -57,9 +57,9 @@ pub struct DockFighter {
     pub id: u64,
 }
 
-impl Into<JournalEntry> for DockFighter {
-    fn into(self) -> JournalEntry {
-        JournalEntry {
+impl Into<GameActivity> for DockFighter {
+    fn into(self) -> GameActivity {
+        GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Docked fighter".into(),
@@ -80,9 +80,9 @@ pub struct CrewLaunchFighter {
     pub crew: String,
 }
 
-impl Into<JournalEntry> for CrewLaunchFighter {
-    fn into(self) -> JournalEntry {
-        JournalEntry {
+impl Into<GameActivity> for CrewLaunchFighter {
+    fn into(self) -> GameActivity {
+        GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Launched fighter by".into(),
@@ -107,9 +107,9 @@ pub struct LaunchFighter {
     pub player_controlled: bool,
 }
 
-impl Into<JournalEntry> for LaunchFighter {
-    fn into(self) -> JournalEntry {
-        JournalEntry {
+impl Into<GameActivity> for LaunchFighter {
+    fn into(self) -> GameActivity {
+        GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Launched fighter".into(),

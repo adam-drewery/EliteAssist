@@ -29,7 +29,7 @@ pub enum Event {
     Rank(personal::Rank),
     Progress(personal::Rank),
     Reputation(personal::Reputation),
-    EngineerProgress(EngineerProgress),
+    EngineerProgress(personal::EngineerProgress),
     SquadronStartup(SquadronStartup),
     LoadGame(LoadGame),
     Statistics(Statistics),
@@ -213,8 +213,4 @@ pub struct Empty {
 
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>
-}
-
-trait JournalEvent {
-    fn handle(self, state: &mut State);
 }

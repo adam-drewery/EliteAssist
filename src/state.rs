@@ -1,18 +1,20 @@
-mod journal_entry;
+mod activity;
 mod market;
 mod material;
 mod message;
 mod ship;
 mod suit;
 mod personal;
+mod engineering;
 
-pub use journal_entry::*;
+pub use activity::*;
+pub use engineering::*;
 pub use market::*;
 pub use material::*;
 pub use message::*;
+pub use personal::*;
 pub use ship::*;
 pub use suit::*;
-pub use personal::*;
 
 use crate::event::Event;
 use serde::Deserialize;
@@ -30,11 +32,12 @@ pub struct State {
     pub active_screen: ActiveScreen,
     pub materials: Materials,
     pub messages: Vec<ChatMessage>,
-    pub journal: Vec<JournalEntry>,
+    pub journal: Vec<GameActivity>,
     pub crime: CrimeStats,
     pub market: Market,
     pub rank: Rank,
-    pub reputation: Reputation
+    pub reputation: Reputation,
+    pub engineers: EngineerProgress,
 }
 
 #[derive(Deserialize, Default, Clone, Debug)]
@@ -49,7 +52,9 @@ pub enum ActiveScreen {
 }
 
 impl State {
+
     pub fn update_from(&mut self, event: Event) {
+
         match event {
 
             Event::Commander(commander) => {
@@ -64,7 +69,6 @@ impl State {
             Event::Location(e) => {
                 self.current_system = e.star_system.clone();
                 self.current_body = e.body.clone();
-                //self.journal.push(location.into());
             }
 
             Event::ShipLocker(e) => {
@@ -113,25 +117,25 @@ impl State {
                 self.market = e.into();
             }
 
-            Event::Rank(e) => { self.rank = e.into(); }
+            Event::Rank(e) => { self.rank = e.into() }
 
-            Event::Progress(e) => { self.rank = e.into(); }
+            Event::Progress(e) => { self.rank = e.into() }
 
             Event::Reputation(e) => { self.reputation = e.into() }
 
-            Event::EngineerProgress(_) => {}
+            Event::EngineerProgress(e) => { self.engineers = e.into() }
             Event::SquadronStartup(_) => {}
             Event::Statistics(_) => {}
             Event::Powerplay(_) => {}
             Event::Music(_) => {}
 
-            Event::SuitLoadout(e) => { self.suit_loadout = e.into(); }
+            Event::SuitLoadout(e) => { self.suit_loadout = e.into() }
 
             Event::Backpack(_) => {}
             Event::Missions(_) => {}
             Event::Shutdown(_) => {}
 
-            Event::Loadout(e) => { self.ship_loadout = e.into(); }
+            Event::Loadout(e) => { self.ship_loadout = e.into() }
 
             Event::BuyAmmo(e) => { self.journal.push(e.into()) }
 

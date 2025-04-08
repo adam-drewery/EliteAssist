@@ -1,5 +1,5 @@
 use crate::event::format::prettify_date;
-use crate::state::JournalEntry;
+use crate::state::GameActivity;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 use thousands::Separable;
@@ -22,9 +22,9 @@ pub struct RestockVehicle {
     pub count: u64
 }
 
-impl Into<JournalEntry> for RestockVehicle {
-    fn into(self) -> JournalEntry {
-        JournalEntry {
+impl Into<GameActivity> for RestockVehicle {
+    fn into(self) -> GameActivity {
+        GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Restocked".into(),

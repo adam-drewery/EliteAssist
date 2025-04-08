@@ -1,5 +1,5 @@
 use crate::event::format::prettify_date;
-use crate::state::JournalEntry;
+use crate::state::GameActivity;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
@@ -49,8 +49,8 @@ pub struct Embark {
 }
 
 impl Embark {
-    pub fn into(self, verb: &str) -> JournalEntry {
-        JournalEntry {
+    pub fn into(self, verb: &str) -> GameActivity {
+        GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: verb.to_owned(),

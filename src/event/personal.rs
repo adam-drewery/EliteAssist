@@ -15,6 +15,7 @@ mod resurrect;
 mod squadron;
 mod statistics;
 mod status;
+mod engineering;
 
 pub use codex_entry::*;
 pub use commander::*;
@@ -23,6 +24,7 @@ pub use crew::*;
 pub use crime::*;
 pub use datalink::*;
 pub use died::*;
+pub use engineering::*;
 pub use friend::*;
 pub use mission::*;
 pub use powerplay::*;
