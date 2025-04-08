@@ -11,6 +11,7 @@ mod subscription;
 mod theme;
 mod image;
 mod text;
+mod fdev_ids;
 
 const FONT_BYTES: &[u8] = include_bytes!("font/eurostile.ttf");
 

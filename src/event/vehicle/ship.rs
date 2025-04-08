@@ -1,5 +1,6 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
+use crate::fdev_ids::outfitting_details;
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct SetUserShipName {
@@ -197,9 +198,11 @@ pub struct ShipModule {
 
 impl Into<crate::state::ShipModule> for ShipModule {
     fn into(self) -> crate::state::ShipModule {
+        let details = outfitting_details(&self.item);
+
         crate::state::ShipModule {
             slot: self.slot,
-            item: self.item,
+            item: details.map(|d| d.name.clone()).unwrap_or(self.item),
             on: self.on,
             priority: self.priority,
             health: self.health,
