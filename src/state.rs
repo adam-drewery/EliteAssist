@@ -2,17 +2,17 @@ mod journal_entry;
 mod market;
 mod material;
 mod message;
-mod ship_locker;
-mod ship_loadout;
-mod suit_loadout;
+mod ship;
+mod suit;
+mod personal;
 
 pub use journal_entry::*;
 pub use market::*;
 pub use material::*;
 pub use message::*;
-pub use ship_locker::*;
-pub use ship_loadout::*;
-pub use suit_loadout::*;
+pub use ship::*;
+pub use suit::*;
+pub use personal::*;
 
 use crate::event::Event;
 use serde::Deserialize;
@@ -33,13 +33,8 @@ pub struct State {
     pub journal: Vec<JournalEntry>,
     pub crime: CrimeStats,
     pub market: Market,
-}
-
-#[derive(Default)]
-pub struct CrimeStats {
-    pub legal_state: String,
-    pub active_fine: bool,
-    pub wanted: bool,
+    pub rank: Rank,
+    pub reputation: Reputation
 }
 
 #[derive(Deserialize, Default, Clone, Debug)]
@@ -101,17 +96,11 @@ impl State {
                 self.journal.push(e.into("Embarked"));
             }
 
-            Event::NavigateTo(e) => {
-                self.active_screen = e;
-            }
+            Event::NavigateTo(e) => { self.active_screen = e; }
 
             Event::Docked(e) => {
-                if let Some(active_fine) = e.active_fine {
-                    self.crime.active_fine = active_fine;
-                }
-                if let Some(wanted) = e.wanted {
-                    self.crime.wanted = wanted;
-                }
+                if let Some(active_fine) = e.active_fine { self.crime.active_fine = active_fine; }
+                if let Some(wanted) = e.wanted { self.crime.wanted = wanted; }
             }
 
             Event::ReceiveText(e) => {
@@ -124,36 +113,29 @@ impl State {
                 self.market = e.into();
             }
 
-            Event::FileHeader(_) => {}
-            Event::Rank(_) => {}
-            Event::Progress(_) => {}
-            Event::Reputation(_) => {}
+            Event::Rank(e) => { self.rank = e.into(); }
+
+            Event::Progress(e) => { self.rank = e.into(); }
+
+            Event::Reputation(e) => { self.reputation = e.into() }
+
             Event::EngineerProgress(_) => {}
             Event::SquadronStartup(_) => {}
-            Event::LoadGame(_) => {}
             Event::Statistics(_) => {}
             Event::Powerplay(_) => {}
             Event::Music(_) => {}
 
-            Event::SuitLoadout(e) => {
-                self.suit_loadout = e.into();
-            }
+            Event::SuitLoadout(e) => { self.suit_loadout = e.into(); }
 
             Event::Backpack(_) => {}
             Event::Missions(_) => {}
             Event::Shutdown(_) => {}
 
-            Event::Loadout(e) => {
-                self.ship_loadout = e.into();
-            }
+            Event::Loadout(e) => { self.ship_loadout = e.into(); }
 
-            Event::BuyAmmo(e) => {
-                self.journal.push(e.into())
-            }
+            Event::BuyAmmo(e) => { self.journal.push(e.into()) }
 
-            Event::RestockVehicle(e) => {
-                self.journal.push(e.into())
-            }
+            Event::RestockVehicle(e) => { self.journal.push(e.into()) }
 
             Event::BuyMicroResources(_) => {}
 
@@ -242,20 +224,13 @@ impl State {
             Event::EjectCargo(_) => {}
             Event::HullDamage(_) => {}
 
-            Event::CrewAssign(e) => {
-                self.journal.push(e.into())
+            Event::CrewAssign(e) => { self.journal.push(e.into()) }
 
-            }
-
-            Event::DockFighter(e) => {
-                self.journal.push(e.into())
-            }
+            Event::DockFighter(e) => { self.journal.push(e.into()) }
 
             Event::CommunityGoal(_) => {}
 
-            Event::LaunchFighter(e) => {
-                self.journal.push(e.into())
-            }
+            Event::LaunchFighter(e) => { self.journal.push(e.into()) }
 
             Event::Scanned(_) => {}
             Event::Friends(_) => {}
@@ -283,17 +258,13 @@ impl State {
             Event::ShipyardNew(_) => {}
             Event::CommunityGoalReward(_) => {}
 
-            Event::CrewMemberJoins(e) => {
-                self.journal.push(e.into())
-            }
+            Event::CrewMemberJoins(e) => { self.journal.push(e.into()) }
 
             Event::Interdicted(_) => {}
             Event::SellOrganicData(_) => {}
             Event::DockSRV(_) => {}
 
-            Event::FighterDestroyed(e) => {
-                self.journal.push(e.into())
-            }
+            Event::FighterDestroyed(e) => { self.journal.push(e.into()) }
 
             Event::ModuleSwap(_) => {}
             Event::MaterialDiscovered(_) => {}
@@ -304,21 +275,15 @@ impl State {
             Event::AfmuRepairs(_) => {}
             Event::CommunityGoalJoin(_) => {}
 
-            Event::NpcCrewRank(e) => {
-                self.journal.push(e.into())
-            }
+            Event::NpcCrewRank(e) => { self.journal.push(e.into()) }
 
             Event::LoadoutEquipModule(_) => {}
 
-            Event::FighterRebuilt(e) => {
-                self.journal.push(e.into())
-            }
+            Event::FighterRebuilt(e) => { self.journal.push(e.into()) }
 
             Event::PowerplayJoin(_) => {}
 
-            Event::CrewMemberRoleChange(e) => {
-                self.journal.push(e.into())
-            }
+            Event::CrewMemberRoleChange(e) => { self.journal.push(e.into()) }
 
             Event::SelfDestruct(_) => {}
             Event::BookTaxi(_) => {}
@@ -329,9 +294,7 @@ impl State {
             Event::SRVDestroyed(_) => {}
             Event::DiscoveryScan(_) => {}
 
-            Event::CrewLaunchFighter(e) => {
-                self.journal.push(e.into())
-            }
+            Event::CrewLaunchFighter(e) => { self.journal.push(e.into()) }
 
             Event::BuyWeapon(_) => {}
             Event::RenameSuitLoadout(_) => {}
@@ -342,26 +305,24 @@ impl State {
             Event::UpgradeSuit(_) => {}
             Event::AppliedToSquadron(_) => {}
 
-            Event::CrewMemberQuits(e) => {
-                self.journal.push(e.into())
-            }
+            Event::CrewMemberQuits(e) => { self.journal.push(e.into()) }
 
-            Event::ChangeCrewRole(e) => {
-                self.journal.push(e.into())
-            }
+            Event::ChangeCrewRole(e) => { self.journal.push(e.into()) }
 
             Event::AsteroidCracked(_) => {}
             Event::DatalinkVoucher(_) => {}
             Event::DeliverPowerMicroResources(_) => {}
             Event::Interdiction(_) => {}
 
-            Event::EndCrewSession(e) => {
-                self.journal.push(e.into())
-            }
+            Event::EndCrewSession(e) => { self.journal.push(e.into()) }
 
             Event::BuySuit(_) => {}
             Event::SellSuit(_) => {}
-            Event::DeleteSuitLoadout(_) => {}
+            Event::DeleteSuitLoadout(_) => {},
+
+            // ignore these events, they seem pointless
+            Event::FileHeader(_) => {},
+            Event::LoadGame(_) => {}
         }
     }
 }

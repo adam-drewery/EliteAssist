@@ -26,9 +26,9 @@ pub enum Event {
     FileHeader(FileHeader),
     Commander(Commander),
     Materials(inventory::Materials),
-    Rank(Rank),
-    Progress(Progress),
-    Reputation(Reputation),
+    Rank(personal::Rank),
+    Progress(personal::Rank),
+    Reputation(personal::Reputation),
     EngineerProgress(EngineerProgress),
     SquadronStartup(SquadronStartup),
     LoadGame(LoadGame),
@@ -208,11 +208,13 @@ pub enum Event {
     NavigateTo(ActiveScreen),
 }
 
-const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S";
-
 #[derive(Deserialize, Debug, Clone)]
 pub struct Empty {
 
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>
+}
+
+trait JournalEvent {
+    fn handle(self, state: &mut State);
 }

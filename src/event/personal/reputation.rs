@@ -19,3 +19,15 @@ pub struct Reputation {
     #[serde(rename = "Alliance")]
     pub alliance: f64
 }
+
+impl Into<crate::state::Reputation> for Reputation {
+    fn into(self) -> crate::state::Reputation {
+        crate::state::Reputation {
+            timestamp: self.timestamp,
+            empire: self.empire,
+            federation: self.federation,
+            independent: self.independent,
+            alliance: self.alliance,
+        }
+    }
+}
