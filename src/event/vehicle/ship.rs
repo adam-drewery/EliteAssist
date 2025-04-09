@@ -198,11 +198,18 @@ pub struct ShipModule {
 
 impl Into<crate::state::ShipModule> for ShipModule {
     fn into(self) -> crate::state::ShipModule {
-        let details = Outfitting::metadata(&self.item);
+        
+        let (class, rating, name) = Outfitting::metadata(&self.item)
+            .map(|details| (
+                details.class.parse().unwrap_or(0),
+                details.rating.chars().next().unwrap_or('X'),
+                details.name.clone()
+            ))
+            .unwrap_or((0, 'X', self.item.clone()));
 
         crate::state::ShipModule {
             slot: self.slot.into(),
-            item: details.map(|d| d.name.clone()).unwrap_or(self.item),
+            name,
             on: self.on,
             priority: self.priority,
             health: self.health,
@@ -210,6 +217,8 @@ impl Into<crate::state::ShipModule> for ShipModule {
             ammo_in_clip: self.ammo_in_clip,
             ammo_in_hopper: self.ammo_in_hopper,
             engineering: self.engineering.map(|e| e.into()),
+            class,
+            rating,
         }
     }
 }
