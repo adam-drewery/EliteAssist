@@ -2,7 +2,7 @@ use crate::event::navigation::faction::Faction;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Location {
 
     #[serde(with = "crate::event::format::date")]
@@ -123,7 +123,7 @@ pub struct Location {
     pub system_faction: Option<SystemFaction>
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct StationEconomy {
 
     #[serde(rename = "Name")]
@@ -136,7 +136,7 @@ pub struct StationEconomy {
     pub proportion: f64,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct SystemFaction {
 
     #[serde(rename = "Name")]

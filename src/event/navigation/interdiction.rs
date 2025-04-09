@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Interdiction {
 
     #[serde(with = "crate::event::format::date")]
@@ -17,7 +17,7 @@ pub struct Interdiction {
     pub faction: String,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct EscapeInterdiction {
 
     #[serde(with = "crate::event::format::date")]
@@ -30,7 +30,7 @@ pub struct EscapeInterdiction {
     pub is_player: bool,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Interdicted {
 
     #[serde(with = "crate::event::format::date")]

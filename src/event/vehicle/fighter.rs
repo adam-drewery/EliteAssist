@@ -3,7 +3,7 @@ use crate::state::GameActivity;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct FighterDestroyed {
 
     #[serde(with = "crate::event::format::date")]
@@ -24,7 +24,7 @@ impl Into<GameActivity> for FighterDestroyed {
     }
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct FighterRebuilt {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
@@ -47,7 +47,7 @@ impl Into<GameActivity> for FighterRebuilt {
     }
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct DockFighter {
 
     #[serde(with = "crate::event::format::date")]
@@ -68,7 +68,7 @@ impl Into<GameActivity> for DockFighter {
     }
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct CrewLaunchFighter {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
@@ -91,7 +91,7 @@ impl Into<GameActivity> for CrewLaunchFighter {
     }
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct LaunchFighter {
 
     #[serde(with = "crate::event::format::date")]

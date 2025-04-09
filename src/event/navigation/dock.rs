@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct DockingCancelled {
 
     #[serde(with = "crate::event::format::date")]
@@ -17,7 +17,7 @@ pub struct DockingCancelled {
     pub station_type: String,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct StationEconomies {
 
     #[serde(rename = "Name")]
@@ -30,7 +30,7 @@ pub struct StationEconomies {
     pub proportion: f64,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct StationFaction {
 
     #[serde(rename = "Name")]
@@ -40,7 +40,7 @@ pub struct StationFaction {
     pub faction_state: Option<String>,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Docked {
 
     #[serde(with = "crate::event::format::date")]
@@ -95,7 +95,7 @@ pub struct Docked {
     pub wanted: Option<bool>,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Undocked {
 
     #[serde(with = "crate::event::format::date")]
@@ -117,7 +117,7 @@ pub struct Undocked {
     pub multicrew: bool,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct DockingDenied {
 
     #[serde(with = "crate::event::format::date")]
@@ -136,7 +136,7 @@ pub struct DockingDenied {
     pub station_type: String,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct DockingGranted {
 
     #[serde(with = "crate::event::format::date")]
@@ -155,7 +155,7 @@ pub struct DockingGranted {
     pub station_type: String,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct LandingPadSize {
 
     #[serde(rename = "Small")]
@@ -168,7 +168,7 @@ pub struct LandingPadSize {
     pub large: u32,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct DockingRequested {
 
     #[serde(with = "crate::event::format::date")]

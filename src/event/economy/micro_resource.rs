@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize, Default, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct BuyMicroResources {
 
     #[serde(with = "crate::event::format::date")]
@@ -26,7 +26,7 @@ pub struct BuyMicroResources {
     pub market_id: u64,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct MicroResource {
 
     #[serde(rename = "Name")]
@@ -42,7 +42,7 @@ pub struct MicroResource {
     pub count: i64,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct DeliverPowerMicroResources {
 
     #[serde(with = "crate::event::format::date")]
@@ -58,7 +58,7 @@ pub struct DeliverPowerMicroResources {
     pub market_id: i64,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct OfferedMicroResource {
 
     #[serde(rename = "Name")]
@@ -74,7 +74,7 @@ pub struct OfferedMicroResource {
     pub count: u32,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct TradeMicroResources {
 
     #[serde(with = "crate::event::format::date")]
@@ -99,7 +99,7 @@ pub struct TradeMicroResources {
     pub market_id: u64,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct SellMicroResources {
 
     #[serde(with = "crate::event::format::date")]

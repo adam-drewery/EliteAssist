@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct BuyWeapon {
 
     #[serde(with = "crate::event::format::date")]
@@ -26,7 +26,7 @@ pub struct BuyWeapon {
     pub weapon_mods: Vec<String>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct SellWeapon {
 
     #[serde(with = "crate::event::format::date")]

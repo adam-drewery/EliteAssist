@@ -6,7 +6,7 @@ mod ship_locker;
 mod messages;
 mod market;
 
-use crate::event::Event;
+use crate::event::JournalEvent;
 use crate::state::{ActiveScreen, State};
 use commander_details::commander_details;
 use header_bar::header_bar;
@@ -21,7 +21,7 @@ use ship_locker::ship_locker;
 pub struct Gui;
 
 impl Gui {
-    pub fn view(state: &State) -> Element<Event> {
+    pub fn view(state: &State) -> Element<JournalEvent> {
         column![
             header_bar(state),
             match state.active_screen {
@@ -40,7 +40,7 @@ impl Gui {
         .into()
     }
 
-    pub fn update(state: &mut State, message: Event) {
+    pub fn update(state: &mut State, message: JournalEvent) {
         state.update_from(message);
     }
 }

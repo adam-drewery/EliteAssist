@@ -16,7 +16,7 @@ pub use personal::*;
 pub use ship::*;
 pub use suit::*;
 
-use crate::event::Event;
+use crate::event::JournalEvent;
 use serde::Deserialize;
 use thousands::Separable;
 
@@ -40,7 +40,7 @@ pub struct State {
     pub engineers: EngineerProgress,
 }
 
-#[derive(Deserialize, Default, Clone, Debug)]
+#[derive(Debug, Default, Deserialize, Clone)]
 pub enum ActiveScreen {
     #[default]
     Commander,
@@ -53,30 +53,30 @@ pub enum ActiveScreen {
 
 impl State {
 
-    pub fn update_from(&mut self, event: Event) {
+    pub fn update_from(&mut self, event: JournalEvent) {
 
         match event {
 
-            Event::Commander(commander) => {
+            JournalEvent::Commander(commander) => {
                 self.commander_name = "CMDR ".to_owned() + &commander.name.to_uppercase();
             }
 
-            Event::Materials(e) => {
+            JournalEvent::Materials(e) => {
                 if e.is_empty() { return; }
                 self.materials = e.into();
             }
 
-            Event::Location(e) => {
+            JournalEvent::Location(e) => {
                 self.current_system = e.star_system.clone();
                 self.current_body = e.body.clone();
             }
 
-            Event::ShipLocker(e) => {
+            JournalEvent::ShipLocker(e) => {
                 if e.is_empty() { return; }
                 self.ship_locker = e.into();
             }
 
-            Event::Status(e) => {
+            JournalEvent::Status(e) => {
                 if let Some(balance) = e.balance {
                     self.credits = balance.separate_with_commas() + " CR";
                 }
@@ -90,243 +90,243 @@ impl State {
                 }
             }
 
-            Event::Disembark(e) => {
+            JournalEvent::Disembark(e) => {
                 self.current_body = e.body.clone();
                 self.journal.push(e.into("Disembarked"));
             }
 
-            Event::Embark(e) => {
+            JournalEvent::Embark(e) => {
                 self.current_body = e.body.clone();
                 self.journal.push(e.into("Embarked"));
             }
 
-            Event::NavigateTo(e) => { self.active_screen = e; }
+            JournalEvent::NavigateTo(e) => { self.active_screen = e; }
 
-            Event::Docked(e) => {
+            JournalEvent::Docked(e) => {
                 if let Some(active_fine) = e.active_fine { self.crime.active_fine = active_fine; }
                 if let Some(wanted) = e.wanted { self.crime.wanted = wanted; }
             }
 
-            Event::ReceiveText(e) => {
+            JournalEvent::ReceiveText(e) => {
                 if e.channel == "npc" || e.channel == "starsystem" { return; }
                 self.messages.push(e.into());
             }
 
-            Event::Market(e) => {
+            JournalEvent::Market(e) => {
                 if e.items.is_none() { return; }
                 self.market = e.into();
             }
 
-            Event::Rank(e) => { self.rank = e.into() }
+            JournalEvent::Rank(e) => { self.rank = e.into() }
 
-            Event::Progress(e) => { self.rank = e.into() }
+            JournalEvent::Progress(e) => { self.rank = e.into() }
 
-            Event::Reputation(e) => { self.reputation = e.into() }
+            JournalEvent::Reputation(e) => { self.reputation = e.into() }
 
-            Event::EngineerProgress(e) => { self.engineers = e.into() }
-            Event::SquadronStartup(_) => {}
-            Event::Statistics(_) => {}
-            Event::Powerplay(_) => {}
-            Event::Music(_) => {}
+            JournalEvent::EngineerProgress(e) => { self.engineers = e.into() }
+            JournalEvent::SquadronStartup(_) => {}
+            JournalEvent::Statistics(_) => {}
+            JournalEvent::Powerplay(_) => {}
+            JournalEvent::Music(_) => {}
 
-            Event::SuitLoadout(e) => { self.suit_loadout = e.into() }
+            JournalEvent::SuitLoadout(e) => { self.suit_loadout = e.into() }
 
-            Event::Backpack(_) => {}
-            Event::Missions(_) => {}
-            Event::Shutdown(_) => {}
+            JournalEvent::Backpack(_) => {}
+            JournalEvent::Missions(_) => {}
+            JournalEvent::Shutdown(_) => {}
 
-            Event::Loadout(e) => { self.ship_loadout = e.into() }
+            JournalEvent::Loadout(e) => { self.ship_loadout = e.into() }
 
-            Event::BuyAmmo(e) => { self.journal.push(e.into()) }
+            JournalEvent::BuyAmmo(e) => { self.journal.push(e.into()) }
 
-            Event::RestockVehicle(e) => { self.journal.push(e.into()) }
+            JournalEvent::RestockVehicle(e) => { self.journal.push(e.into()) }
 
-            Event::BuyMicroResources(_) => {}
+            JournalEvent::BuyMicroResources(_) => {}
 
-            Event::NpcCrewPaidWage(e) => {
+            JournalEvent::NpcCrewPaidWage(e) => {
 
                 if e.amount == 0 { return; }
                 self.journal.push(e.into())
             }
 
-            Event::Cargo(_) => {}
-            Event::BookDropship(_) => {}
-            Event::StartJump(_) => {}
-            Event::LaunchDrone(_) => {}
-            Event::SupercruiseEntry(_) => {}
-            Event::SupercruiseExit(_) => {}
-            Event::Resurrect(_) => {}
-            Event::FSSSignalDiscovered(_) => {}
-            Event::NavRoute(_) => {}
-            Event::Shipyard(_) => {}
-            Event::ApproachSettlement(_) => {}
-            Event::StoredShips(_) => {}
-            Event::SwitchSuitLoadout(_) => {}
-            Event::MissionAccepted(_) => {}
-            Event::FSDTarget(_) => {}
-            Event::ShipyardSwap(_) => {}
-            Event::ShipyardTransfer(_) => {}
-            Event::RefuelAll(_) => {}
-            Event::ClearImpound(_) => {}
-            Event::ModuleInfo(_) => {}
-            Event::Undocked(_) => {}
-            Event::CommitCrime(_) => {}
-            Event::UnderAttack(_) => {}
-            Event::CollectItems(_) => {}
-            Event::LeaveBody(_) => {}
-            Event::FSDJump(_) => {}
-            Event::NavRouteClear(_) => {}
-            Event::Bounty(_) => {}
-            Event::ReservoirReplenished(_) => {}
-            Event::UseConsumable(_) => {}
-            Event::Outfitting(_) => {}
-            Event::DockingDenied(_) => {}
-            Event::MissionFailed(_) => {}
-            Event::SupercruiseDestinationDrop(_) => {}
-            Event::MissionAbandoned(_) => {}
-            Event::EngineerCraft(_) => {}
-            Event::DropshipDeploy(_) => {}
-            Event::FuelScoop(_) => {}
-            Event::ApproachBody(_) => {}
-            Event::Scan(_) => {}
-            Event::StoredModules(_) => {}
-            Event::SAASignalsFound(_) => {}
-            Event::DockingRequested(_) => {}
-            Event::DockingGranted(_) => {}
-            Event::HeatWarning(_) => {}
-            Event::ShieldState(_) => {}
-            Event::MissionCompleted(_) => {}
-            Event::MaterialTrade(_) => {}
-            Event::FSSAllBodiesFound(_) => {}
-            Event::FactionKillBond(_) => {}
-            Event::RedeemVoucher(_) => {}
-            Event::PayBounties(_) => {}
-            Event::Touchdown(_) => {}
-            Event::ShipyardSell(_) => {}
-            Event::ScanOrganic(_) => {}
-            Event::RepairAll(_) => {}
-            Event::DatalinkScan(_) => {}
-            Event::NavBeaconScan(_) => {}
-            Event::MultiSellExplorationData(_) => {}
-            Event::Liftoff(_) => {}
-            Event::EscapeInterdiction(_) => {}
-            Event::ModuleBuy(_) => {}
-            Event::USSDrop(_) => {}
-            Event::ScanBaryCentre(_) => {}
-            Event::Repair(_) => {}
-            Event::Passengers(_) => {}
-            Event::MissionRedirected(_) => {}
-            Event::UpgradeWeapon(_) => {}
-            Event::Resupply(_) => {}
-            Event::Died(_) => {}
-            Event::SrvDestroyed(_) => {}
-            Event::CodexEntry(_) => {}
-            Event::ModuleSell(_) => {}
-            Event::ModuleStore(_) => {}
-            Event::ModuleRetrieve(_) => {}
-            Event::ShipTargeted(_) => {}
-            Event::EjectCargo(_) => {}
-            Event::HullDamage(_) => {}
+            JournalEvent::Cargo(_) => {}
+            JournalEvent::BookDropship(_) => {}
+            JournalEvent::StartJump(_) => {}
+            JournalEvent::LaunchDrone(_) => {}
+            JournalEvent::SupercruiseEntry(_) => {}
+            JournalEvent::SupercruiseExit(_) => {}
+            JournalEvent::Resurrect(_) => {}
+            JournalEvent::FSSSignalDiscovered(_) => {}
+            JournalEvent::NavRoute(_) => {}
+            JournalEvent::Shipyard(_) => {}
+            JournalEvent::ApproachSettlement(_) => {}
+            JournalEvent::StoredShips(_) => {}
+            JournalEvent::SwitchSuitLoadout(_) => {}
+            JournalEvent::MissionAccepted(_) => {}
+            JournalEvent::FSDTarget(_) => {}
+            JournalEvent::ShipyardSwap(_) => {}
+            JournalEvent::ShipyardTransfer(_) => {}
+            JournalEvent::RefuelAll(_) => {}
+            JournalEvent::ClearImpound(_) => {}
+            JournalEvent::ModuleInfo(_) => {}
+            JournalEvent::Undocked(_) => {}
+            JournalEvent::CommitCrime(_) => {}
+            JournalEvent::UnderAttack(_) => {}
+            JournalEvent::CollectItems(_) => {}
+            JournalEvent::LeaveBody(_) => {}
+            JournalEvent::FSDJump(_) => {}
+            JournalEvent::NavRouteClear(_) => {}
+            JournalEvent::Bounty(_) => {}
+            JournalEvent::ReservoirReplenished(_) => {}
+            JournalEvent::UseConsumable(_) => {}
+            JournalEvent::Outfitting(_) => {}
+            JournalEvent::DockingDenied(_) => {}
+            JournalEvent::MissionFailed(_) => {}
+            JournalEvent::SupercruiseDestinationDrop(_) => {}
+            JournalEvent::MissionAbandoned(_) => {}
+            JournalEvent::EngineerCraft(_) => {}
+            JournalEvent::DropshipDeploy(_) => {}
+            JournalEvent::FuelScoop(_) => {}
+            JournalEvent::ApproachBody(_) => {}
+            JournalEvent::Scan(_) => {}
+            JournalEvent::StoredModules(_) => {}
+            JournalEvent::SAASignalsFound(_) => {}
+            JournalEvent::DockingRequested(_) => {}
+            JournalEvent::DockingGranted(_) => {}
+            JournalEvent::HeatWarning(_) => {}
+            JournalEvent::ShieldState(_) => {}
+            JournalEvent::MissionCompleted(_) => {}
+            JournalEvent::MaterialTrade(_) => {}
+            JournalEvent::FSSAllBodiesFound(_) => {}
+            JournalEvent::FactionKillBond(_) => {}
+            JournalEvent::RedeemVoucher(_) => {}
+            JournalEvent::PayBounties(_) => {}
+            JournalEvent::Touchdown(_) => {}
+            JournalEvent::ShipyardSell(_) => {}
+            JournalEvent::ScanOrganic(_) => {}
+            JournalEvent::RepairAll(_) => {}
+            JournalEvent::DatalinkScan(_) => {}
+            JournalEvent::NavBeaconScan(_) => {}
+            JournalEvent::MultiSellExplorationData(_) => {}
+            JournalEvent::Liftoff(_) => {}
+            JournalEvent::EscapeInterdiction(_) => {}
+            JournalEvent::ModuleBuy(_) => {}
+            JournalEvent::USSDrop(_) => {}
+            JournalEvent::ScanBaryCentre(_) => {}
+            JournalEvent::Repair(_) => {}
+            JournalEvent::Passengers(_) => {}
+            JournalEvent::MissionRedirected(_) => {}
+            JournalEvent::UpgradeWeapon(_) => {}
+            JournalEvent::Resupply(_) => {}
+            JournalEvent::Died(_) => {}
+            JournalEvent::SrvDestroyed(_) => {}
+            JournalEvent::CodexEntry(_) => {}
+            JournalEvent::ModuleSell(_) => {}
+            JournalEvent::ModuleStore(_) => {}
+            JournalEvent::ModuleRetrieve(_) => {}
+            JournalEvent::ShipTargeted(_) => {}
+            JournalEvent::EjectCargo(_) => {}
+            JournalEvent::HullDamage(_) => {}
 
-            Event::CrewAssign(e) => { self.journal.push(e.into()) }
+            JournalEvent::CrewAssign(e) => { self.journal.push(e.into()) }
 
-            Event::DockFighter(e) => { self.journal.push(e.into()) }
+            JournalEvent::DockFighter(e) => { self.journal.push(e.into()) }
 
-            Event::CommunityGoal(_) => {}
+            JournalEvent::CommunityGoal(_) => {}
 
-            Event::LaunchFighter(e) => { self.journal.push(e.into()) }
+            JournalEvent::LaunchFighter(e) => { self.journal.push(e.into()) }
 
-            Event::Scanned(_) => {}
-            Event::Friends(_) => {}
-            Event::BackpackChange(_) => {}
-            Event::SetUserShipName(_) => {}
-            Event::FSSDiscoveryScan(_) => {}
-            Event::SendText(_) => {}
-            Event::BuyDrones(_) => {}
-            Event::ShipyardBuy(_) => {}
-            Event::Promotion(_) => {}
-            Event::CollectCargo(_) => {}
-            Event::HeatDamage(_) => {}
-            Event::SAAScanComplete(_) => {}
-            Event::CreateSuitLoadout(_) => {}
-            Event::MaterialCollected(_) => {}
-            Event::LaunchSRV(_) => {}
-            Event::Synthesis(_) => {}
-            Event::TradeMicroResources(_) => {}
-            Event::CrimeVictim(_) => {}
-            Event::JetConeBoost(_) => {}
-            Event::DockingCancelled(_) => {}
-            Event::FetchRemoteModule(_) => {}
-            Event::PayFines(_) => {}
-            Event::SearchAndRescue(_) => {}
-            Event::ShipyardNew(_) => {}
-            Event::CommunityGoalReward(_) => {}
+            JournalEvent::Scanned(_) => {}
+            JournalEvent::Friends(_) => {}
+            JournalEvent::BackpackChange(_) => {}
+            JournalEvent::SetUserShipName(_) => {}
+            JournalEvent::FSSDiscoveryScan(_) => {}
+            JournalEvent::SendText(_) => {}
+            JournalEvent::BuyDrones(_) => {}
+            JournalEvent::ShipyardBuy(_) => {}
+            JournalEvent::Promotion(_) => {}
+            JournalEvent::CollectCargo(_) => {}
+            JournalEvent::HeatDamage(_) => {}
+            JournalEvent::SAAScanComplete(_) => {}
+            JournalEvent::CreateSuitLoadout(_) => {}
+            JournalEvent::MaterialCollected(_) => {}
+            JournalEvent::LaunchSRV(_) => {}
+            JournalEvent::Synthesis(_) => {}
+            JournalEvent::TradeMicroResources(_) => {}
+            JournalEvent::CrimeVictim(_) => {}
+            JournalEvent::JetConeBoost(_) => {}
+            JournalEvent::DockingCancelled(_) => {}
+            JournalEvent::FetchRemoteModule(_) => {}
+            JournalEvent::PayFines(_) => {}
+            JournalEvent::SearchAndRescue(_) => {}
+            JournalEvent::ShipyardNew(_) => {}
+            JournalEvent::CommunityGoalReward(_) => {}
 
-            Event::CrewMemberJoins(e) => { self.journal.push(e.into()) }
+            JournalEvent::CrewMemberJoins(e) => { self.journal.push(e.into()) }
 
-            Event::Interdicted(_) => {}
-            Event::SellOrganicData(_) => {}
-            Event::DockSRV(_) => {}
+            JournalEvent::Interdicted(_) => {}
+            JournalEvent::SellOrganicData(_) => {}
+            JournalEvent::DockSRV(_) => {}
 
-            Event::FighterDestroyed(e) => { self.journal.push(e.into()) }
+            JournalEvent::FighterDestroyed(e) => { self.journal.push(e.into()) }
 
-            Event::ModuleSwap(_) => {}
-            Event::MaterialDiscovered(_) => {}
-            Event::DataScanned(_) => {}
-            Event::VehicleSwitch(_) => {}
-            Event::MarketBuy(_) => {}
-            Event::ModuleSellRemote(_) => {}
-            Event::AfmuRepairs(_) => {}
-            Event::CommunityGoalJoin(_) => {}
+            JournalEvent::ModuleSwap(_) => {}
+            JournalEvent::MaterialDiscovered(_) => {}
+            JournalEvent::DataScanned(_) => {}
+            JournalEvent::VehicleSwitch(_) => {}
+            JournalEvent::MarketBuy(_) => {}
+            JournalEvent::ModuleSellRemote(_) => {}
+            JournalEvent::AfmuRepairs(_) => {}
+            JournalEvent::CommunityGoalJoin(_) => {}
 
-            Event::NpcCrewRank(e) => { self.journal.push(e.into()) }
+            JournalEvent::NpcCrewRank(e) => { self.journal.push(e.into()) }
 
-            Event::LoadoutEquipModule(_) => {}
+            JournalEvent::LoadoutEquipModule(_) => {}
 
-            Event::FighterRebuilt(e) => { self.journal.push(e.into()) }
+            JournalEvent::FighterRebuilt(e) => { self.journal.push(e.into()) }
 
-            Event::PowerplayJoin(_) => {}
+            JournalEvent::PowerplayJoin(_) => {}
 
-            Event::CrewMemberRoleChange(e) => { self.journal.push(e.into()) }
+            JournalEvent::CrewMemberRoleChange(e) => { self.journal.push(e.into()) }
 
-            Event::SelfDestruct(_) => {}
-            Event::BookTaxi(_) => {}
-            Event::MarketSell(_) => {}
-            Event::SellWeapon(_) => {}
-            Event::SystemsShutdown(_) => {}
-            Event::ProspectedAsteroid(_) => {}
-            Event::SRVDestroyed(_) => {}
-            Event::DiscoveryScan(_) => {}
+            JournalEvent::SelfDestruct(_) => {}
+            JournalEvent::BookTaxi(_) => {}
+            JournalEvent::MarketSell(_) => {}
+            JournalEvent::SellWeapon(_) => {}
+            JournalEvent::SystemsShutdown(_) => {}
+            JournalEvent::ProspectedAsteroid(_) => {}
+            JournalEvent::SRVDestroyed(_) => {}
+            JournalEvent::DiscoveryScan(_) => {}
 
-            Event::CrewLaunchFighter(e) => { self.journal.push(e.into()) }
+            JournalEvent::CrewLaunchFighter(e) => { self.journal.push(e.into()) }
 
-            Event::BuyWeapon(_) => {}
-            Event::RenameSuitLoadout(_) => {}
-            Event::MiningRefined(_) => {}
-            Event::CancelTaxi(_) => {}
-            Event::EngineerContribution(_) => {}
-            Event::SellMicroResources(_) => {}
-            Event::UpgradeSuit(_) => {}
-            Event::AppliedToSquadron(_) => {}
+            JournalEvent::BuyWeapon(_) => {}
+            JournalEvent::RenameSuitLoadout(_) => {}
+            JournalEvent::MiningRefined(_) => {}
+            JournalEvent::CancelTaxi(_) => {}
+            JournalEvent::EngineerContribution(_) => {}
+            JournalEvent::SellMicroResources(_) => {}
+            JournalEvent::UpgradeSuit(_) => {}
+            JournalEvent::AppliedToSquadron(_) => {}
 
-            Event::CrewMemberQuits(e) => { self.journal.push(e.into()) }
+            JournalEvent::CrewMemberQuits(e) => { self.journal.push(e.into()) }
 
-            Event::ChangeCrewRole(e) => { self.journal.push(e.into()) }
+            JournalEvent::ChangeCrewRole(e) => { self.journal.push(e.into()) }
 
-            Event::AsteroidCracked(_) => {}
-            Event::DatalinkVoucher(_) => {}
-            Event::DeliverPowerMicroResources(_) => {}
-            Event::Interdiction(_) => {}
+            JournalEvent::AsteroidCracked(_) => {}
+            JournalEvent::DatalinkVoucher(_) => {}
+            JournalEvent::DeliverPowerMicroResources(_) => {}
+            JournalEvent::Interdiction(_) => {}
 
-            Event::EndCrewSession(e) => { self.journal.push(e.into()) }
+            JournalEvent::EndCrewSession(e) => { self.journal.push(e.into()) }
 
-            Event::BuySuit(_) => {}
-            Event::SellSuit(_) => {}
-            Event::DeleteSuitLoadout(_) => {},
+            JournalEvent::BuySuit(_) => {}
+            JournalEvent::SellSuit(_) => {}
+            JournalEvent::DeleteSuitLoadout(_) => {},
 
             // ignore these events, they seem pointless
-            Event::FileHeader(_) => {},
-            Event::LoadGame(_) => {}
+            JournalEvent::FileHeader(_) => {},
+            JournalEvent::LoadGame(_) => {}
         }
     }
 }

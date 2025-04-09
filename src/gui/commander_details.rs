@@ -1,11 +1,11 @@
-use crate::event::Event;
+use crate::event::JournalEvent;
 use crate::state::State;
 use crate::theme::styles::header_style;
 use crate::theme::{GRAY, RED};
 use iced::widget::{button, column, row, text, Column, Row};
 use iced::{Fill, Top};
 
-pub fn commander_details(state: &State) -> Row<Event> {
+pub fn commander_details(state: &State) -> Row<JournalEvent> {
 
     row![
         legal_status(state),
@@ -16,7 +16,7 @@ pub fn commander_details(state: &State) -> Row<Event> {
     .height(Fill)
 }
 
-fn legal_status(state: &State) -> Column<Event> {
+fn legal_status(state: &State) -> Column<JournalEvent> {
     column![ 
         button("LEGAL").style(header_style).width(Fill),
         row!["Legal State: ", text(&state.crime.legal_state)],
@@ -28,7 +28,7 @@ fn legal_status(state: &State) -> Column<Event> {
     .padding(8)
 }
 
-fn ship(state: &State) -> Column<Event> {
+fn ship(state: &State) -> Column<JournalEvent> {
     column![
         
         
@@ -63,7 +63,7 @@ fn ship(state: &State) -> Column<Event> {
     .padding(8)
 }
 
-fn location(state: &State) -> Column<Event> {
+fn location(state: &State) -> Column<JournalEvent> {
     column![ 
         button("LOCATION").style(header_style).width(Fill),
         text(&state.commander_name),

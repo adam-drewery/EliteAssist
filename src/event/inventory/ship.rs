@@ -3,7 +3,7 @@ use chrono::{DateTime, Utc};
 use serde::Deserialize;
 use std::collections::HashMap;
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct ShipLocker {
 
     #[serde(with = "crate::event::format::date")]
@@ -22,7 +22,7 @@ pub struct ShipLocker {
     pub data: Option<Vec<ShipLockerItem>>
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct ShipLockerItem {
 
     #[serde(rename = "Name")]
@@ -41,7 +41,7 @@ pub struct ShipLockerItem {
     pub count: u64,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct StoredModule {
 
     #[serde(rename = "Name")]
@@ -81,7 +81,7 @@ pub struct StoredModule {
     pub quality: Option<f64>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct StoredModules {
 
     #[serde(with = "crate::event::format::date")]
@@ -100,7 +100,7 @@ pub struct StoredModules {
     pub items: Vec<StoredModule>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct ModuleSwap {
 
     #[serde(with = "crate::event::format::date")]
@@ -134,7 +134,7 @@ pub struct ModuleSwap {
     pub ship_id: u64,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct FetchRemoteModule {
 
     #[serde(with = "crate::event::format::date")]

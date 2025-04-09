@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct MissionAccepted {
 
     #[serde(with = "crate::event::format::date")]
@@ -50,7 +50,7 @@ pub struct MissionAccepted {
     pub mission_id: u64,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct MissionFailed {
 
     #[serde(with = "crate::event::format::date")]
@@ -66,7 +66,7 @@ pub struct MissionFailed {
     pub mission_id: u64,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct MissionAbandoned {
 
     #[serde(with = "crate::event::format::date")]
@@ -82,7 +82,7 @@ pub struct MissionAbandoned {
     pub mission_id: u64,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct SystemInfluence {
 
     #[serde(rename = "SystemAddress")]
@@ -95,7 +95,7 @@ pub struct SystemInfluence {
     pub influence: String,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Effect {
 
     #[serde(rename = "Effect")]
@@ -108,7 +108,7 @@ pub struct Effect {
     pub trend: String,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct FactionEffect {
 
     #[serde(rename = "Faction")]
@@ -127,7 +127,7 @@ pub struct FactionEffect {
     pub reputation: String,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct MissionCompleted {
 
     #[serde(with = "crate::event::format::date")]
@@ -158,7 +158,7 @@ pub struct MissionCompleted {
     pub faction_effects: Vec<FactionEffect>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct MissionRedirected {
 
     #[serde(with = "crate::event::format::date")]

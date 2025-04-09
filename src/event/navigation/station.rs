@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct StationEconomy {
 
     #[serde(rename = "Name")]
@@ -13,7 +13,7 @@ pub struct StationEconomy {
     pub proportion: f64,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct StationFaction {
 
     #[serde(rename = "Name")]

@@ -1,10 +1,10 @@
-use crate::event::Event;
+use crate::event::JournalEvent;
 use crate::state::{ShipLockerItem, State};
 use crate::theme::{BLUE, ORANGE, YELLOW};
 use iced::widget::{column, row, scrollable, text, Column, Row};
 use iced::{Color, Element, Fill, Left, Top};
 
-pub fn ship_locker(state: &State) -> Row<Event> {
+pub fn ship_locker(state: &State) -> Row<JournalEvent> {
 
     row![
         locker_item_list("ITEMS", &state.ship_locker.items),
@@ -16,7 +16,7 @@ pub fn ship_locker(state: &State) -> Row<Event> {
     .height(Fill)
 }
 
-pub fn locker_item_list<'a>(title: &'a str, items: &'a [ShipLockerItem]) -> Column<'a, Event> {
+pub fn locker_item_list<'a>(title: &'a str, items: &'a [ShipLockerItem]) -> Column<'a, JournalEvent> {
 
     column![
         text(title).size(20).color(ORANGE),

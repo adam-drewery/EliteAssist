@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Faction {
 
     #[serde(rename = "Name")]
@@ -34,7 +34,7 @@ pub struct Faction {
     pub active_states: Option<Vec<FactionState>>
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct FactionState {
 
     #[serde(rename = "State")]

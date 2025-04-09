@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct FFSSAllBodiesFound {
 
     #[serde(with = "crate::event::format::date")]
@@ -17,7 +17,7 @@ pub struct FFSSAllBodiesFound {
     pub count: u32,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct FSSDiscoveryScan {
 
     #[serde(with = "crate::event::format::date")]
@@ -39,7 +39,7 @@ pub struct FSSDiscoveryScan {
     pub system_address: u64,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct FSSSignalDiscovered {
 
     #[serde(with = "crate::event::format::date")]

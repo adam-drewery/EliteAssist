@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct LaunchSRV {
 
     #[serde(with = "crate::event::format::date")]
@@ -23,7 +23,7 @@ pub struct LaunchSRV {
     pub player_controlled: bool,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct DockSRV {
 
     #[serde(with = "crate::event::format::date")]
@@ -39,7 +39,7 @@ pub struct DockSRV {
     pub id: u64,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct SrvDestroyed {
 
     #[serde(with = "crate::event::format::date")]

@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct ApproachBody {
 
     #[serde(with = "crate::event::format::date")]
@@ -20,7 +20,7 @@ pub struct ApproachBody {
     pub body_id: u64,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct LeaveBody {
 
     #[serde(with = "crate::event::format::date")]

@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Modifier {
     #[serde(rename = "Label")]
     pub label: String,
@@ -16,7 +16,7 @@ pub struct Modifier {
     pub less_is_good: u32,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct EngineerCraft {
 
     #[serde(with = "crate::event::format::date")]
@@ -62,7 +62,7 @@ pub struct EngineerCraft {
     pub modifiers: Vec<Modifier>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct EngineerContribution {
 
     #[serde(with = "crate::event::format::date")]
@@ -85,7 +85,7 @@ pub struct EngineerContribution {
 }
 
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Engineering {
 
     #[serde(rename = "Engineer")]

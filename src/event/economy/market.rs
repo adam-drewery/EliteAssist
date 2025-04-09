@@ -3,7 +3,7 @@ use crate::text::title_case;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct MarketItem {
 
     pub id: u64,
@@ -51,7 +51,7 @@ pub struct MarketItem {
     pub rare: bool,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Market {
 
     #[serde(with = "crate::event::format::date")]
@@ -73,7 +73,7 @@ pub struct Market {
     pub items: Option<Vec<MarketItem>>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct MarketBuy {
 
     #[serde(with = "crate::event::format::date")]
@@ -98,7 +98,7 @@ pub struct MarketBuy {
     pub total_cost: u32,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct MarketSell {
 
     #[serde(with = "crate::event::format::date")]

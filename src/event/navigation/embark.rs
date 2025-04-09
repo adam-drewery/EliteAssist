@@ -3,7 +3,7 @@ use crate::state::GameActivity;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Embark {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,

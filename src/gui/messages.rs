@@ -1,11 +1,11 @@
-use crate::event::Event;
+use crate::event::JournalEvent;
 use crate::state::{Channel, State};
 use crate::theme::{GRAY, ORANGE, WHITE, YELLOW};
 use iced::widget::text::Wrapping;
 use iced::widget::{column, row, scrollable, text, Column, Row};
 use iced::{Color, Element, Fill, Left, Right};
 
-pub fn messages(state: &State) -> Row<Event> {
+pub fn messages(state: &State) -> Row<JournalEvent> {
     row![
         messages_column(&state),
         journal_column(&state),
@@ -22,7 +22,7 @@ pub fn name_color(kind: &Channel) -> Color {
     }
 }
 
-fn messages_column(state: &State) -> Column<Event> {
+fn messages_column(state: &State) -> Column<JournalEvent> {
     column![
             text("MESSAGES").size(20).color(ORANGE),
             scrollable(column(
@@ -64,7 +64,7 @@ fn messages_column(state: &State) -> Column<Event> {
         .align_x(Left)
 }
 
-fn journal_column(state: &State) -> Column<Event> {
+fn journal_column(state: &State) -> Column<JournalEvent> {
     column![
             text("JOURNAL").size(20).color(ORANGE),
             scrollable(column(

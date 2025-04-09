@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct SystemExplorationData {
 
     #[serde(rename = "SystemName")]
@@ -11,7 +11,7 @@ pub struct SystemExplorationData {
     pub num_bodies: u32,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct MultiSellExplorationData {
 
     #[serde(with = "crate::event::format::date")]
@@ -30,7 +30,7 @@ pub struct MultiSellExplorationData {
     pub total_earnings: u32,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct BioData {
 
     #[serde(rename = "Genus")]
@@ -58,7 +58,7 @@ pub struct BioData {
     pub bonus: u32,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct SellOrganicData {
 
     #[serde(with = "crate::event::format::date")]

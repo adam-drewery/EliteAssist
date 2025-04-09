@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct UpgradeResource {
 
     #[serde(rename = "Name")]
@@ -14,7 +14,7 @@ pub struct UpgradeResource {
     pub count: u32,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct UpgradeWeapon {
 
     #[serde(with = "crate::event::format::date")]

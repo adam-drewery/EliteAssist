@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct EngineerProgress {
 
     #[serde(with = "crate::event::format::date")]
@@ -11,7 +11,7 @@ pub struct EngineerProgress {
     pub engineers: Option<Vec<Engineer>>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Engineer {
     #[serde(rename = "Engineer")]
     pub engineer: String,

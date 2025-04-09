@@ -26,7 +26,7 @@ static BASE_MATERIALS: Lazy<state::Materials> = Lazy::new(|| {
     materials
 });
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Materials {
     
     #[serde(with = "crate::event::format::date")]
@@ -42,7 +42,7 @@ pub struct Materials {
     pub encoded: Vec<Material>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Material {
     
     #[serde(rename = "Name")]
@@ -55,7 +55,7 @@ pub struct Material {
     pub count: u16,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct MaterialCollected {
     
     #[serde(with = "crate::event::format::date")]
@@ -74,7 +74,7 @@ pub struct MaterialCollected {
     pub count: u32,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct MaterialDiscovered {
     
     #[serde(with = "crate::event::format::date")]

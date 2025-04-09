@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct SAAScanComplete {
 
     #[serde(with = "crate::event::format::date")]
@@ -23,7 +23,7 @@ pub struct SAAScanComplete {
     pub efficiency_target: u32,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Genus {
 
     #[serde(rename = "Genus")]
@@ -33,7 +33,7 @@ pub struct Genus {
     pub genus_localised: Option<String>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Signal {
 
     #[serde(rename = "Type")]
@@ -46,7 +46,7 @@ pub struct Signal {
     pub count: u32,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct SAASignalsFound {
 
     #[serde(with = "crate::event::format::date")]

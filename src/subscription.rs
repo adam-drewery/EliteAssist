@@ -1,4 +1,4 @@
-use crate::event::Event;
+use crate::event::JournalEvent;
 use crate::journal::JournalWatcher;
 use crate::state::State;
 use iced::futures::Stream;
@@ -6,7 +6,7 @@ use iced::Subscription;
 use tokio::sync::mpsc;
 use tokio_stream::wrappers::ReceiverStream;
 
-fn stream_events() -> impl Stream<Item =Event> {
+fn stream_events() -> impl Stream<Item =JournalEvent> {
     let (sender, receiver) = mpsc::channel(16);
 
     tokio::spawn(async move {
@@ -20,6 +20,6 @@ fn stream_events() -> impl Stream<Item =Event> {
     ReceiverStream::new(receiver)
 }
 
-pub fn subscription(_state: &State) -> Subscription<Event> {
+pub fn subscription(_state: &State) -> Subscription<JournalEvent> {
     Subscription::run(stream_events)
 }

@@ -1,8 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone)]
-#[derive(Default)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Commander {
 
     #[serde(with = "crate::event::format::date")]

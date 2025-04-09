@@ -1,10 +1,10 @@
-use crate::event::Event;
+use crate::event::JournalEvent;
 use crate::state::State;
 use crate::theme::ORANGE;
 use iced::widget::{column, row, text, Row};
 use iced::{Fill, Left, Right};
 
-pub fn header_bar(state: &State) -> Row<Event> {
+pub fn header_bar(state: &State) -> Row<JournalEvent> {
     row![
         column![
             text(&state.commander_name).size(30).color(ORANGE),

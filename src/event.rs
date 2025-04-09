@@ -18,9 +18,10 @@ use crate::state::*;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone)]
+// todo: eventually make this non-clonable and have a separate enum for gui events
+#[derive(Clone, Debug, Deserialize)]
 #[serde(tag = "event")]
-pub enum Event {
+pub enum JournalEvent {
 
     #[serde(rename = "Fileheader")]
     FileHeader(FileHeader),
@@ -208,7 +209,7 @@ pub enum Event {
     NavigateTo(ActiveScreen),
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Empty {
 
     #[serde(with = "crate::event::format::date")]

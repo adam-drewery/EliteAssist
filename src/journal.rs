@@ -1,4 +1,4 @@
-use crate::event::Event;
+use crate::event::JournalEvent;
 use log::{debug, error, info};
 use std::fs::{File, OpenOptions};
 use std::io;
@@ -91,7 +91,7 @@ impl JournalWatcher {
         });
     }
 
-    pub async fn next(&mut self) -> Event {
+    pub async fn next(&mut self) -> JournalEvent {
         loop {
 
             // Try to read next line from current file
@@ -184,7 +184,7 @@ fn get_journal_paths(dir: &Path) -> io::Result<Vec<PathBuf>> {
     Ok(files)
 }
 
-fn check_snapshot_file(file_details: &mut FileDetails) -> Option<Event> {
+fn check_snapshot_file(file_details: &mut FileDetails) -> Option<JournalEvent> {
     // Check status.json first
     let metadata = std::fs::metadata(&file_details.path).unwrap();
     let modified = metadata.modified().unwrap();

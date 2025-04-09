@@ -1,8 +1,8 @@
 use crate::event::navigation::faction::Faction;
 use chrono::{DateTime, Utc};
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct SystemFaction {
 
     #[serde(rename = "Name")]
@@ -12,14 +12,14 @@ pub struct SystemFaction {
     pub faction_state: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct ActiveState {
 
     #[serde(rename = "State")]
     pub state: String,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Power {
 
     #[serde(rename = "Power")]
@@ -29,7 +29,7 @@ pub struct Power {
     pub conflict_progress: f64,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct FSDJump {
 
     #[serde(with = "crate::event::format::date")]
@@ -114,7 +114,7 @@ pub struct FSDJump {
     pub system_faction: Option<SystemFaction>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct FSDTarget {
 
     #[serde(with = "crate::event::format::date")]
@@ -133,7 +133,7 @@ pub struct FSDTarget {
     pub remaining_jumps_in_route: Option<u32>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct SupercruiseEntry {
 
     #[serde(with = "crate::event::format::date")]
@@ -152,7 +152,7 @@ pub struct SupercruiseEntry {
     pub system_address: u64,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct SupercruiseExit {
 
     #[serde(with = "crate::event::format::date")]
@@ -180,7 +180,7 @@ pub struct SupercruiseExit {
     pub body_type: String,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct SupercruiseDestinationDrop {
 
     #[serde(with = "crate::event::format::date")]
@@ -194,7 +194,7 @@ pub struct SupercruiseDestinationDrop {
     pub threat: u32,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct StartJump {
 
     #[serde(with = "crate::event::format::date")]
@@ -207,7 +207,7 @@ pub struct StartJump {
     pub taxi: bool,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct JetConeBoost {
 
     #[serde(with = "crate::event::format::date")]

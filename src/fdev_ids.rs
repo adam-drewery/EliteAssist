@@ -18,10 +18,11 @@ macro_rules! lazy_hashmap {
 }
 
 static OUTFITTING: &Lazy<HashMap<String, Outfitting>> = lazy_hashmap!("../FDevIDs/outfitting.csv");
+static SHIPYARD: &Lazy<HashMap<String, Outfitting>> = lazy_hashmap!("../FDevIDs/shipyard.csv");
 
 pub fn read_csv<T>(bytes: &[u8]) -> HashMap<String, T>
 where
-    T: for<'de> Deserialize<'de> + IdField + std::fmt::Debug,
+    T: for<'de> Deserialize<'de> + SymbolField + std::fmt::Debug,
 {
     let mut rdr = csv::Reader::from_reader(bytes);
     let mut map = HashMap::new();
@@ -29,18 +30,17 @@ where
     for result in rdr.deserialize() {
         let record: T = result.unwrap();
 
-        map.insert(record.get_id().to_lowercase(), record);
+        map.insert(record.get_symbol().to_lowercase(), record);
     }
 
     map
 }
 
-pub trait IdField {
-    fn get_id(&self) -> &str;
+pub trait SymbolField {
+    fn get_symbol(&self) -> &str;
 }
 
-#[derive(Deserialize)]
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct Outfitting {
     pub id: String,
     pub symbol: String,
@@ -54,8 +54,14 @@ pub struct Outfitting {
     pub entitlement: String,
 }
 
-impl IdField for Outfitting {
-    fn get_id(&self) -> &str {
-        &self.symbol
-    }
+pub struct Shipyard {
+    pub id: String,
+    pub symbol: String,
+    pub name: String,
+    pub entitlement: String
 }
+
+impl SymbolField for Outfitting { fn get_symbol(&self) -> &str {
+        &self.symbol
+    } }
+impl SymbolField for Shipyard { fn get_symbol(&self) -> &str { &self.symbol } }

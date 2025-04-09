@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct CargoItem {
 
     #[serde(rename = "Name")]
@@ -20,7 +20,7 @@ pub struct CargoItem {
     pub mission_id: Option<u32>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Cargo {
 
     #[serde(with = "crate::event::format::date")]
@@ -36,7 +36,7 @@ pub struct Cargo {
     pub inventory: Option<Vec<CargoItem>>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct CollectCargo {
 
     #[serde(with = "crate::event::format::date")]
@@ -55,7 +55,7 @@ pub struct CollectCargo {
     pub mission_id: Option<u32>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct EjectCargo {
 
     #[serde(with = "crate::event::format::date")]
