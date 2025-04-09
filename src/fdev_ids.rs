@@ -2,42 +2,20 @@ use once_cell::sync::Lazy;
 use serde::Deserialize;
 use std::collections::HashMap;
 
-pub fn outfitting_details(name: &String) -> Option<&'static Outfitting> {
-    let name_lower = name.to_lowercase();
-    OUTFITTING.get(&name_lower)
-}
-
-macro_rules! lazy_hashmap {
-    ($file_path:expr) => {
-        {
-            const CSV_BYTES: &[u8] = include_bytes!($file_path);
-            static MAP: Lazy<HashMap<String, Outfitting>> = Lazy::new(|| read_csv(CSV_BYTES));
-            &MAP
-        }
-    };
-}
-
-static OUTFITTING: &Lazy<HashMap<String, Outfitting>> = lazy_hashmap!("../FDevIDs/outfitting.csv");
-static SHIPYARD: &Lazy<HashMap<String, Outfitting>> = lazy_hashmap!("../FDevIDs/shipyard.csv");
-
-pub fn read_csv<T>(bytes: &[u8]) -> HashMap<String, T>
-where
-    T: for<'de> Deserialize<'de> + SymbolField + std::fmt::Debug,
-{
-    let mut rdr = csv::Reader::from_reader(bytes);
-    let mut map = HashMap::new();
-
-    for result in rdr.deserialize() {
-        let record: T = result.unwrap();
-
-        map.insert(record.get_symbol().to_lowercase(), record);
-    }
-
-    map
-}
-
-pub trait SymbolField {
-    fn get_symbol(&self) -> &str;
+macro_rules! static_hashmap {
+    ($file_path:expr, $type:ty) => {{
+        static MAP: Lazy<HashMap<String, $type>> = Lazy::new(|| {
+            let csv_bytes: &[u8] = include_bytes!($file_path);
+            let mut rdr = csv::Reader::from_reader(csv_bytes);
+            let mut map = HashMap::new();
+            for result in rdr.deserialize() {
+                let record: $type = result.unwrap();
+                map.insert(record.symbol.to_lowercase(), record);
+            }
+            map
+        });
+        &MAP
+    }};
 }
 
 #[derive(Debug, Deserialize)]
@@ -54,14 +32,22 @@ pub struct Outfitting {
     pub entitlement: String,
 }
 
+#[derive(Debug, Deserialize)]
 pub struct Shipyard {
     pub id: String,
     pub symbol: String,
     pub name: String,
-    pub entitlement: String
+    pub entitlement: String,
 }
 
-impl SymbolField for Outfitting { fn get_symbol(&self) -> &str {
-        &self.symbol
-    } }
-impl SymbolField for Shipyard { fn get_symbol(&self) -> &str { &self.symbol } }
+impl Outfitting {
+    pub fn metadata(name: &String) -> Option<&Self> {
+        static_hashmap!("../FDevIDs/outfitting.csv", Outfitting).get(&name.to_lowercase())
+    }
+}
+
+impl Shipyard {
+    pub fn metadata(name: &String) -> Option<&Self> {
+        static_hashmap!("../FDevIDs/shipyard.csv", Shipyard).get(&name.to_lowercase())
+    }
+}
