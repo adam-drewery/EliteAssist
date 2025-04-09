@@ -73,7 +73,9 @@ pub struct MaterialDiscovered {
 }
 
 impl Materials {
-    fn apply_counts(&self, target: &mut Vec<MaterialGroup>) {
+
+    fn apply_counts_to(&self, target: &mut Vec<MaterialGroup>) {
+
         let count_map: HashMap<String, u16> = self
             .raw
             .iter()
@@ -100,11 +102,11 @@ impl Materials {
 
 impl Into<state::Materials> for Materials {
     fn into(self) -> state::Materials {
-        
+
         let mut materials = all_materials().clone();
-        self.apply_counts(&mut materials.raw);
-        self.apply_counts(&mut materials.manufactured);
-        self.apply_counts(&mut materials.encoded);
+        self.apply_counts_to(&mut materials.raw);
+        self.apply_counts_to(&mut materials.manufactured);
+        self.apply_counts_to(&mut materials.encoded);
         materials
     }
 }

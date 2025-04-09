@@ -201,7 +201,7 @@ impl Into<crate::state::ShipModule> for ShipModule {
         let details = Outfitting::metadata(&self.item);
 
         crate::state::ShipModule {
-            slot: self.slot,
+            slot: self.slot.into(),
             item: details.map(|d| d.name.clone()).unwrap_or(self.item),
             on: self.on,
             priority: self.priority,
