@@ -13,6 +13,7 @@ pub struct MaterialGroup {
 
 #[derive(Clone)]
 pub struct Material {
+    pub id: String,
     pub name: String,
     pub rarity: u8,
     pub count: u16,
