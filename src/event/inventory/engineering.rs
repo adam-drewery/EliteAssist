@@ -122,11 +122,10 @@ impl Into<crate::state::Engineering> for Engineering {
             engineer: self.engineer,
             engineer_id: self.engineer_id,
             blueprint_id: self.blueprint_id,
-            blueprint_name: self.blueprint_name,
+            blueprint_name: self.blueprint_name.split('_').skip(1).next().unwrap().to_string(),
             level: self.level,
             quality: self.quality,
-            experimental_effect: self.experimental_effect,
-            experimental_effect_localised: self.experimental_effect_localised,
+            experimental_effect: self.experimental_effect_localised.or(self.experimental_effect),
             modifiers: self.modifiers.into_iter().map(|m| m.into()).collect(),
         }
     }

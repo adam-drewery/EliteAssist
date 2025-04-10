@@ -1,7 +1,7 @@
+use crate::state;
 use once_cell::sync::Lazy;
 use serde::Deserialize;
 use std::collections::HashMap;
-use crate::state;
 
 macro_rules! static_hashmap {
     ($file_path:expr, $type:ty) => {{
@@ -19,7 +19,7 @@ macro_rules! static_hashmap {
     }};
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Default)]
 pub struct Outfitting {
     pub id: String,
     pub symbol: String,
@@ -31,6 +31,12 @@ pub struct Outfitting {
     pub class: String,
     pub rating: String,
     pub entitlement: String,
+}
+
+impl Outfitting {
+    pub(crate) fn new() -> Outfitting {
+        todo!()
+    }
 }
 
 #[derive(Debug, Deserialize)]

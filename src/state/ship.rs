@@ -34,6 +34,7 @@ pub struct ShipModule {
     pub ammo_in_clip: Option<u64>,
     pub ammo_in_hopper: Option<u64>,
     pub engineering: Option<Engineering>,
+    pub mount: String,
 }
 
 #[derive(Default)]
@@ -52,7 +53,6 @@ pub struct Engineering {
     pub level: u8,
     pub quality: f64,
     pub experimental_effect: Option<String>,
-    pub experimental_effect_localised: Option<String>,
     pub modifiers: Vec<Modifier>,
 }
 
@@ -95,7 +95,6 @@ pub enum CoreInternalType {
     PowerDistributor,
     PowerPlant,
     LifeSupport,
-    CargoHatch,
     Radar,
     FuelTank,
     Armour,
@@ -123,12 +122,12 @@ pub enum CosmeticType {
 
 pub enum MiscellaneousType {
     ColonisationSuite,
-    CargoHatch,
     ShipCockpit,
     PlanetaryApproachSuite,
     DataLinkScanner,
     CodexScanner,
     DiscoveryScanner,
+    CargoHatch,
 }
 
 impl From<String> for SlotType {

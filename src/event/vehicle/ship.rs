@@ -1,6 +1,6 @@
+use crate::fdev_ids::Outfitting;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
-use crate::fdev_ids::Outfitting;
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct SetUserShipName {
@@ -198,14 +198,15 @@ pub struct ShipModule {
 
 impl Into<crate::state::ShipModule> for ShipModule {
     fn into(self) -> crate::state::ShipModule {
-        
-        let (class, rating, name) = Outfitting::metadata(&self.item)
+
+        let (class, rating, name, mount) = Outfitting::metadata(&self.item)
             .map(|details| (
                 details.class.parse().unwrap_or(0),
                 details.rating.chars().next().unwrap_or('X'),
-                details.name.clone()
+                details.name.clone(),
+                details.mount.clone()
             ))
-            .unwrap_or((0, 'X', self.item.clone()));
+            .unwrap_or((0, 'X', self.item.clone(), "".to_string()));
 
         crate::state::ShipModule {
             slot: self.slot.into(),
@@ -219,6 +220,7 @@ impl Into<crate::state::ShipModule> for ShipModule {
             engineering: self.engineering.map(|e| e.into()),
             class,
             rating,
+            mount
         }
     }
 }
