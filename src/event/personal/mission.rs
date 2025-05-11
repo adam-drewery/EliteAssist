@@ -51,23 +51,7 @@ pub struct MissionAccepted {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct MissionFailed {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "LocalisedName")]
-    pub localised_name: String,
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: u64,
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct MissionAbandoned {
+pub struct Mission {
 
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,

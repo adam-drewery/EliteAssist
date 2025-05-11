@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use crate::gui::Gui;
 use crate::subscription::subscription;
 use crate::theme::theme;

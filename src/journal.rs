@@ -196,10 +196,10 @@ fn check_snapshot_file(file_details: &mut FileDetails) -> Option<JournalEvent> {
             file_details.last_modified = modified;
 
             debug!("Snapshot file updated: {}", &line);
-            let deserizlize_result = serde_json::from_str(&line);
-            if let Ok(event) = deserizlize_result {
+            let deserialize_result = serde_json::from_str(&line);
+            if let Ok(event) = deserialize_result {
                 return event;
-            } else if let Err(e) = deserizlize_result {
+            } else if let Err(e) = deserialize_result {
                 let error_msg = e.to_string();
                 if error_msg.starts_with("unknown variant") {
                     if let Some(first_part) = error_msg.split(',').next() {

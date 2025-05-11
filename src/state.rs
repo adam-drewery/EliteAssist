@@ -324,7 +324,7 @@ impl State {
             JournalEvent::SellSuit(_) => {}
             JournalEvent::DeleteSuitLoadout(_) => {},
 
-            // ignore these events, they seem pointless
+            // let's ignore these events, they seem pointless
             JournalEvent::FileHeader(_) => {},
             JournalEvent::LoadGame(_) => {}
         }
