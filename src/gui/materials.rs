@@ -25,8 +25,11 @@ fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a,
                 groups.iter().flat_map(|group| {
 
                     let mut rows = vec![row![text(&group.name).size(16).color(GRAY)].padding(2)];
+                    
+                    let mut sorted_materials = group.materials.to_vec();
+                    sorted_materials.sort_by_key(|item| item.rarity);
 
-                    rows.extend(group.materials.iter().map(|item| {
+                    rows.extend(sorted_materials.into_iter().map(|item| {
                         let svg_handle = match item.rarity {
                             1 => Handle::from_memory(GRADE_1),
                             2 => Handle::from_memory(GRADE_2),
@@ -39,7 +42,7 @@ fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a,
                         row![
                             column![svg(svg_handle).height(16).width(16)].padding([0, 5]),
                             text(item.count.to_string()).size(16).color(YELLOW).width(36),
-                            text(&item.name).size(16),
+                            text(item.name).size(16),
                         ]
                         .padding(2)
                     }));
