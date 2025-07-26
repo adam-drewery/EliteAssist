@@ -46,13 +46,17 @@ pub fn ship(state: &State) -> Column<JournalEvent> {
         }
     }
 
-    let mut result = iced::widget::column![
+    let mut result = column![
         button("SHIP").style(header_style).width(Fill),
         row![
             column![
                 text(state.ship_loadout.ship_name.to_uppercase())
                     .color(ORANGE)
                     .size(30)
+                    .align_x(Left),
+                text(state.ship_loadout.ship.to_uppercase())
+                    .color(ORANGE)
+                    .size(16)
                     .align_x(Left)
             ],
             column![].width(Fill),
@@ -130,13 +134,13 @@ fn module_details(module: &ShipModule, size: u8) -> Row<JournalEvent> {
 fn mount_details(module: &ShipModule, size: u8) -> Column<JournalEvent> {
     column![
         if size == 0 {
-            iced::widget::column![]
+            column![]
         } else {
             match module.mount.as_str() {
-                "Fixed" => iced::widget::column![svg(SvgHandle::from_memory(FIXED))],
-                "Gimballed" => iced::widget::column![svg(SvgHandle::from_memory(GIMBALLED))],
-                "Turreted" => iced::widget::column![svg(SvgHandle::from_memory(TURRET))],
-                _ => iced::widget::column![],
+                "Fixed" => column![svg(SvgHandle::from_memory(FIXED))],
+                "Gimballed" => column![svg(SvgHandle::from_memory(GIMBALLED))],
+                "Turreted" => column![svg(SvgHandle::from_memory(TURRET))],
+                _ => column![],
             }
         }
         .padding(4)
@@ -148,12 +152,12 @@ fn mount_details(module: &ShipModule, size: u8) -> Column<JournalEvent> {
 
 fn engineering_levels(module: &ShipModule) -> Column<JournalEvent> {
     if let Some(engineering) = &module.engineering {
-        iced::widget::column![
+        column![
             row((0..engineering.level).map(|_| image(Handle::from_bytes(ENGINEER_ICON)).into()))
                 .padding(4)
         ]
     } else {
-        iced::widget::column![]
+        column![]
     }
     .padding(4)
     .height(30)
@@ -161,7 +165,7 @@ fn engineering_levels(module: &ShipModule) -> Column<JournalEvent> {
 
 fn engineering_details(module: &ShipModule) -> Column<JournalEvent> {
     if let Some(engineering) = &module.engineering {
-        iced::widget::column![
+        column![
             row![
                 column![text(&engineering.blueprint_name).size(14).color(ORANGE)],
                 column![].width(12),
@@ -173,7 +177,7 @@ fn engineering_details(module: &ShipModule) -> Column<JournalEvent> {
             ]
         ]
     } else {
-        iced::widget::column![]
+        column![]
     }
 }
 

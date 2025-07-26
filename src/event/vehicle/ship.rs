@@ -1,4 +1,4 @@
-use crate::fdev_ids::Outfitting;
+use crate::fdev_ids::{Outfitting, Shipyard};
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
@@ -147,9 +147,12 @@ pub struct ShipLoadout {
 
 impl Into<crate::state::ShipLoadout> for ShipLoadout {
     fn into(self) -> crate::state::ShipLoadout {
+
+        let ship_type = Shipyard::metadata(&self.ship);
+
         crate::state::ShipLoadout {
             timestamp: self.timestamp,
-            ship: self.ship,
+            ship: ship_type.map(|s| s.name.clone()).unwrap_or(self.ship),
             ship_id: self.ship_id,
             ship_name: self.ship_name,
             ship_ident: self.ship_ident,
