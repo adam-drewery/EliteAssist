@@ -5,6 +5,7 @@ mod crew;
 mod crime;
 mod datalink;
 mod died;
+mod engineering;
 mod friend;
 mod mission;
 mod powerplay;
@@ -15,7 +16,6 @@ mod resurrect;
 mod squadron;
 mod statistics;
 mod status;
-mod engineering;
 
 pub use codex_entry::*;
 pub use commander::*;

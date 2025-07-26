@@ -6,6 +6,7 @@ mod ship;
 mod suit;
 mod personal;
 mod engineering;
+mod navigation;
 
 pub use activity::*;
 pub use engineering::*;
@@ -15,6 +16,7 @@ pub use message::*;
 pub use personal::*;
 pub use ship::*;
 pub use suit::*;
+pub use navigation::*;
 
 use crate::event::JournalEvent;
 use serde::Deserialize;
@@ -38,6 +40,7 @@ pub struct State {
     pub rank: Rank,
     pub reputation: Reputation,
     pub engineers: EngineerProgress,
+    nav_route: Vec<NavRouteStep>
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
@@ -157,7 +160,9 @@ impl State {
             JournalEvent::SupercruiseExit(_) => {}
             JournalEvent::Resurrect(_) => {}
             JournalEvent::FSSSignalDiscovered(_) => {}
-            JournalEvent::NavRoute(_) => {}
+            JournalEvent::NavRoute(e) => {
+                self.nav_route = e.into();
+            }
             JournalEvent::Shipyard(_) => {}
             JournalEvent::ApproachSettlement(_) => {}
             JournalEvent::StoredShips(_) => {}

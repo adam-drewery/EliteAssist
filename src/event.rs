@@ -1,10 +1,10 @@
 mod economy;
 mod inventory;
-mod navigation;
 mod personal;
 mod session;
 mod vehicle;
 mod format;
+mod navigation;
 
 use economy::*;
 use inventory::*;
@@ -61,7 +61,7 @@ pub enum JournalEvent {
     SupercruiseExit(SupercruiseExit),
     Resurrect(Resurrect),
     FSSSignalDiscovered(FSSSignalDiscovered),
-    NavRoute(Empty),
+    NavRoute(NavRoute),
     Shipyard(Shipyard),
     ApproachSettlement(ApproachSettlement),
     StoredShips(StoredShips),

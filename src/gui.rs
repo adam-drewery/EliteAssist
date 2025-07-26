@@ -5,12 +5,14 @@ mod navigation_bar;
 mod ship_locker;
 mod messages;
 mod market;
+mod navigation;
 
 use crate::event::JournalEvent;
+use crate::gui::navigation::navigation;
 use crate::state::{ActiveScreen, State};
 use commander_details::commander_details;
 use header_bar::header_bar;
-use iced::widget::{column, row, svg, text};
+use iced::widget::{column, row, svg};
 use iced::{Bottom, Center, Element, Fill};
 use market::market;
 use materials::materials;
@@ -44,7 +46,7 @@ impl Gui {
                 header_bar(state),
                 match state.active_screen {
                     ActiveScreen::Commander => commander_details(state),
-                    ActiveScreen::Navigation => row![text("navigation shit")],
+                    ActiveScreen::Navigation => navigation(state),
                     ActiveScreen::Materials => materials(state),
                     ActiveScreen::ShipLocker => ship_locker(state),
                     ActiveScreen::Market => market(state),

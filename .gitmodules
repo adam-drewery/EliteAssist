@@ -1,0 +1,3 @@
+[submodule "FDevIDs"]
+	path = FDevIDs
+	url = https://github.com/EDCD/FDevIDs.git
