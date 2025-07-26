@@ -1,13 +1,14 @@
+use crate::gui::components::{header, details};
 use crate::event::JournalEvent;
 use crate::image::{ENGINEER_ICON, FIXED, GIMBALLED, TURRET};
-use crate::state::{ShipModule, SlotType, State};
-use crate::theme::styles::header_style;
+use crate::state::{ShipLoadout, ShipModule, SlotType, State};
 use crate::theme::{GRAY, ORANGE, WHITE, YELLOW};
 use iced::border::radius;
 use iced::widget::image::Handle;
 use iced::widget::svg::Handle as SvgHandle;
-use iced::widget::{button, column, container, image, row, svg, text, Column, Row};
+use iced::widget::{column, container, image, row, svg, text, Column, Row};
 use iced::{Border, Center, Element, Fill, Left, Right, Theme, Top};
+use thousands::Separable;
 
 pub fn ship(state: &State) -> Column<JournalEvent> {
     let mut weapons: Vec<Element<JournalEvent>> = vec![];
@@ -28,7 +29,6 @@ pub fn ship(state: &State) -> Column<JournalEvent> {
             }
 
             SlotType::CoreInternal(_) => {
-
                 let row = module_details(module, 0).into();
                 core_internals.push(row);
             }
@@ -47,29 +47,16 @@ pub fn ship(state: &State) -> Column<JournalEvent> {
     }
 
     let mut result = column![
-        button("SHIP").style(header_style).width(Fill),
-        row![
-            column![
-                text(state.ship_loadout.ship_name.to_uppercase())
-                    .color(ORANGE)
-                    .size(30)
-                    .align_x(Left),
-                text(state.ship_loadout.ship.to_uppercase())
-                    .color(ORANGE)
-                    .size(16)
-                    .align_x(Left)
-            ],
-            column![].width(Fill),
-            column![
-                text(state.ship_loadout.ship_ident.to_uppercase())
-                    .color(GRAY)
-                    .size(20)
-                    .align_x(Right)
-            ]
-        ]
-        .padding([0, 8])
-        .height(60)
-        .align_y(Top),
+        header("SHIP"),
+        ship_title(&state.ship_loadout),
+        details("REBUY", "CR ".to_owned() + &state.ship_loadout.rebuy.to_string().separate_with_commas()),
+        details("CARGO CAPACITY", state.ship_loadout.cargo_capacity.to_string()),
+        details("HULL HEALTH", state.ship_loadout.hull_health.to_string()),
+        details("FUEL CAPACITY (MAIN)", state.ship_loadout.fuel_capacity.main.to_string()),
+        details("FUEL CAPACITY (RESERVE)", state.ship_loadout.fuel_capacity.reserve.to_string()),
+        details("MAX JUMP RANGE", state.ship_loadout.max_jump_range.to_string() + " LY"),
+        details("UNLADEN MASS", state.ship_loadout.unladen_mass.to_string() + " T"),
+        header("MODULES")
     ]
     .padding(8);
 
@@ -98,6 +85,31 @@ pub fn ship(state: &State) -> Column<JournalEvent> {
     }
 
     result
+}
+
+fn ship_title(ship_loadout: &ShipLoadout) -> Row<JournalEvent> {
+    row![
+            column![
+                text(ship_loadout.ship_name.to_uppercase())
+                    .color(ORANGE)
+                    .size(30)
+                    .align_x(Left),
+                text(ship_loadout.ship.to_uppercase())
+                    .color(ORANGE)
+                    .size(16)
+                    .align_x(Left)
+            ],
+            column![].width(Fill),
+            column![
+                text(ship_loadout.ship_ident.to_uppercase())
+                    .color(GRAY)
+                    .size(20)
+                    .align_x(Right)
+            ]
+        ]
+        .padding([0, 8])
+        .height(60)
+        .align_y(Top)
 }
 
 fn module_details(module: &ShipModule, size: u8) -> Row<JournalEvent> {

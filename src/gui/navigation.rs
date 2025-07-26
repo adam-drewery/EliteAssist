@@ -1,7 +1,7 @@
+use crate::gui::components::header;
 use crate::event::JournalEvent;
 use crate::state::State;
-use crate::theme::styles::header_style;
-use iced::widget::{button, row, text, Column, Row};
+use iced::widget::{row, text, Column, Row};
 use iced::{Fill, Top};
 
 pub fn navigation(state: &State) -> Row<JournalEvent> {
@@ -17,7 +17,7 @@ fn route(state: &State) -> Column<JournalEvent> {
 
 
     iced::widget::column![
-        button("ROUTE").style(header_style).width(Fill),
+        header("ROUTE"),
         row!["Legal State: ", text(&state.crime.legal_state)],
     ]
         .padding(8)
@@ -27,7 +27,7 @@ fn route(state: &State) -> Column<JournalEvent> {
 
 fn location(state: &State) -> Column<JournalEvent> {
     iced::widget::column![
-        button("LOCATION").style(header_style).width(Fill),
+        header("LOCATION"),
         text(&state.commander_name),
     ]
         .padding(8)

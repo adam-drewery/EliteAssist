@@ -6,6 +6,7 @@ mod ship_locker;
 mod messages;
 mod market;
 mod navigation;
+mod components;
 
 use crate::event::JournalEvent;
 use crate::gui::navigation::navigation;

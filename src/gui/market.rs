@@ -1,8 +1,9 @@
+use crate::gui::components::header;
 use crate::event::JournalEvent;
 use crate::state::{MarketItem, State};
-use crate::theme::{styles, GRAY, ORANGE, WHITE, YELLOW};
-use iced::widget::{button, scrollable, Button};
+use crate::theme::{GRAY, ORANGE, WHITE, YELLOW};
 use iced::widget::{column, row, text, Row};
+use iced::widget::scrollable;
 use iced::{Bottom, Element, Fill, Left};
 
 pub fn market(state: &State) -> Row<JournalEvent> {
@@ -50,10 +51,6 @@ pub fn market(state: &State) -> Row<JournalEvent> {
         ]
         .width(Fill)
     ]
-}
-
-fn header(name: &str) -> Button<JournalEvent> {
-    button(name).width(Fill).style(styles::header_style)
 }
 
 fn cell<'a>(value: impl text::IntoFragment<'a>) -> Element<'a, JournalEvent> {

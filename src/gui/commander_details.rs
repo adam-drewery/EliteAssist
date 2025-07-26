@@ -1,10 +1,10 @@
 mod ship;
 
+use crate::gui::components::header;
 use crate::event::JournalEvent;
 use crate::gui::commander_details::ship::ship;
 use crate::state::State;
-use crate::theme::styles::header_style;
-use iced::widget::{button, column, row, scrollable, text, Column, Row};
+use iced::widget::{column, row, scrollable, text, Column, Row};
 use iced::{Fill, Top};
 
 pub fn commander_details(state: &State) -> Row<JournalEvent> {
@@ -19,7 +19,7 @@ pub fn commander_details(state: &State) -> Row<JournalEvent> {
 
 fn legal_status(state: &State) -> Column<JournalEvent> {
     column![
-        button("LEGAL").style(header_style).width(Fill),
+        header("LEGAL"),
         row!["Legal State: ", text(&state.crime.legal_state)],
     ]
     .padding(8)
@@ -29,7 +29,7 @@ fn legal_status(state: &State) -> Column<JournalEvent> {
 
 fn location(state: &State) -> Column<JournalEvent> {
     column![
-        button("LOCATION").style(header_style).width(Fill),
+        header("LOCATION"),
         text(&state.commander_name),
     ]
     .padding(8)

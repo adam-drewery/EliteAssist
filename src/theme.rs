@@ -31,15 +31,15 @@ pub fn theme(_state: &State) -> Theme {
 }
 
 pub mod styles {
-    use crate::theme::{BLACK, ORANGE};
-    use iced::widget::button::{Status, Style};
+    use crate::theme::{ORANGE, WHITE};
+    use iced::widget::container;
     use iced::Background::Color;
     use iced::Theme;
 
-    pub fn header_style(_theme: &Theme, _status: Status) -> Style {
-        Style {
+    pub fn header_style(_theme: &Theme) -> container::Style {
+        container::Style {
             background: Some(Color(ORANGE)),
-            text_color: BLACK,
+            text_color: Some(WHITE),
             border: Default::default(),
             shadow: Default::default(),
         }

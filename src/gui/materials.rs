@@ -5,6 +5,7 @@ use crate::theme::*;
 use iced::widget::svg::Handle;
 use iced::widget::{column, row, scrollable, svg, text, Column, Row};
 use iced::{Element, Fill, Top};
+use crate::gui::components::sub_header;
 
 pub fn materials(state: &State) -> Row<JournalEvent> {
     
@@ -19,7 +20,7 @@ pub fn materials(state: &State) -> Row<JournalEvent> {
 
 fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a, JournalEvent> {
     iced::widget::column![
-        text(title).size(20).color(ORANGE),
+        sub_header(title),
         scrollable(
             column(
                 groups.iter().flat_map(|group| {
