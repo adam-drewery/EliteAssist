@@ -40,7 +40,7 @@ pub struct State {
     pub rank: Rank,
     pub reputation: Reputation,
     pub engineers: EngineerProgress,
-    nav_route: Vec<NavRouteStep>
+    pub nav_route: Vec<NavRouteStep>
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
@@ -154,14 +154,21 @@ impl State {
 
             JournalEvent::Cargo(_) => {}
             JournalEvent::BookDropship(_) => {}
-            JournalEvent::StartJump(_) => {}
+            JournalEvent::StartJump(e) => {
+                self.journal.push(e.into())
+            }
             JournalEvent::LaunchDrone(_) => {}
             JournalEvent::SupercruiseEntry(_) => {}
             JournalEvent::SupercruiseExit(_) => {}
             JournalEvent::Resurrect(_) => {}
             JournalEvent::FSSSignalDiscovered(_) => {}
             JournalEvent::NavRoute(e) => {
-                self.nav_route = e.into();
+                let route = e.into();
+
+                // The journal file gives us blank NavRoute events when we plot one. Kinda weird.
+                if !route.is_empty() {
+                    self.nav_route = route;
+                }
             }
             JournalEvent::Shipyard(_) => {}
             JournalEvent::ApproachSettlement(_) => {}
@@ -180,7 +187,9 @@ impl State {
             JournalEvent::CollectItems(_) => {}
             JournalEvent::LeaveBody(_) => {}
             JournalEvent::FSDJump(_) => {}
-            JournalEvent::NavRouteClear(_) => {}
+            JournalEvent::NavRouteClear(_) => {
+                self.nav_route.clear();
+            }
             JournalEvent::Bounty(_) => {}
             JournalEvent::ReservoirReplenished(_) => {}
             JournalEvent::UseConsumable(_) => {}

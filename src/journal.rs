@@ -70,7 +70,9 @@ impl JournalWatcher {
             FileDetails::new(dir_path.join("Status.json")),
             FileDetails::new(dir_path.join("Backpack.json")),
             FileDetails::new(dir_path.join("Cargo.json")),
+            FileDetails::new(dir_path.join("ShipLocker.json")),
             FileDetails::new(dir_path.join("Market.json")),
+            FileDetails::new(dir_path.join("NavRoute.json")),
         ];
 
         let (watcher_tx, watcher_rx) = mpsc::channel(32);
@@ -126,6 +128,8 @@ impl JournalWatcher {
                 match reader.read_line(&mut buffer) {
                     Ok(bytes_read) if bytes_read > 0 => {
                         let line = buffer.as_str();
+                        
+                        debug!("Journal file updated: {}", &line);
                         let deserialize_result = serde_json::from_str(line);
 
                         if let Ok(event) = deserialize_result {
@@ -331,7 +335,7 @@ fn check_snapshot_file(file_details: &mut FileDetails) -> Option<JournalEvent> {
         if file_reader.read_to_string(&mut line).is_ok() && !line.is_empty() {
             file_details.last_modified = modified;
 
-            debug!("Snapshot file updated: {}", &line);
+            info!("Snapshot file updated: {}", &line);
             let deserialize_result = serde_json::from_str(&line);
             if let Ok(event) = deserialize_result {
                 return Some(event);

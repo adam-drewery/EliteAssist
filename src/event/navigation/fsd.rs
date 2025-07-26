@@ -1,6 +1,8 @@
 use crate::event::navigation::faction::Faction;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
+use crate::event::format::prettify_date;
+use crate::state::GameActivity;
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct SystemFaction {
@@ -205,6 +207,15 @@ pub struct StartJump {
 
     #[serde(rename = "Taxi")]
     pub taxi: bool,
+
+    #[serde(rename = "StarSystem")]
+    pub star_system: Option<String>,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: Option<u64>,
+
+    #[serde(rename = "StarClass")]
+    pub star_class: Option<String>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -215,4 +226,25 @@ pub struct JetConeBoost {
 
     #[serde(rename = "BoostValue")]
     pub boost_value: f64,
+}
+
+impl Into<GameActivity> for StartJump {
+    fn into(self) -> GameActivity {
+
+        match self.jump_type.as_str() {
+            "Supercruise" => GameActivity {
+                time: self.timestamp,
+                time_display: prettify_date(&self.timestamp),
+                verb: "".into(),
+                noun: "Entered supercruise".into()
+            },
+            "Hyperspace" => GameActivity {
+                time: self.timestamp,
+                time_display: prettify_date(&self.timestamp),
+                verb: "Jumped to".into(),
+                noun: format!["{} ({})", self.star_system.unwrap(), self.star_class.unwrap()]
+            },
+            _ => panic!("Unknown jump type")
+        }
+    }
 }

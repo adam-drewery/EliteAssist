@@ -103,7 +103,7 @@ fn ship_title(ship_loadout: &ShipLoadout) -> Row<JournalEvent> {
             column![
                 text(ship_loadout.ship_ident.to_uppercase())
                     .color(GRAY)
-                    .size(20)
+                    .size(30)
                     .align_x(Right)
             ]
         ]
