@@ -197,7 +197,6 @@ impl From<String> for SlotType {
             "DiscoveryScanner" => SlotType::Miscellaneous(MiscellaneousType::DiscoveryScanner),
             "ColonisationSuite" => SlotType::Miscellaneous(MiscellaneousType::ColonisationSuite),
             
-            
             "WeaponColour" => SlotType::Cosmetic(CosmeticType::WeaponColour),
             "EngineColour" => SlotType::Cosmetic(CosmeticType::EngineColour),
             "PaintJob" => SlotType::Cosmetic(CosmeticType::PaintJob),
