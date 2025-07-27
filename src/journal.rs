@@ -1,5 +1,5 @@
 use crate::event::JournalEvent;
-use log::{debug, error, info};
+use log::{debug, error, info, warn};
 use std::fs::{File, OpenOptions};
 use std::io;
 use std::io::{BufRead, BufReader, Read, Seek, SeekFrom};
@@ -244,7 +244,7 @@ impl JournalWatcher {
 fn get_journal_paths(dir: &Path) -> io::Result<Vec<PathBuf>> {
     // Check if directory exists
     if !dir.exists() {
-        info!("Journal directory does not exist yet: {}", dir.display());
+        warn!("Journal directory does not exist yet: {}", dir.display());
         return Ok(Vec::new());
     }
 
@@ -335,7 +335,7 @@ fn check_snapshot_file(file_details: &mut FileDetails) -> Option<JournalEvent> {
         if file_reader.read_to_string(&mut line).is_ok() && !line.is_empty() {
             file_details.last_modified = modified;
 
-            info!("Snapshot file updated: {}", &line);
+            debug!("Snapshot file updated: {}", &line);
             let deserialize_result = serde_json::from_str(&line);
             if let Ok(event) = deserialize_result {
                 return Some(event);

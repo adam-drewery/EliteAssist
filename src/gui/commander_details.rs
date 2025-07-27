@@ -12,7 +12,7 @@ pub fn commander_details(state: &State) -> Row<JournalEvent> {
     row![
         legal_status(state),
         scrollable(location(state)),
-        scrollable(ship(state)),
+        ship(state),
     ]
     .align_y(Top)
     .height(Fill)
