@@ -10,9 +10,9 @@ use crate::gui::components::sub_header;
 pub fn materials(state: &State) -> Row<JournalEvent> {
     
     row![
-        materials_list("RAW", &state.materials.raw),
-        materials_list("MANUFACTURED", &state.materials.manufactured),
-        materials_list("ENCODED", &state.materials.encoded),
+        materials_list("Raw", &state.materials.raw),
+        materials_list("Manufactured", &state.materials.manufactured),
+        materials_list("Encoded", &state.materials.encoded),
     ]
     .align_y(Top)
     .height(Fill)
@@ -32,11 +32,11 @@ fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a,
 
                     rows.extend(sorted_materials.into_iter().map(|item| {
                         let svg_handle = match item.rarity {
-                            1 => Handle::from_memory(GRADE_1),
-                            2 => Handle::from_memory(GRADE_2),
-                            3 => Handle::from_memory(GRADE_3),
-                            4 => Handle::from_memory(GRADE_4),
-                            5 => Handle::from_memory(GRADE_5),
+                            1 => Handle::from_memory(GRADE_1_SVG),
+                            2 => Handle::from_memory(GRADE_2_SVG),
+                            3 => Handle::from_memory(GRADE_3_SVG),
+                            4 => Handle::from_memory(GRADE_4_SVG),
+                            5 => Handle::from_memory(GRADE_5_SVG),
                             _ => Handle::from_memory(COURIER_ICON),
                         };
 

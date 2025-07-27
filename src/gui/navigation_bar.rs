@@ -9,7 +9,6 @@ use std::mem::discriminant;
 pub fn navigation_bar(state: &State) -> Row<JournalEvent> {
     row![
         navigation_button(state, "CMDR", ActiveScreen::Commander),
-        navigation_button(state, "NAVIGATION", ActiveScreen::Navigation),
         navigation_button(state, "MATERIALS", ActiveScreen::Materials),
         navigation_button(state, "SHIP LOCKER", ActiveScreen::ShipLocker),
         navigation_button(state, "MARKET", ActiveScreen::Market),

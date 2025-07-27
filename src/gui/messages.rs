@@ -24,7 +24,7 @@ pub fn name_color(kind: &Channel) -> Color {
 
 fn messages_column(state: &State) -> Column<JournalEvent> {
     column![
-            text("MESSAGES").size(20).color(ORANGE),
+            text("Messages").size(20).color(ORANGE),
             scrollable(column(
                 state
                     .messages
@@ -66,7 +66,7 @@ fn messages_column(state: &State) -> Column<JournalEvent> {
 
 fn journal_column(state: &State) -> Column<JournalEvent> {
     column![
-            text("JOURNAL").size(20).color(ORANGE),
+            text("Journal").size(20).color(ORANGE),
             scrollable(column(
                 state
                     .journal

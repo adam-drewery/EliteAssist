@@ -10,19 +10,19 @@ pub fn market(state: &State) -> Row<JournalEvent> {
     row![
         column![
             row![
-                header("NAME"),
-                header("BUY"), 
-                header("SELL"),
-                header("STOCK"),
-                header("DEMAND"), 
-                header("PRODUCER"),
-                header("CONSUMER"),
+                header("Name"),
+                header("Buy"),
+                header("Sell"),
+                header("Stock"),
+                header("Demand"),
+                header("Producer"),
+                header("Consumer"),
             ]
             .spacing(20)
             .padding(2)
             .width(Fill),
             scrollable(column(state.market.groups.iter().flat_map(|group| {
-                let mut rows = vec![text(group.name.to_uppercase())
+                let mut rows = vec![text(&group.name)
                     .size(20)
                     .color(GRAY)
                     .align_x(Left)

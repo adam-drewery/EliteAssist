@@ -28,6 +28,7 @@ pub struct State {
     pub credits: String,
     pub current_system: String,
     pub current_body: String,
+    pub location: CurrentLocation,
     pub ship_locker: ShipLocker,
     pub ship_loadout: ShipLoadout,
     pub suit_loadout: SuitLoadout,
@@ -48,7 +49,6 @@ pub enum ActiveScreen {
     #[default]
     Commander,
     ShipLocker,
-    Navigation,
     Market,
     Materials,
     Messages,
@@ -61,7 +61,7 @@ impl State {
         match event {
 
             JournalEvent::Commander(commander) => {
-                self.commander_name = "CMDR ".to_owned() + &commander.name.to_uppercase();
+                self.commander_name = "CMDR ".to_owned() + &commander.name;
             }
 
             JournalEvent::Materials(e) => {
@@ -70,11 +70,13 @@ impl State {
             }
 
             JournalEvent::Location(e) => {
-                self.current_system = e.star_system;
+                self.current_system = e.star_system.clone();
 
                 if e.body_type != "Star" {
-                    self.current_body = e.body;
+                    self.current_body = e.body.clone();
                 }
+                
+                self.location = e.into();
             }
 
             JournalEvent::ShipLocker(e) => {

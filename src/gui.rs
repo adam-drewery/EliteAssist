@@ -5,11 +5,9 @@ mod navigation_bar;
 mod ship_locker;
 mod messages;
 mod market;
-mod navigation;
 mod components;
 
 use crate::event::JournalEvent;
-use crate::gui::navigation::navigation;
 use crate::state::{ActiveScreen, State};
 use overview::overview;
 use header_bar::header_bar;
@@ -20,10 +18,9 @@ use materials::materials;
 use messages::messages;
 use navigation_bar::navigation_bar;
 use ship_locker::ship_locker;
+use crate::image::LOADING_PNG;
 
 pub struct Gui;
-
-const LOADING: &[u8] = include_bytes!("image/loading.svg");
 
 impl Gui {
     pub fn view(state: &State) -> Element<JournalEvent> {
@@ -32,7 +29,7 @@ impl Gui {
                 row![].height(Fill),
                 row![
                     column![].width(Fill),
-                    svg(svg::Handle::from_memory(LOADING))
+                    svg(svg::Handle::from_memory(LOADING_PNG))
                         .width(128)
                         .height(128),
                     column![].width(Fill)
@@ -47,7 +44,6 @@ impl Gui {
                 header_bar(state),
                 match state.active_screen {
                     ActiveScreen::Commander => overview(state),
-                    ActiveScreen::Navigation => navigation(state),
                     ActiveScreen::Materials => materials(state),
                     ActiveScreen::ShipLocker => ship_locker(state),
                     ActiveScreen::Market => market(state),

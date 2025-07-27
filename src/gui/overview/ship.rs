@@ -1,6 +1,6 @@
 use crate::event::JournalEvent;
 use crate::gui::components::{details, header};
-use crate::image::{ENGINEER_ICON, FIXED_PNG, GIMBALLED_PNG, TURRET_PNG};
+use crate::image::{ENGINEER_ICON_PNG, FIXED_PNG, GIMBALLED_PNG, TURRET_PNG};
 use crate::state::{ShipLoadout, ShipModule, SlotType, State};
 use crate::theme::{GRAY, ORANGE, WHITE, YELLOW};
 use iced::border::radius;
@@ -8,6 +8,7 @@ use iced::widget::image::Handle;
 use iced::widget::{column, container, image, row, scrollable, text, Column, Row};
 use iced::{Border, Center, Element, Fill, Left, Right, Theme, Top};
 use thousands::Separable;
+use crate::fonts::eurocaps::FONT;
 
 pub fn ship(state: &State) -> Column<JournalEvent> {
     let mut weapons: Vec<Element<JournalEvent>> = vec![];
@@ -49,39 +50,39 @@ pub fn ship(state: &State) -> Column<JournalEvent> {
 
     if !weapons.is_empty() {
         modules_column = modules_column
-            .push(column![text("WEAPONS").color(GRAY).size(30)])
+            .push(column![text("Weapons").font(FONT).color(GRAY).size(30)])
             .push(column(weapons));
     }
 
     if !utilities.is_empty() {
         modules_column = modules_column
-            .push(column![text("UTILITIES").color(GRAY).size(30)])
+            .push(column![text("Utilities").font(FONT).color(GRAY).size(30)])
             .push(column(utilities));
     }
 
     if !core_internals.is_empty() {
         modules_column = modules_column
-            .push(column![text("CORE INTERNALS").color(GRAY).size(30)])
+            .push(column![text("Core Internals").font(FONT).color(GRAY).size(30)])
             .push(column(core_internals));
     }
 
     if !optional_internals.is_empty() {
         modules_column = modules_column
-            .push(column![text("OPTIONAL INTERNALS").color(GRAY).size(30)])
+            .push(column![text("Optional Internals").font(FONT).color(GRAY).size(30)])
             .push(column(optional_internals));
     }
     
     column![
-        header("SHIP"),
+        header("Ship"),
         ship_title(&state.ship_loadout),
-        details("REBUY", "CR ".to_owned() + &state.ship_loadout.rebuy.to_string().separate_with_commas()),
-        details("CARGO CAPACITY", state.ship_loadout.cargo_capacity.to_string() + " T"),
-        details("HULL HEALTH", (state.ship_loadout.hull_health * 100.0).to_string() + "%"),
-        details("FUEL CAPACITY (MAIN)", state.ship_loadout.fuel_capacity.main.to_string() + " T"),
-        details("FUEL CAPACITY (RESERVE)", state.ship_loadout.fuel_capacity.reserve.to_string() + " T"),
-        details("MAX JUMP RANGE", format!("{:.2} LY", state.ship_loadout.max_jump_range)),
-        details("UNLADEN MASS", format!("{:.2} T", state.ship_loadout.unladen_mass)),
-        header("MODULES"),
+        details("Rebuy", "CR ".to_owned() + &state.ship_loadout.rebuy.to_string().separate_with_commas()),
+        details("Cargo Capacity", state.ship_loadout.cargo_capacity.to_string() + " T"),
+        details("Hull Health", (state.ship_loadout.hull_health * 100.0).to_string() + "%"),
+        details("Fuel Capacity (Main)", state.ship_loadout.fuel_capacity.main.to_string() + " T"),
+        details("Fuel Capacity (Reserve)", state.ship_loadout.fuel_capacity.reserve.to_string() + " T"),
+        details("Max Jump Range", format!("{:.2} LY", state.ship_loadout.max_jump_range)),
+        details("Unladen Mass", format!("{:.2} T", state.ship_loadout.unladen_mass)),
+        header("Modules"),
         scrollable(row![modules_column, column![].width(12)])
     ]
     .padding(8)
@@ -90,18 +91,21 @@ pub fn ship(state: &State) -> Column<JournalEvent> {
 fn ship_title(ship_loadout: &ShipLoadout) -> Row<JournalEvent> {
     row![
             column![
-                text(ship_loadout.ship_name.to_uppercase())
+                text(&ship_loadout.ship_name)
+                    .font(FONT)
                     .color(ORANGE)
                     .size(30)
                     .align_x(Left),
-                text(ship_loadout.ship.to_uppercase())
+                text(&ship_loadout.ship)
+                    .font(FONT)
                     .color(ORANGE)
                     .size(16)
                     .align_x(Left)
             ],
             column![].width(Fill),
             column![
-                text(ship_loadout.ship_ident.to_uppercase())
+                text(&ship_loadout.ship_ident)
+                    .font(FONT)
                     .color(GRAY)
                     .size(30)
                     .align_x(Right)
@@ -168,7 +172,7 @@ fn mount_type_icon(module: &ShipModule, size: u8) -> Column<JournalEvent> {
 fn engineering_levels(module: &ShipModule) -> Column<JournalEvent> {
     if let Some(engineering) = &module.engineering {
         column![
-            row((0..engineering.level).map(|_| image(Handle::from_bytes(ENGINEER_ICON)).into()))
+            row((0..engineering.level).map(|_| image(Handle::from_bytes(ENGINEER_ICON_PNG)).into()))
                 .padding(4)
         ]
     } else {

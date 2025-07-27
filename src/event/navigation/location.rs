@@ -1,11 +1,11 @@
 use crate::event::navigation::faction::Faction;
+use crate::event::navigation::station::StationEconomy;
+use crate::state::{CurrentLocation, FactionState};
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
-use crate::event::navigation::station::StationEconomy;
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Location {
-
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -121,15 +121,103 @@ pub struct Location {
     pub factions: Option<Vec<Faction>>,
 
     #[serde(rename = "SystemFaction")]
-    pub system_faction: Option<SystemFaction>
+    pub system_faction: Option<SystemFaction>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct SystemFaction {
-
     #[serde(rename = "Name")]
     pub name: String,
 
     #[serde(rename = "FactionState")]
     pub faction_state: Option<String>,
+}
+
+impl Into<CurrentLocation> for Location {
+    fn into(self) -> CurrentLocation {
+        CurrentLocation {
+            dist_from_star_ls: self.dist_from_star_ls,
+            docked: self.docked,
+            station_name: self.station_name.clone(),
+            station_type: self.station_type.clone(),
+            station_faction: self
+                .station_faction
+                .clone()
+                .map(|sf| crate::state::SystemFaction {
+                    name: sf.name,
+                    faction_state: sf.faction_state,
+                }),
+            station_government: self.station_government_localised.clone(),
+            station_services: self.station_services.clone(),
+            station_economy: self.station_economy_localised.clone(),
+            station_economies: self.station_economies.clone().map(|economies| {
+                economies
+                    .into_iter()
+                    .map(|economy| crate::state::StationEconomy {
+                        name: economy.name_localised.unwrap_or_default(),
+                        proportion: economy.proportion,
+                    })
+                    .collect()
+            }),
+            taxi: self.taxi,
+            multicrew: self.multicrew,
+            star_system: self.star_system.clone(),
+            system_address: self.system_address,
+            star_pos: self.star_pos.clone(),
+            system_allegiance: self.system_allegiance.clone(),
+            system_economy: self.system_economy_localised.clone(),
+            system_second_economy: self.system_second_economy_localised.clone(),
+            system_government: self.system_government_localised.clone(),
+            system_security: self.system_security_localised.clone(),
+            population: self.population,
+            body: self.body.clone(),
+            body_id: self.body_id,
+            body_type: self.body_type.clone(),
+            controlling_power: self.controlling_power.clone(),
+            powers: self.powers.clone(),
+            powerplay_state: self.powerplay_state.clone(),
+            powerplay_state_control_progress: self.powerplay_state_control_progress,
+            powerplay_state_reinforcement: self.powerplay_state_reinforcement,
+            powerplay_state_undermining: self.powerplay_state_undermining,
+            factions: self.factions.clone().map(|factions| {
+                factions
+                    .into_iter()
+                    .map(|faction| crate::state::Faction {
+                        name: faction.name,
+                        faction_state: faction.faction_state,
+                        government: faction.government,
+                        influence: faction.influence,
+                        allegiance: faction.allegiance,
+                        happiness: faction.happiness_localised.unwrap_or_default(),
+                        my_reputation: faction.my_reputation,
+                        recovering_states: faction.recovering_states.map(|states| {
+                            states
+                                .into_iter()
+                                .map(|state| FactionState {
+                                    state: state.state,
+                                    trend: state.trend,
+                                })
+                                .collect()
+                        }),
+                        active_states: faction.active_states.map(|states| {
+                            states
+                                .into_iter()
+                                .map(|state| FactionState {
+                                    state: state.state,
+                                    trend: state.trend,
+                                })
+                                .collect()
+                        }),
+                    })
+                    .collect()
+            }),
+            system_faction: self
+                .system_faction
+                .clone()
+                .map(|sf| crate::state::SystemFaction {
+                    name: sf.name,
+                    faction_state: sf.faction_state,
+                }),
+        }
+    }
 }

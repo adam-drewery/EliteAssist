@@ -3,7 +3,6 @@
 use crate::gui::Gui;
 use crate::subscription::subscription;
 use crate::theme::theme;
-use iced::Font;
 
 mod gui;
 mod event;
@@ -14,10 +13,7 @@ mod theme;
 mod image;
 mod text;
 mod fdev_ids;
-
-const FONT_BYTES: &[u8] = include_bytes!("font/eurostile.ttf");
-
-pub const FONT: Font = Font::with_name("Eurostile");
+mod fonts;
 
 #[tokio::main]
 async fn main() {
@@ -27,8 +23,9 @@ async fn main() {
     clog.init();
 
     iced::application("EliteAssist", Gui::update, Gui::view)
-        .font(FONT_BYTES)
-        .default_font(FONT)
+        .font(fonts::eurostile::FONT_BYTES)
+        .font(fonts::eurocaps::FONT_BYTES)
+        .default_font(fonts::eurostile::FONT)
         .subscription(subscription)
         .theme(theme)
         .run()
