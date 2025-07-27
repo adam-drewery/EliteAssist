@@ -1,15 +1,17 @@
 mod ship;
 
 use crate::event::JournalEvent;
-use crate::gui::components::{details, header, sub_header};
+use crate::gui::components::{details, details_extra, header, sub_header};
 use crate::gui::overview::ship::ship;
 use crate::state::State;
-use crate::theme::{DARK_GRAY, GRAY, ORANGE, WHITE};
+use crate::theme::{DARK_GRAY, GRAY, ORANGE, RED, WHITE};
 use iced::border::radius;
-use iced::widget::{column, container, row, scrollable, text, Column, Row};
+use iced::widget::{column, container, image, row, scrollable, text, Column, Row};
 use iced::{Border, Fill, Theme};
 use std::f64;
+use iced::widget::image::Handle;
 use thousands::Separable;
+use crate::image::FUEL_STAR_PNG;
 
 pub fn overview(state: &State) -> Row<JournalEvent> {
     row![
@@ -31,16 +33,18 @@ fn location(state: &State) -> Column<JournalEvent> {
         details("Government", &state.location.system_government),
         details("Economy", &state.location.system_economy),
         details("Population", state.location.population.to_string().separate_with_commas()),
-        details("Security", &state.location.system_security),
+        details("Security", &state.location.system_security.replace(" Security", "")),
         details("Allegiance", &state.location.system_allegiance),
     ]
         .padding(8);
 
     if state.location.powerplay_state.is_some() {
         result = result.push(sub_header("Powerplay"))
-            .push(details("Controller", state.location.controlling_power.clone().unwrap_or_default()))
+            .push(details_extra(
+                "Controller", 
+                state.location.controlling_power.clone().unwrap_or_default(),
+                state.location.powerplay_state_control_progress.map(|x| format!("{:.2}%", x * 100.0)).unwrap_or_default()))
             .push(details("State", state.location.powerplay_state.clone().unwrap_or_default()))
-            .push(details("Control", state.location.powerplay_state_control_progress.map(|x| x.to_string()).unwrap_or_default()))
             .push(details("Reinforcement", state.location.powerplay_state_reinforcement.map(|x| x.to_string()).unwrap_or_default()))
             .push(details("Undermining", state.location.powerplay_state_undermining.map(|x| x.to_string()).unwrap_or_default()));
     }
@@ -50,11 +54,21 @@ fn location(state: &State) -> Column<JournalEvent> {
 
         // todo: why do i have to clone this, i don't wanna
         for faction in state.location.factions.clone().unwrap() {
+            let states = if let Some(active_states) = &faction.active_states {
+                let state_names: Vec<String> = active_states.iter().map(|s| s.state.clone()).collect();
+                format!("{} | {} | {}", faction.allegiance, faction.government, state_names.join(" | "))
+            } else {
+                format!("{} | {}", faction.allegiance, faction.government)
+            };
+
             result = result.push(
                 row![
-                    column![text(faction.name)].width(256),
-                    column![text(faction.government).color(GRAY)].width(128),
+                    column![text(faction.name)],
+                    column![].width(12),
+                    column![text(states).color(GRAY)],
                     column![].width(Fill),
+                    column![text(format!("{:.2}%", faction.my_reputation)).color(GRAY)],
+                    column![].width(12),
                     column![text(format!("{:.2}%", faction.influence * 100.0)).color(GRAY)],
                 ]
             );
@@ -85,11 +99,25 @@ fn route(state: &State) -> Column<JournalEvent> {
         if i != 0 {
             let prev_step = &state.nav_route[i - 1];
             let distance = calculate_distance(&prev_step.star_pos, &route_step.star_pos);
+
+            let mut icons_column = column![];
+            let mut star_type_text = text(&route_step.star_class);
+
+            if route_step.is_fuel_star() {
+                icons_column = icons_column.push(row![image(Handle::from_bytes(FUEL_STAR_PNG)).width(12).height(12)].padding(3));
+            }
+            else {
+                star_type_text = star_type_text.color(RED);
+            }
+
             items_column = items_column.push(
                 row![
                     container(row![
                         column![text(&route_step.star_system)],
                         column![].width(Fill),
+                        column![star_type_text],
+                        icons_column,
+                        column![].width(16),
                         column![text(format!("{:.2} ly", distance))]
                     ])
                     .style(route_step_style)

@@ -31,6 +31,7 @@ async fn main() {
         .theme(theme)
         .window_size(Size::new(1920.0, 1080.0))
         .centered()
+        .antialiasing(true)
         .run()
         .unwrap();
 }

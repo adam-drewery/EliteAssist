@@ -1,6 +1,6 @@
 use crate::event::JournalEvent;
 use crate::gui::components::{details, header};
-use crate::image::{ENGINEER_ICON_PNG, FIXED_PNG, GIMBALLED_PNG, TURRET_PNG};
+use crate::image::{CORE_INTERNAL_PNG, ENGINEER_ICON_PNG, FIXED_PNG, GIMBALLED_PNG, HARDPOINTS_PNG, OPTIONAL_INTERNAL_PNG, TURRET_PNG, UTILITIES_PNG};
 use crate::state::{ShipLoadout, ShipModule, SlotType, State};
 use crate::theme::{GRAY, ORANGE, WHITE, YELLOW};
 use iced::border::radius;
@@ -11,7 +11,7 @@ use thousands::Separable;
 use crate::fonts::eurocaps::FONT;
 
 pub fn ship(state: &State) -> Column<JournalEvent> {
-    let mut weapons: Vec<Element<JournalEvent>> = vec![];
+    let mut hardpoints: Vec<Element<JournalEvent>> = vec![];
     let mut utilities: Vec<Element<JournalEvent>> = vec![];
     let mut core_internals: Vec<Element<JournalEvent>> = vec![];
     let mut optional_internals: Vec<Element<JournalEvent>> = vec![];
@@ -24,7 +24,7 @@ pub fn ship(state: &State) -> Column<JournalEvent> {
                 if *size == 0 {
                     utilities.push(row);
                 } else {
-                    weapons.push(row);
+                    hardpoints.push(row);
                 }
             }
 
@@ -47,31 +47,29 @@ pub fn ship(state: &State) -> Column<JournalEvent> {
     }
 
     let mut modules_column = column![];
-
-    if !weapons.is_empty() {
+    if !hardpoints.is_empty() {
         modules_column = modules_column
-            .push(column![text("Weapons").font(FONT).color(GRAY).size(30)])
-            .push(column(weapons));
+            .push(module_group_title("Hardpoints", Handle::from_bytes(HARDPOINTS_PNG)))
+            .push(column(hardpoints));
     }
 
     if !utilities.is_empty() {
         modules_column = modules_column
-            .push(column![text("Utilities").font(FONT).color(GRAY).size(30)])
+            .push(module_group_title("Utilities", Handle::from_bytes(UTILITIES_PNG)))
             .push(column(utilities));
     }
 
     if !core_internals.is_empty() {
         modules_column = modules_column
-            .push(column![text("Core Internals").font(FONT).color(GRAY).size(30)])
+            .push(module_group_title("Core Internals", Handle::from_bytes(CORE_INTERNAL_PNG)))
             .push(column(core_internals));
     }
 
     if !optional_internals.is_empty() {
         modules_column = modules_column
-            .push(column![text("Optional Internals").font(FONT).color(GRAY).size(30)])
+            .push(module_group_title("Optional Internals", Handle::from_bytes(OPTIONAL_INTERNAL_PNG)))
             .push(column(optional_internals));
     }
-    
     column![
         header("Ship"),
         ship_title(&state.ship_loadout),
@@ -80,12 +78,20 @@ pub fn ship(state: &State) -> Column<JournalEvent> {
         details("Hull Health", (state.ship_loadout.hull_health * 100.0).to_string() + "%"),
         details("Fuel Capacity (Main)", state.ship_loadout.fuel_capacity.main.to_string() + " T"),
         details("Fuel Capacity (Reserve)", state.ship_loadout.fuel_capacity.reserve.to_string() + " T"),
-        details("Max Jump Range", format!("{:.2} LY", state.ship_loadout.max_jump_range)),
+        details("Max Jump Range", format!("{:.2} ly", state.ship_loadout.max_jump_range)),
         details("Unladen Mass", format!("{:.2} T", state.ship_loadout.unladen_mass)),
         header("Modules"),
         scrollable(row![modules_column, column![].width(12)])
     ]
     .padding(8)
+}
+
+fn module_group_title(title: &str, icon: Handle) -> Column<JournalEvent> {
+    column![row![
+        column![image(icon).width(40).height(40)],
+        column![].width(12),
+        column![text(title).font(FONT).color(GRAY).size(30)],
+    ]]
 }
 
 fn ship_title(ship_loadout: &ShipLoadout) -> Row<JournalEvent> {

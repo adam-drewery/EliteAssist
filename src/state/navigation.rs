@@ -72,3 +72,9 @@ pub struct FactionState {
     pub state: String,
     pub trend: Option<u8>,
 }
+
+impl NavRouteStep {
+    pub fn is_fuel_star(&self) -> bool {
+        matches!(self.star_class.chars().next(), Some('O' | 'B' | 'A' | 'F' | 'G' | 'K' | 'M'))
+    }
+}
