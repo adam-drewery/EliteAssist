@@ -132,7 +132,7 @@ fn module_details(module: &ShipModule, size: u8) -> Row<JournalEvent> {
                 engineering_details(&module)
             ]
             .width(Fill),
-            mount_details(module, size)
+            mount_type_icon(module, size)
         ])
         .style(module_style)
         .height(48)
@@ -143,7 +143,7 @@ fn module_details(module: &ShipModule, size: u8) -> Row<JournalEvent> {
     .align_y(Center)
 }
 
-fn mount_details(module: &ShipModule, size: u8) -> Column<JournalEvent> {
+fn mount_type_icon(module: &ShipModule, size: u8) -> Column<JournalEvent> {
     column![
         row![].height(Fill),
         if size == 0 {

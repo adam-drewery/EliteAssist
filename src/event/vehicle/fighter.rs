@@ -18,8 +18,8 @@ impl Into<GameActivity> for FighterDestroyed {
         GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
-            verb: "Destroyed fighter".into(),
-            noun: self.id.to_string(),
+            verb: "Destroyed".into(),
+            noun: format!["Fighter {}", self.id.to_string()],
         }
     }
 }
@@ -41,8 +41,8 @@ impl Into<GameActivity> for FighterRebuilt {
         GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
-            verb: "Rebuilt fighter".into(),
-            noun: self.id.to_string()
+            verb: "Rebuilt".into(),
+            noun: format!["Fighter {}", self.id.to_string()],
         }
     }
 }
@@ -62,8 +62,8 @@ impl Into<GameActivity> for DockFighter {
         GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
-            verb: "Docked fighter".into(),
-            noun: self.id.to_string(),
+            verb: "Docked".into(),
+            noun: format!["Fighter {}", self.id.to_string()],
         }
     }
 }
@@ -85,8 +85,8 @@ impl Into<GameActivity> for CrewLaunchFighter {
         GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
-            verb: "Launched fighter by".into(),
-            noun: format!("{}", self.crew),
+            verb: "Launched".into(),
+            noun: format!["Fighter by {}", self.crew],
         }
     }
 }
@@ -112,8 +112,8 @@ impl Into<GameActivity> for LaunchFighter {
         GameActivity {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
-            verb: "Launched fighter".into(),
-            noun: self.id.to_string(),
+            verb: "Launched".into(),
+            noun: format!["Fighter {}", self.id.to_string()],
         }
     }
 }

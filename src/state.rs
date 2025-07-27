@@ -70,8 +70,11 @@ impl State {
             }
 
             JournalEvent::Location(e) => {
-                self.current_system = e.star_system.clone();
-                self.current_body = e.body.clone();
+                self.current_system = e.star_system;
+
+                if e.body_type != "Star" {
+                    self.current_body = e.body;
+                }
             }
 
             JournalEvent::ShipLocker(e) => {
@@ -83,7 +86,6 @@ impl State {
                 if let Some(balance) = e.balance {
                     self.credits = balance.separate_with_commas() + " CR";
                 }
-
                 if let Some(legal_state) = e.legal_state {
                     self.crime.legal_state = legal_state;
                 }
@@ -154,14 +156,17 @@ impl State {
 
             JournalEvent::Cargo(_) => {}
             JournalEvent::BookDropship(_) => {}
+
             JournalEvent::StartJump(e) => {
                 self.journal.push(e.into())
             }
+
             JournalEvent::LaunchDrone(_) => {}
             JournalEvent::SupercruiseEntry(_) => {}
             JournalEvent::SupercruiseExit(_) => {}
             JournalEvent::Resurrect(_) => {}
             JournalEvent::FSSSignalDiscovered(_) => {}
+
             JournalEvent::NavRoute(e) => {
                 let route = e.into();
 
@@ -170,6 +175,7 @@ impl State {
                     self.nav_route = route;
                 }
             }
+
             JournalEvent::Shipyard(_) => {}
             JournalEvent::ApproachSettlement(_) => {}
             JournalEvent::StoredShips(_) => {}
@@ -186,10 +192,16 @@ impl State {
             JournalEvent::UnderAttack(_) => {}
             JournalEvent::CollectItems(_) => {}
             JournalEvent::LeaveBody(_) => {}
-            JournalEvent::FSDJump(_) => {}
+
+            JournalEvent::FSDJump(e) => {
+                self.current_system = e.star_system;
+                self.current_body = "".to_string();
+            }
+
             JournalEvent::NavRouteClear(_) => {
                 self.nav_route.clear();
             }
+
             JournalEvent::Bounty(_) => {}
             JournalEvent::ReservoirReplenished(_) => {}
             JournalEvent::UseConsumable(_) => {}

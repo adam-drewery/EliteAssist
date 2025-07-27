@@ -10,6 +10,8 @@ pub const BLUE: Color = Color::from_rgb(0.7, 0.8, 1.0);
 
 pub const GRAY: Color = Color::from_rgb(0.3, 0.3, 0.3);
 
+pub const DARK_GRAY: Color = Color::from_rgb(0.15, 0.15, 0.15);
+
 pub const BACKGROUND: Color = Color::from_rgb(0.1, 0.1, 0.1);
 
 pub const RED: Color = Color::from_rgb(1.0, 0.0, 0.0);

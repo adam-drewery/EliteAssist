@@ -1,4 +1,4 @@
-mod commander_details;
+mod overview;
 mod header_bar;
 mod materials;
 mod navigation_bar;
@@ -11,7 +11,7 @@ mod components;
 use crate::event::JournalEvent;
 use crate::gui::navigation::navigation;
 use crate::state::{ActiveScreen, State};
-use commander_details::commander_details;
+use overview::overview;
 use header_bar::header_bar;
 use iced::widget::{column, row, svg};
 use iced::{Bottom, Center, Element, Fill};
@@ -46,7 +46,7 @@ impl Gui {
             column![
                 header_bar(state),
                 match state.active_screen {
-                    ActiveScreen::Commander => commander_details(state),
+                    ActiveScreen::Commander => overview(state),
                     ActiveScreen::Navigation => navigation(state),
                     ActiveScreen::Materials => materials(state),
                     ActiveScreen::ShipLocker => ship_locker(state),
