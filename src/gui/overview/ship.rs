@@ -70,6 +70,7 @@ pub fn ship(state: &State) -> Column<JournalEvent> {
             .push(module_group_title("Optional Internals", Handle::from_bytes(OPTIONAL_INTERNAL_PNG)))
             .push(column(optional_internals));
     }
+    
     column![
         header("Ship"),
         ship_title(&state.ship_loadout),

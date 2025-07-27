@@ -3,19 +3,24 @@ mod ship;
 use crate::event::JournalEvent;
 use crate::gui::components::{details, details_extra, header, sub_header};
 use crate::gui::overview::ship::ship;
+use crate::image::FUEL_STAR_PNG;
 use crate::state::State;
 use crate::theme::{DARK_GRAY, GRAY, ORANGE, RED, WHITE};
 use iced::border::radius;
-use iced::widget::{column, container, image, row, scrollable, text, Column, Row};
-use iced::{Border, Fill, Theme};
-use std::f64;
 use iced::widget::image::Handle;
+use iced::widget::{column, container, image, row, scrollable, text, Column, Row};
+use iced::{Border, Element, Fill, Theme};
+use std::f64;
 use thousands::Separable;
-use crate::image::FUEL_STAR_PNG;
 
 pub fn overview(state: &State) -> Row<JournalEvent> {
     row![
-        personal(state),
+        column![
+            personal(state),
+            inventory(state),
+            missions(state),
+            messages(state)
+        ],
         column![
             route(state),
             location(state),
@@ -23,6 +28,46 @@ pub fn overview(state: &State) -> Row<JournalEvent> {
         ],
         ship(state)
     ]
+}
+
+fn inventory(state: &State) -> Column<JournalEvent> {
+    column![
+        header("Inventory"),
+    ]
+    .height(Fill)
+}
+
+fn missions(state: &State) -> Column<JournalEvent> {
+    column![
+        header("Transactions"),
+    ]
+    .height(Fill)
+}
+
+fn messages(state: &State) -> Column<JournalEvent> {
+    column![
+        header("Messages"),
+        scrollable(column(
+                state
+                    .messages
+                    .iter()
+                    .filter(|item| !item.from.is_empty())
+                    .map(|item| {
+                        column![
+                            row![
+                                column![text(&item.from).size(16).color(ORANGE)],
+                                column![].width(12),
+                                column![text(&item.time_display).size(12).color(GRAY)].padding(3),
+                            ],
+                            row![text(&item.text).color(WHITE).size(16)]
+                        ]
+                        .padding(4)
+                    })
+                    .map(Element::from)
+            ))
+            .anchor_bottom()
+    ]
+    .height(256)
 }
 
 fn location(state: &State) -> Column<JournalEvent> {
