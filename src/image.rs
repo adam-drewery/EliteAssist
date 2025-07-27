@@ -12,8 +12,8 @@ pub const GRADE_4: &[u8] = include_bytes!("image/grade-4.svg");
 
 pub const GRADE_5: &[u8] = include_bytes!("image/grade-5.svg");
 
-pub const FIXED: &[u8] = include_bytes!("image/ed-fixed.svg");
+pub const FIXED_PNG: &[u8] = include_bytes!("image/ed-fixed.png");
 
-pub const GIMBALLED: &[u8] = include_bytes!("image/ed-gimballed.svg");
+pub const GIMBALLED_PNG: &[u8] = include_bytes!("image/ed-gimballed.png");
 
-pub const TURRET: &[u8] = include_bytes!("image/ed-turret.svg");
+pub const TURRET_PNG: &[u8] = include_bytes!("image/ed-turret.png");

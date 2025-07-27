@@ -1,12 +1,11 @@
-use crate::gui::components::{header, details};
 use crate::event::JournalEvent;
-use crate::image::{ENGINEER_ICON, FIXED, GIMBALLED, TURRET};
+use crate::gui::components::{details, header};
+use crate::image::{ENGINEER_ICON, FIXED_PNG, GIMBALLED_PNG, TURRET_PNG};
 use crate::state::{ShipLoadout, ShipModule, SlotType, State};
 use crate::theme::{GRAY, ORANGE, WHITE, YELLOW};
 use iced::border::radius;
 use iced::widget::image::Handle;
-use iced::widget::svg::Handle as SvgHandle;
-use iced::widget::{column, container, image, row, scrollable, svg, text, Column, Row};
+use iced::widget::{column, container, image, row, scrollable, text, Column, Row};
 use iced::{Border, Center, Element, Fill, Left, Right, Theme, Top};
 use thousands::Separable;
 
@@ -151,9 +150,9 @@ fn mount_details(module: &ShipModule, size: u8) -> Column<JournalEvent> {
             row![]
         } else {
             match module.mount.as_str() {
-                "Fixed" => row![svg(SvgHandle::from_memory(FIXED))],
-                "Gimballed" => row![svg(SvgHandle::from_memory(GIMBALLED))],
-                "Turreted" => row![svg(SvgHandle::from_memory(TURRET))],
+                "Fixed" => row![image(Handle::from_bytes(FIXED_PNG))],
+                "Gimballed" => row![image(Handle::from_bytes(GIMBALLED_PNG))],
+                "Turreted" => row![image(Handle::from_bytes(TURRET_PNG))],
                 _ => row![],
             }
         }
