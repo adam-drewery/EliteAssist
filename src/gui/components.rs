@@ -17,28 +17,17 @@ pub fn sub_header(title: &str) -> Row<JournalEvent> {
 }
 
 pub fn details(label: &str, value: impl Into<String>) -> Row<JournalEvent> {
+    
+    let value = value.into();
+    if value == "" { return row![] }
+    
     row![
         column![text(label).font(FONT).color(GRAY).size(20)]
             .align_x(Right)
             .padding([0, 8])
             .width(Fill),
-        column![text(value.into()).font(FONT).color(ORANGE).size(20)]
+        column![text(value).font(FONT).color(ORANGE).size(20)]
             .padding([0, 8])
             .width(Fill),
     ]
-}
-
-pub fn optional_details<'a>(label: &'a str, value: &'a Option<String>) -> Row<'a, JournalEvent> {
-    match value {
-        None => row![],
-        Some(str) => row![
-            column![text(label).font(FONT).color(GRAY).size(20)]
-                .align_x(Right)
-                .padding([0, 8])
-                .width(Fill),
-            column![text(str).font(FONT).color(ORANGE).size(20)]
-                .padding([0, 8])
-                .width(Fill),
-        ],
-    }
 }

@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 
+use iced::Size;
 use crate::gui::Gui;
 use crate::subscription::subscription;
 use crate::theme::theme;
@@ -28,6 +29,8 @@ async fn main() {
         .default_font(fonts::eurostile::FONT)
         .subscription(subscription)
         .theme(theme)
+        .window_size(Size::new(1920.0, 1080.0))
+        .centered()
         .run()
         .unwrap();
 }

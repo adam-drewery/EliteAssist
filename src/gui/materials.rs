@@ -1,14 +1,13 @@
 use crate::event::JournalEvent;
+use crate::gui::components::sub_header;
 use crate::image::*;
 use crate::state::{MaterialGroup, State};
 use crate::theme::*;
 use iced::widget::svg::Handle;
 use iced::widget::{column, row, scrollable, svg, text, Column, Row};
 use iced::{Element, Fill, Top};
-use crate::gui::components::sub_header;
 
 pub fn materials(state: &State) -> Row<JournalEvent> {
-    
     row![
         materials_list("Raw", &state.materials.raw),
         materials_list("Manufactured", &state.materials.manufactured),
@@ -21,12 +20,12 @@ pub fn materials(state: &State) -> Row<JournalEvent> {
 fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a, JournalEvent> {
     iced::widget::column![
         sub_header(title),
-        scrollable(
-            column(
-                groups.iter().flat_map(|group| {
-
+        scrollable(column(
+            groups
+                .iter()
+                .flat_map(|group| {
                     let mut rows = vec![row![text(&group.name).size(16).color(GRAY)].padding(2)];
-                    
+
                     let mut sorted_materials = group.materials.to_vec();
                     sorted_materials.sort_by_key(|item| item.rarity);
 
@@ -42,7 +41,10 @@ fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a,
 
                         row![
                             column![svg(svg_handle).height(16).width(16)].padding([0, 5]),
-                            text(item.count.to_string()).size(16).color(YELLOW).width(36),
+                            text(item.count.to_string())
+                                .size(16)
+                                .color(YELLOW)
+                                .width(36),
                             text(item.name).size(16),
                         ]
                         .padding(2)
@@ -51,8 +53,7 @@ fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a,
                     rows
                 })
                 .map(Element::from)
-            )
-        )
+        ))
         .width(Fill)
     ]
 }
