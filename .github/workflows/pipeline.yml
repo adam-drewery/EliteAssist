@@ -17,33 +17,34 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Build Release
-        run: cargo build --release --verbose
-
       - name: Test
         run: cargo test --verbose
-
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: binaries
-          path: target/release/*
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     environment: beta
     steps:
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v4
+      - uses: actions/checkout@v4
         with:
-          name: binaries
-          path: target/release
+          submodules: recursive
 
-      - name: Create Release
+      - name: Setup Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker
+        run: |
+          docker build -t eliteassist-builder .
+          # Extract the built artifacts from the container
+          docker create --name temp-container eliteassist-builder
+          mkdir -p ./artifacts
+          docker cp temp-container:/app/target/release ./artifacts
+          docker rm temp-container
+
+      - name: Deploy
         uses: softprops/action-gh-release@v2
         with:
-          files: target/release/*
+          files: ./artifacts/release/EliteAssist
           prerelease: true
           generate_release_notes: true
           tag_name: ${{ github.run_number }}
