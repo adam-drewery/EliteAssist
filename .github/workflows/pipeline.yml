@@ -10,12 +10,9 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build-test-deploy:
+  build:
     runs-on: ubuntu-latest
-    environment: beta
-
     steps:
-
       - uses: actions/checkout@v4
         with:
           submodules: recursive
@@ -25,6 +22,23 @@ jobs:
 
       - name: Test
         run: cargo test --verbose
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries
+          path: target/release/*
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: beta
+    steps:
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: binaries
+          path: target/release
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
