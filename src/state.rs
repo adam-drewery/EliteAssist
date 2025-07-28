@@ -140,7 +140,9 @@ impl State {
 
             JournalEvent::Backpack(_) => {}
             JournalEvent::Missions(_) => {}
-            JournalEvent::Shutdown(_) => {}
+            JournalEvent::Shutdown(_) => {
+                self.nav_route.clear();
+            }
 
             JournalEvent::Loadout(e) => { self.ship_loadout = e.into() }
 
@@ -196,8 +198,9 @@ impl State {
             JournalEvent::LeaveBody(_) => {}
 
             JournalEvent::FSDJump(e) => {
-                self.current_system = e.star_system;
+                self.current_system = e.star_system.to_string();
                 self.current_body = "".to_string();
+                self.location = e.into();
             }
 
             JournalEvent::NavRouteClear(_) => {
@@ -352,9 +355,10 @@ impl State {
             JournalEvent::SellSuit(_) => {}
             JournalEvent::DeleteSuitLoadout(_) => {},
 
-            // let's ignore these events, they seem pointless
             JournalEvent::FileHeader(_) => {},
-            JournalEvent::LoadGame(_) => {}
+            JournalEvent::LoadGame(_) => {
+                self.nav_route.clear();
+            }
         }
     }
 }

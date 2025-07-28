@@ -2,7 +2,7 @@ use crate::event::navigation::faction::Faction;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 use crate::event::format::prettify_date;
-use crate::state::GameActivity;
+use crate::state::{CurrentLocation, GameActivity};
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct SystemFaction {
@@ -245,6 +245,69 @@ impl Into<GameActivity> for StartJump {
                 noun: format!["{} ({})", self.star_system.unwrap(), self.star_class.unwrap()]
             },
             _ => panic!("Unknown jump type")
+        }
+    }
+}
+
+impl Into<CurrentLocation> for FSDJump {
+    fn into(self) -> CurrentLocation {
+        CurrentLocation {
+            dist_from_star_ls: None,
+            docked: false,
+            station_name: None,
+            station_type: None,
+            station_faction: None,
+            station_government: None,
+            station_services: None,
+            station_economy: None,
+            station_economies: None,
+            taxi: Some(self.taxi),
+            multicrew: Some(self.multicrew),
+            star_system: self.star_system,
+            system_address: self.system_address,
+            star_pos: self.star_pos,
+            system_allegiance: self.system_allegiance,
+            system_economy: self.system_economy_localised,
+            system_second_economy: self.system_second_economy_localised,
+            system_government: self.system_government_localised,
+            system_security: self.system_security_localised,
+            population: self.population,
+            body: self.body,
+            body_id: self.body_id,
+            body_type: self.body_type,
+            powers: self.powers.clone(),
+            controlling_power: self.powers.and_then(|p| p.first().cloned()),
+            powerplay_state: self.powerplay_state,
+            powerplay_state_control_progress: self.powerplay_conflict_progress.and_then(|p| p.first().map(|x| x.conflict_progress)),
+            powerplay_state_reinforcement: None,
+            powerplay_state_undermining: None,
+            factions: self.factions.map(|factions| {
+                factions.into_iter().map(|f| crate::state::Faction {
+                    name: f.name,
+                    faction_state: f.faction_state,
+                    government: f.government,
+                    influence: f.influence,
+                    allegiance: f.allegiance,
+                    happiness: f.happiness,
+                    my_reputation: f.my_reputation,
+                    recovering_states: f.recovering_states.map(|states| {
+                        states.into_iter().map(|s| crate::state::FactionState {
+                            state: s.state,
+                            trend: s.trend,
+                        }).collect()
+                    }),
+                    active_states: f.active_states.map(|states| {
+                        states.into_iter().map(|s| crate::state::FactionState {
+                            state: s.state,
+                            trend: s.trend,
+                        }).collect()
+                    }),
+                }).collect()
+            }),
+            system_faction: self.system_faction.map(|f| crate::state::SystemFaction {
+                name: f.name,
+                faction_state: f.faction_state,
+            }),
         }
     }
 }

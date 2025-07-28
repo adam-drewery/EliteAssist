@@ -12,6 +12,7 @@ use iced::widget::{column, container, image, row, scrollable, text, Column, Row}
 use iced::{Border, Element, Fill, Theme};
 use std::f64;
 use thousands::Separable;
+use crate::fonts::eurocaps::FONT;
 
 pub fn overview(state: &State) -> Row<JournalEvent> {
     row![
@@ -137,7 +138,23 @@ fn personal(state: &State) -> Column<JournalEvent> {
 
 fn route(state: &State) -> Column<JournalEvent> {
     let title_column = column![header("Route")].padding(8);
+
+    if state.nav_route.len() == 0 {
+        return column![
+            title_column,
+            row![].height(Fill),
+            row![
+                column![].width(Fill),
+                column![text("No current route").font(FONT)],
+                column![].width(Fill),
+            ],
+            row![].height(Fill),
+        ]
+    }
+
     let mut items_column = column![].padding(8);
+
+
 
     for i in 0..state.nav_route.len() {
         let route_step = &state.nav_route[i];
