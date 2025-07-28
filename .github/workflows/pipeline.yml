@@ -29,6 +29,16 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Configure Version
+        id: get_version
+        run: |
+          VERSION=$(grep '^version = ' Cargo.toml | cut -d '"' -f2)
+          MAJOR=$(echo $VERSION | cut -d. -f1)
+          MINOR=$(echo $VERSION | cut -d. -f2)
+          NEW_VERSION="$MAJOR.$MINOR.${{ github.run_number }}"
+          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          sed -i "s/^version = \".*\"/version = \"$NEW_VERSION\"/" Cargo.toml
+
       - name: Setup Docker
         uses: docker/setup-buildx-action@v3
 
@@ -47,4 +57,4 @@ jobs:
           files: ./artifacts/release/EliteAssist
           prerelease: true
           generate_release_notes: true
-          tag_name: ${{ github.run_number }}
+          tag_name: v${{ env.VERSION }}
