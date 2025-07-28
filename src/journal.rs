@@ -9,8 +9,6 @@ use tokio::fs;
 use tokio::select;
 use tokio::sync::mpsc;
 
-const JOURNAL_DIRECTORY: &str = ".steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/";
-
 struct FileDetails {
     path: PathBuf,
     last_modified: SystemTime,
@@ -35,10 +33,15 @@ pub struct JournalWatcher {
     current_file_index: usize,
 }
 
+fn get_journal_directory() -> PathBuf {
+    const JOURNAL_DIRECTORY: &str = ".steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/";
+    let home = std::env::var("HOME").expect("Failed to get HOME directory");
+    Path::new(&home).join(JOURNAL_DIRECTORY)
+}
+
 impl JournalWatcher {
     pub fn new() -> Self {
-        let home = std::env::var("HOME").expect("Failed to get HOME directory");
-        let dir_path = Path::new(&home).join(JOURNAL_DIRECTORY);
+        let dir_path = get_journal_directory();
 
         // Get journal files, handling the case where they don't exist yet
         let journal_files = get_journal_paths(dir_path.as_path()).unwrap_or_else(|e| {
@@ -94,7 +97,7 @@ impl JournalWatcher {
 
     fn spawn_watcher(&self) {
         let tx = self.watcher_tx.clone();
-        let dir = PathBuf::from(JOURNAL_DIRECTORY);
+        let dir = get_journal_directory();
 
         tokio::spawn(async move {
             let mut interval = tokio::time::interval(Duration::from_secs(1));
@@ -129,7 +132,7 @@ impl JournalWatcher {
                 match reader.read_line(&mut buffer) {
                     Ok(bytes_read) if bytes_read > 0 => {
                         let line = buffer.as_str();
-                        
+
                         debug!("Journal file updated: {}", &line);
                         let deserialize_result = serde_json::from_str(line);
 
@@ -198,7 +201,8 @@ impl JournalWatcher {
                     }
 
                     // Check for new journal files
-                    let dir_path = Path::new(JOURNAL_DIRECTORY);
+                    let journal_dir = get_journal_directory();
+                    let dir_path = journal_dir.as_path();
                     match get_journal_paths(dir_path) {
                         Ok(journal_files) => {
                             if !journal_files.is_empty() {
@@ -336,7 +340,7 @@ fn check_snapshot_file(file_details: &mut FileDetails) -> Option<JournalEvent> {
         if file_reader.read_to_string(&mut line).is_ok() && !line.is_empty() {
             file_details.last_modified = modified;
 
-            debug!("Snapshot file updated: {}", &line);
+            info!("Snapshot file updated: {}", &file_details.path.display());
             let deserialize_result = serde_json::from_str(&line);
             if let Ok(event) = deserialize_result {
                 return Some(event);

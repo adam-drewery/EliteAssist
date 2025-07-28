@@ -1,6 +1,6 @@
 use crate::event::JournalEvent;
 use crate::fonts::eurocaps::FONT;
-use crate::gui::components::{details, details_extra, header, sub_header};
+use crate::gui::components::{details, header, sub_header};
 use crate::image::FUEL_STAR_PNG;
 use crate::state::State;
 use crate::theme::{styles, GRAY, RED};
@@ -13,18 +13,18 @@ pub fn location(state: &State) -> Column<JournalEvent> {
     column![
         header("Location"),
         row![
-            column![system_section(state)],
-            column![powerplay_section(state)]
+            system(state),
+            powerplay(state)
         ],
-        factions_section(state),
+        factions(state),
     ]
     .padding(8)
 }
 
-fn factions_section(state: &State) -> Column<JournalEvent> {
-    
+fn factions(state: &State) -> Column<JournalEvent> {
+
     if state.location.factions.is_none() { return column![] }
-    
+
     let mut result = column![sub_header("Factions")];
 
     // todo: why do i have to clone this, i don't wanna
@@ -53,23 +53,21 @@ fn factions_section(state: &State) -> Column<JournalEvent> {
     result
 }
 
-fn powerplay_section(state: &State) -> Column<JournalEvent> {
-    
+fn powerplay(state: &State) -> Column<JournalEvent> {
+
     if state.location.powerplay_state.is_none() { return column![] }
-    
+
     column![
         sub_header("Powerplay"),
-        details_extra(
-            "Controller",
-            state.location.controlling_power.clone().unwrap_or_default(),
-            state.location.powerplay_state_control_progress.map(|x| format!("{:.2}%", x * 100.0)).unwrap_or_default()),
+        details("Controller", state.location.controlling_power.clone().unwrap_or_default()),
+        details("Progress", state.location.powerplay_state_control_progress.map(|x| format!("{:.2}%", x * 100.0)).unwrap_or_default()),
         details("State", state.location.powerplay_state.clone().unwrap_or_default()),
         details("Reinforcement", state.location.powerplay_state_reinforcement.map(|x| x.to_string()).unwrap_or_default()),
         details("Undermining", state.location.powerplay_state_undermining.map(|x| x.to_string()).unwrap_or_default())
     ]
 }
 
-fn system_section(state: &State) -> Column<JournalEvent> {
+fn system(state: &State) -> Column<JournalEvent> {
     column![
         sub_header("System"),
         details("Government", &state.location.system_government),
