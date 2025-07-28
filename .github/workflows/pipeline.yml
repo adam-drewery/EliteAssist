@@ -10,15 +10,25 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-
+  build-test-deploy:
     runs-on: ubuntu-latest
+    environment: beta
 
     steps:
+
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-      - name: Build
-        run: cargo build --verbose
+
+      - name: Build Release
+        run: cargo build --release --verbose
+
       - name: Test
         run: cargo test --verbose
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: target/release/*
+          prerelease: true
+          generate_release_notes: true
