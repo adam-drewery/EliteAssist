@@ -9,7 +9,7 @@ use tokio::fs;
 use tokio::select;
 use tokio::sync::mpsc;
 
-const JOURNAL_DIRECTORY: &str = "/home/adam/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/";
+const JOURNAL_DIRECTORY: &str = ".steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/";
 
 struct FileDetails {
     path: PathBuf,
@@ -37,10 +37,11 @@ pub struct JournalWatcher {
 
 impl JournalWatcher {
     pub fn new() -> Self {
-        let dir_path = Path::new(JOURNAL_DIRECTORY);
+        let home = std::env::var("HOME").expect("Failed to get HOME directory");
+        let dir_path = Path::new(&home).join(JOURNAL_DIRECTORY);
 
         // Get journal files, handling the case where they don't exist yet
-        let journal_files = get_journal_paths(dir_path).unwrap_or_else(|e| {
+        let journal_files = get_journal_paths(dir_path.as_path()).unwrap_or_else(|e| {
             error!("Error getting journal paths: {}", e);
             Vec::new()
         });
