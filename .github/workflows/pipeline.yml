@@ -46,3 +46,4 @@ jobs:
           files: target/release/*
           prerelease: true
           generate_release_notes: true
+          tag_name: ${{ github.run_number }}
