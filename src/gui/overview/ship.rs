@@ -10,7 +10,7 @@ use iced::{Border, Center, Element, Fill, Left, Right, Theme, Top};
 use thousands::Separable;
 use crate::fonts::eurocaps::FONT;
 
-pub fn ship(state: &State) -> Column<JournalEvent> {
+pub fn ship_modules(state: &State) -> Column<JournalEvent> {
     let mut hardpoints: Vec<Element<JournalEvent>> = vec![];
     let mut utilities: Vec<Element<JournalEvent>> = vec![];
     let mut core_internals: Vec<Element<JournalEvent>> = vec![];
@@ -72,6 +72,15 @@ pub fn ship(state: &State) -> Column<JournalEvent> {
     }
     
     column![
+        header("Modules"),
+        scrollable(row![modules_column, column![].width(12)])
+    ]
+    .padding(8)
+    .height(Fill)
+}
+
+pub fn ship_details(state: &State) -> Column<JournalEvent> {
+    column![
         header("Ship"),
         ship_title(&state.ship_loadout),
         details("Rebuy", "CR ".to_owned() + &state.ship_loadout.rebuy.to_string().separate_with_commas()),
@@ -81,8 +90,6 @@ pub fn ship(state: &State) -> Column<JournalEvent> {
         details("Fuel Capacity (Reserve)", state.ship_loadout.fuel_capacity.reserve.to_string() + " T"),
         details("Max Jump Range", format!("{:.2} ly", state.ship_loadout.max_jump_range)),
         details("Unladen Mass", format!("{:.2} T", state.ship_loadout.unladen_mass)),
-        header("Modules"),
-        scrollable(row![modules_column, column![].width(12)])
     ]
     .padding(8)
 }

@@ -1,6 +1,6 @@
-mod ship;
 mod location;
 mod personal;
+mod ship;
 
 use crate::event::JournalEvent;
 use crate::gui::components::header;
@@ -22,49 +22,45 @@ pub fn overview(state: &State) -> Row<JournalEvent> {
         ],
         column![
             route(state),
-            location(state),
-
+            location(state)
         ],
-        ship(state)
+        column![
+            ship_details(state),
+            ship_modules(state)
+        ]
     ]
 }
 
 fn inventory(state: &State) -> Column<JournalEvent> {
-    column![
-        header("Inventory"),
-    ]
-    .height(Fill)
+    column![header("Inventory"),].height(Fill)
 }
 
 fn missions(state: &State) -> Column<JournalEvent> {
-    column![
-        header("Transactions"),
-    ]
-    .height(Fill)
+    column![header("Transactions"),].height(Fill)
 }
 
 fn messages(state: &State) -> Column<JournalEvent> {
     column![
         header("Messages"),
         scrollable(column(
-                state
-                    .messages
-                    .iter()
-                    .filter(|item| !item.from.is_empty())
-                    .map(|item| {
-                        column![
-                            row![
-                                column![text(&item.from).size(16).color(ORANGE)],
-                                column![].width(12),
-                                column![text(&item.time_display).size(12).color(GRAY)].padding(3),
-                            ],
-                            row![text(&item.text).color(WHITE).size(16)]
-                        ]
-                        .padding(4)
-                    })
-                    .map(Element::from)
-            ))
-            .anchor_bottom()
+            state
+                .messages
+                .iter()
+                .filter(|item| !item.from.is_empty())
+                .map(|item| {
+                    column![
+                        row![
+                            column![text(&item.from).size(16).color(ORANGE)],
+                            column![].width(12),
+                            column![text(&item.time_display).size(12).color(GRAY)].padding(3),
+                        ],
+                        row![text(&item.text).color(WHITE).size(16)]
+                    ]
+                    .padding(4)
+                })
+                .map(Element::from)
+        ))
+        .anchor_bottom()
     ]
     .height(256)
 }

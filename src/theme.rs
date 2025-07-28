@@ -33,16 +33,30 @@ pub fn theme(_state: &State) -> Theme {
 }
 
 pub mod styles {
-    use crate::theme::{ORANGE, WHITE};
+    use crate::theme::{DARK_GRAY, ORANGE, WHITE};
     use iced::widget::container;
     use iced::Background::Color;
-    use iced::Theme;
+    use iced::{Border, Theme};
+    use iced::border::radius;
 
-    pub fn header_style(_theme: &Theme) -> container::Style {
+    pub fn header(_theme: &Theme) -> container::Style {
         container::Style {
             background: Some(Color(ORANGE)),
             text_color: Some(WHITE),
             border: Default::default(),
+            shadow: Default::default(),
+        }
+    }
+
+    pub fn list_item(_theme: &Theme) -> container::Style {
+        container::Style {
+            background: Some(DARK_GRAY.into()),
+            text_color: Some(WHITE),
+            border: Border {
+                width: 0.0,
+                color: ORANGE,
+                radius: radius(0),
+            },
             shadow: Default::default(),
         }
     }

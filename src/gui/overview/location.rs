@@ -1,19 +1,76 @@
 use crate::event::JournalEvent;
-use crate::gui::components::{details, details_extra, header, sub_header};
-use crate::state::State;
-use crate::theme::{DARK_GRAY, GRAY, ORANGE, RED, WHITE};
-use iced::widget::{column, container, image, row, scrollable, text, Column};
-use iced::{Border, Fill, Theme};
-use iced::border::radius;
-use iced::widget::image::Handle;
-use thousands::Separable;
 use crate::fonts::eurocaps::FONT;
+use crate::gui::components::{details, details_extra, header, sub_header};
 use crate::image::FUEL_STAR_PNG;
+use crate::state::State;
+use crate::theme::{styles, GRAY, RED};
+use iced::widget::image::Handle;
+use iced::widget::{column, container, image, row, scrollable, text, Column};
+use iced::Fill;
+use thousands::Separable;
 
 pub fn location(state: &State) -> Column<JournalEvent> {
-    let mut result = iced::widget::column![
+    column![
         header("Location"),
+        row![
+            column![system_section(state)],
+            column![powerplay_section(state)]
+        ],
+        factions_section(state),
+    ]
+    .padding(8)
+}
 
+fn factions_section(state: &State) -> Column<JournalEvent> {
+    
+    if state.location.factions.is_none() { return column![] }
+    
+    let mut result = column![sub_header("Factions")];
+
+    // todo: why do i have to clone this, i don't wanna
+    for faction in state.location.factions.clone().unwrap() {
+        let states = if let Some(active_states) = &faction.active_states {
+            let state_names: Vec<String> = active_states.iter().map(|s| s.state.clone()).collect();
+            format!("{} | {} | {}", faction.allegiance, faction.government, state_names.join(" | "))
+        } else {
+            format!("{} | {}", faction.allegiance, faction.government)
+        };
+
+        result = result.push(
+            column![
+                row![
+                    column![text(faction.name)],
+                    column![].width(Fill),
+                    column![text(states).color(GRAY)],
+                ]
+            ],
+            //     column![text(format!("{:.2}%", faction.my_reputation)).color(GRAY)],
+            //     column![].width(12),
+            //     column![text(format!("{:.2}%", faction.influence * 100.0)).color(GRAY)],
+        );
+    }
+
+    result
+}
+
+fn powerplay_section(state: &State) -> Column<JournalEvent> {
+    
+    if state.location.powerplay_state.is_none() { return column![] }
+    
+    column![
+        sub_header("Powerplay"),
+        details_extra(
+            "Controller",
+            state.location.controlling_power.clone().unwrap_or_default(),
+            state.location.powerplay_state_control_progress.map(|x| format!("{:.2}%", x * 100.0)).unwrap_or_default()),
+        details("State", state.location.powerplay_state.clone().unwrap_or_default()),
+        details("Reinforcement", state.location.powerplay_state_reinforcement.map(|x| x.to_string()).unwrap_or_default()),
+        details("Undermining", state.location.powerplay_state_undermining.map(|x| x.to_string()).unwrap_or_default())
+    ]
+}
+
+fn system_section(state: &State) -> Column<JournalEvent> {
+    column![
         sub_header("System"),
         details("Government", &state.location.system_government),
         details("Economy", &state.location.system_economy),
@@ -21,46 +78,6 @@ pub fn location(state: &State) -> Column<JournalEvent> {
         details("Security", &state.location.system_security.replace(" Security", "")),
         details("Allegiance", &state.location.system_allegiance),
     ]
-        .padding(8);
-
-    if state.location.powerplay_state.is_some() {
-        result = result.push(sub_header("Powerplay"))
-            .push(details_extra(
-                "Controller",
-                state.location.controlling_power.clone().unwrap_or_default(),
-                state.location.powerplay_state_control_progress.map(|x| format!("{:.2}%", x * 100.0)).unwrap_or_default()))
-            .push(details("State", state.location.powerplay_state.clone().unwrap_or_default()))
-            .push(details("Reinforcement", state.location.powerplay_state_reinforcement.map(|x| x.to_string()).unwrap_or_default()))
-            .push(details("Undermining", state.location.powerplay_state_undermining.map(|x| x.to_string()).unwrap_or_default()));
-    }
-
-    if state.location.factions.is_some() {
-        result = result.push(sub_header("Factions"));
-
-        // todo: why do i have to clone this, i don't wanna
-        for faction in state.location.factions.clone().unwrap() {
-            let states = if let Some(active_states) = &faction.active_states {
-                let state_names: Vec<String> = active_states.iter().map(|s| s.state.clone()).collect();
-                format!("{} | {} | {}", faction.allegiance, faction.government, state_names.join(" | "))
-            } else {
-                format!("{} | {}", faction.allegiance, faction.government)
-            };
-
-            result = result.push(
-                row![
-                    column![text(faction.name)],
-                    column![].width(12),
-                    column![text(states).color(GRAY)],
-                    column![].width(Fill),
-                    column![text(format!("{:.2}%", faction.my_reputation)).color(GRAY)],
-                    column![].width(12),
-                    column![text(format!("{:.2}%", faction.influence * 100.0)).color(GRAY)],
-                ]
-            );
-        }
-    }
-
-    result
 }
 
 pub fn route(state: &State) -> Column<JournalEvent> {
@@ -80,8 +97,6 @@ pub fn route(state: &State) -> Column<JournalEvent> {
     }
 
     let mut items_column = column![].padding(8);
-
-
 
     for i in 0..state.nav_route.len() {
         let route_step = &state.nav_route[i];
@@ -109,7 +124,7 @@ pub fn route(state: &State) -> Column<JournalEvent> {
                         column![].width(16),
                         column![text(format!("{:.2} ly", distance))]
                     ])
-                    .style(route_step_style)
+                    .style(styles::list_item)
                     .padding(8)
                 ]
                     .padding(8)
@@ -128,15 +143,3 @@ fn calculate_distance(pos1: &Vec<f64>, pos2: &Vec<f64>) -> f64 {
     f64::sqrt(dx * dx + dy * dy + dz * dz)
 }
 
-fn route_step_style(_theme: &Theme) -> container::Style {
-    container::Style {
-        background: Some(DARK_GRAY.into()),
-        text_color: Some(WHITE),
-        border: Border {
-            width: 0.0,
-            color: ORANGE,
-            radius: radius(0),
-        },
-        shadow: Default::default(),
-    }
-}
