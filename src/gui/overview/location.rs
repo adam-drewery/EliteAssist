@@ -1,5 +1,5 @@
 use crate::event::JournalEvent;
-use crate::fonts::eurocaps::FONT;
+use crate::font::eurocaps::FONT;
 use crate::gui::components::{details, header, sub_header};
 use crate::image::FUEL_STAR_PNG;
 use crate::state::State;

@@ -8,7 +8,7 @@ use iced::widget::image::Handle;
 use iced::widget::{column, container, image, row, scrollable, text, Column, Row};
 use iced::{Border, Center, Element, Fill, Left, Right, Theme, Top};
 use thousands::Separable;
-use crate::fonts::eurocaps::FONT;
+use crate::font::eurocaps::FONT;
 
 pub fn ship_modules(state: &State) -> Column<JournalEvent> {
     let mut hardpoints: Vec<Element<JournalEvent>> = vec![];

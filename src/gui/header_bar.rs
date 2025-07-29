@@ -3,7 +3,7 @@ use crate::state::State;
 use crate::theme::ORANGE;
 use iced::widget::{column, row, text, Row};
 use iced::{Fill, Left, Right};
-use crate::fonts::eurocaps::FONT;
+use crate::font::eurocaps::FONT;
 
 pub fn header_bar(state: &State) -> Row<JournalEvent> {
     row![

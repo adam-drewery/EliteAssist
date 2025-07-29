@@ -14,7 +14,7 @@ mod theme;
 mod image;
 mod text;
 mod fdev_ids;
-mod fonts;
+mod font;
 
 #[tokio::main]
 async fn main() {
@@ -24,9 +24,9 @@ async fn main() {
     clog.init();
 
     iced::application("EliteAssist", Gui::update, Gui::view)
-        .font(fonts::eurostile::FONT_BYTES)
-        .font(fonts::eurocaps::FONT_BYTES)
-        .default_font(fonts::eurostile::FONT)
+        .font(font::eurostile::FONT_BYTES)
+        .font(font::eurocaps::FONT_BYTES)
+        .default_font(font::eurostile::FONT)
         .subscription(subscription)
         .theme(theme)
         .window_size(Size::new(1920.0, 1080.0))
