@@ -23,6 +23,9 @@ pub struct RedeemVoucher {
     #[serde(rename = "Amount")]
     pub amount: u32,
 
+    #[serde(rename = "Faction")]
+    pub faction: Option<String>,
+
     #[serde(rename = "Factions")]
     pub factions: Option<Vec<FactionVoucher>>,
 }

@@ -29,3 +29,20 @@ pub struct PowerplayJoin {
     #[serde(rename = "Power")]
     pub power: String,
 }
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ActiveState {
+
+    #[serde(rename = "State")]
+    pub state: String,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct Power {
+
+    #[serde(rename = "Power")]
+    pub power: String,
+
+    #[serde(rename = "ConflictProgress")]
+    pub conflict_progress: f64,
+}

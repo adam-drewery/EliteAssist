@@ -2,34 +2,8 @@ use crate::event::navigation::faction::Faction;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 use crate::event::format::prettify_date;
+use crate::event::personal::Power;
 use crate::state::{CurrentLocation, GameActivity};
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct SystemFaction {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "FactionState")]
-    pub faction_state: Option<String>,
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct ActiveState {
-
-    #[serde(rename = "State")]
-    pub state: String,
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct Power {
-
-    #[serde(rename = "Power")]
-    pub power: String,
-
-    #[serde(rename = "ConflictProgress")]
-    pub conflict_progress: f64,
-}
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct FSDJump {
@@ -100,6 +74,15 @@ pub struct FSDJump {
     #[serde(rename = "PowerplayConflictProgress")]
     pub powerplay_conflict_progress: Option<Vec<Power>>,
 
+    #[serde(rename = "PowerplayStateControlProgress")]
+    pub powerplay_state_control_progress: Option<f64>,
+
+    #[serde(rename = "PowerplayStateReinforcement")]
+    pub powerplay_state_reinforcement: Option<u32>,
+
+    #[serde(rename = "PowerplayStateUndermining")]
+    pub powerplay_state_undermining: Option<u32>,
+
     #[serde(rename = "JumpDist")]
     pub jump_dist: f64,
 
@@ -114,6 +97,16 @@ pub struct FSDJump {
 
     #[serde(rename = "SystemFaction")]
     pub system_faction: Option<SystemFaction>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct SystemFaction {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "FactionState")]
+    pub faction_state: Option<String>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -278,9 +271,10 @@ impl Into<CurrentLocation> for FSDJump {
             powers: self.powers.clone(),
             controlling_power: self.powers.and_then(|p| p.first().cloned()),
             powerplay_state: self.powerplay_state,
-            powerplay_state_control_progress: self.powerplay_conflict_progress.and_then(|p| p.first().map(|x| x.conflict_progress)),
-            powerplay_state_reinforcement: None,
-            powerplay_state_undermining: None,
+            powerplay_state_conflict_progress: None, // todo
+            powerplay_state_control_progress: self.powerplay_state_control_progress,
+            powerplay_state_reinforcement: self.powerplay_state_reinforcement,
+            powerplay_state_undermining: self.powerplay_state_undermining,
             factions: self.factions.map(|factions| {
                 factions.into_iter().map(|f| crate::state::Faction {
                     name: f.name,

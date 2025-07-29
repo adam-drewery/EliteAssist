@@ -1,25 +1,29 @@
 mod activity;
+mod engineering;
 mod market;
 mod material;
 mod message;
+mod mission;
+mod navigation;
+mod personal;
 mod ship;
 mod suit;
-mod personal;
-mod engineering;
-mod navigation;
 
 pub use activity::*;
 pub use engineering::*;
 pub use market::*;
 pub use material::*;
 pub use message::*;
+pub use mission::*;
+pub use navigation::*;
 pub use personal::*;
 pub use ship::*;
 pub use suit::*;
-pub use navigation::*;
 
 use crate::event::JournalEvent;
+use log::warn;
 use serde::Deserialize;
+use std::collections::HashMap;
 use thousands::Separable;
 
 #[derive(Default)]
@@ -41,7 +45,11 @@ pub struct State {
     pub rank: Rank,
     pub reputation: Reputation,
     pub engineers: EngineerProgress,
-    pub nav_route: Vec<NavRouteStep>
+    pub nav_route: Vec<NavRouteStep>,
+    pub missions: Vec<Mission>,
+    pub combat_bonds: HashMap<String, i64>,
+    pub bounties: HashMap<String, i64>,
+    pub discoveries: HashMap<String, i64>,
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
@@ -55,11 +63,8 @@ pub enum ActiveScreen {
 }
 
 impl State {
-
     pub fn update_from(&mut self, event: JournalEvent) {
-
         match event {
-
             JournalEvent::Commander(commander) => {
                 self.commander_name = "CMDR ".to_owned() + &commander.name;
             }
@@ -75,7 +80,7 @@ impl State {
                 if e.body_type != "Star" {
                     self.current_body = e.body.clone();
                 }
-                
+
                 self.location = e.into();
             }
 
@@ -107,11 +112,17 @@ impl State {
                 self.journal.push(e.into("Embarked"));
             }
 
-            JournalEvent::NavigateTo(e) => { self.active_screen = e; }
+            JournalEvent::NavigateTo(e) => {
+                self.active_screen = e;
+            }
 
             JournalEvent::Docked(e) => {
-                if let Some(active_fine) = e.active_fine { self.crime.active_fine = active_fine; }
-                if let Some(wanted) = e.wanted { self.crime.wanted = wanted; }
+                if let Some(active_fine) = e.active_fine {
+                    self.crime.active_fine = active_fine;
+                }
+                if let Some(wanted) = e.wanted {
+                    self.crime.wanted = wanted;
+                }
             }
 
             JournalEvent::ReceiveText(e) => {
@@ -124,46 +135,45 @@ impl State {
                 self.market = e.into();
             }
 
-            JournalEvent::Rank(e) => { self.rank = e.into() }
+            JournalEvent::Rank(e) => self.rank = e.into(),
 
-            JournalEvent::Progress(e) => { self.rank = e.into() }
+            JournalEvent::Progress(e) => self.rank = e.into(),
 
-            JournalEvent::Reputation(e) => { self.reputation = e.into() }
+            JournalEvent::Reputation(e) => self.reputation = e.into(),
 
-            JournalEvent::EngineerProgress(e) => { self.engineers = e.into() }
+            JournalEvent::EngineerProgress(e) => self.engineers = e.into(),
             JournalEvent::SquadronStartup(_) => {}
             JournalEvent::Statistics(_) => {}
             JournalEvent::Powerplay(_) => {}
             JournalEvent::Music(_) => {}
 
-            JournalEvent::SuitLoadout(e) => { self.suit_loadout = e.into() }
+            JournalEvent::SuitLoadout(e) => self.suit_loadout = e.into(),
 
             JournalEvent::Backpack(_) => {}
-            JournalEvent::Missions(_) => {}
+            JournalEvent::Missions(_) => { /* this doesn't give us all the info we need */ }
             JournalEvent::Shutdown(_) => {
                 self.nav_route.clear();
             }
 
-            JournalEvent::Loadout(e) => { self.ship_loadout = e.into() }
+            JournalEvent::Loadout(e) => self.ship_loadout = e.into(),
 
-            JournalEvent::BuyAmmo(e) => { self.journal.push(e.into()) }
+            JournalEvent::BuyAmmo(e) => self.journal.push(e.into()),
 
-            JournalEvent::RestockVehicle(e) => { self.journal.push(e.into()) }
+            JournalEvent::RestockVehicle(e) => self.journal.push(e.into()),
 
             JournalEvent::BuyMicroResources(_) => {}
 
             JournalEvent::NpcCrewPaidWage(e) => {
-
-                if e.amount == 0 { return; }
+                if e.amount == 0 {
+                    return;
+                }
                 self.journal.push(e.into())
             }
 
             JournalEvent::Cargo(_) => {}
             JournalEvent::BookDropship(_) => {}
 
-            JournalEvent::StartJump(e) => {
-                self.journal.push(e.into())
-            }
+            JournalEvent::StartJump(e) => self.journal.push(e.into()),
 
             JournalEvent::LaunchDrone(_) => {}
             JournalEvent::SupercruiseEntry(_) => {}
@@ -184,7 +194,11 @@ impl State {
             JournalEvent::ApproachSettlement(_) => {}
             JournalEvent::StoredShips(_) => {}
             JournalEvent::SwitchSuitLoadout(_) => {}
-            JournalEvent::MissionAccepted(_) => {}
+
+            JournalEvent::MissionAccepted(e) => {
+                self.missions.push(e.into());
+            }
+
             JournalEvent::FSDTarget(_) => {}
             JournalEvent::ShipyardSwap(_) => {}
             JournalEvent::ShipyardTransfer(_) => {}
@@ -207,14 +221,32 @@ impl State {
                 self.nav_route.clear();
             }
 
-            JournalEvent::Bounty(_) => {}
+            JournalEvent::Bounty(e) => {
+                for reward in e.rewards {
+                    self.bounties
+                        .entry(reward.faction.clone())
+                        .and_modify(|v| *v += i64::from(reward.reward))
+                        .or_insert(i64::from(reward.reward));
+                }
+            }
             JournalEvent::ReservoirReplenished(_) => {}
             JournalEvent::UseConsumable(_) => {}
             JournalEvent::Outfitting(_) => {}
             JournalEvent::DockingDenied(_) => {}
-            JournalEvent::MissionFailed(_) => {}
+
+            JournalEvent::MissionFailed(e) => {
+                self.missions.retain(|m| m.mission_id != e.mission_id);
+            }
+
+            JournalEvent::MissionAbandoned(e) => {
+                self.missions.retain(|m| m.mission_id != e.mission_id);
+            }
+
+            JournalEvent::MissionCompleted(e) => {
+                self.missions.retain(|m| m.mission_id != e.mission_id);
+            }
+
             JournalEvent::SupercruiseDestinationDrop(_) => {}
-            JournalEvent::MissionAbandoned(_) => {}
             JournalEvent::EngineerCraft(_) => {}
             JournalEvent::DropshipDeploy(_) => {}
             JournalEvent::FuelScoop(_) => {}
@@ -226,11 +258,50 @@ impl State {
             JournalEvent::DockingGranted(_) => {}
             JournalEvent::HeatWarning(_) => {}
             JournalEvent::ShieldState(_) => {}
-            JournalEvent::MissionCompleted(_) => {}
             JournalEvent::MaterialTrade(_) => {}
             JournalEvent::FSSAllBodiesFound(_) => {}
-            JournalEvent::FactionKillBond(_) => {}
-            JournalEvent::RedeemVoucher(_) => {}
+
+            JournalEvent::FactionKillBond(e) => {
+                self.combat_bonds
+                    .entry(e.awarding_faction.clone())
+                    .and_modify(|v| *v += i64::from(e.reward))
+                    .or_insert(i64::from(e.reward));
+            }
+
+            JournalEvent::RedeemVoucher(e) => {
+                let target = match e.r#type.as_str() {
+                    "CombatBond" => &mut self.combat_bonds,
+                    "bounty" => &mut self.bounties,
+                    "codex" => &mut self.discoveries,
+                    _ => {
+                        warn!("Unknown voucher type: {}", e.r#type);
+                        return;
+                    }
+                };
+
+                if let Some(faction) = e.faction {
+                    let result = target
+                        .entry(faction.clone())
+                        .and_modify(|b| *b -= i64::from(e.amount))
+                        .or_default();
+
+                    if *result <= 0 {
+                        target.remove(&faction);
+                    }
+                } else if let Some(vouchers) = e.factions {
+                    for voucher in vouchers {
+                        let result = target
+                            .entry(voucher.faction.clone())
+                            .and_modify(|b| *b -= i64::from(e.amount))
+                            .or_default();
+
+                        if *result <= 0 {
+                            target.remove(&voucher.faction);
+                        }
+                    }
+                }
+            }
+
             JournalEvent::PayBounties(_) => {}
             JournalEvent::Touchdown(_) => {}
             JournalEvent::ShipyardSell(_) => {}
@@ -259,13 +330,13 @@ impl State {
             JournalEvent::EjectCargo(_) => {}
             JournalEvent::HullDamage(_) => {}
 
-            JournalEvent::CrewAssign(e) => { self.journal.push(e.into()) }
+            JournalEvent::CrewAssign(e) => self.journal.push(e.into()),
 
-            JournalEvent::DockFighter(e) => { self.journal.push(e.into()) }
+            JournalEvent::DockFighter(e) => self.journal.push(e.into()),
 
             JournalEvent::CommunityGoal(_) => {}
 
-            JournalEvent::LaunchFighter(e) => { self.journal.push(e.into()) }
+            JournalEvent::LaunchFighter(e) => self.journal.push(e.into()),
 
             JournalEvent::Scanned(_) => {}
             JournalEvent::Friends(_) => {}
@@ -293,13 +364,13 @@ impl State {
             JournalEvent::ShipyardNew(_) => {}
             JournalEvent::CommunityGoalReward(_) => {}
 
-            JournalEvent::CrewMemberJoins(e) => { self.journal.push(e.into()) }
+            JournalEvent::CrewMemberJoins(e) => self.journal.push(e.into()),
 
             JournalEvent::Interdicted(_) => {}
             JournalEvent::SellOrganicData(_) => {}
             JournalEvent::DockSRV(_) => {}
 
-            JournalEvent::FighterDestroyed(e) => { self.journal.push(e.into()) }
+            JournalEvent::FighterDestroyed(e) => self.journal.push(e.into()),
 
             JournalEvent::ModuleSwap(_) => {}
             JournalEvent::MaterialDiscovered(_) => {}
@@ -310,15 +381,15 @@ impl State {
             JournalEvent::AfmuRepairs(_) => {}
             JournalEvent::CommunityGoalJoin(_) => {}
 
-            JournalEvent::NpcCrewRank(e) => { self.journal.push(e.into()) }
+            JournalEvent::NpcCrewRank(e) => self.journal.push(e.into()),
 
             JournalEvent::LoadoutEquipModule(_) => {}
 
-            JournalEvent::FighterRebuilt(e) => { self.journal.push(e.into()) }
+            JournalEvent::FighterRebuilt(e) => self.journal.push(e.into()),
 
             JournalEvent::PowerplayJoin(_) => {}
 
-            JournalEvent::CrewMemberRoleChange(e) => { self.journal.push(e.into()) }
+            JournalEvent::CrewMemberRoleChange(e) => self.journal.push(e.into()),
 
             JournalEvent::SelfDestruct(_) => {}
             JournalEvent::BookTaxi(_) => {}
@@ -329,7 +400,7 @@ impl State {
             JournalEvent::SRVDestroyed(_) => {}
             JournalEvent::DiscoveryScan(_) => {}
 
-            JournalEvent::CrewLaunchFighter(e) => { self.journal.push(e.into()) }
+            JournalEvent::CrewLaunchFighter(e) => self.journal.push(e.into()),
 
             JournalEvent::BuyWeapon(_) => {}
             JournalEvent::RenameSuitLoadout(_) => {}
@@ -340,22 +411,22 @@ impl State {
             JournalEvent::UpgradeSuit(_) => {}
             JournalEvent::AppliedToSquadron(_) => {}
 
-            JournalEvent::CrewMemberQuits(e) => { self.journal.push(e.into()) }
+            JournalEvent::CrewMemberQuits(e) => self.journal.push(e.into()),
 
-            JournalEvent::ChangeCrewRole(e) => { self.journal.push(e.into()) }
+            JournalEvent::ChangeCrewRole(e) => self.journal.push(e.into()),
 
             JournalEvent::AsteroidCracked(_) => {}
             JournalEvent::DatalinkVoucher(_) => {}
             JournalEvent::DeliverPowerMicroResources(_) => {}
             JournalEvent::Interdiction(_) => {}
 
-            JournalEvent::EndCrewSession(e) => { self.journal.push(e.into()) }
+            JournalEvent::EndCrewSession(e) => self.journal.push(e.into()),
 
             JournalEvent::BuySuit(_) => {}
             JournalEvent::SellSuit(_) => {}
-            JournalEvent::DeleteSuitLoadout(_) => {},
+            JournalEvent::DeleteSuitLoadout(_) => {}
 
-            JournalEvent::FileHeader(_) => {},
+            JournalEvent::FileHeader(_) => {}
             JournalEvent::LoadGame(_) => {
                 self.nav_route.clear();
             }

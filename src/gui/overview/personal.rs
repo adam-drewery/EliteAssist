@@ -1,6 +1,6 @@
 use iced::{Element, Fill};
 use crate::event::JournalEvent;
-use crate::gui::components::{details, header};
+use crate::gui::components::*;
 use crate::state::State;
 use iced::widget::{column, row, scrollable, text, Column};
 use crate::theme::{GRAY, ORANGE, WHITE};
@@ -41,15 +41,48 @@ pub fn messages(state: &State) -> Column<JournalEvent> {
         ))
         .anchor_bottom()
     ]
-        .height(256)
+    .height(256)
 }
 
 
-pub fn inventory(state: &State) -> Column<JournalEvent> {
-    column![header("Inventory"),].height(Fill)
+pub fn claims(state: &State) -> Column<JournalEvent> {
 
+    if (state.bounties.len() == 0) && (state.combat_bonds.len() == 0) {
+        return column![
+            header("Claims"),
+            empty_text("No Claims"),
+        ].height(Fill)
+    }
+
+    let all_claims = state.bounties.iter().map(|m| {
+        details(&m.0, format!["{} CR", &m.1])
+    }).chain(
+        state.combat_bonds.iter().map(|m| {
+            details(&m.0, format!["{} CR", &m.1])
+        })
+    );
+
+    column![
+        header("Claims"),
+        scrollable(column(all_claims.map(Element::from)))
+    ].height(Fill)
 }
 
 pub fn missions(state: &State) -> Column<JournalEvent> {
-    column![header("Transactions"),].height(Fill)
+
+    if state.missions.len() == 0 {
+        return column![
+            header("Missions"),
+            empty_text("No Missions"),
+        ]
+    }
+
+    column![
+        header("Missions"),
+        scrollable(column(state.missions.iter().map(|m| {
+            column![
+                details(&m.faction, &m.name)
+            ]
+        }).map(Element::from)))
+    ].height(Fill)
 }

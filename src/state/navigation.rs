@@ -35,6 +35,7 @@ pub struct CurrentLocation {
     pub controlling_power: Option<String>,
     pub powers: Option<Vec<String>>,
     pub powerplay_state: Option<String>,
+    pub powerplay_state_conflict_progress: Option<f64>,
     pub powerplay_state_control_progress: Option<f64>,
     pub powerplay_state_reinforcement: Option<u32>,
     pub powerplay_state_undermining: Option<u32>,
@@ -74,7 +75,15 @@ pub struct FactionState {
 }
 
 impl NavRouteStep {
+    
     pub fn is_fuel_star(&self) -> bool {
         matches!(self.star_class.chars().next(), Some('O' | 'B' | 'A' | 'F' | 'G' | 'K' | 'M'))
+    }
+    
+    pub fn distance_to(&self, other: &NavRouteStep) -> f64 {
+            let dx = self.star_pos[0] - other.star_pos[0];
+            let dy = self.star_pos[1] - other.star_pos[1];
+            let dz = self.star_pos[2] - other.star_pos[2];
+            f64::sqrt(dx * dx + dy * dy + dz * dz)
     }
 }

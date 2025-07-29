@@ -3,6 +3,7 @@ use crate::event::navigation::station::StationEconomy;
 use crate::state::{CurrentLocation, FactionState};
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
+use crate::event::personal::Power;
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Location {
@@ -108,6 +109,9 @@ pub struct Location {
     #[serde(rename = "PowerplayState")]
     pub powerplay_state: Option<String>,
 
+    #[serde(rename = "PowerplayConflictProgress")]
+    pub powerplay_conflict_progress: Option<Vec<Power>>,
+
     #[serde(rename = "PowerplayStateControlProgress")]
     pub powerplay_state_control_progress: Option<f64>,
 
@@ -134,6 +138,7 @@ pub struct SystemFaction {
 }
 
 impl Into<CurrentLocation> for Location {
+
     fn into(self) -> CurrentLocation {
         CurrentLocation {
             dist_from_star_ls: self.dist_from_star_ls,
@@ -176,6 +181,7 @@ impl Into<CurrentLocation> for Location {
             controlling_power: self.controlling_power.clone(),
             powers: self.powers.clone(),
             powerplay_state: self.powerplay_state.clone(),
+            powerplay_state_conflict_progress: None, // todo
             powerplay_state_control_progress: self.powerplay_state_control_progress,
             powerplay_state_reinforcement: self.powerplay_state_reinforcement,
             powerplay_state_undermining: self.powerplay_state_undermining,

@@ -1,5 +1,6 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
+use crate::state;
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct MissionAccepted {
@@ -168,4 +169,23 @@ pub struct MissionRedirected {
 
     #[serde(rename = "OldDestinationSystem")]
     pub old_destination_system: String,
+}
+
+impl Into<state::Mission> for MissionAccepted {
+    fn into(self) -> state::Mission {
+        state::Mission {
+            name: self.localised_name,
+            mission_id: self.mission_id,
+            faction: self.faction,
+            commodity: self.commodity_localised,
+            count: self.count,
+            destination_system: self.destination_system,
+            destination_settlement: self.destination_settlement,
+            expiry: self.expiry,
+            wing: self.wing,
+            influence: self.influence,
+            reputation: self.reputation,
+            reward: self.reward,
+        }
+    }
 }

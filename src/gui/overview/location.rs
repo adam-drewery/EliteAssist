@@ -1,6 +1,5 @@
 use crate::event::JournalEvent;
-use crate::font::eurocaps::FONT;
-use crate::gui::components::{details, header, sub_header};
+use crate::gui::components::*;
 use crate::image::FUEL_STAR_PNG;
 use crate::state::State;
 use crate::theme::{styles, GRAY, RED};
@@ -43,10 +42,7 @@ fn factions(state: &State) -> Column<JournalEvent> {
                     column![].width(Fill),
                     column![text(states).color(GRAY)],
                 ]
-            ],
-            //     column![text(format!("{:.2}%", faction.my_reputation)).color(GRAY)],
-            //     column![].width(12),
-            //     column![text(format!("{:.2}%", faction.influence * 100.0)).color(GRAY)],
+            ]
         );
     }
 
@@ -84,13 +80,7 @@ pub fn route(state: &State) -> Column<JournalEvent> {
     if state.nav_route.len() == 0 {
         return column![
             title_column,
-            row![].height(Fill),
-            row![
-                column![].width(Fill),
-                column![text("No current route").font(FONT)],
-                column![].width(Fill),
-            ],
-            row![].height(Fill),
+            empty_text("No current route")
         ]
     }
 
@@ -100,13 +90,16 @@ pub fn route(state: &State) -> Column<JournalEvent> {
         let route_step = &state.nav_route[i];
         if i != 0 {
             let prev_step = &state.nav_route[i - 1];
-            let distance = calculate_distance(&prev_step.star_pos, &route_step.star_pos);
+            let distance = &prev_step.distance_to(&route_step);
 
             let mut icons_column = column![];
             let mut star_type_text = text(&route_step.star_class);
 
             if route_step.is_fuel_star() {
-                icons_column = icons_column.push(row![image(Handle::from_bytes(FUEL_STAR_PNG)).width(12).height(12)].padding(3));
+                icons_column = icons_column.push(
+                    row![
+                        image(Handle::from_bytes(FUEL_STAR_PNG)).width(12).height(12)].padding(3)
+                );
             }
             else {
                 star_type_text = star_type_text.color(RED);
@@ -125,19 +118,12 @@ pub fn route(state: &State) -> Column<JournalEvent> {
                     .style(styles::list_item)
                     .padding(8)
                 ]
-                    .padding(8)
-                    .width(Fill),
+                .padding(8)
+                .width(Fill),
             );
         }
     }
 
     column![title_column, scrollable(items_column)].height(Fill)
-}
-
-fn calculate_distance(pos1: &Vec<f64>, pos2: &Vec<f64>) -> f64 {
-    let dx = pos2[0] - pos1[0];
-    let dy = pos2[1] - pos1[1];
-    let dz = pos2[2] - pos1[2];
-    f64::sqrt(dx * dx + dy * dy + dz * dz)
 }
 

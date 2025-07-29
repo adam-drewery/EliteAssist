@@ -13,7 +13,7 @@ pub fn overview(state: &State) -> Row<JournalEvent> {
     row![
         column![
             personal(state),
-            inventory(state),
+            claims(state),
             missions(state),
             messages(state)
         ],

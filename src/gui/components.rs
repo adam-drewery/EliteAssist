@@ -1,7 +1,7 @@
 use crate::event::JournalEvent;
 use crate::theme::styles;
 use crate::theme::{GRAY, ORANGE};
-use iced::widget::{column, container, row, text, Row};
+use iced::widget::{column, container, row, text, Column, Row};
 use iced::{Fill, Right};
 use crate::font::eurocaps::FONT;
 
@@ -49,5 +49,17 @@ pub fn details_extra(label: &str, value: impl Into<String>, value2: impl Into<St
         ]
         .padding([0, 8])
         .width(Fill)
+    ]
+}
+
+pub fn empty_text(label: &str) -> Column<JournalEvent> {
+    column![
+        row![].height(Fill),
+        row![
+            column![].width(Fill),
+            column![text(label).font(FONT)],
+            column![].width(Fill),
+        ],
+        row![].height(Fill),
     ]
 }

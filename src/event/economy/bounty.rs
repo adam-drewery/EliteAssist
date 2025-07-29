@@ -37,6 +37,9 @@ pub struct Bounty {
 
     #[serde(rename = "VictimFaction")]
     pub victim_faction: String,
+    
+    #[serde(rename = "SharedWithOthers")]
+    pub shared_with_others: Option<bool>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
