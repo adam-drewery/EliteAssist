@@ -1,6 +1,8 @@
 # EliteAssist
 _A Linux compatible Elite:Dangerous companion for your second monitor_
 
+[![Rust](https://github.com/adam-drewery/EliteAssist/actions/workflows/pipeline.yml/badge.svg)](https://github.com/adam-drewery/EliteAssist/actions/workflows/pipeline.yml)
+
 ## Contents
 
 - [Features](#features)
