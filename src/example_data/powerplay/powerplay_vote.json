@@ -4,6 +4,7 @@
     "event": "PowerplayVote",
     "Power": "Aisling Duval",
     "Votes": 5,
+    "VoteToConsolidate": 1,
     "System": "Kamadhenu"
   }
 ]

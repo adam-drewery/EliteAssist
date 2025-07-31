@@ -11,6 +11,22 @@
     "JumpRangeCurr": 500.0,
     "JumpRangeMax": 500.0,
     "PendingDecommission": false,
+    "ShipPacks": [
+      {
+        "PackTheme": "Zorgon Peterson - Cargo",
+        "PackTier": 1
+      }
+    ],
+    "ModulePacks": [
+      {
+        "PackTheme": "Mining Tools",
+        "PackTier": 2
+      },
+      {
+        "PackTheme": "Limpets",
+        "PackTier": 1
+      }
+    ],
     "SpaceUsage": {
       "TotalCapacity": 25000,
       "Crew": 5250,

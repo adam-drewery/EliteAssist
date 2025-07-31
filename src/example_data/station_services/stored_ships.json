@@ -4,6 +4,7 @@
     "event": "StoredShips",
     "StationName": "Jameson Memorial",
     "StarSystem": "Shinrarta Dezhra",
+    "MarketID": 128666762,
     "ShipsHere": [
       {
         "ShipID": 64,

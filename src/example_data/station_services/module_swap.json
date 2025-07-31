@@ -2,6 +2,7 @@
   {
     "timestamp": "2016-06-10T14:32:03Z",
     "event": "ModuleSwap",
+    "MarketID": 128666762,
     "FromSlot": "SmallHardpoint2",
     "ToSlot": "SmallHardpoint1",
     "FromItem": "hpt_pulselaserburst_fixed_small_scatter",

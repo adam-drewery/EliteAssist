@@ -5,6 +5,7 @@
     "CarrierID": 3700005632,
     "CarrierName": "Stellar Voyager",
     "CallSign": "L14X1J",
+    "MarketID": 3700005633,
     "Materials": [
       {
         "Name": "graphene",

@@ -8,6 +8,7 @@
     "BuyItem": "hpt_multicannon_gimbal_medium",
     "BuyPrice": 50018,
     "Ship": "cobramkiii",
-    "ShipID": 1
+    "ShipID": 1,
+    "MarketID": 128666762
   }
 ]

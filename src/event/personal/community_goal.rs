@@ -100,7 +100,7 @@ pub struct CommunityGoalReward {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct CommunityGoalDiscarded {
+pub struct CommunityGoalDiscard {
 
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,

@@ -3,6 +3,7 @@
     "timestamp": "2016-07-21T15:12:19Z",
     "event": "ShipyardSell",
     "ShipType": "Adder",
+    "MarketID": 128666762,
     "SellShipID": 6,
     "ShipPrice": 79027,
     "System": "Eranin"

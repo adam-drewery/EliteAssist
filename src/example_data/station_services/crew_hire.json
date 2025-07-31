@@ -3,6 +3,7 @@
     "timestamp": "2016-08-09T08:46:29Z",
     "event": "CrewHire",
     "Name": "Margaret Parrish",
+    "CrewID": 54321,
     "Faction": "The Dark Wheel",
     "Cost": 15000,
     "CombatRank": 1

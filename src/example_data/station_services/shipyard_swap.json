@@ -5,6 +5,7 @@
     "ShipType": "sidewinder",
     "ShipID": 10,
     "StoreOldShip": "Asp",
-    "StoreShipID": 2
+    "StoreShipID": 2,
+    "MarketID": 128666762
   }
 ]

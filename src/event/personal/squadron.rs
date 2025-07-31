@@ -125,13 +125,3 @@ pub struct SquadronPromotion {
     #[serde(rename = "NewRank")]
     pub new_rank: u8,
 }
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct WonATrophyForSquadron {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "SquadronName")]
-    pub squadron_name: String,
-}

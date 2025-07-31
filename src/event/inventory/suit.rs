@@ -38,7 +38,7 @@ pub struct SuitLoadout {
     pub suit_name_localised: Option<String>,
 
     #[serde(rename = "SuitMods")]
-    pub suit_mods: Option<Vec<String>>,
+    pub suit_mods: Vec<String>,
 
     #[serde(rename = "LoadoutID")]
     pub loadout_id: u64,
@@ -136,7 +136,7 @@ impl Into<crate::state::SuitLoadout> for SuitLoadout {
             timestamp: self.timestamp,
             suit_id: self.suit_id,
             suit_name: self.suit_name_localised.unwrap_or_default(),
-            suit_mods: self.suit_mods.unwrap_or_default(),
+            suit_mods: self.suit_mods,
             loadout_id: self.loadout_id,
             loadout_name: self.loadout_name,
             modules: self.modules.unwrap_or_default()

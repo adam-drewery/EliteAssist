@@ -3,6 +3,7 @@
     "timestamp": "2016-08-09T08:45:31Z",
     "event": "CrewAssign",
     "Name": "Dannie Koller",
-    "Role": "Active"
+    "Role": "Active",
+    "CrewID": 98765
   }
 ]

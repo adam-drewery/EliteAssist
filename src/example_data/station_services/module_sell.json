@@ -6,6 +6,7 @@
     "SellItem": "int_cargorack_size1_class1",
     "SellPrice": 877,
     "Ship": "asp",
-    "ShipID": 1
+    "ShipID": 1,
+    "MarketID": 128666762
   }
 ]

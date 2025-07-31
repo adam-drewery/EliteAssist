@@ -1,13 +1,19 @@
 [
   {
     "timestamp": "2025-07-31T10:00:00Z",
-    "event": "StationTransferRequest",
+    "event": "ShipyardTransfer",
     "StorageSlot": "Storage_01",
     "StoredItem": "Cargo_Module",
     "ServerId": "SRV_78392",
     "TransferCost": 15000,
     "Ship": "Python",
-    "ShipId": 15,
-    "TransferTime": 300
+    "ShipID": 15,
+    "TransferTime": 300,
+    "ShipType": "python",
+    "System": "Shinrarta Dezhra",
+    "ShipMarketID": 128667226,
+    "Distance": 15.45,
+    "TransferPrice": 15000,
+    "MarketID": 128666762
   }
 ]

@@ -218,7 +218,6 @@ pub enum JournalEvent {
     SquadronCreated(SquadronCreated),
     SquadronDemotion(SquadronDemotion),
     SquadronPromotion(SquadronPromotion),
-    WonATrophyForSquadron(WonATrophyForSquadron),
     CrewMemberQuits(CrewMemberQuits),
     ChangeCrewRole(ChangeCrewRole),
     AsteroidCracked(AsteroidCracked),
@@ -232,7 +231,7 @@ pub enum JournalEvent {
     CapShipBond(CapShipBond),
     PVPKill(PVPKill),
 
-    CommunityGoalDiscarded(CommunityGoalDiscarded),
+    CommunityGoalDiscard(CommunityGoalDiscard),
     JetConeDamage(JetConeDamage),
     RefuelPartial(RefuelPartial),
 
@@ -251,7 +250,7 @@ pub enum JournalEvent {
     CarrierModulePack(CarrierModulePack),
     CarrierTradeOrder(CarrierTradeOrder),
     CarrierDockingPermission(CarrierDockingPermission),
-    CarrierNameChanged(CarrierNameChanged),
+    CarrierNameChange(CarrierNameChange),
     CarrierJumpCancelled(CarrierJumpCancelled),
     FCMaterials(FCMaterials),
     
@@ -278,7 +277,6 @@ pub enum JournalEvent {
     KickCrewMember(KickCrewMember),
     CockpitBreached(CockpitBreached),
     Continued(Continued),
-    StationTransferRequest(StationTransferRequest),
     
     // Wing events
     WingAdd(WingAdd),

@@ -439,7 +439,6 @@ impl State {
             JournalEvent::SquadronCreated(_) => {}
             JournalEvent::SquadronDemotion(_) => {}
             JournalEvent::SquadronPromotion(_) => {}
-            JournalEvent::WonATrophyForSquadron(_) => {}
             JournalEvent::CarrierJump(_) => {}
             JournalEvent::CarrierBuy(_) => {}
             JournalEvent::CarrierStats(_) => {}
@@ -454,7 +453,7 @@ impl State {
             JournalEvent::CarrierModulePack(_) => {}
             JournalEvent::CarrierTradeOrder(_) => {}
             JournalEvent::CarrierDockingPermission(_) => {}
-            JournalEvent::CarrierNameChanged(_) => {}
+            JournalEvent::CarrierNameChange(_) => {}
             JournalEvent::CarrierJumpCancelled(_) => {}
             JournalEvent::FCMaterials(_) => {}
             JournalEvent::CancelDropship(_) => {}
@@ -493,11 +492,10 @@ impl State {
             JournalEvent::KickCrewMember(_) => {}
             JournalEvent::CockpitBreached(_) => {}
             JournalEvent::Continued(_) => {}
-            JournalEvent::CommunityGoalDiscarded(_) => {}
+            JournalEvent::CommunityGoalDiscard(_) => {}
             JournalEvent::JetConeDamage(_) => {}
             JournalEvent::RefuelPartial(_) => {}
-            JournalEvent::StationTransferRequest(_) => {}
-            
+
             // Wing events
             JournalEvent::WingAdd(_) => {}
             JournalEvent::WingInvite(_) => {}

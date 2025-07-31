@@ -30,6 +30,9 @@ pub struct FCMaterials {
     #[serde(rename = "CallSign")]
     pub callsign: String,
 
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
     #[serde(rename = "Materials")]
     pub materials: Vec<CarrierMaterial>,
 }
@@ -200,6 +203,24 @@ pub struct CarrierBuy {
 }
 
 #[derive(Clone, Debug, Deserialize)]
+pub struct ShipPack {
+    #[serde(rename = "PackTheme")]
+    pub pack_theme: String,
+
+    #[serde(rename = "PackTier")]
+    pub pack_tier: u64,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ModulePack {
+    #[serde(rename = "PackTheme")]
+    pub pack_theme: String,
+
+    #[serde(rename = "PackTier")]
+    pub pack_tier: u64,
+}
+
+#[derive(Clone, Debug, Deserialize)]
 pub struct CarrierStats {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
@@ -230,6 +251,12 @@ pub struct CarrierStats {
 
     #[serde(rename = "PendingDecommission")]
     pub pending_decommission: bool,
+
+    #[serde(rename = "ShipPacks")]
+    pub ship_packs: Vec<ShipPack>,
+
+    #[serde(rename = "ModulePacks")]
+    pub module_packs: Vec<ModulePack>,
 
     #[serde(rename = "SpaceUsage")]
     pub space_usage: SpaceUsage,
@@ -575,7 +602,7 @@ pub struct CarrierDockingPermission {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct CarrierNameChanged {
+pub struct CarrierNameChange {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 

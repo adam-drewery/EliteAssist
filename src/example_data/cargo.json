@@ -3,6 +3,7 @@
     "timestamp": "2018-06-26T08:21:17Z",
     "event": "Cargo",
     "Vessel": "Ship",
+    "Count": 92,
     "Inventory": [
       {
         "Name": "gold",

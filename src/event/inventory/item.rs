@@ -21,8 +21,20 @@ pub struct DropItems {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Items")]
-    pub items: Vec<DroppedItem>,
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+    #[serde(rename = "OwnerID")]
+    pub owner_id: u64,
+
+    #[serde(rename = "Count")]
+    pub count: u32,
 }
 
 #[derive(Clone, Debug, Deserialize)]

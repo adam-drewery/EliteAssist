@@ -32,6 +32,9 @@ pub struct PowerplayVote {
     #[serde(rename = "Votes")]
     pub votes: u32,
 
+    #[serde(rename = "VoteToConsolidate")]
+    pub vote_to_consolidate: u32,
+
     #[serde(rename = "System")]
     pub system: String,
 }

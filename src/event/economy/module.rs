@@ -203,30 +203,3 @@ pub struct MassModuleStore {
     #[serde(rename = "Items")]
     pub items: Vec<ModuleItem>,
 }
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StationTransferRequest {
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "StorageSlot")]
-    pub storage_slot: String,
-
-    #[serde(rename = "StoredItem")]
-    pub stored_item: String,
-
-    #[serde(rename = "ServerId")]
-    pub server_id: String,
-
-    #[serde(rename = "TransferCost")]
-    pub transfer_cost: u32,
-
-    #[serde(rename = "Ship")]
-    pub ship: String,
-
-    #[serde(rename = "ShipId")]
-    pub ship_id: u32,
-
-    #[serde(rename = "TransferTime")]
-    pub transfer_time: u32,
-}
