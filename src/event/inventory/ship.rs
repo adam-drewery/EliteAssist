@@ -107,7 +107,7 @@ pub struct ModuleSwap {
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
-    pub market_id: u64,
+    pub market_id: Option<u64>,
 
     #[serde(rename = "FromSlot")]
     pub from_slot: String,
@@ -141,16 +141,16 @@ pub struct FetchRemoteModule {
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "StorageSlot")]
-    pub storage_slot: u32,
+    pub storage_slot: String,
 
     #[serde(rename = "StoredItem")]
     pub stored_item: String,
 
     #[serde(rename = "StoredItem_Localised")]
-    pub stored_item_localised: String,
+    pub stored_item_localised: Option<String>,
 
     #[serde(rename = "ServerId")]
-    pub server_id: u64,
+    pub server_id: String,
 
     #[serde(rename = "TransferCost")]
     pub transfer_cost: u32,
@@ -162,7 +162,7 @@ pub struct FetchRemoteModule {
     pub ship: String,
 
     #[serde(rename = "ShipID")]
-    pub ship_id: u64,
+    pub ship_id: Option<u64>,
 }
 
 impl ShipLocker {

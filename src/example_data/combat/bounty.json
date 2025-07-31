@@ -15,9 +15,14 @@
   {
     "timestamp": "2018-05-20T21:19:58Z",
     "event": "Bounty",
-    "Faction": "HIP 18828 Empire Consulate",
+    "Rewards": [
+      {
+        "Faction": "HIP 18828 Empire Consulate",
+        "Reward": 1000
+      }
+    ],
     "Target": "Skimmer",
-    "Reward": 1000,
+    "TotalReward": 1000,
     "VictimFaction": "HIP 18828 Empire Consulate"
   }
 ]

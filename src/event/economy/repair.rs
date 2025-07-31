@@ -7,8 +7,11 @@ pub struct Repair {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
+    #[serde(rename = "Item")]
+    pub item: Option<String>,
+
     #[serde(rename = "Items")]
-    pub items: Vec<String>,
+    pub items: Option<Vec<String>>,
 
     #[serde(rename = "Cost")]
     pub cost: u32,

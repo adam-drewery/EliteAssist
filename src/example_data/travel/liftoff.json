@@ -4,6 +4,9 @@
     "event": "Liftoff",
     "Latitude": 63.468872,
     "Longitude": 157.59938,
-    "PlayerControlled": true
+    "PlayerControlled": true,
+    "Body": "Yuetu B",
+    "BodyID": 34985,
+    "BodyType": "Star"
   }
 ]

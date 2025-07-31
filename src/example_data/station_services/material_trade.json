@@ -13,6 +13,7 @@
     "Received": {
       "Material": "encodedscandata",
       "Material_Localised": "Divergent Scan Data",
+      "Category": "Encoded",
       "Quantity": 1
     }
   }

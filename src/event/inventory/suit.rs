@@ -13,7 +13,7 @@ pub struct SuitModule {
     pub module_name: String,
 
     #[serde(rename = "ModuleName_Localised")]
-    pub module_name_localised: String,
+    pub module_name_localised: Option<String>,
 
     #[serde(rename = "Class")]
     pub class: i64,
@@ -35,7 +35,7 @@ pub struct SuitLoadout {
     pub suit_name: String,
 
     #[serde(rename = "SuitName_Localised")]
-    pub suit_name_localised: String,
+    pub suit_name_localised: Option<String>,
 
     #[serde(rename = "SuitMods")]
     pub suit_mods: Option<Vec<String>>,
@@ -105,7 +105,7 @@ pub struct LoadoutEquipModule {
     pub suit_name: String,
 
     #[serde(rename = "SuitName_Localised")]
-    pub suit_name_localised: String,
+    pub suit_name_localised: Option<String>,
 
     #[serde(rename = "LoadoutID")]
     pub loadout_id: u64,
@@ -117,7 +117,7 @@ pub struct LoadoutEquipModule {
     pub module_name: String,
 
     #[serde(rename = "ModuleName_Localised")]
-    pub module_name_localised: String,
+    pub module_name_localised: Option<String>,
 
     #[serde(rename = "Class")]
     pub class: u32,
@@ -135,8 +135,7 @@ impl Into<crate::state::SuitLoadout> for SuitLoadout {
         crate::state::SuitLoadout {
             timestamp: self.timestamp,
             suit_id: self.suit_id,
-            suit_name: self.suit_name,
-            suit_name_localised: self.suit_name_localised,
+            suit_name: self.suit_name_localised.unwrap_or_default(),
             suit_mods: self.suit_mods.unwrap_or_default(),
             loadout_id: self.loadout_id,
             loadout_name: self.loadout_name,
@@ -153,8 +152,7 @@ impl Into<crate::state::SuitModule> for SuitModule {
         crate::state::SuitModule {
             slot_name: self.slot_name,
             suit_module_id: self.suit_module_id,
-            module_name: self.module_name,
-            module_name_localised: self.module_name_localised,
+            module_name: self.module_name_localised.unwrap_or_default(),
             class: self.class,
             weapon_mods: self.weapon_mods,
         }

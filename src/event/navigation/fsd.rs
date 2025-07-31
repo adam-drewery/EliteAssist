@@ -12,10 +12,10 @@ pub struct FSDJump {
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Taxi")]
-    pub taxi: bool,
+    pub taxi: Option<bool>,
 
     #[serde(rename = "Multicrew")]
-    pub multicrew: bool,
+    pub multicrew: Option<bool>,
 
     #[serde(rename = "StarSystem")]
     pub star_system: String,
@@ -33,25 +33,25 @@ pub struct FSDJump {
     pub system_economy: String,
 
     #[serde(rename = "SystemEconomy_Localised")]
-    pub system_economy_localised: String,
+    pub system_economy_localised: Option<String>,
 
     #[serde(rename = "SystemSecondEconomy")]
     pub system_second_economy: String,
 
     #[serde(rename = "SystemSecondEconomy_Localised")]
-    pub system_second_economy_localised: String,
+    pub system_second_economy_localised: Option<String>,
 
     #[serde(rename = "SystemGovernment")]
     pub system_government: String,
 
     #[serde(rename = "SystemGovernment_Localised")]
-    pub system_government_localised: String,
+    pub system_government_localised: Option<String>,
 
     #[serde(rename = "SystemSecurity")]
     pub system_security: String,
 
     #[serde(rename = "SystemSecurity_Localised")]
-    pub system_security_localised: String,
+    pub system_security_localised: Option<String>,
 
     #[serde(rename = "Population")]
     pub population: u64,
@@ -135,10 +135,10 @@ pub struct SupercruiseEntry {
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Taxi")]
-    pub taxi: bool,
+    pub taxi: Option<bool>,
 
     #[serde(rename = "Multicrew")]
-    pub multicrew: bool,
+    pub multicrew: Option<bool>,
 
     #[serde(rename = "StarSystem")]
     pub star_system: String,
@@ -154,10 +154,10 @@ pub struct SupercruiseExit {
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Taxi")]
-    pub taxi: bool,
+    pub taxi: Option<bool>,
 
     #[serde(rename = "Multicrew")]
-    pub multicrew: bool,
+    pub multicrew: Option<bool>,
 
     #[serde(rename = "StarSystem")]
     pub star_system: String,
@@ -199,7 +199,7 @@ pub struct StartJump {
     pub jump_type: String,
 
     #[serde(rename = "Taxi")]
-    pub taxi: bool,
+    pub taxi: Option<bool>,
 
     #[serde(rename = "StarSystem")]
     pub star_system: Option<String>,
@@ -254,16 +254,16 @@ impl Into<CurrentLocation> for FSDJump {
             station_services: None,
             station_economy: None,
             station_economies: None,
-            taxi: Some(self.taxi),
-            multicrew: Some(self.multicrew),
+            taxi: self.taxi,
+            multicrew: self.multicrew,
             star_system: self.star_system,
             system_address: self.system_address,
             star_pos: self.star_pos,
             system_allegiance: self.system_allegiance,
-            system_economy: self.system_economy_localised,
-            system_second_economy: self.system_second_economy_localised,
-            system_government: self.system_government_localised,
-            system_security: self.system_security_localised,
+            system_economy: self.system_economy_localised.unwrap_or_default(),
+            system_second_economy: self.system_second_economy_localised.unwrap_or_default(),
+            system_government: self.system_government_localised.unwrap_or_default(),
+            system_security: self.system_security_localised.unwrap_or_default(),
             population: self.population,
             body: self.body,
             body_id: self.body_id,

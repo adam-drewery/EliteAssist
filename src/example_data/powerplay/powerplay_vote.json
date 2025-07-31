@@ -1,11 +1,9 @@
 [
-  [
-    {
-      "timestamp": "2025-07-31T10:00:00Z",
-      "event": "PowerplayVote",
-      "Power": "Aisling Duval",
-      "Votes": 5,
-      "System": "Kamadhenu"
-    }
-  ]
+  {
+    "timestamp": "2025-07-31T10:00:00Z",
+    "event": "PowerplayVote",
+    "Power": "Aisling Duval",
+    "Votes": 5,
+    "System": "Kamadhenu"
+  }
 ]

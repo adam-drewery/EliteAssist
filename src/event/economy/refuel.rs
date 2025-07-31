@@ -13,3 +13,16 @@ pub struct RefuelAll {
     #[serde(rename = "Amount")]
     pub amount: f64,
 }
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct RefuelPartial {
+
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Cost")]
+    pub cost: u32,
+
+    #[serde(rename = "Amount")]
+    pub amount: f64,
+}

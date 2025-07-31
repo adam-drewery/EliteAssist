@@ -1,7 +1,7 @@
 [
   {
     "timestamp": "2020-04-27T08:02:52Z",
-    "event": "Route",
+    "event": "NavRoute",
     "Route": [
       {
         "StarSystem": "i Bootis",

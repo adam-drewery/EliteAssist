@@ -37,19 +37,19 @@ pub struct BioData {
     pub genus: String,
 
     #[serde(rename = "Genus_Localised")]
-    pub genus_localised: String,
+    pub genus_localised: Option<String>,
 
     #[serde(rename = "Species")]
     pub species: String,
 
     #[serde(rename = "Species_Localised")]
-    pub species_localised: String,
+    pub species_localised: Option<String>,
 
     #[serde(rename = "Variant")]
     pub variant: String,
 
     #[serde(rename = "Variant_Localised")]
-    pub variant_localised: String,
+    pub variant_localised: Option<String>,
 
     #[serde(rename = "Value")]
     pub value: u32,
@@ -69,4 +69,52 @@ pub struct SellOrganicData {
 
     #[serde(rename = "BioData")]
     pub bio_data: Vec<BioData>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct SellExplorationData {
+
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Systems")]
+    pub systems: Vec<String>,
+
+    #[serde(rename = "Discovered")]
+    pub discovered: Vec<String>,
+
+    #[serde(rename = "BaseValue")]
+    pub base_value: u32,
+
+    #[serde(rename = "Bonus")]
+    pub bonus: u32,
+
+    #[serde(rename = "TotalEarnings")]
+    pub total_earnings: u32,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct BuyExplorationData {
+
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "System")]
+    pub system: String,
+
+    #[serde(rename = "Cost")]
+    pub cost: u32,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct BuyTradeData {
+
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "System")]
+    pub system: String,
+
+    #[serde(rename = "Cost")]
+    pub cost: u32,
 }

@@ -3,6 +3,7 @@
     "timestamp": "2016-06-10T14:32:03Z",
     "event": "RedeemVoucher",
     "Type": "bounty",
+    "Amount": 3000,
     "Factions": [
       {
         "Faction": "Ed's 38",

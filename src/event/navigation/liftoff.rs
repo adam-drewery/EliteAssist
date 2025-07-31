@@ -11,16 +11,16 @@ pub struct Liftoff {
     pub player_controlled: bool,
 
     #[serde(rename = "Taxi")]
-    pub taxi: bool,
+    pub taxi: Option<bool>,
 
     #[serde(rename = "Multicrew")]
-    pub multicrew: bool,
+    pub multicrew: Option<bool>,
 
     #[serde(rename = "StarSystem")]
-    pub star_system: String,
+    pub star_system: Option<String>,
 
     #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
+    pub system_address: Option<u64>,
 
     #[serde(rename = "Body")]
     pub body: String,
@@ -29,10 +29,10 @@ pub struct Liftoff {
     pub body_id: u64,
 
     #[serde(rename = "OnStation")]
-    pub on_station: bool,
+    pub on_station: Option<bool>,
 
     #[serde(rename = "OnPlanet")]
-    pub on_planet: bool,
+    pub on_planet: Option<bool>,
 
     #[serde(rename = "Latitude")]
     pub latitude: f64,

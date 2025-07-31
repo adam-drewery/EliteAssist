@@ -11,7 +11,7 @@ pub struct USSDrop {
     pub uss_type: String,
 
     #[serde(rename = "USSType_Localised")]
-    pub uss_type_localised: String,
+    pub uss_type_localised: Option<String>,
 
     #[serde(rename = "USSThreat")]
     pub uss_threat: u32,

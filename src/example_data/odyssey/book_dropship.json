@@ -5,6 +5,7 @@
     "Cost": 5000,
     "DestinationSystem": "Shinrarta Dezhra",
     "DestinationLocation": "Jameson Memorial",
-    "DestinationSettlement": "Jameson Base"
+    "DestinationSettlement": "Jameson Base",
+    "Retreat": false
   }
 ]

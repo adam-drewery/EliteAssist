@@ -30,7 +30,7 @@ pub struct Cargo {
     pub vessel: String,
 
     #[serde(rename = "Count")]
-    pub count: u32,
+    pub count: Option<u32>,
 
     #[serde(rename = "Inventory")]
     pub inventory: Option<Vec<CargoItem>>,

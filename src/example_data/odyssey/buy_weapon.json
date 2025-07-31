@@ -6,6 +6,7 @@
     "Name_Localised": "Manticore Executioner",
     "Price": 75000,
     "WeaponID": 87654321,
+    "SuitModuleID": 5,
     "Class": 1,
     "WeaponMods": [
       "mod_weapon_damage_increase",

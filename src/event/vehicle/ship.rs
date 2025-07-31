@@ -31,7 +31,7 @@ pub struct AfmuRepairs {
     pub module: String,
 
     #[serde(rename = "Module_Localised")]
-    pub module_localised: String,
+    pub module_localised: Option<String>,
 
     #[serde(rename = "FullyRepaired")]
     pub fully_repaired: bool,
@@ -72,7 +72,7 @@ pub struct Ship {
     pub value: u32,
 
     #[serde(rename = "Hot")]
-    pub hot: bool,
+    pub hot: Option<bool>,
 
     #[serde(rename = "ShipType_Localised")]
     pub ship_type_localised: Option<String>,
@@ -88,7 +88,7 @@ pub struct StoredShips {
     pub station_name: String,
 
     #[serde(rename = "MarketID")]
-    pub market_id: u64,
+    pub market_id: Option<u64>,
 
     #[serde(rename = "StarSystem")]
     pub star_system: String,
@@ -244,6 +244,48 @@ impl Into<crate::state::FuelCapacity> for FuelCapacity {
             reserve: self.reserve,
         }
     }
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct RepairDrone {
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "HullRepaired")]
+    pub hull_repaired: f64,
+
+    #[serde(rename = "CockpitRepaired")]
+    pub cockpit_repaired: f64,
+
+    #[serde(rename = "CorrosionRepaired")]
+    pub corrosion_repaired: f64,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct RebootRepair {
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Modules")]
+    pub modules: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CockpitBreached {
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct JetConeDamage {
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Module")]
+    pub module: String,
+
+    #[serde(rename = "Module_Localised")]
+    pub module_localised: String,
 }
 
 

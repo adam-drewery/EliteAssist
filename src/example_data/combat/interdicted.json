@@ -1,7 +1,7 @@
 [
   {
     "timestamp": "2016-06-10T14:32:03Z",
-    "event": "interdicted",
+    "event": "Interdicted",
     "Submitted": false,
     "Interdictor": "Dread Pirate Roberts",
     "IsPlayer": false,

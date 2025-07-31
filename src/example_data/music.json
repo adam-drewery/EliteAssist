@@ -1,5 +1,7 @@
-{
-  "timestamp": "2025-07-29T22:34:41Z",
-  "event": "Music",
-  "MusicTrack": "Starport"
-}
+[
+  {
+    "timestamp": "2025-07-29T22:34:41Z",
+    "event": "Music",
+    "MusicTrack": "Starport"
+  }
+]

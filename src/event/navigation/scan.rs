@@ -38,6 +38,19 @@ pub struct ScanMaterial {
 
     #[serde(rename = "Name")]
     pub name: String,
+    
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Percent")]
+    pub percent: f64,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct AtmosphereComponent {
+
+    #[serde(rename = "Name")]
+    pub name: String,
 
     #[serde(rename = "Percent")]
     pub percent: f64,
@@ -51,6 +64,12 @@ pub struct Parent {
 
     #[serde(rename = "Star")]
     pub star: Option<u32>,
+    
+    #[serde(rename = "Ring")]
+    pub ring: Option<u32>,
+    
+    #[serde(rename = "Null")]
+    pub null: Option<u32>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -94,6 +113,9 @@ pub struct Scan {
 
     #[serde(rename = "AtmosphereType")]
     pub atmosphere_type: Option<String>,
+    
+    #[serde(rename = "AtmosphereComposition")]
+    pub atmosphere_composition: Option<Vec<AtmosphereComponent>>,
 
     #[serde(rename = "Volcanism")]
     pub volcanism: Option<String>,
@@ -154,6 +176,24 @@ pub struct Scan {
 
     #[serde(rename = "ReserveLevel")]
     pub reserve_level: Option<String>,
+    
+    #[serde(rename = "StarType")]
+    pub star_type: Option<String>,
+    
+    #[serde(rename = "Subclass")]
+    pub subclass: Option<i32>,
+    
+    #[serde(rename = "StellarMass")]
+    pub stellar_mass: Option<f64>,
+    
+    #[serde(rename = "AbsoluteMagnitude")]
+    pub absolute_magnitude: Option<f64>,
+    
+    #[serde(rename = "Age_MY")]
+    pub age_my: Option<i32>,
+    
+    #[serde(rename = "Luminosity")]
+    pub luminosity: Option<String>,
 
     #[serde(rename = "WasDiscovered")]
     pub was_discovered: bool,
@@ -212,19 +252,19 @@ pub struct ScanOrganic {
     pub genus: String,
 
     #[serde(rename = "Genus_Localised")]
-    pub genus_localised: String,
+    pub genus_localised: Option<String>,
 
     #[serde(rename = "Species")]
     pub species: String,
 
     #[serde(rename = "Species_Localised")]
-    pub species_localised: String,
+    pub species_localised: Option<String>,
 
     #[serde(rename = "Variant")]
     pub variant: String,
 
     #[serde(rename = "Variant_Localised")]
-    pub variant_localised: String,
+    pub variant_localised: Option<String>,
 
     #[serde(rename = "SystemAddress")]
     pub system_address: u64,
@@ -253,7 +293,7 @@ pub struct DataScanned {
     pub r#type: String,
 
     #[serde(rename = "Type_Localised")]
-    pub type_localised: String,
+    pub type_localised: Option<String>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -280,4 +320,70 @@ pub struct NavBeaconScan {
 
     #[serde(rename = "NumBodies")]
     pub num_bodies: u32,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct Screenshot {
+
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Filename")]
+    pub filename: String,
+
+    #[serde(rename = "Width")]
+    pub width: u32,
+
+    #[serde(rename = "Height")]
+    pub height: u32,
+
+    #[serde(rename = "System")]
+    pub system: Option<String>,
+
+    #[serde(rename = "Body")]
+    pub body: Option<String>,
+
+    #[serde(rename = "Latitude")]
+    pub latitude: Option<f64>,
+
+    #[serde(rename = "Longitude")]
+    pub longitude: Option<f64>,
+
+    #[serde(rename = "Heading")]
+    pub heading: Option<u32>,
+
+    #[serde(rename = "Altitude")]
+    pub altitude: Option<f64>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct FSSSignal {
+    
+    #[serde(rename = "Type")]
+    pub signal_type: String,
+
+    #[serde(rename = "Type_Localised")]
+    pub type_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: u32,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct FSSBodySignals {
+
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "BodyName")]
+    pub body_name: String,
+
+    #[serde(rename = "BodyID")]
+    pub body_id: u64,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    #[serde(rename = "Signals")]
+    pub signals: Vec<FSSSignal>,
 }

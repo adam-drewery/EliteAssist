@@ -12,6 +12,7 @@ dependencies = [
  "iced",
  "log",
  "once_cell",
+ "rand",
  "regex",
  "serde",
  "serde_json",

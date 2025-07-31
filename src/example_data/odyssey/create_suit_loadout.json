@@ -10,23 +10,35 @@
     "Modules": [
       {
         "SlotName": "PrimaryWeapon",
+        "SuitModuleID": 1001,
         "ModuleName": "wpn_s_plasma_pistol_charged",
-        "ModuleName_Localised": "Manticore Executioner"
+        "ModuleName_Localised": "Manticore Executioner",
+        "Class": 1,
+        "WeaponMods": []
       },
       {
         "SlotName": "SecondaryWeapon",
+        "SuitModuleID": 1002,
         "ModuleName": "wpn_s_laser_rifle",
-        "ModuleName_Localised": "TK Aphelion"
+        "ModuleName_Localised": "TK Aphelion",
+        "Class": 1,
+        "WeaponMods": []
       },
       {
         "SlotName": "Utility1",
+        "SuitModuleID": 1003,
         "ModuleName": "wpn_t_scanner_profile",
-        "ModuleName_Localised": "Profile Analyzer"
+        "ModuleName_Localised": "Profile Analyzer",
+        "Class": 1,
+        "WeaponMods": []
       },
       {
         "SlotName": "Utility2",
+        "SuitModuleID": 1004,
         "ModuleName": "wpn_t_scanner_energy",
-        "ModuleName_Localised": "Energy Link Scanner"
+        "ModuleName_Localised": "Energy Link Scanner",
+        "Class": 1,
+        "WeaponMods": []
       }
     ]
   }

@@ -3,6 +3,7 @@
     "timestamp": "2025-07-31T16:06:00Z",
     "event": "LaunchSRV",
     "Loadout": "SRV Scarab",
-    "ID": 24
+    "ID": 24,
+    "PlayerControlled": false
   }
 ]

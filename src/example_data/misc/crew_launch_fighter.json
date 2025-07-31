@@ -3,6 +3,7 @@
     "timestamp": "2025-07-31T16:06:00Z",
     "event": "CrewLaunchFighter",
     "Crew": "John Smith",
-    "ID": 12
+    "ID": 12,
+    "Telepresence": true
   }
 ]

@@ -3,6 +3,9 @@
     "timestamp": "2016-06-10T14:32:03Z",
     "event": "SupercruiseExit",
     "StarSystem": "Yuetu",
-    "Body": "Yuetu B"
+    "Body": "Yuetu B",
+    "BodyID": 34985,
+    "BodyType": "Star",
+    "SystemAddress": 12345
   }
 ]

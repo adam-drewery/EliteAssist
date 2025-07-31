@@ -12,10 +12,10 @@ pub struct Embark {
     pub srv: bool,
 
     #[serde(rename = "Taxi")]
-    pub taxi: bool,
+    pub taxi: Option<bool>,
 
     #[serde(rename = "Multicrew")]
-    pub multicrew: bool,
+    pub multicrew: Option<bool>,
 
     #[serde(rename = "ID")]
     pub id: Option<u64>,

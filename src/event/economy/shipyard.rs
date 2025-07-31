@@ -58,5 +58,24 @@ pub struct ShipyardSell {
     pub ship_price: u32,
 
     #[serde(rename = "MarketID")]
-    pub market_id: u64,
+    pub market_id: Option<u64>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct SellShipOnRebuy {
+
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "ShipType")]
+    pub ship_type: String,
+
+    #[serde(rename = "System")]
+    pub system: String,
+
+    #[serde(rename = "SellShipId")]
+    pub sell_ship_id: u64,
+
+    #[serde(rename = "ShipPrice")]
+    pub ship_price: u32,
 }

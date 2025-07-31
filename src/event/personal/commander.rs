@@ -13,3 +13,19 @@ pub struct Commander {
     #[serde(rename = "Name")]
     pub name: String
 }
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct NewCommander {
+
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "FID")]
+    pub fid: String,
+
+    #[serde(rename = "Package")]
+    pub package: String
+}

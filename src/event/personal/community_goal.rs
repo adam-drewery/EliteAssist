@@ -98,3 +98,19 @@ pub struct CommunityGoalReward {
     #[serde(rename = "Reward")]
     pub reward: u32,
 }
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CommunityGoalDiscarded {
+
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CGID")]
+    pub cgid: u64,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "System")]
+    pub system: String,
+}

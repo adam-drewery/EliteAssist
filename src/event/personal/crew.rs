@@ -5,6 +5,35 @@ use serde::Deserialize;
 use thousands::Separable;
 
 #[derive(Clone, Debug, Deserialize)]
+pub struct CrewFire {
+
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CrewHire {
+
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Faction")]
+    pub faction: String,
+
+    #[serde(rename = "Cost")]
+    pub cost: u32,
+
+    #[serde(rename = "CombatRank")]
+    pub combat_rank: u32,
+}
+
+#[derive(Clone, Debug, Deserialize)]
 pub struct CrewAssign {
 
     #[serde(with = "crate::event::format::date")]
@@ -14,7 +43,7 @@ pub struct CrewAssign {
     pub name: String,
 
     #[serde(rename = "CrewID")]
-    pub crew_id: u64,
+    pub crew_id: Option<u64>,
 
     #[serde(rename = "Role")]
     pub role: String,
@@ -30,7 +59,7 @@ pub struct CrewMemberJoins {
     pub crew: String,
 
     #[serde(rename = "Telepresence")]
-    pub telepresence: bool,
+    pub telepresence: Option<bool>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -43,7 +72,7 @@ pub struct CrewMemberQuits {
     pub crew: String,
 
     #[serde(rename = "Telepresence")]
-    pub telepresence: bool,
+    pub telepresence: Option<bool>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -59,7 +88,7 @@ pub struct CrewMemberRoleChange {
     pub role: String,
 
     #[serde(rename = "Telepresence")]
-    pub telepresence: bool,
+    pub telepresence: Option<bool>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -72,7 +101,7 @@ pub struct EndCrewSession {
     pub on_crime: bool,
 
     #[serde(rename = "Telepresence")]
-    pub telepresence: bool,
+    pub telepresence: Option<bool>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -101,7 +130,7 @@ pub struct ChangeCrewRole {
     pub role: String,
 
     #[serde(rename = "Telepresence")]
-    pub telepresence: bool,
+    pub telepresence: Option<bool>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -118,6 +147,39 @@ pub struct NpcCrewPaidWage {
 
     #[serde(rename = "Amount")]
     pub amount: u32,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct QuitACrew {
+
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Captain")]
+    pub captain: String,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct JoinACrew {
+
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Captain")]
+    pub captain: String,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct KickCrewMember {
+
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Crew")]
+    pub crew: String,
+
+    #[serde(rename = "OnCrime")]
+    pub on_crime: bool,
 }
 
 impl Into<GameActivity> for CrewAssign {
@@ -137,7 +199,7 @@ impl Into<GameActivity> for CrewMemberJoins {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Crew Joined".into(),
-            noun: format!("{} {}", self.crew, if self.telepresence { "remotely" } else { "to crew" }),
+            noun: format!("{} {}", self.crew, if self.telepresence.unwrap_or_default() { "remotely" } else { "to crew" }),
         }
     }
 }
@@ -148,7 +210,7 @@ impl Into<GameActivity> for CrewMemberQuits {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Crew Left".into(),
-            noun: format!("{} {}", self.crew, if self.telepresence { "remote session" } else { "crew" }),
+            noun: format!("{} {}", self.crew, if self.telepresence.unwrap_or_default() { "remote session" } else { "crew" }),
         }
     }
 }
@@ -169,7 +231,7 @@ impl Into<GameActivity> for EndCrewSession {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Ended".into(),
-            noun: if self.telepresence { "remote session".into() } else { "crew session".into() },
+            noun: if self.telepresence.unwrap_or_default() { "remote session".into() } else { "crew session".into() },
         }
     }
 }

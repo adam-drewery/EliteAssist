@@ -68,7 +68,7 @@ pub struct Docked {
     pub station_government: String,
 
     #[serde(rename = "StationGovernment_Localised")]
-    pub station_government_localised: String,
+    pub station_government_localised: Option<String>,
 
     #[serde(rename = "StationAllegiance")]
     pub station_allegiance: Option<String>,
@@ -80,7 +80,7 @@ pub struct Docked {
     pub station_economy: String,
 
     #[serde(rename = "StationEconomy_Localised")]
-    pub station_economy_localised: String,
+    pub station_economy_localised: Option<String>,
 
     #[serde(rename = "StationEconomies")]
     pub station_economies: Vec<StationEconomies>,
@@ -111,10 +111,10 @@ pub struct Undocked {
     pub market_id: u64,
 
     #[serde(rename = "Taxi")]
-    pub taxi: bool,
+    pub taxi: Option<bool>,
 
     #[serde(rename = "Multicrew")]
-    pub multicrew: bool,
+    pub multicrew: Option<bool>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -185,4 +185,20 @@ pub struct DockingRequested {
 
     #[serde(rename = "LandingPads")]
     pub landing_pads: LandingPadSize,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct DockingTimeout {
+
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "StationName")]
+    pub station_name: String,
+
+    #[serde(rename = "StationType")]
+    pub station_type: String,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
 }

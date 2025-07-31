@@ -1,3 +1,4 @@
+mod carrier;
 mod dropship;
 mod fighter;
 mod ship;
@@ -5,6 +6,7 @@ mod srv;
 mod taxi;
 
 use chrono::{DateTime, Utc};
+pub use carrier::*;
 pub use dropship::*;
 pub use fighter::*;
 use serde::Deserialize;

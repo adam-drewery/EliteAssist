@@ -4,7 +4,7 @@
     "event": "BuyDrones",
     "Type": "Drones",
     "Count": 2,
-    "SellPrice": 101,
+    "BuyPrice": 101,
     "TotalCost": 202
   }
 ]

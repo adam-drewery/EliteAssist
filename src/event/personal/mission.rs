@@ -61,7 +61,7 @@ pub struct Mission {
     pub name: String,
 
     #[serde(rename = "LocalisedName")]
-    pub localised_name: String,
+    pub localised_name: Option<String>,
 
     #[serde(rename = "MissionID")]
     pub mission_id: u64,
@@ -87,7 +87,7 @@ pub struct Effect {
     pub effect: String,
 
     #[serde(rename = "Effect_Localised")]
-    pub effect_localised: String,
+    pub effect_localised: Option<String>,
 
     #[serde(rename = "Trend")]
     pub trend: String,
@@ -125,7 +125,7 @@ pub struct MissionCompleted {
     pub name: String,
 
     #[serde(rename = "LocalisedName")]
-    pub localised_name: String,
+    pub localised_name: Option<String>,
 
     #[serde(rename = "MissionID")]
     pub mission_id: u64,
@@ -156,7 +156,10 @@ pub struct MissionRedirected {
     pub name: String,
 
     #[serde(rename = "LocalisedName")]
-    pub localised_name: String,
+    pub localised_name: Option<String>,
+
+    #[serde(rename = "LocalisedName_Localised")]
+    pub localised_name_localised: Option<String>,
 
     #[serde(rename = "NewDestinationStation")]
     pub new_destination_station: String,
@@ -188,4 +191,40 @@ impl Into<state::Mission> for MissionAccepted {
             reward: self.reward,
         }
     }
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CargoDepot {
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: u64,
+
+    #[serde(rename = "UpdateType")]
+    pub update_type: String,
+
+    #[serde(rename = "CargoType")]
+    pub cargo_type: String,
+
+    #[serde(rename = "Count")]
+    pub count: u32,
+
+    #[serde(rename = "StartMarketID")]
+    pub start_market_id: u64,
+
+    #[serde(rename = "EndMarketID")]
+    pub end_market_id: u64,
+
+    #[serde(rename = "ItemsCollected")]
+    pub items_collected: u32,
+
+    #[serde(rename = "ItemsDelivered")]
+    pub items_delivered: u32,
+
+    #[serde(rename = "TotalItemsToDeliver")]
+    pub total_items_to_deliver: u32,
+
+    #[serde(rename = "Progress")]
+    pub progress: u32,
 }

@@ -9,7 +9,7 @@ pub fn personal(state: &State) -> Column<JournalEvent> {
 
     column![
         header("Personal"),
-        details("Suit Name", &state.suit_loadout.suit_name_localised),
+        details("Suit Name", &state.suit_loadout.suit_name),
         details("Loadout", &state.suit_loadout.loadout_name),
         details("Empire", state.reputation.empire.to_string()),
         details("Federation", state.reputation.federation.to_string()),

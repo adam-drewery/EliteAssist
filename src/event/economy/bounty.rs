@@ -52,7 +52,7 @@ pub struct PayBounties {
     pub amount: u32,
 
     #[serde(rename = "AllFines")]
-    pub all_fines: bool,
+    pub all_fines: Option<bool>,
 
     #[serde(rename = "ShipID")]
     pub ship_id: u64,

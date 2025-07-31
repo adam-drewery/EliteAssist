@@ -3,6 +3,9 @@
     "timestamp": "2018-10-29T10:05:21Z",
     "event": "FSDJump",
     "StarSystem": "Eranin",
+    "Body": "Eranin A",
+    "BodyID": 34985,
+    "BodyType": "Star",
     "SystemAddress": 2832631632594,
     "StarPos": [
       -22.84375,

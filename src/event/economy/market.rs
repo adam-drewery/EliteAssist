@@ -18,7 +18,7 @@ pub struct MarketItem {
     pub category: String,
 
     #[serde(rename = "Category_Localised")]
-    pub category_localised: String,
+    pub category_localised: Option<String>,
 
     #[serde(rename = "BuyPrice")]
     pub buy_price: u32,
@@ -131,9 +131,10 @@ impl Into<state::Market> for Market {
         let mut groups = std::collections::HashMap::new();
 
         if let Some(mut items) = self.items {
-            items.sort_by(|a, b| a.name_localised.cmp(&b.name_localised));
+            items.sort_by(|a, b| a.name_localised.clone().unwrap_or_default().cmp(&b.name_localised.clone().unwrap_or_default()));
             for item in items {
-                groups.entry(item.category_localised.clone())
+                let entry = item.category_localised.clone().unwrap_or_default();
+                groups.entry(entry.clone())
                     .or_insert_with(Vec::new)
                     .push(item.into());
             }

@@ -39,7 +39,7 @@ pub struct ShipyardSwap {
     pub store_ship_id: u64,
 
     #[serde(rename = "MarketID")]
-    pub market_id: u64,
+    pub market_id: Option<u64>,
 }
 
 #[derive(Clone, Debug, Deserialize)]

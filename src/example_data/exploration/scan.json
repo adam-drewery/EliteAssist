@@ -86,6 +86,10 @@
     "Periapsis": 309.656799,
     "OrbitalPeriod": 344902.9375,
     "RotationPeriod": 352425.46875,
-    "AxialTilt": 0.479157
+    "AxialTilt": 0.479157,
+    "StarSystem": "Procyon",
+    "SystemAddress": 4356789,
+    "WasDiscovered": true,
+    "WasMapped": false
   }
 ]

@@ -8,10 +8,10 @@ pub struct LaunchSRV {
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "SRVType")]
-    pub srvtype: String,
+    pub srv_type: Option<String>,
 
     #[serde(rename = "SRVType_Localised")]
-    pub srvtype_localised: String,
+    pub srv_type_localised: Option<String>,
 
     #[serde(rename = "Loadout")]
     pub loadout: String,
@@ -30,10 +30,10 @@ pub struct DockSRV {
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "SRVType")]
-    pub srvtype: String,
+    pub srv_type: Option<String>,
 
     #[serde(rename = "SRVType_Localised")]
-    pub srvtype_localised: String,
+    pub srv_type_localised: Option<String>,
 
     #[serde(rename = "ID")]
     pub id: u64,
@@ -52,5 +52,5 @@ pub struct SrvDestroyed {
     pub srvtype: String,
 
     #[serde(rename = "SRVType_Localised")]
-    pub srvtype_localised: String,
+    pub srvtype_localised: Option<String>,
 }

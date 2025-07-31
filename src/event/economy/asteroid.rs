@@ -37,7 +37,7 @@ pub struct ProspectedAsteroid {
     pub content: String,
 
     #[serde(rename = "Content_Localised")]
-    pub content_localised: String,
+    pub content_localised: Option<String>,
 
     #[serde(rename = "Remaining")]
     pub remaining: f64,

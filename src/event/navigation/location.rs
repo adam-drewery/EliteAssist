@@ -68,25 +68,25 @@ pub struct Location {
     pub system_economy: String,
 
     #[serde(rename = "SystemEconomy_Localised")]
-    pub system_economy_localised: String,
+    pub system_economy_localised: Option<String>,
 
     #[serde(rename = "SystemSecondEconomy")]
     pub system_second_economy: String,
 
     #[serde(rename = "SystemSecondEconomy_Localised")]
-    pub system_second_economy_localised: String,
+    pub system_second_economy_localised: Option<String>,
 
     #[serde(rename = "SystemGovernment")]
     pub system_government: String,
 
     #[serde(rename = "SystemGovernment_Localised")]
-    pub system_government_localised: String,
+    pub system_government_localised: Option<String>,
 
     #[serde(rename = "SystemSecurity")]
     pub system_security: String,
 
     #[serde(rename = "SystemSecurity_Localised")]
-    pub system_security_localised: String,
+    pub system_security_localised: Option<String>,
 
     #[serde(rename = "Population")]
     pub population: u64,
@@ -170,10 +170,10 @@ impl Into<CurrentLocation> for Location {
             system_address: self.system_address,
             star_pos: self.star_pos.clone(),
             system_allegiance: self.system_allegiance.clone(),
-            system_economy: self.system_economy_localised.clone(),
-            system_second_economy: self.system_second_economy_localised.clone(),
-            system_government: self.system_government_localised.clone(),
-            system_security: self.system_security_localised.clone(),
+            system_economy: self.system_economy_localised.unwrap_or_default(),
+            system_second_economy: self.system_second_economy_localised.unwrap_or_default(),
+            system_government: self.system_government_localised.unwrap_or_default(),
+            system_security: self.system_security_localised.unwrap_or_default(),
             population: self.population,
             body: self.body.clone(),
             body_id: self.body_id,
