@@ -31,13 +31,6 @@ pub struct PowerplayJoin {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct ActiveState {
-
-    #[serde(rename = "State")]
-    pub state: String,
-}
-
-#[derive(Clone, Debug, Deserialize)]
 pub struct Power {
 
     #[serde(rename = "Power")]

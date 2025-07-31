@@ -1,0 +1,20 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "CollectItems",
+    "Items": [
+      {
+        "Name": "healthpack",
+        "Name_Localised": "Medkit",
+        "Type": "Consumable",
+        "Count": 2
+      },
+      {
+        "Name": "carbon",
+        "Name_Localised": "Carbon",
+        "Type": "Material",
+        "Count": 3
+      }
+    ]
+  }
+]

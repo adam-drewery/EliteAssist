@@ -1,0 +1,244 @@
+[
+  {
+    "timestamp": "2025-07-29T22:34:40Z",
+    "event": "Location",
+    "DistFromStarLS": 358.522452,
+    "Docked": true,
+    "StationName": "Nowak Hub",
+    "StationType": "Coriolis",
+    "MarketID": 3221477376,
+    "StationFaction": {
+      "Name": "Brotherhood of Terra Mater",
+      "FactionState": "War"
+    },
+    "StationGovernment": "$government_Anarchy;",
+    "StationGovernment_Localised": "Anarchy",
+    "StationServices": [
+      "dock",
+      "autodock",
+      "blackmarket",
+      "commodities",
+      "contacts",
+      "exploration",
+      "missions",
+      "outfitting",
+      "crewlounge",
+      "rearm",
+      "refuel",
+      "repair",
+      "shipyard",
+      "tuning",
+      "engineer",
+      "missionsgenerated",
+      "facilitator",
+      "flightcontroller",
+      "stationoperations",
+      "powerplay",
+      "stationMenu",
+      "shop",
+      "livery",
+      "socialspace",
+      "bartender",
+      "vistagenomics",
+      "pioneersupplies",
+      "apexinterstellar",
+      "frontlinesolutions",
+      "registeringcolonisation"
+    ],
+    "StationEconomy": "$economy_Agri;",
+    "StationEconomy_Localised": "Agriculture",
+    "StationEconomies": [
+      {
+        "Name": "$economy_Agri;",
+        "Name_Localised": "Agriculture",
+        "Proportion": 1.000000
+      }
+    ],
+    "Taxi": false,
+    "Multicrew": false,
+    "StarSystem": "Wonorne Nu",
+    "SystemAddress": 3657131070154,
+    "StarPos": [
+      -69.46875,
+      -47.00000,
+      -50.03125
+    ],
+    "SystemAllegiance": "Independent",
+    "SystemEconomy": "$economy_Agri;",
+    "SystemEconomy_Localised": "Agriculture",
+    "SystemSecondEconomy": "$economy_Colony;",
+    "SystemSecondEconomy_Localised": "Colony",
+    "SystemGovernment": "$government_Anarchy;",
+    "SystemGovernment_Localised": "Anarchy",
+    "SystemSecurity": "$GAlAXY_MAP_INFO_state_anarchy;",
+    "SystemSecurity_Localised": "Anarchy",
+    "Population": 1625612601,
+    "Body": "Nowak Hub",
+    "BodyID": 27,
+    "BodyType": "Station",
+    "ControllingPower": "Li Yong-Rui",
+    "Powers": [
+      "Li Yong-Rui",
+      "Pranav Antal"
+    ],
+    "PowerplayState": "Fortified",
+    "PowerplayStateControlProgress": 0.046338,
+    "PowerplayStateReinforcement": 534,
+    "PowerplayStateUndermining": 14,
+    "Factions": [
+      {
+        "Name": "Brotherhood of Terra Mater",
+        "FactionState": "War",
+        "Government": "Anarchy",
+        "Influence": 0.250743,
+        "Allegiance": "Independent",
+        "Happiness": "$Faction_HappinessBand2;",
+        "Happiness_Localised": "Happy",
+        "MyReputation": 12.096200,
+        "ActiveStates": [
+          {
+            "State": "War"
+          }
+        ]
+      },
+      {
+        "Name": "Defence Party of Nastrond",
+        "FactionState": "War",
+        "Government": "Dictatorship",
+        "Influence": 0.250743,
+        "Allegiance": "Independent",
+        "Happiness": "$Faction_HappinessBand2;",
+        "Happiness_Localised": "Happy",
+        "MyReputation": 0.000000,
+        "ActiveStates": [
+          {
+            "State": "War"
+          }
+        ]
+      },
+      {
+        "Name": "Wonorne Nu Values Party",
+        "FactionState": "None",
+        "Government": "Democracy",
+        "Influence": 0.116947,
+        "Allegiance": "Federation",
+        "Happiness": "$Faction_HappinessBand2;",
+        "Happiness_Localised": "Happy",
+        "MyReputation": -6.000000,
+        "PendingStates": [
+          {
+            "State": "CivilWar",
+            "Trend": 0
+          }
+        ]
+      },
+      {
+        "Name": "Wonorne Nu Exchange",
+        "FactionState": "None",
+        "Government": "Corporate",
+        "Influence": 0.116947,
+        "Allegiance": "Independent",
+        "Happiness": "$Faction_HappinessBand2;",
+        "Happiness_Localised": "Happy",
+        "MyReputation": 0.000000,
+        "PendingStates": [
+          {
+            "State": "CivilWar",
+            "Trend": 0
+          }
+        ]
+      },
+      {
+        "Name": "Wonorne Nu Party",
+        "FactionState": "None",
+        "Government": "Dictatorship",
+        "Influence": 0.046581,
+        "Allegiance": "Independent",
+        "Happiness": "$Faction_HappinessBand2;",
+        "Happiness_Localised": "Happy",
+        "MyReputation": 0.000000
+      },
+      {
+        "Name": "Wonorne Nu Natural Limited",
+        "FactionState": "Election",
+        "Government": "Corporate",
+        "Influence": 0.109019,
+        "Allegiance": "Federation",
+        "Happiness": "$Faction_HappinessBand2;",
+        "Happiness_Localised": "Happy",
+        "MyReputation": 0.000000,
+        "ActiveStates": [
+          {
+            "State": "Election"
+          }
+        ]
+      },
+      {
+        "Name": "Pan Galactic Mining Corp.",
+        "FactionState": "Election",
+        "Government": "Corporate",
+        "Influence": 0.109019,
+        "Allegiance": "Independent",
+        "Happiness": "$Faction_HappinessBand2;",
+        "Happiness_Localised": "Happy",
+        "MyReputation": -27.240000,
+        "ActiveStates": [
+          {
+            "State": "Expansion"
+          },
+          {
+            "State": "Election"
+          }
+        ]
+      }
+    ],
+    "SystemFaction": {
+      "Name": "Brotherhood of Terra Mater",
+      "FactionState": "War"
+    },
+    "Conflicts": [
+      {
+        "WarType": "war",
+        "Status": "active",
+        "Faction1": {
+          "Name": "Brotherhood of Terra Mater",
+          "Stake": "Nowak Hub",
+          "WonDays": 2
+        },
+        "Faction2": {
+          "Name": "Defence Party of Nastrond",
+          "Stake": "",
+          "WonDays": 0
+        }
+      },
+      {
+        "WarType": "civilwar",
+        "Status": "pending",
+        "Faction1": {
+          "Name": "Wonorne Nu Values Party",
+          "Stake": "Sohn Hydroponics Exchange",
+          "WonDays": 0
+        },
+        "Faction2": {
+          "Name": "Wonorne Nu Exchange",
+          "Stake": "",
+          "WonDays": 0
+        }
+      },
+      {
+        "WarType": "election",
+        "Status": "active",
+        "Faction1": {
+          "Name": "Wonorne Nu Natural Limited",
+          "Stake": "",
+          "WonDays": 0
+        },
+        "Faction2": {
+          "Name": "Pan Galactic Mining Corp.",
+          "Stake": "Baruwal Deposits",
+          "WonDays": 0
+        }
+      }
+    ]
+  }
+]

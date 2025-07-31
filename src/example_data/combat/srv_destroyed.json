@@ -1,0 +1,8 @@
+[
+  {
+    "timestamp": "2025-07-31T10:00:00Z",
+    "event": "SRVDestroyed",
+    "ID": 12,
+    "SRVType": "TestingSRV"
+  }
+]

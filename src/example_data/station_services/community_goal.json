@@ -1,0 +1,28 @@
+[
+  {
+    "timestamp": "2025-07-29T22:34:45Z",
+    "event": "CommunityGoal",
+    "CurrentGoals": [
+      {
+        "CGID": 829,
+        "Title": "Brewer corporation calls for Trailblazer resupply",
+        "SystemName": "Minerva",
+        "MarketName": "Starlace Station",
+        "Expiry": "2025-08-21T10:00:00Z",
+        "IsComplete": false,
+        "CurrentTotal": 330613441,
+        "PlayerContribution": 0,
+        "NumContributors": 25434,
+        "TopTier": {
+          "Name": "Tier 8",
+          "Bonus": ""
+        },
+        "TopRankSize": 10,
+        "PlayerInTopRank": false,
+        "TierReached": "Tier 5",
+        "PlayerPercentileBand": 100,
+        "Bonus": 100000000
+      }
+    ]
+  }
+]

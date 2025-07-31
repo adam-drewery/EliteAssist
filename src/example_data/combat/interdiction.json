@@ -1,0 +1,10 @@
+[
+  {
+    "timestamp": "2016-06-10T14:32:03Z",
+    "event": "interdiction",
+    "Success": true,
+    "Interdicted": "Fred Flintstone",
+    "IsPlayer": true,
+    "CombatRank": 5
+  }
+]

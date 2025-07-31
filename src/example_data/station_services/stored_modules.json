@@ -1,0 +1,39 @@
+[
+  {
+    "timestamp": "2018-01-31T10:55:16Z",
+    "event": "StoredModules",
+    "MarketID": 128676487,
+    "StationName": "Farseer Inc",
+    "StarSystem": "Deciat",
+    "Items": [
+      {
+        "Name": "$int_engine_size3_class5_name;",
+        "Name_Localised": "Thrusters",
+        "StorageSlot": 57,
+        "StarSystem": "Deciat",
+        "MarketID": 128676487,
+        "TransferCost": 0,
+        "TransferTime": 0,
+        "BuyPrice": 495215,
+        "Hot": false,
+        "EngineerModifications": "Engine_Dirty",
+        "Level": 1,
+        "Quality": 0.000000
+      },
+      {
+        "Name": "$int_hyperdrive_size6_class5_name;",
+        "Name_Localised": "FSD",
+        "StorageSlot": 59,
+        "StarSystem": "Shinrarta Dezhra",
+        "MarketID": 128666762,
+        "TransferCost": 79680,
+        "TransferTime": 1317,
+        "BuyPrice": 12620035,
+        "Hot": false,
+        "EngineerModifications": "FSD_LongRange",
+        "Level": 5,
+        "Quality": 0.000000
+      }
+    ]
+  }
+]

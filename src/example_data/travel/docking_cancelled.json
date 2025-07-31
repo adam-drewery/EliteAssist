@@ -1,0 +1,9 @@
+[
+  {
+    "timestamp": "2025-07-31T10:00:00Z",
+    "event": "DockingCancelled",
+    "StationName": "Alexandria Gateway",
+    "StationType": "Orbis",
+    "MarketID": 128666754
+  }
+]

@@ -1,0 +1,9 @@
+[
+  {
+    "timestamp": "2025-07-31T14:23:45Z",
+    "event": "HullDamage",
+    "Health": 0.85,
+    "PlayerPilot": true,
+    "Fighter": false
+  }
+]

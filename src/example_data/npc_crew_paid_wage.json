@@ -1,0 +1,9 @@
+[
+  {
+    "timestamp": "2025-07-29T22:34:41Z",
+    "event": "NpcCrewPaidWage",
+    "NpcCrewName": "Hipolito Strickland",
+    "NpcCrewId": 105387200,
+    "Amount": 356
+  }
+]

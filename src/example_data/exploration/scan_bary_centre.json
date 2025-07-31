@@ -1,0 +1,16 @@
+[
+  {
+    "timestamp": "2021-07-27T13:52:20Z",
+    "event": "ScanBaryCentre",
+    "StarSystem": "Col 285 Sector YX-N b21-1",
+    "SystemAddress": 2867561768401,
+    "BodyID": 10,
+    "SemiMajorAxis": 2107998251914.978,
+    "Eccentricity": 0.033074,
+    "OrbitalInclination": 0.019013,
+    "Periapsis": 342.187341,
+    "OrbitalPeriod": 3739380657.672882,
+    "AscendingNode": -31.477241,
+    "MeanAnomaly": 64.03028
+  }
+]

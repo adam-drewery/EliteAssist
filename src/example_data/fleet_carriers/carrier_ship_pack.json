@@ -1,0 +1,25 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "CarrierShipPack",
+    "CarrierID": 3700005632,
+    "Operation": "Buy",
+    "PackTheme": "Exploration",
+    "PackTier": 2,
+    "Cost": 15000000,
+    "Ships": [
+      {
+        "Name": "asp_explorer",
+        "Quantity": 5
+      },
+      {
+        "Name": "diamondback_explorer",
+        "Quantity": 5
+      },
+      {
+        "Name": "krait_phantom",
+        "Quantity": 3
+      }
+    ]
+  }
+]

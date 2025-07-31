@@ -1,0 +1,17 @@
+[
+  {
+    "timestamp": "2016-06-10T14:32:03Z",
+    "event": "RedeemVoucher",
+    "Type": "bounty",
+    "Factions": [
+      {
+        "Faction": "Ed's 38",
+        "Amount": 1000
+      },
+      {
+        "Faction": "Zac's Lads",
+        "Amount": 2000
+      }
+    ]
+  }
+]

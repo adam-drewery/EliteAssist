@@ -1,0 +1,10 @@
+[
+  {
+    "timestamp": "2025-07-31T10:00:00Z",
+    "event": "CommunityGoalReward",
+    "CGID": 123456,
+    "Name": "Brewer corporation calls for Trailblazer resupply",
+    "System": "Sol",
+    "Reward": 123456
+  }
+]

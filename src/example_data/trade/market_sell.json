@@ -1,0 +1,21 @@
+[
+  {
+    "timestamp": "2016-06-10T14:32:03Z",
+    "event": "MarketSell",
+    "Type": "agriculturalmedicines",
+    "Count": 3,
+    "SellPrice": 1360,
+    "TotalSale": 4080,
+    "AvgPricePaid": 304
+  },
+  {
+    "event": "MarketSell",
+    "Type": "mineraloil",
+    "Count": 9,
+    "SellPrice": 72,
+    "TotalSale": 648,
+    "AvgPricePaid": 0,
+    "StolenGoods": true,
+    "BlackMarket": true
+  }
+]

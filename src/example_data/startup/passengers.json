@@ -1,0 +1,29 @@
+[
+  {
+    "timestamp": "2025-07-31T10:15:00Z",
+    "event": "Passengers",
+    "Manifest": [
+      {
+        "MissionID": 123456789,
+        "Type": "Diplomat",
+        "VIP": true,
+        "Wanted": false,
+        "Count": 1
+      },
+      {
+        "MissionID": 987654321,
+        "Type": "Tourist",
+        "VIP": false,
+        "Wanted": false,
+        "Count": 3
+      },
+      {
+        "MissionID": 456789123,
+        "Type": "Criminal",
+        "VIP": false,
+        "Wanted": true,
+        "Count": 2
+      }
+    ]
+  }
+]

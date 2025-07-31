@@ -1,0 +1,23 @@
+[
+  {
+    "timestamp": "2025-07-29T22:34:21Z",
+    "event": "LoadGame",
+    "FID": "F9708203",
+    "Commander": "gandhi bo-bandhi",
+    "Horizons": true,
+    "Odyssey": true,
+    "Ship": "Krait_Light",
+    "Ship_Localised": "Krait Phantom",
+    "ShipID": 35,
+    "ShipName": "Jenny Longuet",
+    "ShipIdent": "6-NDH1",
+    "FuelLevel": 32.000000,
+    "FuelCapacity": 32.000000,
+    "GameMode": "Solo",
+    "Credits": 437906957,
+    "Loan": 0,
+    "language": "English/UK",
+    "gameversion": "4.1.3.0",
+    "build": "r316268/r0 "
+  }
+]

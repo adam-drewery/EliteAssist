@@ -1,0 +1,24 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "BackpackChange",
+    "Added": [
+      {
+        "Name": "healthpack",
+        "Name_Localised": "Medkit",
+        "OwnerID": 0,
+        "Count": 1,
+        "Type": "Consumable"
+      }
+    ],
+    "Removed": [
+      {
+        "Name": "energycell",
+        "Name_Localised": "Energy Cell",
+        "OwnerID": 0,
+        "Count": 1,
+        "Type": "Consumable"
+      }
+    ]
+  }
+]

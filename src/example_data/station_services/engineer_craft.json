@@ -1,0 +1,34 @@
+[
+  {
+    "timestamp": "2018-03-04T07:08:27Z",
+    "event": "EngineerCraft",
+    "Slot": "Slot03_Size3",
+    "Module": "int_dronecontrol_collection_size3_class5",
+    "Ingredients": [
+      {
+        "Name": "phosphorus",
+        "Count": 1
+      }
+    ],
+    "Engineer": "Ram Tah",
+    "EngineerID": 300110,
+    "BlueprintID": 128731526,
+    "BlueprintName": "Misc_LightWeight",
+    "Level": 1,
+    "Quality": 0.955,
+    "Modifiers": [
+      {
+        "Label": "Mass",
+        "Value": 4.436,
+        "OriginalValue": 8,
+        "LessIsGood": 1
+      },
+      {
+        "Label": "Integrity",
+        "Value": 81,
+        "OriginalValue": 90,
+        "LessIsGood": 0
+      }
+    ]
+  }
+]

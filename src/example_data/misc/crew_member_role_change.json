@@ -1,0 +1,9 @@
+[
+  {
+    "timestamp": "2025-07-31T16:06:00Z",
+    "event": "CrewMemberRoleChange",
+    "Crew": "Jane Doe",
+    "CrewID": 987654321,
+    "Role": "FighterCon"
+  }
+]

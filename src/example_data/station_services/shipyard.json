@@ -1,0 +1,136 @@
+[
+  {
+    "timestamp": "2017-10-04T10:01:38Z",
+    "event": "Shipyard",
+    "MarketID": 128122104,
+    "StationName": "Seven Holm",
+    "StarSystem": "Tamor"
+  },
+  {
+    "timestamp": "2025-07-31T09:15:25Z",
+    "event": "Shipyard",
+    "MarketID": 3221497856,
+    "StationName": "Tanner Settlement",
+    "StarSystem": "Polevnic",
+    "Horizons": true,
+    "AllowCobraMkIV": false,
+    "PriceList": [
+      {
+        "id": 0,
+        "ShipType": "mamba",
+        "ShipPrice": 76876533
+      },
+      {
+        "id": 0,
+        "ShipType": "sidewinder",
+        "ShipPrice": 1773438
+      },
+      {
+        "id": 0,
+        "ShipType": "empire_eagle",
+        "ShipType_Localised": "Imperial Eagle",
+        "ShipPrice": 2490492
+      },
+      {
+        "id": 0,
+        "ShipType": "viper",
+        "ShipType_Localised": "Viper Mk III",
+        "ShipPrice": 3804388
+      },
+      {
+        "id": 0,
+        "ShipType": "viper_mkiv",
+        "ShipType_Localised": "Viper Mk IV",
+        "ShipPrice": 7564230
+      },
+      {
+        "id": 0,
+        "ShipType": "diamondbackxl",
+        "ShipType_Localised": "Diamondback Explorer",
+        "ShipPrice": 14128489
+      },
+      {
+        "id": 0,
+        "ShipType": "vulture",
+        "ShipPrice": 19270271
+      },
+      {
+        "id": 0,
+        "ShipType": "asp",
+        "ShipType_Localised": "Asp Explorer",
+        "ShipPrice": 46762758
+      },
+      {
+        "id": 0,
+        "ShipType": "federation_dropship",
+        "ShipType_Localised": "Federal Dropship",
+        "ShipPrice": 47236769
+      },
+      {
+        "id": 0,
+        "ShipType": "type8",
+        "ShipType_Localised": "Type-8 Transporter",
+        "ShipPrice": 59019727
+      },
+      {
+        "id": 0,
+        "ShipType": "krait_light",
+        "ShipType_Localised": "Krait Phantom",
+        "ShipPrice": 79431984
+      },
+      {
+        "id": 0,
+        "ShipType": "typex_3",
+        "ShipType_Localised": "Alliance Challenger",
+        "ShipPrice": 84986550
+      },
+      {
+        "id": 0,
+        "ShipType": "typex",
+        "ShipType_Localised": "Alliance Chieftain",
+        "ShipPrice": 89716158
+      },
+      {
+        "id": 0,
+        "ShipType": "federation_gunship",
+        "ShipType_Localised": "Federal Gunship",
+        "ShipPrice": 92235298
+      },
+      {
+        "id": 0,
+        "ShipType": "python_nx",
+        "ShipType_Localised": "Python Mk II",
+        "ShipPrice": 111943985
+      },
+      {
+        "id": 0,
+        "ShipType": "python",
+        "ShipPrice": 123062826
+      },
+      {
+        "id": 0,
+        "ShipType": "type9",
+        "ShipType_Localised": "Type-9 Heavy",
+        "ShipPrice": 167775038
+      },
+      {
+        "id": 0,
+        "ShipType": "belugaliner",
+        "ShipType_Localised": "Beluga Liner",
+        "ShipPrice": 194158503
+      },
+      {
+        "id": 0,
+        "ShipType": "type9_military",
+        "ShipType_Localised": "Type-10 Defender",
+        "ShipPrice": 460304741
+      },
+      {
+        "id": 0,
+        "ShipType": "federation_corvette",
+        "ShipType_Localised": "Federal Corvette",
+        "ShipPrice": 479889165
+      }
+    ]
+  }
+]

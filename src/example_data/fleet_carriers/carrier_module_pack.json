@@ -1,0 +1,29 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "CarrierModulePack",
+    "CarrierID": 3700005632,
+    "Operation": "Buy",
+    "PackTheme": "Mining",
+    "PackTier": 2,
+    "Cost": 10000000,
+    "Modules": [
+      {
+        "Name": "int_mining_laser_size2_class2",
+        "Quantity": 10
+      },
+      {
+        "Name": "int_prospectlimpet_size3_class a",
+        "Quantity": 5
+      },
+      {
+        "Name": "int_collectlimpet_size3_class a",
+        "Quantity": 5
+      },
+      {
+        "Name": "int_refinery_size4_class4",
+        "Quantity": 3
+      }
+    ]
+  }
+]

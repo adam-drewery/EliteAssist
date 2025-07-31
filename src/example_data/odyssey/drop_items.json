@@ -1,0 +1,20 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "DropItems",
+    "Items": [
+      {
+        "Name": "graphene",
+        "Name_Localised": "Graphene",
+        "Type": "Material",
+        "Count": 2
+      },
+      {
+        "Name": "energycell",
+        "Name_Localised": "Energy Cell",
+        "Type": "Consumable",
+        "Count": 1
+      }
+    ]
+  }
+]

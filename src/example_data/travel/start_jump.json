@@ -1,0 +1,11 @@
+[
+  {
+    "timestamp": "2025-07-31T14:32:03Z",
+    "event": "StartJump",
+    "JumpType": "Hyperspace",
+    "StarSystem": "Sol",
+    "SystemAddress": 10477373803,
+    "StarClass": "G2",
+    "Taxi": true
+  }
+]

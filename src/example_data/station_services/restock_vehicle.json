@@ -1,0 +1,10 @@
+[
+  {
+    "timestamp": "2016-06-10T14:32:03Z",
+    "event": "RestockVehicle",
+    "Type": "SRV",
+    "Loadout": "starter",
+    "Cost": 1030,
+    "Count": 1
+  }
+]

@@ -1,0 +1,21 @@
+[
+  {
+    "timestamp": "2019-05-13T13:28:51Z",
+    "event": "CodexEntry",
+    "EntryID": 1400159,
+    "Name": "$Codex_Ent_IceFumarole_CarbonDioxideGeysers_Name;",
+    "Name_Localised": "Carbon Dioxide Ice Fumarole",
+    "SubCategory": "$Codex_SubCategory_Geology_and_Anomalies;",
+    "SubCategory_Localised": "Geology and anomalies",
+    "Category": "$Codex_Category_Biology;",
+    "Category_Localised": "Biological and Geological",
+    "Region": "$Codex_RegionName_18;",
+    "Region_Localised": "Inner Orion Spur",
+    "System": "Hermitage",
+    "SystemAddress": 5363877956440,
+    "NearestDestination": "$SAA_Unknown_Signal:#type=$SAA_SignalType_Geological;:#index=9;",
+    "NearestDestination_Localised": "Surface signal: Geological (9)",
+    "IsNewEntry": true,
+    "VoucherAmount": 50000
+  }
+]

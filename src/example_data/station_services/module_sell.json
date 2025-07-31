@@ -1,0 +1,11 @@
+[
+  {
+    "timestamp": "2016-06-10T14:32:03Z",
+    "event": "ModuleSell",
+    "Slot": "Slot06_Size2",
+    "SellItem": "int_cargorack_size1_class1",
+    "SellPrice": 877,
+    "Ship": "asp",
+    "ShipID": 1
+  }
+]

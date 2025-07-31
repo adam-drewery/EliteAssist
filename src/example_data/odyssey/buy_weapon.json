@@ -1,0 +1,15 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "BuyWeapon",
+    "Name": "pistol_plasma_class1",
+    "Name_Localised": "Manticore Executioner",
+    "Price": 75000,
+    "WeaponID": 87654321,
+    "Class": 1,
+    "WeaponMods": [
+      "mod_weapon_damage_increase",
+      "mod_weapon_reload_speed"
+    ]
+  }
+]

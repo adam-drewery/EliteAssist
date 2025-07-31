@@ -1,0 +1,24 @@
+[
+  {
+    "timestamp": "2025-07-31T10:00:00Z",
+    "event": "MassModuleStore",
+    "MarketID": 128666762,
+    "Ship": "federation_corvette",
+    "ShipId": 25,
+    "Items": [
+      {
+        "Slot": "HugeHardpoint1",
+        "Name": "hc_multicannon",
+        "Hot": false,
+        "EngineerModifications": "Overcharged",
+        "Level": 4,
+        "Quality": 0.89
+      },
+      {
+        "Slot": "MediumHardpoint2",
+        "Name": "mc_cannon",
+        "Hot": false
+      }
+    ]
+  }
+]

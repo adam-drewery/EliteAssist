@@ -1,0 +1,239 @@
+[
+  {
+    "timestamp": "2025-07-31T10:17:25Z",
+    "event": "ModuleInfo",
+    "Modules": [
+      {
+        "Slot": "MainEngines",
+        "Item": "int_engine_size7_class5",
+        "Power": 10.032001,
+        "Priority": 0
+      },
+      {
+        "Slot": "Slot01_Size7",
+        "Item": "int_shieldgenerator_size7_class5",
+        "Power": 4.900000,
+        "Priority": 0
+      },
+      {
+        "Slot": "Radar",
+        "Item": "int_sensors_size8_class5",
+        "Power": 2.070000,
+        "Priority": 0
+      },
+      {
+        "Slot": "TinyHardpoint1",
+        "Item": "hpt_shieldbooster_size0_class5",
+        "Power": 1.440000,
+        "Priority": 0
+      },
+      {
+        "Slot": "TinyHardpoint2",
+        "Item": "hpt_shieldbooster_size0_class5",
+        "Power": 1.440000,
+        "Priority": 0
+      },
+      {
+        "Slot": "TinyHardpoint3",
+        "Item": "hpt_shieldbooster_size0_class5",
+        "Power": 1.440000,
+        "Priority": 0
+      },
+      {
+        "Slot": "TinyHardpoint4",
+        "Item": "hpt_shieldbooster_size0_class5",
+        "Power": 1.440000,
+        "Priority": 0
+      },
+      {
+        "Slot": "TinyHardpoint5",
+        "Item": "hpt_shieldbooster_size0_class5",
+        "Power": 1.440000,
+        "Priority": 0
+      },
+      {
+        "Slot": "TinyHardpoint6",
+        "Item": "hpt_shieldbooster_size0_class5",
+        "Power": 1.440000,
+        "Priority": 0
+      },
+      {
+        "Slot": "PowerDistributor",
+        "Item": "int_powerdistributor_size8_class5",
+        "Power": 0.960000,
+        "Priority": 0
+      },
+      {
+        "Slot": "FrameShiftDrive",
+        "Item": "int_hyperdrive_overcharge_size6_class5",
+        "Power": 0.840000,
+        "Priority": 0
+      },
+      {
+        "Slot": "TinyHardpoint7",
+        "Item": "hpt_crimescanner_size0_class3",
+        "Power": 0.800000,
+        "Priority": 0
+      },
+      {
+        "Slot": "TinyHardpoint8",
+        "Item": "hpt_cloudscanner_size0_class3",
+        "Power": 0.800000,
+        "Priority": 0
+      },
+      {
+        "Slot": "MediumHardpoint1",
+        "Item": "hpt_beamlaser_gimbal_medium",
+        "Power": 0.798000,
+        "Priority": 0
+      },
+      {
+        "Slot": "MediumHardpoint2",
+        "Item": "hpt_beamlaser_gimbal_medium",
+        "Power": 0.798000,
+        "Priority": 0
+      },
+      {
+        "Slot": "Slot06_Size5",
+        "Item": "int_dronecontrol_collection_size5_class5",
+        "Power": 0.700000,
+        "Priority": 0
+      },
+      {
+        "Slot": "HugeHardpoint1",
+        "Item": "hpt_multicannon_gimbal_huge",
+        "Power": 0.666120,
+        "Priority": 0
+      },
+      {
+        "Slot": "HugeHardpoint2",
+        "Item": "hpt_multicannon_gimbal_huge",
+        "Power": 0.666120,
+        "Priority": 0
+      },
+      {
+        "Slot": "LifeSupport",
+        "Item": "int_lifesupport_size5_class2",
+        "Power": 0.640000,
+        "Priority": 0
+      },
+      {
+        "Slot": "SmallHardpoint1",
+        "Item": "hpt_beamlaser_gimbal_small",
+        "Power": 0.630000,
+        "Priority": 0
+      },
+      {
+        "Slot": "SmallHardpoint2",
+        "Item": "hpt_beamlaser_gimbal_small",
+        "Power": 0.630000,
+        "Priority": 0
+      },
+      {
+        "Slot": "CargoHatch",
+        "Item": "modularcargobaydoor",
+        "Power": 0.600000,
+        "Priority": 2
+      },
+      {
+        "Slot": "LargeHardpoint1",
+        "Item": "hpt_multicannon_gimbal_large",
+        "Power": 0.504400,
+        "Priority": 0
+      },
+      {
+        "Slot": "Slot10_Size3",
+        "Item": "int_fuelscoop_size3_class5",
+        "Power": 0.480000,
+        "Priority": 0
+      },
+      {
+        "Slot": "Slot02_Size7",
+        "Item": "int_fighterbay_size7_class1",
+        "Power": 0.350000,
+        "Priority": 0
+      },
+      {
+        "Slot": "Slot11_Size1",
+        "Item": "int_supercruiseassist",
+        "Power": 0.300000,
+        "Priority": 2
+      },
+      {
+        "Slot": "ShipCockpit",
+        "Item": "federation_corvette_cockpit",
+        "Power": 0.000000
+      },
+      {
+        "Slot": "PowerPlant",
+        "Item": "int_guardianpowerplant_size8",
+        "Power": 0.000000
+      },
+      {
+        "Slot": "Slot03_Size7",
+        "Item": "int_cargorack_size7_class1",
+        "Power": 0.000000
+      },
+      {
+        "Slot": "PlanetaryApproachSuite",
+        "Item": "int_planetapproachsuite_advanced",
+        "Power": 0.000000
+      },
+      {
+        "Slot": "WeaponColour",
+        "Item": "weaponcustomisation_red",
+        "Power": 0.000000
+      },
+      {
+        "Slot": "EngineColour",
+        "Item": "enginecustomisation_red",
+        "Power": 0.000000
+      },
+      {
+        "Slot": "DataLinkScanner",
+        "Item": "hpt_shipdatalinkscanner",
+        "Power": 0.000000,
+        "Priority": 0
+      },
+      {
+        "Slot": "CodexScanner",
+        "Item": "int_codexscanner",
+        "Power": 0.000000
+      },
+      {
+        "Slot": "DiscoveryScanner",
+        "Item": "int_stellarbodydiscoveryscanner_standard",
+        "Power": 0.000000
+      },
+      {
+        "Slot": "ColonisationSuite",
+        "Item": "int_colonisation",
+        "Power": 0.000000
+      },
+      {
+        "Slot": "Slot04_Size6",
+        "Item": "int_guardianshieldreinforcement_size5_class2"
+      },
+      {
+        "Slot": "Slot05_Size6",
+        "Item": "int_guardianshieldreinforcement_size5_class2"
+      },
+      {
+        "Slot": "Slot08_Size4",
+        "Item": "int_guardianshieldreinforcement_size4_class2"
+      },
+      {
+        "Slot": "Slot09_Size4",
+        "Item": "int_guardianshieldreinforcement_size4_class2"
+      },
+      {
+        "Slot": "Military01",
+        "Item": "int_guardianshieldreinforcement_size5_class2"
+      },
+      {
+        "Slot": "Military02",
+        "Item": "int_guardianshieldreinforcement_size5_class2"
+      }
+    ]
+  }
+]

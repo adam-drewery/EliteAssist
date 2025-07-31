@@ -1,0 +1,11 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "DeleteSuitLoadout",
+    "SuitID": 12345678,
+    "SuitName": "explorationsuit_class1",
+    "SuitName_Localised": "Artemis Suit",
+    "LoadoutID": 98765432,
+    "LoadoutName": "Explorer Loadout"
+  }
+]

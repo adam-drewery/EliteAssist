@@ -1,0 +1,8 @@
+[
+  {
+    "timestamp": "2016-07-21T14:36:38Z",
+    "event": "ShipyardNew",
+    "ShipType": "hauler",
+    "NewShipID": 4
+  }
+]

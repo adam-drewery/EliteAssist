@@ -1,0 +1,16 @@
+[
+  {
+    "timestamp": "2022-03-17T18:20:53Z",
+    "event": "FSSBodySignals",
+    "BodyName": "Phroi Blou EW-W d1-1056 2 a",
+    "BodyID": 18,
+    "SystemAddress": 36293555558035,
+    "Signals": [
+      {
+        "Type": "$SAA_SignalType_Geological;",
+        "Type_Localised": "Geological",
+        "Count": 3
+      }
+    ]
+  }
+]

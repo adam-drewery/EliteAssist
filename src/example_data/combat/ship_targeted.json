@@ -1,0 +1,19 @@
+[
+  {
+    "timestamp": "2025-07-31T14:32:03Z",
+    "event": "ShipTargeted",
+    "TargetLocked": true,
+    "Ship": "Anaconda",
+    "ScanStage": 3,
+    "PilotName": "John Smith",
+    "PilotRank": "Elite",
+    "ShieldHealth": 100.0,
+    "HullHealth": 97.3,
+    "Faction": "Federation",
+    "LegalStatus": "Clean",
+    "Bounty": 0,
+    "SubSystem": "Frame Shift Drive",
+    "SubSystemHealth": 100.0,
+    "Power": "Zachary Hudson"
+  }
+]

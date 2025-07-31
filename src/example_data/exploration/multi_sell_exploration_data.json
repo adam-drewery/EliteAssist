@@ -1,0 +1,19 @@
+[
+  {
+    "timestamp": "2018-11-14T10:35:35Z",
+    "event": "MultiSellExplorationData",
+    "Discovered": [
+      {
+        "SystemName": "HIP 84742",
+        "NumBodies": 23
+      },
+      {
+        "SystemName": "Col 359 Sector NY-S b20-1",
+        "NumBodies": 9
+      }
+    ],
+    "BaseValue": 2938186,
+    "Bonus": 291000,
+    "TotalEarnings": 3229186
+  }
+]

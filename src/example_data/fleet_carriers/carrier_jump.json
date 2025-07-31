@@ -1,0 +1,73 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "CarrierJump",
+    "Docked": true,
+    "StationName": "FC L14X1J",
+    "StationType": "FleetCarrier",
+    "MarketID": 3700005632,
+    "StationFaction": {
+      "Name": "FleetCarrier"
+    },
+    "StationGovernment": "$government_Carrier;",
+    "StationGovernment_Localised": "Private Ownership",
+    "StationServices": [
+      "dock",
+      "autodock",
+      "commodities",
+      "contacts",
+      "exploration",
+      "outfitting",
+      "crewlounge",
+      "rearm",
+      "refuel",
+      "repair",
+      "shipyard",
+      "engineer",
+      "flightcontroller",
+      "stationoperations",
+      "stationMenu",
+      "carriermanagement",
+      "carrierfuel",
+      "voucherredemption"
+    ],
+    "StationEconomy": "$economy_Carrier;",
+    "StationEconomy_Localised": "Private Enterprise",
+    "StarSystem": "Shinrarta Dezhra",
+    "SystemAddress": 3932277478106,
+    "StarPos": [55.71875, 17.59375, 27.15625],
+    "SystemAllegiance": "Independent",
+    "SystemEconomy": "$economy_HighTech;",
+    "SystemEconomy_Localised": "High Tech",
+    "SystemSecondEconomy": "$economy_Industrial;",
+    "SystemSecondEconomy_Localised": "Industrial",
+    "SystemGovernment": "$government_Democracy;",
+    "SystemGovernment_Localised": "Democracy",
+    "SystemSecurity": "$SYSTEM_SECURITY_high;",
+    "SystemSecurity_Localised": "High Security",
+    "Population": 85206935,
+    "Body": "Jameson Memorial",
+    "BodyID": 66,
+    "BodyType": "Station",
+    "Powers": [
+      "Edmund Mahon"
+    ],
+    "PowerplayState": "Exploited",
+    "Factions": [
+      {
+        "Name": "The Pilots Federation",
+        "FactionState": "None",
+        "Government": "Democracy",
+        "Influence": 0.7,
+        "Allegiance": "Independent",
+        "Happiness": "$Faction_HappinessBand2;",
+        "Happiness_Localised": "Happy",
+        "MyReputation": 100
+      }
+    ],
+    "SystemFaction": {
+      "Name": "The Pilots Federation",
+      "FactionState": "None"
+    }
+  }
+]

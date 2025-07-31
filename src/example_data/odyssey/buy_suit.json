@@ -1,0 +1,14 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "BuySuit",
+    "Name": "explorationsuit_class1",
+    "Name_Localised": "Artemis Suit",
+    "Price": 150000,
+    "SuitID": 12345678,
+    "SuitMods": [
+      "mod_suit_faster_shield_regen",
+      "mod_suit_increased_sprint_duration"
+    ]
+  }
+]

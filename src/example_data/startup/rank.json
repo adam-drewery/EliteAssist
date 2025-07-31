@@ -1,0 +1,14 @@
+[
+  {
+    "timestamp": "2025-07-29T22:34:21Z",
+    "event": "Rank",
+    "Combat": 5,
+    "Trade": 9,
+    "Explore": 6,
+    "Soldier": 4,
+    "Exobiologist": 2,
+    "Empire": 2,
+    "Federation": 12,
+    "CQC": 1
+  }
+]

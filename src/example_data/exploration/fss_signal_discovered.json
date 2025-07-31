@@ -1,0 +1,110 @@
+[
+  {
+    "timestamp": "2025-07-29T22:34:40Z",
+    "event": "FSSSignalDiscovered",
+    "SystemAddress": 3657131070154,
+    "SignalName": "$Warzone_PointRace_Low:#index=1;",
+    "SignalName_Localised": "Conflict Zone [Low Intensity]",
+    "SignalType": "Combat"
+  },
+  {
+    "timestamp": "2025-07-29T22:34:40Z",
+    "event": "FSSSignalDiscovered",
+    "SystemAddress": 3657131070154,
+    "SignalName": "$MULTIPLAYER_SCENARIO42_TITLE;",
+    "SignalName_Localised": "Nav Beacon",
+    "SignalType": "NavBeacon"
+  },
+  {
+    "timestamp": "2025-07-29T22:34:40Z",
+    "event": "FSSSignalDiscovered",
+    "SystemAddress": 3657131070154,
+    "SignalName": "Nowak Hub",
+    "SignalType": "StationCoriolis",
+    "IsStation": true
+  },
+  {
+    "timestamp": "2025-07-29T22:34:40Z",
+    "event": "FSSSignalDiscovered",
+    "SystemAddress": 3657131070154,
+    "SignalName": "$Warzone_PointRace_High:#index=1;",
+    "SignalName_Localised": "Conflict Zone [High Intensity]",
+    "SignalType": "Combat"
+  },
+  {
+    "timestamp": "2025-07-29T22:34:40Z",
+    "event": "FSSSignalDiscovered",
+    "SystemAddress": 3657131070154,
+    "SignalName": "$Warzone_PointRace_Low:#index=1;",
+    "SignalName_Localised": "Conflict Zone [Low Intensity]",
+    "SignalType": "Combat"
+  },
+  {
+    "timestamp": "2025-07-29T22:34:40Z",
+    "event": "FSSSignalDiscovered",
+    "SystemAddress": 3657131070154,
+    "SignalName": "[TDW] USN MIRZOEV JFB-BTT",
+    "SignalType": "FleetCarrier",
+    "IsStation": true
+  },
+  {
+    "timestamp": "2025-07-29T22:34:40Z",
+    "event": "FSSSignalDiscovered",
+    "SystemAddress": 3657131070154,
+    "SignalName": "bLACK wIND [bOtm] H0G-05X",
+    "SignalType": "FleetCarrier",
+    "IsStation": true
+  },
+  {
+    "timestamp": "2025-07-29T22:34:40Z",
+    "event": "FSSSignalDiscovered",
+    "SystemAddress": 3657131070154,
+    "SignalName": "ALCYONE QHB-1TX",
+    "SignalType": "FleetCarrier",
+    "IsStation": true
+  },
+  {
+    "timestamp": "2025-07-29T22:34:40Z",
+    "event": "FSSSignalDiscovered",
+    "SystemAddress": 3657131070154,
+    "SignalName": "$Warzone_PointRace_Med:#index=1;",
+    "SignalName_Localised": "Conflict Zone [Medium Intensity]",
+    "SignalType": "Combat"
+  },
+  {
+    "timestamp": "2025-07-29T22:34:40Z",
+    "event": "FSSSignalDiscovered",
+    "SystemAddress": 3657131070154,
+    "SignalName": "First Military Garrison",
+    "SignalType": "Installation"
+  },
+  {
+    "timestamp": "2025-07-29T22:34:40Z",
+    "event": "FSSSignalDiscovered",
+    "SystemAddress": 3657131070154,
+    "SignalName": "The People's Vigil",
+    "SignalType": "StationMegaShip",
+    "IsStation": true
+  },
+  {
+    "timestamp": "2025-07-29T22:34:40Z",
+    "event": "FSSSignalDiscovered",
+    "SystemAddress": 3657131070154,
+    "SignalName": "Royal Military Staging Post",
+    "SignalType": "Installation"
+  },
+  {
+    "timestamp": "2025-07-29T22:34:40Z",
+    "event": "FSSSignalDiscovered",
+    "SystemAddress": 3657131070154,
+    "SignalName": "Conjunct Mobile Defence Group",
+    "SignalType": "Installation"
+  },
+  {
+    "timestamp": "2025-07-29T22:34:40Z",
+    "event": "FSSSignalDiscovered",
+    "SystemAddress": 3657131070154,
+    "SignalName": "LP 295-2 Sagan-class Traveller",
+    "SignalType": "Megaship"
+  }
+]

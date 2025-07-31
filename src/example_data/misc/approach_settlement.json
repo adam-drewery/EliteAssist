@@ -1,0 +1,13 @@
+[
+  {
+    "timestamp": "2025-07-31T16:06:00Z",
+    "event": "ApproachSettlement",
+    "Name": "Jameson Base",
+    "MarketID": 128666762,
+    "Latitude": 31.5678,
+    "Longitude": -75.4321,
+    "SystemAddress": 3932277478106,
+    "BodyID": 7,
+    "BodyName": "Founders World"
+  }
+]
