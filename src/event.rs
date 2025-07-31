@@ -279,6 +279,12 @@ pub enum JournalEvent {
     CockpitBreached(CockpitBreached),
     Continued(Continued),
     StationTransferRequest(StationTransferRequest),
+    
+    // Wing events
+    WingAdd(WingAdd),
+    WingInvite(WingInvite),
+    WingJoin(WingJoin),
+    WingLeave(WingLeave),
 
     NavigateTo(ActiveScreen),
 }

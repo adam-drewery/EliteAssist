@@ -16,6 +16,7 @@ mod resurrect;
 mod squadron;
 mod statistics;
 mod status;
+mod wing;
 
 pub use codex_entry::*;
 pub use commander::*;
@@ -35,3 +36,4 @@ pub use resurrect::*;
 pub use squadron::*;
 pub use statistics::*;
 pub use status::*;
+pub use wing::*;

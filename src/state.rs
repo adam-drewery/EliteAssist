@@ -497,6 +497,12 @@ impl State {
             JournalEvent::JetConeDamage(_) => {}
             JournalEvent::RefuelPartial(_) => {}
             JournalEvent::StationTransferRequest(_) => {}
+            
+            // Wing events
+            JournalEvent::WingAdd(_) => {}
+            JournalEvent::WingInvite(_) => {}
+            JournalEvent::WingJoin(_) => {}
+            JournalEvent::WingLeave(_) => {}
         }
     }
 }
