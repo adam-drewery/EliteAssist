@@ -14,6 +14,13 @@ function ConvertTo-SnakeCase {
         return $str
     }
 
+    $str = $str -replace "fleetcarrier", "fleet_carrier"
+    $str = $str -replace "pioneersupplies", "pioneer_supplies"
+    $str = $str -replace "stolenprofit", "stolen_profit"
+    $str = $str -replace "stolenspend", "stolen_spend"
+    $str = $str -replace "tradeprofit", "trade_profit"
+    $str = $str -replace "tradespend", "trade_spend"
+
     # Special case for CAPS_LOCK format (all uppercase with underscores)
     # Example: TG_ENCOUNTERS -> tg_encounters
     if ($str -cmatch '^[A-Z0-9_]+$') {
@@ -89,7 +96,16 @@ function ConvertTo-SnakeCase {
     }
 
     # Join the words with underscores and convert to lowercase
-    return ($words -join "_").ToLower()
+    $result = ($words -join "_").ToLower()
+
+    # Apply hard-coded replacements again to catch any that might have been missed
+    $result = $result -replace "changechange", "change"
+    $result = $result -replace "fleetcarrier", "fleet_carrier"
+    $result = $result -replace "pioneersupplies", "pioneer_supplies"
+    $result = $result -replace "stolenprofit", "stolen_profit"
+    $result = $result -replace "stolenspend", "stolen_spend"
+
+    return $result
 }
 
 # Helper function to check if a name is a Rust reserved keyword and escape it if needed
@@ -122,9 +138,8 @@ function Get-NestedStructName {
         [string]$propertyName
     )
 
-    # Handle all-uppercase property names with underscores (like "TG_ENCOUNTERS")
-    if ($propertyName -cmatch '^[A-Z0-9_]+$') {
-        # Convert to Title Case (first letter of each word uppercase, rest lowercase)
+    # Handle property names with underscores by properly capitalizing each part
+    if ($propertyName -match '_') {
         $words = $propertyName -split '_'
         $titleCaseWords = $words | ForEach-Object { 
             if ($_.Length -gt 0) {
@@ -135,11 +150,17 @@ function Get-NestedStructName {
         }
         $cleanPropertyName = $titleCaseWords -join ''
     } else {
-        # For other property names, just remove underscores
-        $cleanPropertyName = $propertyName -replace '_', ''
+        # For property names without underscores, just use as is
+        $cleanPropertyName = $propertyName
     }
 
-    return "${parentName}${cleanPropertyName}"
+    # Apply hard-coded post-fix replacements
+    $structName = "${parentName}${cleanPropertyName}"
+    
+    # Apply specific replacements as required
+    $structName = $structName -replace "Changechange", "Change"
+
+    return $structName
 }
 
 # Helper function to process array item objects and add them to the nested structs collection
