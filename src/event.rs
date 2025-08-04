@@ -192,17 +192,6 @@ pub struct ApproachSettlement {
 
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct ApproachSettlementStationFaction {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "FactionState")]
-    pub faction_state: Option<String>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
 pub struct ApproachSettlementStationEconomies {
 
     #[serde(rename = "Name")]
@@ -213,6 +202,17 @@ pub struct ApproachSettlementStationEconomies {
 
     #[serde(rename = "Proportion")]
     pub proportion: f64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ApproachSettlementStationFaction {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "FactionState")]
+    pub faction_state: Option<String>,
 
 }
 
@@ -1000,13 +1000,16 @@ pub struct CarrierJump {
 
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpSystemFaction {
+pub struct CarrierJumpStationEconomies {
 
     #[serde(rename = "Name")]
     pub name: String,
 
-    #[serde(rename = "FactionState")]
-    pub faction_state: Option<String>,
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Proportion")]
+    pub proportion: f64,
 
 }
 
@@ -1015,6 +1018,32 @@ pub struct CarrierJumpStationFaction {
 
     #[serde(rename = "Name")]
     pub name: String,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierJumpThargoidWar {
+
+    #[serde(rename = "CurrentState")]
+    pub current_state: String,
+
+    #[serde(rename = "NextStateSuccess")]
+    pub next_state_success: Option<String>,
+
+    #[serde(rename = "NextStateFailure")]
+    pub next_state_failure: Option<String>,
+
+    #[serde(rename = "SuccessStateReached")]
+    pub success_state_reached: bool,
+
+    #[serde(rename = "WarProgress")]
+    pub war_progress: Option<f64>,
+
+    #[serde(rename = "RemainingPorts")]
+    pub remaining_ports: Option<i64>,
+
+    #[serde(rename = "EstimatedRemainingTime")]
+    pub estimated_remaining_time: Option<String>,
 
 }
 
@@ -1067,42 +1096,24 @@ pub struct CarrierJumpConflictsFaction1 {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpStationEconomies {
+pub struct CarrierJumpPowerplayConflictProgress {
 
-    #[serde(rename = "Name")]
-    pub name: String,
+    #[serde(rename = "Power")]
+    pub power: String,
 
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Proportion")]
-    pub proportion: f64,
+    #[serde(rename = "ConflictProgress")]
+    pub conflict_progress: f64,
 
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpThargoidWar {
+pub struct CarrierJumpSystemFaction {
 
-    #[serde(rename = "CurrentState")]
-    pub current_state: String,
+    #[serde(rename = "Name")]
+    pub name: String,
 
-    #[serde(rename = "NextStateSuccess")]
-    pub next_state_success: Option<String>,
-
-    #[serde(rename = "NextStateFailure")]
-    pub next_state_failure: Option<String>,
-
-    #[serde(rename = "SuccessStateReached")]
-    pub success_state_reached: bool,
-
-    #[serde(rename = "WarProgress")]
-    pub war_progress: Option<f64>,
-
-    #[serde(rename = "RemainingPorts")]
-    pub remaining_ports: Option<i64>,
-
-    #[serde(rename = "EstimatedRemainingTime")]
-    pub estimated_remaining_time: Option<String>,
+    #[serde(rename = "FactionState")]
+    pub faction_state: Option<String>,
 
 }
 
@@ -1162,17 +1173,6 @@ pub struct CarrierJumpFactionsActiveStates {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpFactionsRecoveringStates {
-
-    #[serde(rename = "State")]
-    pub state: String,
-
-    #[serde(rename = "Trend")]
-    pub trend: i64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
 pub struct CarrierJumpFactionsPendingStates {
 
     #[serde(rename = "State")]
@@ -1184,13 +1184,13 @@ pub struct CarrierJumpFactionsPendingStates {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpPowerplayConflictProgress {
+pub struct CarrierJumpFactionsRecoveringStates {
 
-    #[serde(rename = "Power")]
-    pub power: String,
+    #[serde(rename = "State")]
+    pub state: String,
 
-    #[serde(rename = "ConflictProgress")]
-    pub conflict_progress: f64,
+    #[serde(rename = "Trend")]
+    pub trend: i64,
 
 }
 
@@ -1372,61 +1372,7 @@ pub struct CarrierStats {
 
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct CarrierStatsSpaceUsage {
-
-    #[serde(rename = "TotalCapacity")]
-    pub total_capacity: i64,
-
-    #[serde(rename = "Crew")]
-    pub crew: i64,
-
-    #[serde(rename = "Cargo")]
-    pub cargo: i64,
-
-    #[serde(rename = "CargoSpaceReserved")]
-    pub cargo_space_reserved: i64,
-
-    #[serde(rename = "ShipPacks")]
-    pub ship_packs: i64,
-
-    #[serde(rename = "ModulePacks")]
-    pub module_packs: i64,
-
-    #[serde(rename = "FreeSpace")]
-    pub free_space: i64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
 pub struct CarrierStatsShipPacks {
-
-    #[serde(rename = "PackTheme")]
-    pub pack_theme: String,
-
-    #[serde(rename = "PackTier")]
-    pub pack_tier: i64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierStatsCrew {
-
-    #[serde(rename = "CrewRole")]
-    pub crew_role: String,
-
-    #[serde(rename = "Activated")]
-    pub activated: bool,
-
-    #[serde(rename = "Enabled")]
-    pub enabled: Option<bool>,
-
-    #[serde(rename = "CrewName")]
-    pub crew_name: Option<String>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierStatsModulePacks {
 
     #[serde(rename = "PackTheme")]
     pub pack_theme: String,
@@ -1471,6 +1417,60 @@ pub struct CarrierStatsFinance {
 
     #[serde(rename = "TaxRate")]
     pub tax_rate: Option<i64>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierStatsModulePacks {
+
+    #[serde(rename = "PackTheme")]
+    pub pack_theme: String,
+
+    #[serde(rename = "PackTier")]
+    pub pack_tier: i64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierStatsSpaceUsage {
+
+    #[serde(rename = "TotalCapacity")]
+    pub total_capacity: i64,
+
+    #[serde(rename = "Crew")]
+    pub crew: i64,
+
+    #[serde(rename = "Cargo")]
+    pub cargo: i64,
+
+    #[serde(rename = "CargoSpaceReserved")]
+    pub cargo_space_reserved: i64,
+
+    #[serde(rename = "ShipPacks")]
+    pub ship_packs: i64,
+
+    #[serde(rename = "ModulePacks")]
+    pub module_packs: i64,
+
+    #[serde(rename = "FreeSpace")]
+    pub free_space: i64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierStatsCrew {
+
+    #[serde(rename = "CrewRole")]
+    pub crew_role: String,
+
+    #[serde(rename = "Activated")]
+    pub activated: bool,
+
+    #[serde(rename = "Enabled")]
+    pub enabled: Option<bool>,
+
+    #[serde(rename = "CrewName")]
+    pub crew_name: Option<String>,
 
 }
 
@@ -2440,20 +2440,6 @@ pub struct DockedStationFaction {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct DockedStationEconomies {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Proportion")]
-    pub proportion: f64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
 pub struct DockedLandingPads {
 
     #[serde(rename = "Small")]
@@ -2464,6 +2450,20 @@ pub struct DockedLandingPads {
 
     #[serde(rename = "Large")]
     pub large: i64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct DockedStationEconomies {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Proportion")]
+    pub proportion: f64,
 
 }
 
@@ -2857,20 +2857,6 @@ pub struct EngineerCraft {
 
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct EngineerCraftIngredients {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: i64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
 pub struct EngineerCraftModifiers {
 
     #[serde(rename = "Label")]
@@ -2890,6 +2876,20 @@ pub struct EngineerCraftModifiers {
 
     #[serde(rename = "LessIsGood")]
     pub less_is_good: i64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct EngineerCraftIngredients {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: i64,
 
 }
 
@@ -3351,6 +3351,17 @@ pub struct FSDJumpConflictsFaction2 {
 }
 
 #[derive(Clone, Debug, Deserialize)]
+pub struct FSDJumpPowerplayConflictProgress {
+
+    #[serde(rename = "Power")]
+    pub power: String,
+
+    #[serde(rename = "ConflictProgress")]
+    pub conflict_progress: f64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
 pub struct FSDJumpThargoidWar {
 
     #[serde(rename = "CurrentState")]
@@ -3435,17 +3446,6 @@ pub struct FSDJumpFactionsRecoveringStates {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct FSDJumpFactionsPendingStates {
-
-    #[serde(rename = "State")]
-    pub state: String,
-
-    #[serde(rename = "Trend")]
-    pub trend: i64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
 pub struct FSDJumpFactionsActiveStates {
 
     #[serde(rename = "State")]
@@ -3454,13 +3454,13 @@ pub struct FSDJumpFactionsActiveStates {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct FSDJumpPowerplayConflictProgress {
+pub struct FSDJumpFactionsPendingStates {
 
-    #[serde(rename = "Power")]
-    pub power: String,
+    #[serde(rename = "State")]
+    pub state: String,
 
-    #[serde(rename = "ConflictProgress")]
-    pub conflict_progress: f64,
+    #[serde(rename = "Trend")]
+    pub trend: i64,
 
 }
 
@@ -4411,13 +4411,13 @@ pub struct Location {
 
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct LocationPowerplayConflictProgress {
+pub struct LocationStationFaction {
 
-    #[serde(rename = "Power")]
-    pub power: String,
+    #[serde(rename = "Name")]
+    pub name: String,
 
-    #[serde(rename = "ConflictProgress")]
-    pub conflict_progress: f64,
+    #[serde(rename = "FactionState")]
+    pub faction_state: Option<String>,
 
 }
 
@@ -4439,20 +4439,6 @@ pub struct LocationConflicts {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct LocationConflictsFaction2 {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Stake")]
-    pub stake: String,
-
-    #[serde(rename = "WonDays")]
-    pub won_days: i64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
 pub struct LocationConflictsFaction1 {
 
     #[serde(rename = "Name")]
@@ -4470,13 +4456,53 @@ pub struct LocationConflictsFaction1 {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct LocationStationFaction {
+pub struct LocationConflictsFaction2 {
 
     #[serde(rename = "Name")]
     pub name: String,
 
-    #[serde(rename = "FactionState")]
-    pub faction_state: Option<String>,
+    #[serde(rename = "Stake")]
+    pub stake: String,
+
+    #[serde(rename = "WonDays")]
+    pub won_days: i64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct LocationThargoidWar {
+
+    #[serde(rename = "CurrentState")]
+    pub current_state: String,
+
+    #[serde(rename = "NextStateSuccess")]
+    pub next_state_success: Option<String>,
+
+    #[serde(rename = "NextStateFailure")]
+    pub next_state_failure: Option<String>,
+
+    #[serde(rename = "SuccessStateReached")]
+    pub success_state_reached: bool,
+
+    #[serde(rename = "WarProgress")]
+    pub war_progress: Option<f64>,
+
+    #[serde(rename = "RemainingPorts")]
+    pub remaining_ports: Option<i64>,
+
+    #[serde(rename = "EstimatedRemainingTime")]
+    pub estimated_remaining_time: Option<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct LocationPowerplayConflictProgress {
+
+    #[serde(rename = "Power")]
+    pub power: String,
+
+    #[serde(rename = "ConflictProgress")]
+    pub conflict_progress: f64,
 
 }
 
@@ -4558,17 +4584,6 @@ pub struct LocationFactionsRecoveringStates {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct LocationSystemFaction {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "FactionState")]
-    pub faction_state: Option<String>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
 pub struct LocationStationEconomies {
 
     #[serde(rename = "Name")]
@@ -4583,28 +4598,13 @@ pub struct LocationStationEconomies {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct LocationThargoidWar {
+pub struct LocationSystemFaction {
 
-    #[serde(rename = "CurrentState")]
-    pub current_state: String,
+    #[serde(rename = "Name")]
+    pub name: String,
 
-    #[serde(rename = "NextStateSuccess")]
-    pub next_state_success: Option<String>,
-
-    #[serde(rename = "NextStateFailure")]
-    pub next_state_failure: Option<String>,
-
-    #[serde(rename = "SuccessStateReached")]
-    pub success_state_reached: bool,
-
-    #[serde(rename = "WarProgress")]
-    pub war_progress: Option<f64>,
-
-    #[serde(rename = "RemainingPorts")]
-    pub remaining_ports: Option<i64>,
-
-    #[serde(rename = "EstimatedRemainingTime")]
-    pub estimated_remaining_time: Option<String>,
+    #[serde(rename = "FactionState")]
+    pub faction_state: Option<String>,
 
 }
 
@@ -4892,7 +4892,7 @@ pub struct MaterialsManufactured {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct MaterialsEncoded {
+pub struct MaterialsRaw {
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -4906,7 +4906,7 @@ pub struct MaterialsEncoded {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct MaterialsRaw {
+pub struct MaterialsEncoded {
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -4941,7 +4941,7 @@ pub struct MaterialTrade {
 
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct MaterialTradePaid {
+pub struct MaterialTradeReceived {
 
     #[serde(rename = "Material")]
     pub material: String,
@@ -4958,7 +4958,7 @@ pub struct MaterialTradePaid {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct MaterialTradeReceived {
+pub struct MaterialTradePaid {
 
     #[serde(rename = "Material")]
     pub material: String,
@@ -5185,22 +5185,22 @@ pub struct MissionCompleted {
 
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct MissionCompletedFactionEffects {
+pub struct MissionCompletedMaterialsReward {
 
-    #[serde(rename = "Faction")]
-    pub faction: String,
+    #[serde(rename = "Name")]
+    pub name: String,
 
-    #[serde(rename = "Effects")]
-    pub effects: Vec<MissionCompletedFactionEffectsEffects>,
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
 
-    #[serde(rename = "Influence")]
-    pub influence: Vec<MissionCompletedFactionEffectsInfluence>,
+    #[serde(rename = "Category")]
+    pub category: String,
 
-    #[serde(rename = "ReputationTrend")]
-    pub reputation_trend: String,
+    #[serde(rename = "Category_Localised")]
+    pub category_localised: Option<String>,
 
-    #[serde(rename = "Reputation")]
-    pub reputation: String,
+    #[serde(rename = "Count")]
+    pub count: i64,
 
 }
 
@@ -5219,22 +5219,22 @@ pub struct MissionCompletedCommodityReward {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct MissionCompletedMaterialsReward {
+pub struct MissionCompletedFactionEffects {
 
-    #[serde(rename = "Name")]
-    pub name: String,
+    #[serde(rename = "Faction")]
+    pub faction: String,
 
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
+    #[serde(rename = "Effects")]
+    pub effects: Vec<MissionCompletedFactionEffectsEffects>,
 
-    #[serde(rename = "Category")]
-    pub category: String,
+    #[serde(rename = "Influence")]
+    pub influence: Vec<MissionCompletedFactionEffectsInfluence>,
 
-    #[serde(rename = "Category_Localised")]
-    pub category_localised: Option<String>,
+    #[serde(rename = "ReputationTrend")]
+    pub reputation_trend: String,
 
-    #[serde(rename = "Count")]
-    pub count: i64,
+    #[serde(rename = "Reputation")]
+    pub reputation: String,
 
 }
 
@@ -5337,26 +5337,6 @@ pub struct Missions {
 
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct MissionsFailed {
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: i64,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "PassengerMission")]
-    pub passenger_mission: bool,
-
-    #[serde(rename = "Expires")]
-    pub expires: i64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
 pub struct MissionsComplete {
 
     #[serde(rename = "MissionID")]
@@ -5378,6 +5358,26 @@ pub struct MissionsComplete {
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct MissionsActive {
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: i64,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "PassengerMission")]
+    pub passenger_mission: bool,
+
+    #[serde(rename = "Expires")]
+    pub expires: i64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct MissionsFailed {
 
     #[serde(rename = "MissionID")]
     pub mission_id: i64,
@@ -6799,33 +6799,13 @@ pub struct Scan {
 
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct ScanParents {
+pub struct ScanAtmosphereComposition {
 
-    #[serde(rename = "Star")]
-    pub star: Option<i64>,
+    #[serde(rename = "Name")]
+    pub name: String,
 
-    #[serde(rename = "Null")]
-    pub null: Option<i64>,
-
-    #[serde(rename = "Ring")]
-    pub ring: Option<i64>,
-
-    #[serde(rename = "Planet")]
-    pub planet: Option<i64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct ScanComposition {
-
-    #[serde(rename = "Ice")]
-    pub ice: f64,
-
-    #[serde(rename = "Rock")]
-    pub rock: f64,
-
-    #[serde(rename = "Metal")]
-    pub metal: f64,
+    #[serde(rename = "Percent")]
+    pub percent: f64,
 
 }
 
@@ -6844,13 +6824,33 @@ pub struct ScanMaterials {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct ScanAtmosphereComposition {
+pub struct ScanComposition {
 
-    #[serde(rename = "Name")]
-    pub name: String,
+    #[serde(rename = "Ice")]
+    pub ice: f64,
 
-    #[serde(rename = "Percent")]
-    pub percent: f64,
+    #[serde(rename = "Rock")]
+    pub rock: f64,
+
+    #[serde(rename = "Metal")]
+    pub metal: f64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ScanParents {
+
+    #[serde(rename = "Star")]
+    pub star: Option<i64>,
+
+    #[serde(rename = "Null")]
+    pub null: Option<i64>,
+
+    #[serde(rename = "Ring")]
+    pub ring: Option<i64>,
+
+    #[serde(rename = "Planet")]
+    pub planet: Option<i64>,
 
 }
 
@@ -7342,7 +7342,7 @@ pub struct ShipLockerMaterials {
 
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct ShipLockerMaterialsComponents {
+pub struct ShipLockerMaterialsItems {
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -7362,7 +7362,7 @@ pub struct ShipLockerMaterialsComponents {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct ShipLockerMaterialsItems {
+pub struct ShipLockerMaterialsData {
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -7399,7 +7399,7 @@ pub struct ShipLockerMaterialsConsumables {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct ShipLockerMaterialsData {
+pub struct ShipLockerMaterialsComponents {
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -7853,158 +7853,145 @@ pub struct Statistics {
     pub material_trader_stats: Option<StatisticsMaterialTraderStats>,
 
     #[serde(rename = "FLEETCARRIER")]
-    pub fleetcarrier: Option<StatisticsFLEETCARRIER>,
+    pub fleetcarrier: Option<StatisticsFleetcarrier>,
 
     #[serde(rename = "Exobiology")]
     pub exobiology: Option<StatisticsExobiology>,
 
     #[serde(rename = "TG_ENCOUNTERS")]
-    pub tg_encounters: Option<StatisticsTGENCOUNTERS>,
+    pub tg_encounters: Option<StatisticsTgEncounters>,
 
     #[serde(rename = "CQC")]
-    pub cqc: Option<StatisticsCQC>,
+    pub cqc: Option<StatisticsCqc>,
 
 }
 
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsTGENCOUNTERS {
+pub struct StatisticsFleetcarrier {
 
-    #[serde(rename = "TG_ENCOUNTER_IMPRINT")]
-    pub tg_encounter_imprint: Option<i64>,
+    #[serde(rename = "FLEETCARRIER_EXPORT_TOTAL")]
+    pub fleetcarrier_export_total: i64,
 
-    #[serde(rename = "TG_ENCOUNTER_WAKES")]
-    pub tg_encounter_wakes: Option<i64>,
+    #[serde(rename = "FLEETCARRIER_IMPORT_TOTAL")]
+    pub fleetcarrier_import_total: i64,
 
-    #[serde(rename = "TG_ENCOUNTER_KILLED")]
-    pub tg_encounter_killed: Option<i64>,
+    #[serde(rename = "FLEETCARRIER_TRADEPROFIT_TOTAL")]
+    pub fleetcarrier_tradeprofit_total: i64,
 
-    #[serde(rename = "TG_ENCOUNTER_TOTAL")]
-    pub tg_encounter_total: i64,
+    #[serde(rename = "FLEETCARRIER_TRADESPEND_TOTAL")]
+    pub fleetcarrier_tradespend_total: i64,
 
-    #[serde(rename = "TG_ENCOUNTER_TOTAL_LAST_SYSTEM")]
-    pub tg_encounter_total_last_system: String,
+    #[serde(rename = "FLEETCARRIER_STOLENPROFIT_TOTAL")]
+    pub fleetcarrier_stolenprofit_total: i64,
 
-    #[serde(rename = "TG_ENCOUNTER_TOTAL_LAST_TIMESTAMP")]
-    pub tg_encounter_total_last_timestamp: String,
+    #[serde(rename = "FLEETCARRIER_STOLENSPEND_TOTAL")]
+    pub fleetcarrier_stolenspend_total: i64,
 
-    #[serde(rename = "TG_ENCOUNTER_TOTAL_LAST_SHIP")]
-    pub tg_encounter_total_last_ship: String,
+    #[serde(rename = "FLEETCARRIER_DISTANCE_TRAVELLED")]
+    pub fleetcarrier_distance_travelled: serde_json::Value,
 
-    #[serde(rename = "TG_SCOUT_COUNT")]
-    pub tg_scout_count: Option<i64>,
+    #[serde(rename = "FLEETCARRIER_TOTAL_JUMPS")]
+    pub fleetcarrier_total_jumps: i64,
 
-}
+    #[serde(rename = "FLEETCARRIER_SHIPYARD_SOLD")]
+    pub fleetcarrier_shipyard_sold: i64,
 
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsSearchAndRescue {
+    #[serde(rename = "FLEETCARRIER_SHIPYARD_PROFIT")]
+    pub fleetcarrier_shipyard_profit: i64,
 
-    #[serde(rename = "SearchRescue_Traded")]
-    pub search_rescue_traded: i64,
+    #[serde(rename = "FLEETCARRIER_OUTFITTING_SOLD")]
+    pub fleetcarrier_outfitting_sold: i64,
 
-    #[serde(rename = "SearchRescue_Profit")]
-    pub search_rescue_profit: i64,
+    #[serde(rename = "FLEETCARRIER_OUTFITTING_PROFIT")]
+    pub fleetcarrier_outfitting_profit: i64,
 
-    #[serde(rename = "SearchRescue_Count")]
-    pub search_rescue_count: i64,
+    #[serde(rename = "FLEETCARRIER_REARM_TOTAL")]
+    pub fleetcarrier_rearm_total: i64,
 
-    #[serde(rename = "Salvage_Legal_POI")]
-    pub salvage_legal_poi: Option<i64>,
+    #[serde(rename = "FLEETCARRIER_REFUEL_TOTAL")]
+    pub fleetcarrier_refuel_total: i64,
 
-    #[serde(rename = "Salvage_Legal_Settlements")]
-    pub salvage_legal_settlements: Option<i64>,
+    #[serde(rename = "FLEETCARRIER_REFUEL_PROFIT")]
+    pub fleetcarrier_refuel_profit: i64,
 
-    #[serde(rename = "Salvage_Illegal_POI")]
-    pub salvage_illegal_poi: Option<i64>,
+    #[serde(rename = "FLEETCARRIER_REPAIRS_TOTAL")]
+    pub fleetcarrier_repairs_total: i64,
 
-    #[serde(rename = "Salvage_Illegal_Settlements")]
-    pub salvage_illegal_settlements: Option<i64>,
+    #[serde(rename = "FLEETCARRIER_VOUCHERS_REDEEMED")]
+    pub fleetcarrier_vouchers_redeemed: i64,
 
-    #[serde(rename = "Maglocks_Opened")]
-    pub maglocks_opened: Option<i64>,
-
-    #[serde(rename = "Panels_Opened")]
-    pub panels_opened: Option<i64>,
-
-    #[serde(rename = "Settlements_State_FireOut")]
-    pub settlements_state_fire_out: Option<i64>,
-
-    #[serde(rename = "Settlements_State_Reboot")]
-    pub settlements_state_reboot: Option<i64>,
+    #[serde(rename = "FLEETCARRIER_VOUCHERS_PROFIT")]
+    pub fleetcarrier_vouchers_profit: i64,
 
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsCrime {
+pub struct StatisticsMulticrew {
 
-    #[serde(rename = "Notoriety")]
-    pub notoriety: Option<i64>,
+    #[serde(rename = "Multicrew_Time_Total")]
+    pub multicrew_time_total: i64,
 
-    #[serde(rename = "Fines")]
-    pub fines: i64,
+    #[serde(rename = "Multicrew_Gunner_Time_Total")]
+    pub multicrew_gunner_time_total: i64,
 
-    #[serde(rename = "Total_Fines")]
-    pub total_fines: i64,
+    #[serde(rename = "Multicrew_Fighter_Time_Total")]
+    pub multicrew_fighter_time_total: i64,
 
-    #[serde(rename = "Bounties_Received")]
-    pub bounties_received: i64,
+    #[serde(rename = "Multicrew_Credits_Total")]
+    pub multicrew_credits_total: i64,
 
-    #[serde(rename = "Total_Bounties")]
-    pub total_bounties: i64,
+    #[serde(rename = "Multicrew_Fines_Total")]
+    pub multicrew_fines_total: i64,
 
-    #[serde(rename = "Highest_Bounty")]
-    pub highest_bounty: i64,
+}
 
-    #[serde(rename = "Malware_Uploaded")]
-    pub malware_uploaded: Option<i64>,
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsTrading {
 
-    #[serde(rename = "Settlements_State_Shutdown")]
-    pub settlements_state_shutdown: Option<i64>,
+    #[serde(rename = "Markets_Traded_With")]
+    pub markets_traded_with: i64,
 
-    #[serde(rename = "Production_Sabotage")]
-    pub production_sabotage: Option<i64>,
+    #[serde(rename = "Market_Profits")]
+    pub market_profits: i64,
 
-    #[serde(rename = "Production_Theft")]
-    pub production_theft: Option<i64>,
+    #[serde(rename = "Resources_Traded")]
+    pub resources_traded: i64,
 
-    #[serde(rename = "Total_Murders")]
-    pub total_murders: Option<i64>,
+    #[serde(rename = "Average_Profit")]
+    pub average_profit: f64,
 
-    #[serde(rename = "Citizens_Murdered")]
-    pub citizens_murdered: Option<i64>,
+    #[serde(rename = "Highest_Single_Transaction")]
+    pub highest_single_transaction: i64,
 
-    #[serde(rename = "Omnipol_Murdered")]
-    pub omnipol_murdered: Option<i64>,
+    #[serde(rename = "Data_Sold")]
+    pub data_sold: Option<i64>,
 
-    #[serde(rename = "Guards_Murdered")]
-    pub guards_murdered: Option<i64>,
+    #[serde(rename = "Goods_Sold")]
+    pub goods_sold: Option<i64>,
 
-    #[serde(rename = "Data_Stolen")]
-    pub data_stolen: Option<i64>,
+    #[serde(rename = "Assets_Sold")]
+    pub assets_sold: Option<i64>,
 
-    #[serde(rename = "Goods_Stolen")]
-    pub goods_stolen: Option<i64>,
+}
 
-    #[serde(rename = "Sample_Stolen")]
-    pub sample_stolen: Option<i64>,
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsSmuggling {
 
-    #[serde(rename = "Total_Stolen")]
-    pub total_stolen: Option<i64>,
+    #[serde(rename = "Black_Markets_Traded_With")]
+    pub black_markets_traded_with: i64,
 
-    #[serde(rename = "Turrets_Destroyed")]
-    pub turrets_destroyed: Option<i64>,
+    #[serde(rename = "Black_Markets_Profits")]
+    pub black_markets_profits: i64,
 
-    #[serde(rename = "Turrets_Overloaded")]
-    pub turrets_overloaded: Option<i64>,
+    #[serde(rename = "Resources_Smuggled")]
+    pub resources_smuggled: i64,
 
-    #[serde(rename = "Turrets_Total")]
-    pub turrets_total: Option<i64>,
+    #[serde(rename = "Average_Profit")]
+    pub average_profit: f64,
 
-    #[serde(rename = "Value_Stolen_StateChange")]
-    pub value_stolen_state_change: Option<i64>,
-
-    #[serde(rename = "Profiles_Cloned")]
-    pub profiles_cloned: Option<i64>,
+    #[serde(rename = "Highest_Single_Transaction")]
+    pub highest_single_transaction: i64,
 
 }
 
@@ -8083,215 +8070,6 @@ pub struct StatisticsCrafting {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsExobiology {
-
-    #[serde(rename = "Organic_Genus_Encountered")]
-    pub organic_genus_encountered: i64,
-
-    #[serde(rename = "Organic_Species_Encountered")]
-    pub organic_species_encountered: i64,
-
-    #[serde(rename = "Organic_Variant_Encountered")]
-    pub organic_variant_encountered: i64,
-
-    #[serde(rename = "Organic_Data_Profits")]
-    pub organic_data_profits: i64,
-
-    #[serde(rename = "Organic_Data")]
-    pub organic_data: i64,
-
-    #[serde(rename = "First_Logged_Profits")]
-    pub first_logged_profits: i64,
-
-    #[serde(rename = "First_Logged")]
-    pub first_logged: i64,
-
-    #[serde(rename = "Organic_Systems")]
-    pub organic_systems: i64,
-
-    #[serde(rename = "Organic_Planets")]
-    pub organic_planets: i64,
-
-    #[serde(rename = "Organic_Genus")]
-    pub organic_genus: i64,
-
-    #[serde(rename = "Organic_Species")]
-    pub organic_species: i64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsSmuggling {
-
-    #[serde(rename = "Black_Markets_Traded_With")]
-    pub black_markets_traded_with: i64,
-
-    #[serde(rename = "Black_Markets_Profits")]
-    pub black_markets_profits: i64,
-
-    #[serde(rename = "Resources_Smuggled")]
-    pub resources_smuggled: i64,
-
-    #[serde(rename = "Average_Profit")]
-    pub average_profit: f64,
-
-    #[serde(rename = "Highest_Single_Transaction")]
-    pub highest_single_transaction: i64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsExploration {
-
-    #[serde(rename = "Systems_Visited")]
-    pub systems_visited: i64,
-
-    #[serde(rename = "Exploration_Profits")]
-    pub exploration_profits: i64,
-
-    #[serde(rename = "Planets_Scanned_To_Level_2")]
-    pub planets_scanned_to_level_2: i64,
-
-    #[serde(rename = "Planets_Scanned_To_Level_3")]
-    pub planets_scanned_to_level_3: i64,
-
-    #[serde(rename = "Efficient_Scans")]
-    pub efficient_scans: Option<i64>,
-
-    #[serde(rename = "Highest_Payout")]
-    pub highest_payout: i64,
-
-    #[serde(rename = "Total_Hyperspace_Distance")]
-    pub total_hyperspace_distance: i64,
-
-    #[serde(rename = "Total_Hyperspace_Jumps")]
-    pub total_hyperspace_jumps: i64,
-
-    #[serde(rename = "Greatest_Distance_From_Start")]
-    pub greatest_distance_from_start: f64,
-
-    #[serde(rename = "Time_Played")]
-    pub time_played: i64,
-
-    #[serde(rename = "OnFoot_Distance_Travelled")]
-    pub on_foot_distance_travelled: Option<i64>,
-
-    #[serde(rename = "Shuttle_Journeys")]
-    pub shuttle_journeys: Option<i64>,
-
-    #[serde(rename = "Shuttle_Distance_Travelled")]
-    pub shuttle_distance_travelled: Option<f64>,
-
-    #[serde(rename = "Spent_On_Shuttles")]
-    pub spent_on_shuttles: Option<i64>,
-
-    #[serde(rename = "First_Footfalls")]
-    pub first_footfalls: Option<i64>,
-
-    #[serde(rename = "Planet_Footfalls")]
-    pub planet_footfalls: Option<i64>,
-
-    #[serde(rename = "Settlements_Visited")]
-    pub settlements_visited: Option<i64>,
-
-    #[serde(rename = "Fuel_Scooped")]
-    pub fuel_scooped: Option<i64>,
-
-    #[serde(rename = "Fuel_Purchased")]
-    pub fuel_purchased: Option<i64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsCrew {
-
-    #[serde(rename = "NpcCrew_TotalWages")]
-    pub npc_crew_total_wages: Option<i64>,
-
-    #[serde(rename = "NpcCrew_Hired")]
-    pub npc_crew_hired: Option<i64>,
-
-    #[serde(rename = "NpcCrew_Fired")]
-    pub npc_crew_fired: Option<i64>,
-
-    #[serde(rename = "NpcCrew_Died")]
-    pub npc_crew_died: Option<i64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsMaterialTraderStats {
-
-    #[serde(rename = "Trades_Completed")]
-    pub trades_completed: i64,
-
-    #[serde(rename = "Materials_Traded")]
-    pub materials_traded: i64,
-
-    #[serde(rename = "Encoded_Materials_Traded")]
-    pub encoded_materials_traded: Option<i64>,
-
-    #[serde(rename = "Raw_Materials_Traded")]
-    pub raw_materials_traded: Option<i64>,
-
-    #[serde(rename = "Grade_1_Materials_Traded")]
-    pub grade_1_materials_traded: Option<i64>,
-
-    #[serde(rename = "Grade_2_Materials_Traded")]
-    pub grade_2_materials_traded: Option<i64>,
-
-    #[serde(rename = "Grade_3_Materials_Traded")]
-    pub grade_3_materials_traded: Option<i64>,
-
-    #[serde(rename = "Grade_4_Materials_Traded")]
-    pub grade_4_materials_traded: Option<i64>,
-
-    #[serde(rename = "Grade_5_Materials_Traded")]
-    pub grade_5_materials_traded: Option<i64>,
-
-    #[serde(rename = "Assets_Traded_In")]
-    pub assets_traded_in: Option<i64>,
-
-    #[serde(rename = "Assets_Traded_Out")]
-    pub assets_traded_out: Option<i64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsMining {
-
-    #[serde(rename = "Mining_Profits")]
-    pub mining_profits: i64,
-
-    #[serde(rename = "Quantity_Mined")]
-    pub quantity_mined: i64,
-
-    #[serde(rename = "Materials_Collected")]
-    pub materials_collected: Option<i64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsMulticrew {
-
-    #[serde(rename = "Multicrew_Time_Total")]
-    pub multicrew_time_total: i64,
-
-    #[serde(rename = "Multicrew_Gunner_Time_Total")]
-    pub multicrew_gunner_time_total: i64,
-
-    #[serde(rename = "Multicrew_Fighter_Time_Total")]
-    pub multicrew_fighter_time_total: i64,
-
-    #[serde(rename = "Multicrew_Credits_Total")]
-    pub multicrew_credits_total: i64,
-
-    #[serde(rename = "Multicrew_Fines_Total")]
-    pub multicrew_fines_total: i64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsBankAccount {
 
     #[serde(rename = "Current_Wealth")]
@@ -8341,6 +8119,81 @@ pub struct StatisticsBankAccount {
 
     #[serde(rename = "Premium_Stock_Bought")]
     pub premium_stock_bought: Option<i64>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsMining {
+
+    #[serde(rename = "Mining_Profits")]
+    pub mining_profits: i64,
+
+    #[serde(rename = "Quantity_Mined")]
+    pub quantity_mined: i64,
+
+    #[serde(rename = "Materials_Collected")]
+    pub materials_collected: Option<i64>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsPassengers {
+
+    #[serde(rename = "Passengers_Missions_Accepted")]
+    pub passengers_missions_accepted: Option<i64>,
+
+    #[serde(rename = "Passengers_Missions_Disgruntled")]
+    pub passengers_missions_disgruntled: Option<i64>,
+
+    #[serde(rename = "Passengers_Missions_Bulk")]
+    pub passengers_missions_bulk: i64,
+
+    #[serde(rename = "Passengers_Missions_VIP")]
+    pub passengers_missions_vip: i64,
+
+    #[serde(rename = "Passengers_Missions_Delivered")]
+    pub passengers_missions_delivered: i64,
+
+    #[serde(rename = "Passengers_Missions_Ejected")]
+    pub passengers_missions_ejected: i64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsExobiology {
+
+    #[serde(rename = "Organic_Genus_Encountered")]
+    pub organic_genus_encountered: i64,
+
+    #[serde(rename = "Organic_Species_Encountered")]
+    pub organic_species_encountered: i64,
+
+    #[serde(rename = "Organic_Variant_Encountered")]
+    pub organic_variant_encountered: i64,
+
+    #[serde(rename = "Organic_Data_Profits")]
+    pub organic_data_profits: i64,
+
+    #[serde(rename = "Organic_Data")]
+    pub organic_data: i64,
+
+    #[serde(rename = "First_Logged_Profits")]
+    pub first_logged_profits: i64,
+
+    #[serde(rename = "First_Logged")]
+    pub first_logged: i64,
+
+    #[serde(rename = "Organic_Systems")]
+    pub organic_systems: i64,
+
+    #[serde(rename = "Organic_Planets")]
+    pub organic_planets: i64,
+
+    #[serde(rename = "Organic_Genus")]
+    pub organic_genus: i64,
+
+    #[serde(rename = "Organic_Species")]
+    pub organic_species: i64,
 
 }
 
@@ -8431,7 +8284,7 @@ pub struct StatisticsCombat {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsCQC {
+pub struct StatisticsCqc {
 
     #[serde(rename = "CQC_Credits_Earned")]
     pub cqc_credits_earned: Option<i64>,
@@ -8451,113 +8304,260 @@ pub struct StatisticsCQC {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsPassengers {
+pub struct StatisticsSearchAndRescue {
 
-    #[serde(rename = "Passengers_Missions_Accepted")]
-    pub passengers_missions_accepted: Option<i64>,
+    #[serde(rename = "SearchRescue_Traded")]
+    pub search_rescue_traded: i64,
 
-    #[serde(rename = "Passengers_Missions_Disgruntled")]
-    pub passengers_missions_disgruntled: Option<i64>,
+    #[serde(rename = "SearchRescue_Profit")]
+    pub search_rescue_profit: i64,
 
-    #[serde(rename = "Passengers_Missions_Bulk")]
-    pub passengers_missions_bulk: i64,
+    #[serde(rename = "SearchRescue_Count")]
+    pub search_rescue_count: i64,
 
-    #[serde(rename = "Passengers_Missions_VIP")]
-    pub passengers_missions_vip: i64,
+    #[serde(rename = "Salvage_Legal_POI")]
+    pub salvage_legal_poi: Option<i64>,
 
-    #[serde(rename = "Passengers_Missions_Delivered")]
-    pub passengers_missions_delivered: i64,
+    #[serde(rename = "Salvage_Legal_Settlements")]
+    pub salvage_legal_settlements: Option<i64>,
 
-    #[serde(rename = "Passengers_Missions_Ejected")]
-    pub passengers_missions_ejected: i64,
+    #[serde(rename = "Salvage_Illegal_POI")]
+    pub salvage_illegal_poi: Option<i64>,
 
-}
+    #[serde(rename = "Salvage_Illegal_Settlements")]
+    pub salvage_illegal_settlements: Option<i64>,
 
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsTrading {
+    #[serde(rename = "Maglocks_Opened")]
+    pub maglocks_opened: Option<i64>,
 
-    #[serde(rename = "Markets_Traded_With")]
-    pub markets_traded_with: i64,
+    #[serde(rename = "Panels_Opened")]
+    pub panels_opened: Option<i64>,
 
-    #[serde(rename = "Market_Profits")]
-    pub market_profits: i64,
+    #[serde(rename = "Settlements_State_FireOut")]
+    pub settlements_state_fire_out: Option<i64>,
 
-    #[serde(rename = "Resources_Traded")]
-    pub resources_traded: i64,
-
-    #[serde(rename = "Average_Profit")]
-    pub average_profit: f64,
-
-    #[serde(rename = "Highest_Single_Transaction")]
-    pub highest_single_transaction: i64,
-
-    #[serde(rename = "Data_Sold")]
-    pub data_sold: Option<i64>,
-
-    #[serde(rename = "Goods_Sold")]
-    pub goods_sold: Option<i64>,
-
-    #[serde(rename = "Assets_Sold")]
-    pub assets_sold: Option<i64>,
+    #[serde(rename = "Settlements_State_Reboot")]
+    pub settlements_state_reboot: Option<i64>,
 
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsFLEETCARRIER {
+pub struct StatisticsTgEncounters {
 
-    #[serde(rename = "FLEETCARRIER_EXPORT_TOTAL")]
-    pub fleetcarrier_export_total: i64,
+    #[serde(rename = "TG_ENCOUNTER_IMPRINT")]
+    pub tg_encounter_imprint: Option<i64>,
 
-    #[serde(rename = "FLEETCARRIER_IMPORT_TOTAL")]
-    pub fleetcarrier_import_total: i64,
+    #[serde(rename = "TG_ENCOUNTER_WAKES")]
+    pub tg_encounter_wakes: Option<i64>,
 
-    #[serde(rename = "FLEETCARRIER_TRADEPROFIT_TOTAL")]
-    pub fleetcarrier_tradeprofit_total: i64,
+    #[serde(rename = "TG_ENCOUNTER_KILLED")]
+    pub tg_encounter_killed: Option<i64>,
 
-    #[serde(rename = "FLEETCARRIER_TRADESPEND_TOTAL")]
-    pub fleetcarrier_tradespend_total: i64,
+    #[serde(rename = "TG_ENCOUNTER_TOTAL")]
+    pub tg_encounter_total: i64,
 
-    #[serde(rename = "FLEETCARRIER_STOLENPROFIT_TOTAL")]
-    pub fleetcarrier_stolenprofit_total: i64,
+    #[serde(rename = "TG_ENCOUNTER_TOTAL_LAST_SYSTEM")]
+    pub tg_encounter_total_last_system: String,
 
-    #[serde(rename = "FLEETCARRIER_STOLENSPEND_TOTAL")]
-    pub fleetcarrier_stolenspend_total: i64,
+    #[serde(rename = "TG_ENCOUNTER_TOTAL_LAST_TIMESTAMP")]
+    pub tg_encounter_total_last_timestamp: String,
 
-    #[serde(rename = "FLEETCARRIER_DISTANCE_TRAVELLED")]
-    pub fleetcarrier_distance_travelled: serde_json::Value,
+    #[serde(rename = "TG_ENCOUNTER_TOTAL_LAST_SHIP")]
+    pub tg_encounter_total_last_ship: String,
 
-    #[serde(rename = "FLEETCARRIER_TOTAL_JUMPS")]
-    pub fleetcarrier_total_jumps: i64,
+    #[serde(rename = "TG_SCOUT_COUNT")]
+    pub tg_scout_count: Option<i64>,
 
-    #[serde(rename = "FLEETCARRIER_SHIPYARD_SOLD")]
-    pub fleetcarrier_shipyard_sold: i64,
+}
 
-    #[serde(rename = "FLEETCARRIER_SHIPYARD_PROFIT")]
-    pub fleetcarrier_shipyard_profit: i64,
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsCrew {
 
-    #[serde(rename = "FLEETCARRIER_OUTFITTING_SOLD")]
-    pub fleetcarrier_outfitting_sold: i64,
+    #[serde(rename = "NpcCrew_TotalWages")]
+    pub npc_crew_total_wages: Option<i64>,
 
-    #[serde(rename = "FLEETCARRIER_OUTFITTING_PROFIT")]
-    pub fleetcarrier_outfitting_profit: i64,
+    #[serde(rename = "NpcCrew_Hired")]
+    pub npc_crew_hired: Option<i64>,
 
-    #[serde(rename = "FLEETCARRIER_REARM_TOTAL")]
-    pub fleetcarrier_rearm_total: i64,
+    #[serde(rename = "NpcCrew_Fired")]
+    pub npc_crew_fired: Option<i64>,
 
-    #[serde(rename = "FLEETCARRIER_REFUEL_TOTAL")]
-    pub fleetcarrier_refuel_total: i64,
+    #[serde(rename = "NpcCrew_Died")]
+    pub npc_crew_died: Option<i64>,
 
-    #[serde(rename = "FLEETCARRIER_REFUEL_PROFIT")]
-    pub fleetcarrier_refuel_profit: i64,
+}
 
-    #[serde(rename = "FLEETCARRIER_REPAIRS_TOTAL")]
-    pub fleetcarrier_repairs_total: i64,
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsMaterialTraderStats {
 
-    #[serde(rename = "FLEETCARRIER_VOUCHERS_REDEEMED")]
-    pub fleetcarrier_vouchers_redeemed: i64,
+    #[serde(rename = "Trades_Completed")]
+    pub trades_completed: i64,
 
-    #[serde(rename = "FLEETCARRIER_VOUCHERS_PROFIT")]
-    pub fleetcarrier_vouchers_profit: i64,
+    #[serde(rename = "Materials_Traded")]
+    pub materials_traded: i64,
+
+    #[serde(rename = "Encoded_Materials_Traded")]
+    pub encoded_materials_traded: Option<i64>,
+
+    #[serde(rename = "Raw_Materials_Traded")]
+    pub raw_materials_traded: Option<i64>,
+
+    #[serde(rename = "Grade_1_Materials_Traded")]
+    pub grade_1_materials_traded: Option<i64>,
+
+    #[serde(rename = "Grade_2_Materials_Traded")]
+    pub grade_2_materials_traded: Option<i64>,
+
+    #[serde(rename = "Grade_3_Materials_Traded")]
+    pub grade_3_materials_traded: Option<i64>,
+
+    #[serde(rename = "Grade_4_Materials_Traded")]
+    pub grade_4_materials_traded: Option<i64>,
+
+    #[serde(rename = "Grade_5_Materials_Traded")]
+    pub grade_5_materials_traded: Option<i64>,
+
+    #[serde(rename = "Assets_Traded_In")]
+    pub assets_traded_in: Option<i64>,
+
+    #[serde(rename = "Assets_Traded_Out")]
+    pub assets_traded_out: Option<i64>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsExploration {
+
+    #[serde(rename = "Systems_Visited")]
+    pub systems_visited: i64,
+
+    #[serde(rename = "Exploration_Profits")]
+    pub exploration_profits: i64,
+
+    #[serde(rename = "Planets_Scanned_To_Level_2")]
+    pub planets_scanned_to_level_2: i64,
+
+    #[serde(rename = "Planets_Scanned_To_Level_3")]
+    pub planets_scanned_to_level_3: i64,
+
+    #[serde(rename = "Efficient_Scans")]
+    pub efficient_scans: Option<i64>,
+
+    #[serde(rename = "Highest_Payout")]
+    pub highest_payout: i64,
+
+    #[serde(rename = "Total_Hyperspace_Distance")]
+    pub total_hyperspace_distance: i64,
+
+    #[serde(rename = "Total_Hyperspace_Jumps")]
+    pub total_hyperspace_jumps: i64,
+
+    #[serde(rename = "Greatest_Distance_From_Start")]
+    pub greatest_distance_from_start: f64,
+
+    #[serde(rename = "Time_Played")]
+    pub time_played: i64,
+
+    #[serde(rename = "OnFoot_Distance_Travelled")]
+    pub on_foot_distance_travelled: Option<i64>,
+
+    #[serde(rename = "Shuttle_Journeys")]
+    pub shuttle_journeys: Option<i64>,
+
+    #[serde(rename = "Shuttle_Distance_Travelled")]
+    pub shuttle_distance_travelled: Option<f64>,
+
+    #[serde(rename = "Spent_On_Shuttles")]
+    pub spent_on_shuttles: Option<i64>,
+
+    #[serde(rename = "First_Footfalls")]
+    pub first_footfalls: Option<i64>,
+
+    #[serde(rename = "Planet_Footfalls")]
+    pub planet_footfalls: Option<i64>,
+
+    #[serde(rename = "Settlements_Visited")]
+    pub settlements_visited: Option<i64>,
+
+    #[serde(rename = "Fuel_Scooped")]
+    pub fuel_scooped: Option<i64>,
+
+    #[serde(rename = "Fuel_Purchased")]
+    pub fuel_purchased: Option<i64>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsCrime {
+
+    #[serde(rename = "Notoriety")]
+    pub notoriety: Option<i64>,
+
+    #[serde(rename = "Fines")]
+    pub fines: i64,
+
+    #[serde(rename = "Total_Fines")]
+    pub total_fines: i64,
+
+    #[serde(rename = "Bounties_Received")]
+    pub bounties_received: i64,
+
+    #[serde(rename = "Total_Bounties")]
+    pub total_bounties: i64,
+
+    #[serde(rename = "Highest_Bounty")]
+    pub highest_bounty: i64,
+
+    #[serde(rename = "Malware_Uploaded")]
+    pub malware_uploaded: Option<i64>,
+
+    #[serde(rename = "Settlements_State_Shutdown")]
+    pub settlements_state_shutdown: Option<i64>,
+
+    #[serde(rename = "Production_Sabotage")]
+    pub production_sabotage: Option<i64>,
+
+    #[serde(rename = "Production_Theft")]
+    pub production_theft: Option<i64>,
+
+    #[serde(rename = "Total_Murders")]
+    pub total_murders: Option<i64>,
+
+    #[serde(rename = "Citizens_Murdered")]
+    pub citizens_murdered: Option<i64>,
+
+    #[serde(rename = "Omnipol_Murdered")]
+    pub omnipol_murdered: Option<i64>,
+
+    #[serde(rename = "Guards_Murdered")]
+    pub guards_murdered: Option<i64>,
+
+    #[serde(rename = "Data_Stolen")]
+    pub data_stolen: Option<i64>,
+
+    #[serde(rename = "Goods_Stolen")]
+    pub goods_stolen: Option<i64>,
+
+    #[serde(rename = "Sample_Stolen")]
+    pub sample_stolen: Option<i64>,
+
+    #[serde(rename = "Total_Stolen")]
+    pub total_stolen: Option<i64>,
+
+    #[serde(rename = "Turrets_Destroyed")]
+    pub turrets_destroyed: Option<i64>,
+
+    #[serde(rename = "Turrets_Overloaded")]
+    pub turrets_overloaded: Option<i64>,
+
+    #[serde(rename = "Turrets_Total")]
+    pub turrets_total: Option<i64>,
+
+    #[serde(rename = "Value_Stolen_StateChange")]
+    pub value_stolen_state_change: Option<i64>,
+
+    #[serde(rename = "Profiles_Cloned")]
+    pub profiles_cloned: Option<i64>,
 
 }
 
@@ -8754,6 +8754,29 @@ pub struct StoredShips {
 
 
 #[derive(Clone, Debug, Deserialize)]
+pub struct StoredShipsShipsHere {
+
+    #[serde(rename = "ShipID")]
+    pub ship_id: i64,
+
+    #[serde(rename = "ShipType")]
+    pub ship_type: String,
+
+    #[serde(rename = "Value")]
+    pub value: i64,
+
+    #[serde(rename = "Hot")]
+    pub hot: bool,
+
+    #[serde(rename = "ShipType_Localised")]
+    pub ship_type_localised: Option<String>,
+
+    #[serde(rename = "Name")]
+    pub name: Option<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
 pub struct StoredShipsShipsRemote {
 
     #[serde(rename = "ShipID")]
@@ -8788,29 +8811,6 @@ pub struct StoredShipsShipsRemote {
 
     #[serde(rename = "InTransit")]
     pub in_transit: Option<bool>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StoredShipsShipsHere {
-
-    #[serde(rename = "ShipID")]
-    pub ship_id: i64,
-
-    #[serde(rename = "ShipType")]
-    pub ship_type: String,
-
-    #[serde(rename = "Value")]
-    pub value: i64,
-
-    #[serde(rename = "Hot")]
-    pub hot: bool,
-
-    #[serde(rename = "ShipType_Localised")]
-    pub ship_type_localised: Option<String>,
-
-    #[serde(rename = "Name")]
-    pub name: Option<String>,
 
 }
 
@@ -9054,23 +9054,6 @@ pub struct TechnologyBroker {
 
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct TechnologyBrokerMaterials {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: i64,
-
-    #[serde(rename = "Category")]
-    pub category: String,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
 pub struct TechnologyBrokerCommodities {
 
     #[serde(rename = "Name")]
@@ -9092,6 +9075,23 @@ pub struct TechnologyBrokerItemsUnlocked {
 
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct TechnologyBrokerMaterials {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: i64,
+
+    #[serde(rename = "Category")]
+    pub category: String,
 
 }
 

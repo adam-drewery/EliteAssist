@@ -122,8 +122,22 @@ function Get-NestedStructName {
         [string]$propertyName
     )
 
-    # Remove underscores from property name to create a clean struct name
-    $cleanPropertyName = $propertyName -replace '_', ''
+    # Handle all-uppercase property names with underscores (like "TG_ENCOUNTERS")
+    if ($propertyName -cmatch '^[A-Z0-9_]+$') {
+        # Convert to Title Case (first letter of each word uppercase, rest lowercase)
+        $words = $propertyName -split '_'
+        $titleCaseWords = $words | ForEach-Object { 
+            if ($_.Length -gt 0) {
+                $_.Substring(0, 1).ToUpper() + $_.Substring(1).ToLower()
+            } else {
+                $_
+            }
+        }
+        $cleanPropertyName = $titleCaseWords -join ''
+    } else {
+        # For other property names, just remove underscores
+        $cleanPropertyName = $propertyName -replace '_', ''
+    }
 
     return "${parentName}${cleanPropertyName}"
 }
