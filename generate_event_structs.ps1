@@ -21,31 +21,75 @@ function ConvertTo-SnakeCase {
         return $str.ToLower()
     }
 
-    # Get rid of underscores otherwise they'll get doubled up.
-    $str = $str -replace '_', ''
-
     # Special case for ID suffix - convert "MarketID" to "market_id" not "market_i_d"
-    $str = $str -replace 'ID$', 'Id'
+    if ($str -cmatch 'ID$') {
+        $str = $str.Substring(0, $str.Length - 2) + "Id"
+    }
 
-    # Special case for acronyms - convert "VIPs" to "Vips" so it becomes "vips" not "v_i_ps"
-    $str = $str -replace 'VIPs', 'Vips'
-    $str = $str -replace 'VIP', 'Vip'
+    # Initialize variables
+    $words = @()
+    $currentWord = ""
+    $inAcronym = $false
 
-    # Handle other common acronyms
-    $str = $str -replace 'API', 'Api'
-    $str = $str -replace 'FSD', 'Fsd'
-    $str = $str -replace 'HUD', 'Hud'
-    $str = $str -replace 'NPC', 'Npc'
-    $str = $str -replace 'SRV', 'Srv'
-    $str = $str -replace 'UI', 'Ui'
-    $str = $str -replace 'URL', 'Url'
-    $str = $str -replace 'UUID', 'Uuid'
-    $str = $str -replace 'TG', 'Tg'  # Add special case for TG acronym
+    # Process each character
+    for ($i = 0; $i -lt $str.Length; $i++) {
+        $char = $str[$i]
 
-    # Insert underscore before each uppercase letter (except the first one)
-    # and convert the entire string to lowercase
-    $result = $str -creplace '(?<!^)([A-Z])', '_$1'
-    return $result.ToLower()
+        # Check if this is an underscore (word boundary)
+        if ($char -eq '_') {
+            if ($currentWord -ne "") {
+                $words += $currentWord
+                $currentWord = ""
+            }
+            $inAcronym = $false
+            continue
+        }
+
+        # Check if this is a capital letter
+        if ($char -cmatch '[A-Z]') {
+            # If we're at the start of the string or the current word is empty,
+            # just add to the current word
+            if ($i -eq 0 -or $currentWord -eq "") {
+                $currentWord += $char
+                # Check if we're starting an acronym (next char is also uppercase)
+                $inAcronym = ($i + 1 -lt $str.Length) -and ($str[$i + 1] -cmatch '[A-Z]')
+            }
+            # If we're in an acronym and this is still part of it
+            elseif ($inAcronym) {
+                # If this is the last letter of the acronym (next char is lowercase or end of string)
+                if (($i + 1 -eq $str.Length) -or ($str[$i + 2] -cmatch '[a-z]')) {
+                    $currentWord += $char
+                    $words += $currentWord
+                    $currentWord = ""
+                    $inAcronym = $false
+                } else {
+                    $currentWord += $char
+                }
+            }
+            # Otherwise, this capital letter starts a new word
+            else {
+                if ($currentWord -ne "") {
+                    $words += $currentWord
+                }
+                $currentWord = $char
+                # Check if we're starting an acronym
+                $inAcronym = ($i + 1 -lt $str.Length) -and ($str[$i + 1] -cmatch '[A-Z]')
+            }
+        }
+        # For lowercase letters and other characters, just add to the current word
+        else {
+            $currentWord += $char
+            $inAcronym = $false
+        }
+    }
+
+    # Add the last word if there is one
+    if ($currentWord -ne "") {
+        $words += $currentWord
+    }
+
+    # Join the words with underscores and convert to lowercase
+    return ($words -join "_").ToLower()
 }
 
 # Helper function to check if a name is a Rust reserved keyword and escape it if needed
@@ -78,7 +122,10 @@ function Get-NestedStructName {
         [string]$propertyName
     )
 
-    return "${parentName}${propertyName}"
+    # Remove underscores from property name to create a clean struct name
+    $cleanPropertyName = $propertyName -replace '_', ''
+
+    return "${parentName}${cleanPropertyName}"
 }
 
 # Helper function to process array item objects and add them to the nested structs collection
@@ -94,13 +141,13 @@ function Process-ArrayItemObject {
     # If the items schema is an object with properties, add it to the nested structs
     if ($itemsSchema.type -eq "object" -and $itemsSchema.properties) {
         $itemStructName = Get-NestedStructName -parentName $parentName -propertyName $propertyName
-        
+
         # Check if we've already processed this type globally
         if ($processedTypes.ContainsKey($itemStructName)) {
             # We've already processed this type, just return the name
             return $itemStructName
         }
-        
+
         # Check if we've already processed this nested struct in this context
         $key = "${parentName}_${propertyName}"
         if (-not $nestedStructs.ContainsKey($key)) {
@@ -110,10 +157,10 @@ function Process-ArrayItemObject {
                 Definition = $itemsSchema
             }
         }
-        
+
         return $itemStructName
     }
-    
+
     return $null
 }
 
@@ -178,21 +225,21 @@ function Get-RustType {
             if ($ref -match "^\.\./(.*?)#definitions/(.*)$") {
                 $schemaFilePath = $matches[1]
                 $defName = $matches[2]
-                
+
                 # Construct the full path to the schema file
                 $fullSchemaPath = Join-Path (Get-Location) "ed-journal-schemas/schemas/$schemaFilePath"
-                
+
                 if (Test-Path $fullSchemaPath) {
                     # Load the referenced schema file
                     $refSchema = Get-Content $fullSchemaPath -Raw | ConvertFrom-Json
-                    
+
                     # Get the definition from the schema
                     $definition = $refSchema.definitions.$defName
-                    
+
                     if ($definition) {
                         # Generate a struct name based on the definition name
                         $structName = $defName
-                        
+
                         # Check if we've already processed this type
                         if (-not $processedTypes.ContainsKey($defName)) {
                             # Check if we've already processed this definition in this run
@@ -206,7 +253,7 @@ function Get-RustType {
                             # Mark this type as processed
                             $processedTypes[$defName] = $true
                         }
-                        
+
                         # Use the struct name as the type
                         $rustType = $structName
                     } else {
@@ -223,7 +270,7 @@ function Get-RustType {
                 # Regular reference to an external schema file
                 $refParts = $ref -split "/"
                 $typeName = $refParts[-1]
-                
+
                 # Check if this is a problematic type
                 if ($problematicTypes -contains $typeName) {
                     $rustType = "serde_json::Value"
@@ -341,22 +388,22 @@ function Generate-NestedStruct {
             # Process array item objects
             if ($isArray -and $prop.items.type -eq "object" -and $prop.items.properties) {
                 $itemStructName = Process-ArrayItemObject -itemsSchema $prop.items -parentName $structName -propertyName $propName -nestedStructs $nestedStructs -topLevelSchema $topLevelSchema
-                
+
                 if ($itemStructName) {
                     # Use the nested struct name for the array item type
                     $rustType = "Vec<${itemStructName}>"
-                    
+
                     # Convert property name to snake_case for Rust
                     $rustPropName = ConvertTo-SnakeCase -str $propName
-                    
+
                     # Check if the property name is a Rust reserved keyword and escape it if needed
                     $rustPropName = Escape-RustKeyword -name $rustPropName
-                    
+
                     # Add the property to the struct
                     $output += ('    #[serde(rename = "' + $propName + '")]')
                     $output += "    pub ${rustPropName}: ${rustType},"
                     $output += ""
-                    
+
                     # Skip the rest of the type determination since we've already processed this property
                     continue
                 }
@@ -388,34 +435,34 @@ function Generate-NestedStruct {
 
     # Process nested structs recursively
     $nestedStructOutput = @()
-    
+
     # Create a copy of the keys to avoid modifying the collection during iteration
     $keys = @($nestedStructs.Keys)
-    
+
     foreach ($key in $keys) {
         $nestedStruct = $nestedStructs[$key]
-        
+
         # Skip if we've already processed this type
         if ($processedTypes.ContainsKey($nestedStruct.Name)) {
             continue
         }
-        
+
         # Create a new hashtable for nested structs to avoid circular references
         $newNestedStructs = @{}
-        
+
         # Generate the nested struct
         $result = Generate-NestedStruct -structName $nestedStruct.Name -definition $nestedStruct.Definition -topLevelSchema $topLevelSchema -nestedStructs $newNestedStructs
         if ($result.StructCode -ne "") {
             $nestedStructOutput += $result.StructCode
         }
     }
-    
+
     # Combine the main struct and nested structs
     $structCode = $output -join "`n"
     if ($nestedStructOutput.Count -gt 0) {
         $structCode += "`n`n" + ($nestedStructOutput -join "`n`n")
     }
-    
+
     # Return both the struct code and the nested structs collection
     return @{
         StructCode = $structCode
@@ -486,26 +533,26 @@ function Generate-RustStruct {
                     $jsonType = $prop.items.type
                     $format = $prop.items.format
                 }
-                
+
                 # Process array item objects
                 if ($prop.items.type -eq "object" -and $prop.items.properties) {
                     $itemStructName = Process-ArrayItemObject -itemsSchema $prop.items -parentName $structName -propertyName $propName -nestedStructs $nestedStructs -topLevelSchema $schema
-                    
+
                     if ($itemStructName) {
                         # Use the nested struct name for the array item type
                         $rustType = "Vec<${itemStructName}>"
-                        
+
                         # Convert property name to snake_case for Rust
                         $rustPropName = ConvertTo-SnakeCase -str $propName
-                        
+
                         # Check if the property name is a Rust reserved keyword and escape it if needed
                         $rustPropName = Escape-RustKeyword -name $rustPropName
-                        
+
                         # Add the property to the struct
                         $output += ('    #[serde(rename = "' + $propName + '")]')
                         $output += "    pub ${rustPropName}: ${rustType},"
                         $output += ""
-                        
+
                         # Skip the rest of the type determination since we've already processed this property
                         continue
                     }
@@ -605,26 +652,26 @@ if (Test-Path $commonDir) {
     $commonFiles = Get-ChildItem -Path $commonDir -Filter "*.json"
     foreach ($file in $commonFiles) {
         Write-Host "Processing common schema file: $($file.Name)..."
-        
+
         # Read the schema
         $schema = Get-Content $file.FullName -Raw | ConvertFrom-Json
-        
+
         # Process definitions in the schema
         if ($schema.definitions) {
             foreach ($defName in $schema.definitions.PSObject.Properties.Name) {
                 $definition = $schema.definitions.$defName
-                
+
                 # Skip if we've already processed this type
                 if ($processedTypes.ContainsKey($defName)) {
                     continue
                 }
-                
+
                 # Generate a struct for this definition
                 $result = Generate-NestedStruct -structName $defName -definition $definition -topLevelSchema $schema
-                
+
                 # Add the struct to our collection
                 $allStructs += $result.StructCode
-                
+
                 # Mark this type as processed
                 $processedTypes[$defName] = $true
             }
@@ -662,19 +709,19 @@ foreach ($dir in $schemaDirs) {
         if ($result.StructCode -ne "") {
             $allStructs += $result.StructCode
         }
-        
+
         # Process nested structs
         foreach ($key in $result.NestedStructs.Keys) {
             $nestedStruct = $result.NestedStructs[$key]
-            
+
             # Skip if we've already processed this type
             if ($processedTypes.ContainsKey($nestedStruct.Name)) {
                 continue
             }
-            
+
             # Generate the nested struct
             $nestedResult = Generate-NestedStruct -structName $nestedStruct.Name -definition $nestedStruct.Definition -topLevelSchema $schema
-            
+
             # Add the nested struct to our collection if it's not empty
             if ($nestedResult.StructCode -ne "") {
                 $allStructs += $nestedResult.StructCode
