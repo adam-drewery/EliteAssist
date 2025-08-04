@@ -4,7 +4,7 @@ use crate::state;
 
 impl Materials {
 
-    fn apply_counts_to(&self, target: &mut Vec<MaterialGroup>) {
+    fn apply_counts_to(&self, target: &mut Vec<state::MaterialGroup>) {
 
         let count_map: HashMap<String, u16> = self
             .raw
