@@ -321,7 +321,6 @@ impl State {
             JournalEvent::UpgradeWeapon(_) => {}
             JournalEvent::Resupply(_) => {}
             JournalEvent::Died(_) => {}
-            JournalEvent::SrvDestroyed(_) => {}
             JournalEvent::CodexEntry(_) => {}
             JournalEvent::ModuleSell(_) => {}
             JournalEvent::ModuleStore(_) => {}
