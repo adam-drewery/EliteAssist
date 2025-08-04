@@ -1,7 +1,6 @@
 #!/usr/bin/env pwsh
 
 # Script to generate Rust structs from JSON schemas in ed-journal-schemas/schemas
-# This is a fixed version that properly handles nested object types and arrays of references
 
 # Helper function to convert PascalCase to snake_case
 function ConvertTo-SnakeCase {
@@ -326,7 +325,7 @@ function Get-RustType {
                     $rustType = "String"
                 }
             }
-            "integer" { $rustType = "i64" }
+            "integer" { $rustType = "u64" }
             "number" { $rustType = "f64" }
             "boolean" { $rustType = "bool" }
             "object" {

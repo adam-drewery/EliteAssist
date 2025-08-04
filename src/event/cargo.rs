@@ -1,17 +1,19 @@
 use std::collections::HashMap;
 use crate::event::*;
+use crate::fdev_ids::all_materials;
 use crate::state;
+use crate::text::title_case;
 
 impl Materials {
 
     fn apply_counts_to(&self, target: &mut Vec<state::MaterialGroup>) {
 
-        let count_map: HashMap<String, u16> = self
+        let count_map: HashMap<String, u64> = self
             .raw
             .iter()
-            .chain(self.manufactured.iter())
-            .chain(self.encoded.iter())
             .map(|m| (m.name.clone(), m.count))
+            .chain(self.manufactured.iter().map(|m| (m.name.clone(), m.count)))
+            .chain(self.encoded.iter().map(|m| (m.name.clone(), m.count)))
             .collect();
 
         for group in target {
@@ -39,4 +41,63 @@ impl Into<state::Materials> for Materials {
         self.apply_counts_to(&mut materials.encoded);
         materials
     }
+}
+
+impl ShipLocker {
+    pub fn is_empty(&self) -> bool {
+        self.items.is_none()
+            && self.components.is_none()
+            && self.consumables.is_none()
+            && self.data.is_none()
+    }
+}
+
+impl Into<state::ShipLocker> for ShipLocker {
+
+    fn into(self) -> state::ShipLocker {
+
+        state::ShipLocker {
+
+            items: map_vec(self.items),
+            consumables: map_vec(self.consumables),
+            data: map_vec(self.data),
+            components: map_vec(self.components),
+        }
+    }
+}
+
+impl Into<crate::state::ShipLockerItem> for Item {
+
+    fn into(self) -> state::ShipLockerItem {
+
+        crate::state::ShipLockerItem {
+            name: self.name_localised.unwrap_or(title_case(&self.name)),
+            for_mission: self.mission_id.is_some(),
+            count: self.count,
+        }
+    }
+}
+
+fn group_and_sort(items: Vec<Item>) -> Vec<Item> {
+
+    let mut grouped_items: HashMap<(String, Option<u64>), Item> = HashMap::new();
+
+    for item in items {
+        grouped_items
+            .entry((item.name.clone(), item.mission_id))
+            .and_modify(|e| e.count += item.count)
+            .or_insert(item);
+    }
+
+    let mut items: Vec<_> = grouped_items.into_values().collect();
+    items.sort_by(|a, b| a.name.cmp(&b.name));
+    items
+}
+
+fn map_vec(vec: Option<Vec<Item>>) -> Vec<state::ShipLockerItem> {
+
+    group_and_sort(vec.unwrap_or_default())
+        .into_iter()
+        .map(|f| f.into())
+        .collect()
 }
