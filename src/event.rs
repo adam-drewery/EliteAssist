@@ -8,2585 +8,30 @@ pub mod location;
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 #[derive(Clone, Debug, Deserialize)]
-pub struct Item {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "OwnerID")]
-    pub owner_id: u64,
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: Option<u64>,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct Component {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "OwnerID")]
-    pub owner_id: u64,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: Option<u64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct Consumable {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "OwnerID")]
-    pub owner_id: u64,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct Data {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "OwnerID")]
-    pub owner_id: u64,
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: Option<u64>,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-}
-
-/// When written: when repairing modules using the Auto Field Maintenance Unit (AFMU)
-#[derive(Clone, Debug, Deserialize)]
-pub struct AfmuRepairs {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Module")]
-    pub module: String,
-
-    #[serde(rename = "Module_Localised")]
-    pub module_localised: Option<String>,
-
-    #[serde(rename = "FullyRepaired")]
-    pub fully_repaired: bool,
-
-    #[serde(rename = "Health")]
-    pub health: f64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct AppliedToSquadron {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "SquadronName")]
-    pub squadron_name: String,
-
-}
-
-/// When written: when in Supercruise, and distance from planet drops to within the 'Orbital Cruise' zone
-#[derive(Clone, Debug, Deserialize)]
-pub struct ApproachBody {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "StarSystem")]
-    pub star_system: String,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-    #[serde(rename = "Body")]
-    pub body: String,
-
-    #[serde(rename = "BodyID")]
-    pub body_id: u64,
-
-}
-
-/// When written: when approaching a planetary settlement
-#[derive(Clone, Debug, Deserialize)]
-pub struct ApproachSettlement {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: Option<u64>,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-    #[serde(rename = "BodyID")]
-    pub body_id: u64,
-
-    #[serde(rename = "BodyName")]
-    pub body_name: String,
-
-    #[serde(rename = "Latitude")]
-    pub latitude: Option<f64>,
-
-    #[serde(rename = "Longitude")]
-    pub longitude: Option<f64>,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "StationFaction")]
-    pub station_faction: Option<ApproachSettlementStationFaction>,
-
-    #[serde(rename = "StationGovernment")]
-    pub station_government: Option<String>,
-
-    #[serde(rename = "StationGovernment_Localised")]
-    pub station_government_localised: Option<String>,
-
-    #[serde(rename = "StationAllegiance")]
-    pub station_allegiance: Option<String>,
-
-    #[serde(rename = "StationServices")]
-    pub station_services: Option<Vec<String>>,
-
-    #[serde(rename = "StationEconomy")]
-    pub station_economy: Option<String>,
-
-    #[serde(rename = "StationEconomy_Localised")]
-    pub station_economy_localised: Option<String>,
-
-    #[serde(rename = "StationEconomies")]
-    pub station_economies: Option<Vec<ApproachSettlementStationEconomies>>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct ApproachSettlementStationFaction {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "FactionState")]
-    pub faction_state: Option<String>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct ApproachSettlementStationEconomies {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Proportion")]
-    pub proportion: f64,
-
-}
-
-/// When written: when the player has broken up a ‘Motherlode’ asteroid for mining
-#[derive(Clone, Debug, Deserialize)]
-pub struct AsteroidCracked {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Body")]
-    pub body: String,
-
-}
-
-/// Lists the contents of the backpack, in a separate backpack.json file
-#[derive(Clone, Debug, Deserialize)]
-pub struct Backpack {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Items")]
-    pub items: Option<Vec<Item>>,
-
-    #[serde(rename = "Components")]
-    pub components: Option<Vec<Component>>,
-
-    #[serde(rename = "Consumables")]
-    pub consumables: Option<Vec<Consumable>>,
-
-    #[serde(rename = "Data")]
-    pub data: Option<Vec<Data>>,
-
-}
-
-/// This is written when there is any change to the contents of the suit backpack – note this can be written at the same time as other events like UseConsumable
-#[derive(Clone, Debug, Deserialize)]
-pub struct BackpackChange {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Added")]
-    pub added: Option<Vec<BackpackChangeEntry>>,
-
-    #[serde(rename = "Removed")]
-    pub removed: Option<Vec<BackpackChangeEntry>>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct BackpackChangeEntry {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "OwnerID")]
-    pub owner_id: u64,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-    #[serde(rename = "Type")]
-    pub r#type: String,
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: Option<u64>,
-
-}
-
-/// This event is logged when signing up to fight at a recruitment desk
-#[derive(Clone, Debug, Deserialize)]
-pub struct BookDropship {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Retreat")]
-    pub retreat: Option<bool>,
-
-    #[serde(rename = "Cost")]
-    pub cost: u64,
-
-    #[serde(rename = "DestinationSystem")]
-    pub destination_system: String,
-
-    #[serde(rename = "DestinationLocation")]
-    pub destination_location: String,
-
-}
-
-/// This event is logged when booking a taxi transport
-#[derive(Clone, Debug, Deserialize)]
-pub struct BookTaxi {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Cost")]
-    pub cost: u64,
-
-    #[serde(rename = "DestinationSystem")]
-    pub destination_system: String,
-
-    #[serde(rename = "DestinationLocation")]
-    pub destination_location: String,
-
-    /// indicates if requested for exit from combat zone
-    #[serde(rename = "Retreat")]
-    pub retreat: Option<bool>,
-
-}
-
-/// When written: player is awarded a bounty for a kill
-#[derive(Clone, Debug, Deserialize)]
-pub struct Bounty {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// An array of Faction names and the Reward values, as the target can have multiple bounties payable by different factions. Not used for skimmers.(See Reward)
-    #[serde(rename = "Rewards")]
-    pub rewards: Option<Vec<BountyRewards>>,
-
-    /// Name of the Pilot
-    #[serde(rename = "PilotName")]
-    pub pilot_name: Option<String>,
-
-    /// Name of the Pilot
-    #[serde(rename = "PilotName_Localised")]
-    pub pilot_name_localised: Option<String>,
-
-    /// type of ship
-    #[serde(rename = "Target")]
-    pub target: String,
-
-    #[serde(rename = "Target_Localised")]
-    pub target_localised: Option<String>,
-
-    /// Not used for skimmers.
-    #[serde(rename = "TotalReward")]
-    pub total_reward: Option<u64>,
-
-    #[serde(rename = "VictimFaction")]
-    pub victim_faction: String,
-
-    #[serde(rename = "VictimFaction_Localised")]
-    pub victim_faction_localised: Option<String>,
-
-    /// if credit for the kill is shared with other players, this has the number of other players involved
-    #[serde(rename = "SharedWithOthers")]
-    pub shared_with_others: Option<u64>,
-
-    /// Used instead of Rewards when the bounty is for a skimmer
-    #[serde(rename = "Reward")]
-    pub reward: Option<u64>,
-
-    #[serde(rename = "Faction")]
-    pub faction: Option<String>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct BountyRewards {
-
-    #[serde(rename = "Faction")]
-    pub faction: String,
-
-    #[serde(rename = "Reward")]
-    pub reward: u64,
-
-}
-
-/// When Written: when purchasing ammunition
-#[derive(Clone, Debug, Deserialize)]
-pub struct BuyAmmo {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Cost")]
-    pub cost: u64,
-
-}
-
-/// When Written: when purchasing drones
-#[derive(Clone, Debug, Deserialize)]
-pub struct BuyDrones {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Type")]
-    pub r#type: String,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-    #[serde(rename = "BuyPrice")]
-    pub buy_price: u64,
-
-    #[serde(rename = "TotalCost")]
-    pub total_cost: u64,
-
-}
-
-/// When Written: when buying system data via the galaxy map
-#[derive(Clone, Debug, Deserialize)]
-pub struct BuyExplorationData {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "System")]
-    pub system: String,
-
-    #[serde(rename = "Cost")]
-    pub cost: u64,
-
-}
-
-/// This event is logged when buying microresources
-#[derive(Clone, Debug, Deserialize)]
-pub struct BuyMicroResources {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// Old format (used for example at supplies vendor)
-    #[serde(rename = "Name")]
-    pub name: Option<String>,
-
-    /// Old format (used for example at supplies vendor)
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Category")]
-    pub category: Option<String>,
-
-    /// Old format (used for example at supplies vendor)
-    #[serde(rename = "Count")]
-    pub count: Option<u64>,
-
-    #[serde(rename = "Price")]
-    pub price: u64,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    /// New format (eg at Fleet Carrier bartender)
-    #[serde(rename = "TotalCount")]
-    pub total_count: Option<u64>,
-
-    /// New format (eg at Fleet Carrier bartender)
-    #[serde(rename = "MicroResources")]
-    pub micro_resources: Option<Vec<BuyMicroResourcesMicroResources>>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct BuyMicroResourcesMicroResources {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Category")]
-    pub category: String,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-}
-
-/// This event is logged when buying a new suit
-#[derive(Clone, Debug, Deserialize)]
-pub struct BuySuit {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Price")]
-    pub price: u64,
-
-    #[serde(rename = "SuitID")]
-    pub suit_id: u64,
-
-    #[serde(rename = "SuitMods")]
-    pub suit_mods: Vec<String>,
-
-}
-
-/// When Written: when buying trade data in the galaxy map
-#[derive(Clone, Debug, Deserialize)]
-pub struct BuyTradeData {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "System")]
-    pub system: String,
-
-    #[serde(rename = "Cost")]
-    pub cost: u64,
-
-}
-
-/// This event is logged when purchasing a new hand weapon
-#[derive(Clone, Debug, Deserialize)]
-pub struct BuyWeapon {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Class")]
-    pub class: u64,
-
-    #[serde(rename = "Price")]
-    pub price: u64,
-
-    #[serde(rename = "SuitModuleID")]
-    pub suit_module_id: u64,
-
-    #[serde(rename = "WeaponMods")]
-    pub weapon_mods: Vec<String>,
-
-}
-
-/// This event is logged if the player cancels their journey to a combat zone
-#[derive(Clone, Debug, Deserialize)]
-pub struct CancelDropship {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Refund")]
-    pub refund: u64,
-
-}
-
-/// This event is logged if the player cancels a booked taxi trip
-#[derive(Clone, Debug, Deserialize)]
-pub struct CancelTaxi {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Refund")]
-    pub refund: u64,
-
-}
-
-/// When written: The player has been rewarded for a capital ship combat
-#[derive(Clone, Debug, Deserialize)]
-pub struct CapShipBond {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Reward")]
-    pub reward: u64,
-
-    #[serde(rename = "AwardingFaction")]
-    pub awarding_faction: String,
-
-    #[serde(rename = "VictimFaction")]
-    pub victim_faction: String,
-
-}
-
-/// When written: at startup, note this is now written slightly later in startup, after we have initialised missions, so we can detect if any cargo came from an abandoned delivery mission. The first Cargo event in the file will contain the full inventory, others just indicate a separate file has been written. The full data is now written to a separate file Cargo.json. A simple event (with no parameters) is written to the main journal file when the cargo file is updated.
-#[derive(Clone, Debug, Deserialize)]
-pub struct Cargo {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Vessel")]
-    pub vessel: String,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-    #[serde(rename = "Inventory")]
-    pub inventory: Option<Vec<CargoInventory>>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CargoInventory {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-    #[serde(rename = "Stolen")]
-    pub stolen: u64,
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: Option<u64>,
-
-}
-
-/// When written: when collecting or delivering cargo for a wing mission, or if a wing member updates progress. The CargoType and Count are included when you collect or deliver goods, they are not included for a wing update. The Progress value actually represents pending progress for goods in transit: (ItemsCollected-ItemsDelivered)/TotalItemsToDeliver
-#[derive(Clone, Debug, Deserialize)]
-pub struct CargoDepot {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+pub struct PassengersManifest {
 
     #[serde(rename = "MissionID")]
     pub mission_id: u64,
 
-    #[serde(rename = "UpdateType")]
-    pub update_type: String,
-
-    /// Not included for UpdateType of WingUpdate
-    #[serde(rename = "CargoType")]
-    pub cargo_type: Option<String>,
-
-    /// Not included for UpdateType of WingUpdate
-    #[serde(rename = "Count")]
-    pub count: Option<u64>,
-
-    #[serde(rename = "StartMarketID")]
-    pub start_market_id: u64,
-
-    #[serde(rename = "EndMarketID")]
-    pub end_market_id: u64,
-
-    #[serde(rename = "ItemsCollected")]
-    pub items_collected: u64,
-
-    #[serde(rename = "ItemsDelivered")]
-    pub items_delivered: u64,
-
-    #[serde(rename = "TotalItemsToDeliver")]
-    pub total_items_to_deliver: u64,
-
-    #[serde(rename = "Progress")]
-    pub progress: f64,
-
-    #[serde(rename = "CargoType_Localised")]
-    pub cargo_type_localised: Option<String>,
-
-}
-
-/// When transferring cargo between ship and fleet carrier, or between ship and SRV
-#[derive(Clone, Debug, Deserialize)]
-pub struct CargoTransfer {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Transfers")]
-    pub transfers: Vec<CargoTransferTransfers>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CargoTransferTransfers {
-
     #[serde(rename = "Type")]
     pub r#type: String,
 
-    #[serde(rename = "Type_Localised")]
-    pub type_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-    #[serde(rename = "Direction")]
-    pub direction: String,
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: Option<u64>,
-
-}
-
-/// Player transfers credits to/from carrier
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierBankTransfer {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CarrierID")]
-    pub carrier_id: u64,
-
-    #[serde(rename = "Deposit")]
-    pub deposit: Option<u64>,
-
-    #[serde(rename = "Withdraw")]
-    pub withdraw: Option<u64>,
-
-    /// Player balance after transfer
-    #[serde(rename = "PlayerBalance")]
-    pub player_balance: u64,
-
-    /// Carrier balance after transfer
-    #[serde(rename = "CarrierBalance")]
-    pub carrier_balance: u64,
-
-}
-
-/// Player has bought a fleet carrier
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierBuy {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CarrierID")]
-    pub carrier_id: u64,
-
-    #[serde(rename = "BoughtAtMarket")]
-    pub bought_at_market: u64,
-
-    #[serde(rename = "Location")]
-    pub location: String,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-    #[serde(rename = "Price")]
-    pub price: u64,
-
-    #[serde(rename = "Variant")]
-    pub variant: String,
-
-    #[serde(rename = "Callsign")]
-    pub callsign: String,
-
-}
-
-/// At the time the player cancels decommission
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierCancelDecommission {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CarrierID")]
-    pub carrier_id: u64,
-
-}
-
-/// Changes to crew
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierCrewServices {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CarrierID")]
-    pub carrier_id: u64,
-
-    #[serde(rename = "CrewRole")]
-    pub crew_role: String,
-
-    #[serde(rename = "Operation")]
-    pub operation: String,
-
-    #[serde(rename = "CrewName")]
-    pub crew_name: String,
-
-}
-
-/// At the time the player requests decommission
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierDecommission {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CarrierID")]
-    pub carrier_id: u64,
-
-    #[serde(rename = "ScrapRefund")]
-    pub scrap_refund: u64,
-
-    #[serde(rename = "ScrapTime")]
-    pub scrap_time: u64,
-
-}
-
-/// Any player giving fuel to the carrier
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierDepositFuel {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CarrierID")]
-    pub carrier_id: u64,
-
-    #[serde(rename = "Amount")]
-    pub amount: u64,
-
-    /// Total amount of fuel after donation
-    #[serde(rename = "Total")]
-    pub total: u64,
-
-}
-
-/// The carrier owner has changed the docking permission criteria
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierDockingPermission {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CarrierID")]
-    pub carrier_id: u64,
-
-    #[serde(rename = "DockingAccess")]
-    pub docking_access: String,
-
-    #[serde(rename = "AllowNotorious")]
-    pub allow_notorious: bool,
-
-}
-
-/// Change to tax rate or reserve
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierFinance {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CarrierID")]
-    pub carrier_id: u64,
-
-    #[serde(rename = "CarrierBalance")]
-    pub carrier_balance: u64,
-
-    #[serde(rename = "ReserveBalance")]
-    pub reserve_balance: u64,
-
-    #[serde(rename = "AvailableBalance")]
-    pub available_balance: u64,
-
-    #[serde(rename = "ReservePercent")]
-    pub reserve_percent: u64,
-
-    #[serde(rename = "TaxRate_pioneersupplies")]
-    pub tax_rate_pioneer_supplies: Option<u64>,
-
-    #[serde(rename = "TaxRate_shipyard")]
-    pub tax_rate_shipyard: Option<u64>,
-
-    #[serde(rename = "TaxRate_rearm")]
-    pub tax_rate_rearm: Option<u64>,
-
-    #[serde(rename = "TaxRate_outfitting")]
-    pub tax_rate_outfitting: Option<u64>,
-
-    #[serde(rename = "TaxRate_refuel")]
-    pub tax_rate_refuel: Option<u64>,
-
-    #[serde(rename = "TaxRate_repair")]
-    pub tax_rate_repair: Option<u64>,
-
-    #[serde(rename = "TaxRate")]
-    pub tax_rate: Option<u64>,
-
-}
-
-/// This is similar to FSDJump and Location, but it is written if the player is online and docked at a fleet carrier when the carrier jumps. Note it does not include the distance jumped, or fuel used.
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJump {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Docked")]
-    pub docked: bool,
-
-    #[serde(rename = "OnFoot")]
-    pub on_foot: Option<bool>,
-
-    #[serde(rename = "StationName")]
-    pub station_name: String,
-
-    #[serde(rename = "StationType")]
-    pub station_type: String,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "StationFaction")]
-    pub station_faction: Option<CarrierJumpStationFaction>,
-
-    #[serde(rename = "StationGovernment")]
-    pub station_government: String,
-
-    #[serde(rename = "StationGovernment_Localised")]
-    pub station_government_localised: Option<String>,
-
-    #[serde(rename = "StationServices")]
-    pub station_services: Option<Vec<String>>,
-
-    #[serde(rename = "StationEconomy")]
-    pub station_economy: String,
-
-    #[serde(rename = "StationEconomy_Localised")]
-    pub station_economy_localised: Option<String>,
-
-    #[serde(rename = "StationEconomies")]
-    pub station_economies: Option<Vec<CarrierJumpStationEconomies>>,
-
-    #[serde(rename = "Taxi")]
-    pub taxi: Option<bool>,
-
-    #[serde(rename = "Multicrew")]
-    pub multicrew: Option<bool>,
+    #[serde(rename = "VIP")]
+    pub vip: bool,
 
     #[serde(rename = "Wanted")]
-    pub wanted: Option<bool>,
+    pub wanted: bool,
 
-    /// Name of destination starsystem
-    #[serde(rename = "StarSystem")]
-    pub star_system: String,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-    /// star position, as a Json array [x, y, z], relative to Sol in Ly
-    #[serde(rename = "StarPos")]
-    pub star_pos: Vec<f64>,
-
-    #[serde(rename = "SystemAllegiance")]
-    pub system_allegiance: String,
-
-    #[serde(rename = "SystemEconomy")]
-    pub system_economy: String,
-
-    #[serde(rename = "SystemEconomy_Localised")]
-    pub system_economy_localised: Option<String>,
-
-    #[serde(rename = "SystemSecondEconomy")]
-    pub system_second_economy: String,
-
-    #[serde(rename = "SystemSecondEconomy_Localised")]
-    pub system_second_economy_localised: Option<String>,
-
-    #[serde(rename = "SystemGovernment")]
-    pub system_government: String,
-
-    #[serde(rename = "SystemGovernment_Localised")]
-    pub system_government_localised: Option<String>,
-
-    #[serde(rename = "SystemSecurity")]
-    pub system_security: String,
-
-    #[serde(rename = "SystemSecurity_Localised")]
-    pub system_security_localised: Option<String>,
-
-    #[serde(rename = "Population")]
-    pub population: u64,
-
-    #[serde(rename = "Body")]
-    pub body: String,
-
-    #[serde(rename = "BodyID")]
-    pub body_id: u64,
-
-    #[serde(rename = "BodyType")]
-    pub body_type: String,
-
-    #[serde(rename = "Factions")]
-    pub factions: Option<Vec<CarrierJumpFactions>>,
-
-    #[serde(rename = "SystemFaction")]
-    pub system_faction: Option<CarrierJumpSystemFaction>,
-
-    #[serde(rename = "Conflicts")]
-    pub conflicts: Option<Vec<CarrierJumpConflicts>>,
-
-    /// Thargoid war information
-    #[serde(rename = "ThargoidWar")]
-    pub thargoid_war: Option<CarrierJumpThargoidWar>,
-
-    /// If the player is pledged to a Power in Powerplay, and the star system is involved in powerplay
-    #[serde(rename = "Powers")]
-    pub powers: Option<Vec<String>>,
-
-    /// Controlling power for the system
-    #[serde(rename = "ControllingPower")]
-    pub controlling_power: Option<String>,
-
-    /// Powerplay state for the system.
-    #[serde(rename = "PowerplayState")]
-    pub powerplay_state: Option<String>,
-
-    /// The current amount of control within the specific powerplay state
-    #[serde(rename = "PowerplayStateControlProgress")]
-    pub powerplay_state_control_progress: Option<f64>,
-
-    /// Merits gained towards reinforcing the system and increasing the system strength
-    #[serde(rename = "PowerplayStateReinforcement")]
-    pub powerplay_state_reinforcement: Option<u64>,
-
-    /// Merits gained towards undermining the system and decreasing the system strength
-    #[serde(rename = "PowerplayStateUndermining")]
-    pub powerplay_state_undermining: Option<u64>,
-
-    /// When the system is unoccupied and 1 or more powers are fighting for control by reaching 120k merits.
-    #[serde(rename = "PowerplayConflictProgress")]
-    pub powerplay_conflict_progress: Option<Vec<CarrierJumpPowerplayConflictProgress>>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpFactions {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "FactionState")]
-    pub faction_state: String,
-
-    #[serde(rename = "Government")]
-    pub government: String,
-
-    #[serde(rename = "Influence")]
-    pub influence: f64,
-
-    #[serde(rename = "Allegiance")]
-    pub allegiance: String,
-
-    #[serde(rename = "Happiness")]
-    pub happiness: String,
-
-    #[serde(rename = "Happiness_Localised")]
-    pub happiness_localised: Option<String>,
-
-    /// If player squadron faction, and this is happiest system
-    #[serde(rename = "HappiestSystem")]
-    pub happiest_system: Option<bool>,
-
-    #[serde(rename = "MyReputation")]
-    pub my_reputation: f64,
-
-    #[serde(rename = "PendingStates")]
-    pub pending_states: Option<Vec<CarrierJumpFactionsPendingStates>>,
-
-    #[serde(rename = "ActiveStates")]
-    pub active_states: Option<Vec<CarrierJumpFactionsActiveStates>>,
-
-    #[serde(rename = "SquadronFaction")]
-    pub squadron_faction: Option<bool>,
-
-    #[serde(rename = "HomeSystem")]
-    pub home_system: Option<bool>,
-
-    #[serde(rename = "RecoveringStates")]
-    pub recovering_states: Option<Vec<CarrierJumpFactionsRecoveringStates>>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpStationEconomies {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Proportion")]
-    pub proportion: f64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpFactionsRecoveringStates {
-
-    #[serde(rename = "State")]
-    pub state: String,
-
-    #[serde(rename = "Trend")]
-    pub trend: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpFactionsActiveStates {
-
-    #[serde(rename = "State")]
-    pub state: String,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpFactionsPendingStates {
-
-    #[serde(rename = "State")]
-    pub state: String,
-
-    #[serde(rename = "Trend")]
-    pub trend: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpStationFaction {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpSystemFaction {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "FactionState")]
-    pub faction_state: Option<String>,
-
-}
-
-/// Thargoid war information
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpThargoidWar {
-
-    #[serde(rename = "CurrentState")]
-    pub current_state: String,
-
-    #[serde(rename = "NextStateSuccess")]
-    pub next_state_success: Option<String>,
-
-    #[serde(rename = "NextStateFailure")]
-    pub next_state_failure: Option<String>,
-
-    #[serde(rename = "SuccessStateReached")]
-    pub success_state_reached: bool,
-
-    #[serde(rename = "WarProgress")]
-    pub war_progress: Option<f64>,
-
-    #[serde(rename = "RemainingPorts")]
-    pub remaining_ports: Option<u64>,
-
-    #[serde(rename = "EstimatedRemainingTime")]
-    pub estimated_remaining_time: Option<String>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpConflicts {
-
-    #[serde(rename = "WarType")]
-    pub war_type: String,
-
-    #[serde(rename = "Status")]
-    pub status: String,
-
-    #[serde(rename = "Faction1")]
-    pub faction1: CarrierJumpConflictsFaction1,
-
-    #[serde(rename = "Faction2")]
-    pub faction2: CarrierJumpConflictsFaction2,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpConflictsFaction1 {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Stake")]
-    pub stake: String,
-
-    #[serde(rename = "Stake_Localised")]
-    pub stake_localised: Option<String>,
-
-    #[serde(rename = "WonDays")]
-    pub won_days: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpConflictsFaction2 {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Stake")]
-    pub stake: String,
-
-    #[serde(rename = "WonDays")]
-    pub won_days: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpPowerplayConflictProgress {
-
-    #[serde(rename = "Power")]
-    pub power: String,
-
-    /// Progress towards the control threshold of 120k merits. can exceed 100%(1.0).
-    #[serde(rename = "ConflictProgress")]
-    pub conflict_progress: f64,
-
-}
-
-/// This is logged when a jump is cancelled
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpCancelled {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CarrierID")]
-    pub carrier_id: u64,
-
-}
-
-/// At the time the player requests the jump, not the jump itself
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierJumpRequest {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CarrierID")]
-    pub carrier_id: u64,
-
-    #[serde(rename = "SystemName")]
-    pub system_name: String,
-
-    #[serde(rename = "Body")]
-    pub body: Option<String>,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-    #[serde(rename = "BodyID")]
-    pub body_id: u64,
-
-    #[serde(rename = "DepartureTime", with = "crate::event::format::optional_date")]
-    pub departure_time: Option<DateTime<Utc>>,
-
-}
-
-/// Carrier Location. Written on startup and after a carrier jump.
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierLocation {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CarrierID")]
-    pub carrier_id: u64,
-
-    #[serde(rename = "StarSystem")]
-    pub star_system: String,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-    #[serde(rename = "BodyID")]
-    pub body_id: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierModulePack {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CarrierID")]
-    pub carrier_id: u64,
-
-    #[serde(rename = "Operation")]
-    pub operation: String,
-
-    #[serde(rename = "PackTheme")]
-    pub pack_theme: String,
-
-    #[serde(rename = "PackTier")]
-    pub pack_tier: u64,
-
-    #[serde(rename = "Refund")]
-    pub refund: Option<u64>,
-
-    #[serde(rename = "Cost")]
-    pub cost: Option<u64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierNameChange {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CarrierID")]
-    pub carrier_id: u64,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Callsign")]
-    pub callsign: String,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierShipPack {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CarrierID")]
-    pub carrier_id: u64,
-
-    #[serde(rename = "Operation")]
-    pub operation: String,
-
-    #[serde(rename = "PackTheme")]
-    pub pack_theme: String,
-
-    #[serde(rename = "PackTier")]
-    pub pack_tier: u64,
-
-    #[serde(rename = "Refund")]
-    pub refund: Option<u64>,
-
-    #[serde(rename = "Cost")]
-    pub cost: Option<u64>,
-
-}
-
-/// When owner opens carrier management
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierStats {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CarrierID")]
-    pub carrier_id: u64,
-
-    #[serde(rename = "Callsign")]
-    pub callsign: String,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "DockingAccess")]
-    pub docking_access: String,
-
-    #[serde(rename = "AllowNotorious")]
-    pub allow_notorious: bool,
-
-    #[serde(rename = "FuelLevel")]
-    pub fuel_level: u64,
-
-    #[serde(rename = "JumpRangeCurr")]
-    pub jump_range_curr: f64,
-
-    #[serde(rename = "JumpRangeMax")]
-    pub jump_range_max: f64,
-
-    #[serde(rename = "PendingDecommission")]
-    pub pending_decommission: bool,
-
-    #[serde(rename = "SpaceUsage")]
-    pub space_usage: CarrierStatsSpaceUsage,
-
-    #[serde(rename = "Finance")]
-    pub finance: CarrierStatsFinance,
-
-    #[serde(rename = "Crew")]
-    pub crew: Vec<CarrierStatsCrew>,
-
-    #[serde(rename = "ShipPacks")]
-    pub ship_packs: Vec<CarrierStatsShipPacks>,
-
-    #[serde(rename = "ModulePacks")]
-    pub module_packs: Vec<CarrierStatsModulePacks>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierStatsSpaceUsage {
-
-    #[serde(rename = "TotalCapacity")]
-    pub total_capacity: u64,
-
-    #[serde(rename = "Crew")]
-    pub crew: u64,
-
-    #[serde(rename = "Cargo")]
-    pub cargo: u64,
-
-    #[serde(rename = "CargoSpaceReserved")]
-    pub cargo_space_reserved: u64,
-
-    #[serde(rename = "ShipPacks")]
-    pub ship_packs: u64,
-
-    #[serde(rename = "ModulePacks")]
-    pub module_packs: u64,
-
-    #[serde(rename = "FreeSpace")]
-    pub free_space: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierStatsShipPacks {
-
-    #[serde(rename = "PackTheme")]
-    pub pack_theme: String,
-
-    #[serde(rename = "PackTier")]
-    pub pack_tier: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierStatsFinance {
-
-    #[serde(rename = "CarrierBalance")]
-    pub carrier_balance: u64,
-
-    #[serde(rename = "ReserveBalance")]
-    pub reserve_balance: u64,
-
-    #[serde(rename = "AvailableBalance")]
-    pub available_balance: u64,
-
-    #[serde(rename = "ReservePercent")]
-    pub reserve_percent: Option<u64>,
-
-    #[serde(rename = "TaxRate_shipyard")]
-    pub tax_rate_shipyard: Option<u64>,
-
-    #[serde(rename = "TaxRate_rearm")]
-    pub tax_rate_rearm: Option<u64>,
-
-    #[serde(rename = "TaxRate_outfitting")]
-    pub tax_rate_outfitting: Option<u64>,
-
-    #[serde(rename = "TaxRate_refuel")]
-    pub tax_rate_refuel: Option<u64>,
-
-    #[serde(rename = "TaxRate_repair")]
-    pub tax_rate_repair: Option<u64>,
-
-    #[serde(rename = "TaxRate_pioneersupplies")]
-    pub tax_rate_pioneer_supplies: Option<u64>,
-
-    #[serde(rename = "TaxRate")]
-    pub tax_rate: Option<u64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierStatsCrew {
-
-    #[serde(rename = "CrewRole")]
-    pub crew_role: String,
-
-    #[serde(rename = "Activated")]
-    pub activated: bool,
-
-    #[serde(rename = "Enabled")]
-    pub enabled: Option<bool>,
-
-    #[serde(rename = "CrewName")]
-    pub crew_name: Option<String>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierStatsModulePacks {
-
-    #[serde(rename = "PackTheme")]
-    pub pack_theme: String,
-
-    #[serde(rename = "PackTier")]
-    pub pack_tier: u64,
-
-}
-
-/// The carrier owner has requested the carrier buys or sells goods (or cancels such an order)
-#[derive(Clone, Debug, Deserialize)]
-pub struct CarrierTradeOrder {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CarrierID")]
-    pub carrier_id: u64,
-
-    #[serde(rename = "BlackMarket")]
-    pub black_market: bool,
-
-    #[serde(rename = "Commodity")]
-    pub commodity: String,
-
-    #[serde(rename = "Commodity_Localised")]
-    pub commodity_localised: Option<String>,
-
-    /// PurchaseOrder or SaleOrder or CancelTrade
-    #[serde(rename = "PurchaseOrder")]
-    pub purchase_order: Option<u64>,
-
-    /// PurchaseOrder or SaleOrder or CancelTrade
-    #[serde(rename = "SaleOrder")]
-    pub sale_order: Option<u64>,
-
-    /// PurchaseOrder or SaleOrder or CancelTrade
-    #[serde(rename = "CancelTrade")]
-    pub cancel_trade: Option<bool>,
-
-    #[serde(rename = "Price")]
-    pub price: Option<u64>,
-
-}
-
-/// When written: when in a crew on someone else's ship, player switched crew role
-#[derive(Clone, Debug, Deserialize)]
-pub struct ChangeCrewRole {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Role")]
-    pub role: String,
-
-    /// Only from Odyssey build
-    #[serde(rename = "Telepresence")]
-    pub telepresence: Option<bool>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct ClearImpound {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "ShipType")]
-    pub ship_type: String,
-
-    #[serde(rename = "ShipType_Localised")]
-    pub ship_type_localised: Option<String>,
-
-    #[serde(rename = "ShipID")]
-    pub ship_id: u64,
-
-    #[serde(rename = "ShipMarketID")]
-    pub ship_market_id: u64,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "System")]
-    pub system: Option<String>,
-
-}
-
-/// When written: If you should ever reset your game
-#[derive(Clone, Debug, Deserialize)]
-pub struct ClearSavedGame {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "FID")]
-    pub fid: String,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CockpitBreached {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-}
-
-/// When written: when a new discovery is added to the Codex
-#[derive(Clone, Debug, Deserialize)]
-pub struct CodexEntry {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "EntryID")]
-    pub entry_id: u64,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "SubCategory")]
-    pub sub_category: String,
-
-    #[serde(rename = "SubCategory_Localised")]
-    pub sub_category_localised: Option<String>,
-
-    #[serde(rename = "Category")]
-    pub category: String,
-
-    #[serde(rename = "Category_Localised")]
-    pub category_localised: Option<String>,
-
-    #[serde(rename = "Region")]
-    pub region: String,
-
-    #[serde(rename = "Region_Localised")]
-    pub region_localised: Option<String>,
-
-    #[serde(rename = "System")]
-    pub system: String,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-    #[serde(rename = "BodyID")]
-    pub body_id: Option<u64>,
-
-    #[serde(rename = "Latitude")]
-    pub latitude: Option<f64>,
-
-    #[serde(rename = "Longitude")]
-    pub longitude: Option<f64>,
-
-    #[serde(rename = "VoucherAmount")]
-    pub voucher_amount: Option<u64>,
-
-    /// The NearestDestination is added if within 50km of a location listed in the navigation panel
-    #[serde(rename = "NearestDestination")]
-    pub nearest_destination: Option<String>,
-
-    #[serde(rename = "NearestDestination_Localised")]
-    pub nearest_destination_localised: Option<String>,
-
-    /// The IsNewEntry field is optional depending on the results of the scan
-    #[serde(rename = "IsNewEntry")]
-    pub is_new_entry: Option<bool>,
-
-    /// The NewTraitsDiscovered field is optional depending on the results of the scan
-    #[serde(rename = "NewTraitsDiscovered")]
-    pub new_traits_discovered: Option<bool>,
-
-    /// The Traits field is only available for entries that have unlocked traits
-    #[serde(rename = "Traits")]
-    pub traits: Option<Vec<String>>,
-
-}
-
-/// When Written: when scooping cargo from space or planet surface
-#[derive(Clone, Debug, Deserialize)]
-pub struct CollectCargo {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Type")]
-    pub r#type: String,
-
-    /// The localised value will be omitted if it is exactly the same as Type
-    #[serde(rename = "Type_Localised")]
-    pub type_localised: Option<String>,
-
-    #[serde(rename = "Stolen")]
-    pub stolen: bool,
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: Option<u64>,
-
-}
-
-/// When picking up items from the ground
-#[derive(Clone, Debug, Deserialize)]
-pub struct CollectItems {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    /// The localised value will be omitted if it is exactly the same as Name
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Type")]
-    pub r#type: String,
-
-    #[serde(rename = "OwnerID")]
-    pub owner_id: u64,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-    #[serde(rename = "Stolen")]
-    pub stolen: bool,
-
-}
-
-/// When Written: when a colonisation beacon is deployed
-#[derive(Clone, Debug, Deserialize)]
-pub struct ColonisationBeaconDeployed {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-}
-
-/// When Written: Every 15 seconds while docked at a construction depot
-#[derive(Clone, Debug, Deserialize)]
-pub struct ColonisationConstructionDepot {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "ConstructionProgress")]
-    pub construction_progress: f64,
-
-    #[serde(rename = "ConstructionComplete")]
-    pub construction_complete: bool,
-
-    #[serde(rename = "ConstructionFailed")]
-    pub construction_failed: bool,
-
-    #[serde(rename = "ResourcesRequired")]
-    pub resources_required: Vec<ColonisationConstructionDepotResourcesRequired>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct ColonisationConstructionDepotResourcesRequired {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: String,
-
-    #[serde(rename = "RequiredAmount")]
-    pub required_amount: u64,
-
-    #[serde(rename = "ProvidedAmount")]
-    pub provided_amount: u64,
-
-    #[serde(rename = "Payment")]
-    pub payment: u64,
-
-}
-
-/// When Written: when contributing materials to a colonisation effort
-#[derive(Clone, Debug, Deserialize)]
-pub struct ColonisationContribution {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "Contributions")]
-    pub contributions: Vec<ColonisationContributionContributions>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct ColonisationContributionContributions {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: String,
-
-    #[serde(rename = "Amount")]
-    pub amount: u64,
-
-}
-
-/// When Written: When a system is claimed for colonisation by paying for the claim.
-#[derive(Clone, Debug, Deserialize)]
-pub struct ColonisationSystemClaim {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "StarSystem")]
-    pub star_system: String,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-}
-
-/// When Written: when a colonisation claim is released
-#[derive(Clone, Debug, Deserialize)]
-pub struct ColonisationSystemClaimRelease {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "StarSystem")]
-    pub star_system: String,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-}
-
-/// When written: at the start of the LoadGame process. This is written before the inventory, loadout, etc
-#[derive(Clone, Debug, Deserialize)]
-pub struct Commander {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "FID")]
-    pub fid: String,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-}
-
-/// When written: when a crime is recorded against the player
-#[derive(Clone, Debug, Deserialize)]
-pub struct CommitCrime {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CrimeType")]
-    pub crime_type: String,
-
-    #[serde(rename = "Faction")]
-    pub faction: String,
-
-    #[serde(rename = "Victim")]
-    pub victim: Option<String>,
-
-    #[serde(rename = "Bounty")]
-    pub bounty: Option<u64>,
-
-    #[serde(rename = "Fine")]
-    pub fine: Option<u64>,
-
-    #[serde(rename = "Victim_Localised")]
-    pub victim_localised: Option<String>,
-
-}
-
-/// When written: when the game retrieves info on community goals from the server, and the data has changed since last time. This event contains the current status of all community goals the player is currently subscribed to.
-#[derive(Clone, Debug, Deserialize)]
-pub struct CommunityGoal {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CurrentGoals")]
-    pub current_goals: Vec<CommunityGoalCurrentGoals>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CommunityGoalCurrentGoals {
-
-    /// A unique ID number for the CG
-    #[serde(rename = "CGID")]
-    pub cgid: u64,
-
-    /// A description for the CG
-    #[serde(rename = "Title")]
-    pub title: String,
-
-    #[serde(rename = "SystemName")]
-    pub system_name: String,
-
-    #[serde(rename = "MarketName")]
-    pub market_name: String,
-
-    #[serde(rename = "Expiry", with = "crate::event::format::date")]
-    pub expiry: DateTime<Utc>,
-
-    #[serde(rename = "IsComplete")]
-    pub is_complete: bool,
-
-    #[serde(rename = "CurrentTotal")]
-    pub current_total: u64,
-
-    #[serde(rename = "PlayerContribution")]
-    pub player_contribution: u64,
-
-    #[serde(rename = "NumContributors")]
-    pub num_contributors: u64,
-
-    #[serde(rename = "TopTier")]
-    pub top_tier: CommunityGoalCurrentGoalsTopTier,
-
-    /// If the community goal is constructed with a fixed-size top rank (ie max reward for top 10 players)
-    #[serde(rename = "TopRankSize")]
-    pub top_rank_size: Option<u64>,
-
-    /// If the community goal is constructed with a fixed-size top rank (ie max reward for top 10 players)
-    #[serde(rename = "PlayerInTopRank")]
-    pub player_in_top_rank: Option<bool>,
-
-    /// If the community goal has reached the first success
-    #[serde(rename = "TierReached")]
-    pub tier_reached: Option<String>,
-
-    #[serde(rename = "PlayerPercentileBand")]
-    pub player_percentile_band: u64,
-
-    /// If the community goal has reached the first success
-    #[serde(rename = "Bonus")]
-    pub bonus: Option<u64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CommunityGoalCurrentGoalsTopTier {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Bonus")]
-    pub bonus: String,
-
-}
-
-/// When written: when opting out of a community goal
-#[derive(Clone, Debug, Deserialize)]
-pub struct CommunityGoalDiscard {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CGID")]
-    pub cgid: u64,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "System")]
-    pub system: String,
-
-}
-
-/// When Written: when signing up to a community goal
-#[derive(Clone, Debug, Deserialize)]
-pub struct CommunityGoalJoin {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CGID")]
-    pub cgid: u64,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "System")]
-    pub system: String,
-
-}
-
-/// When Written: when receiving a reward for a community goal
-#[derive(Clone, Debug, Deserialize)]
-pub struct CommunityGoalReward {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "CGID")]
-    pub cgid: u64,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "System")]
-    pub system: String,
-
-    #[serde(rename = "Reward")]
-    pub reward: u64,
-
-}
-
-/// When written: if the journal file grows to 500k lines, we write this event, close the file, and start a new one. The new journalname will increase the partnumber, ex: {datetime}.02.log. The new journal will start with a Fileheader and continue.
-#[derive(Clone, Debug, Deserialize)]
-pub struct Continued {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Part")]
-    pub part: u64,
-
-}
-
-/// This event is logged when the player creates a new suit loadout
-#[derive(Clone, Debug, Deserialize)]
-pub struct CreateSuitLoadout {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "SuitID")]
-    pub suit_id: u64,
-
-    #[serde(rename = "SuitName")]
-    pub suit_name: String,
-
-    #[serde(rename = "SuitName_Localised")]
-    pub suit_name_localised: Option<String>,
-
-    #[serde(rename = "SuitMods")]
-    pub suit_mods: Vec<String>,
-
-    #[serde(rename = "LoadoutID")]
-    pub loadout_id: u64,
-
-    #[serde(rename = "LoadoutName")]
-    pub loadout_name: String,
-
-    #[serde(rename = "Modules")]
-    pub modules: Vec<CreateSuitLoadoutModules>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct CreateSuitLoadoutModules {
-
-    #[serde(rename = "SlotName")]
-    pub slot_name: String,
-
-    #[serde(rename = "SuitModuleID")]
-    pub suit_module_id: u64,
-
-    #[serde(rename = "ModuleName")]
-    pub module_name: String,
-
-    #[serde(rename = "ModuleName_Localised")]
-    pub module_name_localised: Option<String>,
-
-    #[serde(rename = "Class")]
-    pub class: u64,
-
-    #[serde(rename = "WeaponMods")]
-    pub weapon_mods: Vec<String>,
-
-}
-
-/// When written: when changing the task assignment of a member of crew
-#[derive(Clone, Debug, Deserialize)]
-pub struct CrewAssign {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "CrewID")]
-    pub crew_id: u64,
-
-    #[serde(rename = "Role")]
-    pub role: String,
-
-}
-
-/// When written: when dismissing a member of crew
-#[derive(Clone, Debug, Deserialize)]
-pub struct CrewFire {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "CrewID")]
-    pub crew_id: u64,
-
-}
-
-/// When written: when engaging a new member of crew
-#[derive(Clone, Debug, Deserialize)]
-pub struct CrewHire {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "CrewID")]
-    pub crew_id: u64,
-
-    #[serde(rename = "Faction")]
-    pub faction: String,
-
-    #[serde(rename = "Cost")]
-    pub cost: u64,
-
-    #[serde(rename = "CombatRank")]
-    pub combat_rank: u64,
-
-}
-
-/// When written: when in multicrew, in Helm player's log, when a crew member launches a fighter
-#[derive(Clone, Debug, Deserialize)]
-pub struct CrewLaunchFighter {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// only from Odyssey build
-    #[serde(rename = "Telepresence")]
-    pub telepresence: bool,
-
-    /// Name of crew member launching in fighter
-    #[serde(rename = "Crew")]
-    pub crew: String,
-
-}
-
-/// When written: When another player joins your ship's crew
-#[derive(Clone, Debug, Deserialize)]
-pub struct CrewMemberJoins {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// only from Odyssey build
-    #[serde(rename = "Telepresence")]
-    pub telepresence: Option<bool>,
-
-    /// Player's commander name
-    #[serde(rename = "Crew")]
-    pub crew: String,
-
-}
-
-/// When written: When another player leaves your ship's crew
-#[derive(Clone, Debug, Deserialize)]
-pub struct CrewMemberQuits {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// only from Odyssey build
-    #[serde(rename = "Telepresence")]
-    pub telepresence: Option<bool>,
-
-    /// Player's commander name
-    #[serde(rename = "Crew")]
-    pub crew: String,
-
-}
-
-/// When written: in Multicrew, Helm's log, when another crew player changes role
-#[derive(Clone, Debug, Deserialize)]
-pub struct CrewMemberRoleChange {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// only from Odyssey build
-    #[serde(rename = "Telepresence")]
-    pub telepresence: Option<bool>,
-
-    /// Player's commander name
-    #[serde(rename = "Crew")]
-    pub crew: String,
-
-    #[serde(rename = "Role")]
-    pub role: String,
-
-}
-
-/// When written: when another player commits a crime against the current player
-#[derive(Clone, Debug, Deserialize)]
-pub struct CrimeVictim {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Offender")]
-    pub offender: String,
-
-    #[serde(rename = "CrimeType")]
-    pub crime_type: String,
-
-    /// Fine or Bounty
-    #[serde(rename = "Fine")]
-    pub fine: Option<u64>,
-
-    /// Fine or Bounty
-    #[serde(rename = "Bounty")]
-    pub bounty: Option<u64>,
-
-}
-
-/// When written: when scanning a data link
-#[derive(Clone, Debug, Deserialize)]
-pub struct DatalinkScan {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// Message identifier from data link
-    #[serde(rename = "Message")]
-    pub message: String,
-
-    /// Localized message from data link
-    #[serde(rename = "Message_Localised")]
-    pub message_localised: Option<String>,
-
-}
-
-/// When written: when scanning a datalink generates a reward
-#[derive(Clone, Debug, Deserialize)]
-pub struct DatalinkVoucher {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Reward")]
-    pub reward: u64,
-
-    #[serde(rename = "VictimFaction")]
-    pub victim_faction: String,
-
-    #[serde(rename = "PayeeFaction")]
-    pub payee_faction: String,
-
-}
-
-/// When written: when scanning some types of data links
-#[derive(Clone, Debug, Deserialize)]
-pub struct DataScanned {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Type")]
-    pub r#type: String,
-
-    #[serde(rename = "Type_Localised")]
-    pub type_localised: Option<String>,
-
-}
-
-/// This event is logged when the player deletes a suit loadout
-#[derive(Clone, Debug, Deserialize)]
-pub struct DeleteSuitLoadout {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "SuitID")]
-    pub suit_id: u64,
-
-    #[serde(rename = "SuitName")]
-    pub suit_name: String,
-
-    #[serde(rename = "SuitName_Localised")]
-    pub suit_name_localised: Option<String>,
-
-    #[serde(rename = "LoadoutID")]
-    pub loadout_id: u64,
-
-    #[serde(rename = "LoadoutName")]
-    pub loadout_name: String,
-
-}
-
-/// When Written: when delivering power micro-resources.
-#[derive(Clone, Debug, Deserialize)]
-pub struct DeliverPowerMicroResources {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// The total number of micro-resources delivered.
-    #[serde(rename = "TotalCount")]
-    pub total_count: u64,
-
-    /// Details of the micro-resources delivered.
-    #[serde(rename = "MicroResources")]
-    pub micro_resources: Vec<DeliverPowerMicroResourcesMicroResources>,
-
-    /// The ID of the market where the delivery took place.
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct DeliverPowerMicroResourcesMicroResources {
-
-    /// The internal name of the micro-resource.
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    /// The localized name of the micro-resource.
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    /// The category of the micro-resource.
-    #[serde(rename = "Category")]
-    pub category: String,
-
-    /// The count of this type of micro-resource.
     #[serde(rename = "Count")]
     pub count: u64,
 
 }
 
-/// When written: player was killed
 #[derive(Clone, Debug, Deserialize)]
-pub struct Died {
+pub struct MassModuleStoreItem {
 
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// When killed by a single entity
-    #[serde(rename = "KillerName")]
-    pub killer_name: Option<String>,
-
-    /// When killed by a single entity
-    #[serde(rename = "KillerShip")]
-    pub killer_ship: Option<String>,
-
-    /// When killed by a single entity
-    #[serde(rename = "KillerRank")]
-    pub killer_rank: Option<String>,
-
-    /// When killed by a single entity
-    #[serde(rename = "KillerName_Localised")]
-    pub killer_name_localised: Option<String>,
-
-    /// When killed by a wing
-    #[serde(rename = "Killers")]
-    pub killers: Option<Vec<serde_json::Value>>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct DisbandedSquadron {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "SquadronName")]
-    pub squadron_name: String,
-
-}
-
-/// When written: when using the discovery scanner, and new body discoveries are displayed in the cockpit info window. Note you can get two or three of these in a row, where some bodies are discovered by the automatic passive scan, before the active scan is complete.
-#[derive(Clone, Debug, Deserialize)]
-pub struct DiscoveryScan {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-    /// Number of new bodies discovered
-    #[serde(rename = "Bodies")]
-    pub bodies: u64,
-
-}
-
-/// This event is logged when the player steps out of a ship or SRV
-#[derive(Clone, Debug, Deserialize)]
-pub struct Disembark {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// true if getting out of SRV, false if getting out of a ship
-    #[serde(rename = "SRV")]
-    pub srv: bool,
-
-    /// true when getting out of a taxi transposrt ship
-    #[serde(rename = "Taxi")]
-    pub taxi: bool,
-
-    /// true when getting out of another player’s vessel
-    #[serde(rename = "Multicrew")]
-    pub multicrew: bool,
-
-    /// player’s ship ID (if players own vessel)
-    #[serde(rename = "ID")]
-    pub id: Option<u64>,
-
-    #[serde(rename = "StarSystem")]
-    pub star_system: String,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-    #[serde(rename = "Body")]
-    pub body: String,
-
-    #[serde(rename = "BodyID")]
-    pub body_id: u64,
-
-    #[serde(rename = "OnStation")]
-    pub on_station: bool,
-
-    #[serde(rename = "OnPlanet")]
-    pub on_planet: bool,
-
-    /// If at a station
-    #[serde(rename = "StationName")]
-    pub station_name: Option<String>,
-
-    /// If at a station
-    #[serde(rename = "StationType")]
-    pub station_type: Option<String>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: Option<u64>,
-
-}
-
-/// When written: when landing at landing pad in a space station, outpost, or surface settlement
-#[derive(Clone, Debug, Deserialize)]
-pub struct Docked {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "StationName")]
-    pub station_name: String,
-
-    #[serde(rename = "StationName_Localised")]
-    pub station_name_localised: Option<String>,
-
-    #[serde(rename = "StationType")]
-    pub station_type: String,
-
-    #[serde(rename = "Taxi")]
-    pub taxi: Option<bool>,
-
-    #[serde(rename = "Multicrew")]
-    pub multicrew: Option<bool>,
-
-    #[serde(rename = "StarSystem")]
-    pub star_system: String,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "StationFaction")]
-    pub station_faction: DockedStationFaction,
-
-    #[serde(rename = "StationGovernment")]
-    pub station_government: String,
-
-    #[serde(rename = "StationGovernment_Localised")]
-    pub station_government_localised: Option<String>,
-
-    /// StationServices can include: Dock, Autodock, BlackMarket, Commodities, Contacts, Exploration, Initiatives, Missions, Outfitting, CrewLounge, Rearm, Refuel, Repair, Shipyard, Tuning, Workshop, MissionsGenerated, Facilitator, Research, FlightController, StationOperations, OnDockMission, Powerplay, SearchAndRescue. New in v3.7: shop, carriermanagement, carrierfuel, carriervendor, livery, modulepacks, voucherredemption
-    #[serde(rename = "StationServices")]
-    pub station_services: Vec<String>,
-
-    /// Only if station has a single economy
-    #[serde(rename = "StationEconomy")]
-    pub station_economy: Option<String>,
-
-    /// Only if station has a single economy
-    #[serde(rename = "StationEconomy_Localised")]
-    pub station_economy_localised: Option<String>,
-
-    /// Only if station has multiple economies
-    #[serde(rename = "StationEconomies")]
-    pub station_economies: Option<Vec<DockedStationEconomies>>,
-
-    #[serde(rename = "DistFromStarLS")]
-    pub dist_from_star_ls: f64,
-
-    #[serde(rename = "LandingPads")]
-    pub landing_pads: Option<DockedLandingPads>,
-
-    /// Only if docking when wanted locally
-    #[serde(rename = "Wanted")]
-    pub wanted: Option<bool>,
-
-    /// Only if any fine is active
-    #[serde(rename = "ActiveFine")]
-    pub active_fine: Option<bool>,
-
-    #[serde(rename = "StationAllegiance")]
-    pub station_allegiance: Option<String>,
-
-    /// true (only if landing with breached cockpit)
-    #[serde(rename = "CockpitBreach")]
-    pub cockpit_breach: Option<bool>,
-
-    #[serde(rename = "StationState")]
-    pub station_state: Option<String>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct DockedStationEconomies {
+    #[serde(rename = "Slot")]
+    pub slot: String,
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -2594,66 +39,19 @@ pub struct DockedStationEconomies {
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
 
-    #[serde(rename = "Proportion")]
-    pub proportion: f64,
+    /// If there is a fine/bounty associated with the module
+    #[serde(rename = "Hot")]
+    pub hot: bool,
 
-}
+    /// Only if modifications are present
+    #[serde(rename = "EngineerModifications")]
+    pub engineer_modifications: Option<String>,
 
-#[derive(Clone, Debug, Deserialize)]
-pub struct DockedStationFaction {
+    #[serde(rename = "Level")]
+    pub level: Option<u64>,
 
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "FactionState")]
-    pub faction_state: Option<String>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct DockedLandingPads {
-
-    #[serde(rename = "Small")]
-    pub small: u64,
-
-    #[serde(rename = "Medium")]
-    pub medium: u64,
-
-    #[serde(rename = "Large")]
-    pub large: u64,
-
-}
-
-/// When written: when docking a fighter back with the mothership
-#[derive(Clone, Debug, Deserialize)]
-pub struct DockFighter {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "ID")]
-    pub id: u64,
-
-}
-
-/// When written: when the player cancels a docking request
-#[derive(Clone, Debug, Deserialize)]
-pub struct DockingCancelled {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "StationName")]
-    pub station_name: String,
-
-    #[serde(rename = "StationName_Localised")]
-    pub station_name_localised: Option<String>,
-
-    #[serde(rename = "StationType")]
-    pub station_type: String,
+    #[serde(rename = "Quality")]
+    pub quality: Option<f64>,
 
 }
 
@@ -2661,6 +59,7 @@ pub struct DockingCancelled {
 #[derive(Clone, Debug, Deserialize)]
 pub struct DockingDenied {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -2681,96 +80,16 @@ pub struct DockingDenied {
 
 }
 
-/// When written: when a docking request is granted
+/// When written: when the player's SRV is destroyed
 #[derive(Clone, Debug, Deserialize)]
-pub struct DockingGranted {
+pub struct SRVDestroyed {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "LandingPad")]
-    pub landing_pad: u64,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "StationName")]
-    pub station_name: String,
-
-    #[serde(rename = "StationName_Localised")]
-    pub station_name_localised: Option<String>,
-
-    #[serde(rename = "StationType")]
-    pub station_type: String,
-
-}
-
-/// When written: when the player requests docking at a station
-#[derive(Clone, Debug, Deserialize)]
-pub struct DockingRequested {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "StationName")]
-    pub station_name: String,
-
-    #[serde(rename = "StationName_Localised")]
-    pub station_name_localised: Option<String>,
-
-    #[serde(rename = "StationType")]
-    pub station_type: String,
-
-    #[serde(rename = "LandingPads")]
-    pub landing_pads: Option<DockingRequestedLandingPads>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct DockingRequestedLandingPads {
-
-    #[serde(rename = "Small")]
-    pub small: u64,
-
-    #[serde(rename = "Medium")]
-    pub medium: u64,
-
-    #[serde(rename = "Large")]
-    pub large: u64,
-
-}
-
-/// When written: when a docking request has timed out
-#[derive(Clone, Debug, Deserialize)]
-pub struct DockingTimeout {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: Option<u64>,
-
-    #[serde(rename = "StationName")]
-    pub station_name: Option<String>,
-
-    #[serde(rename = "StationName_Localised")]
-    pub station_name_localised: Option<String>,
-
-    #[serde(rename = "StationType")]
-    pub station_type: Option<String>,
-
-}
-
-/// When written: when docking an SRV with the ship
-#[derive(Clone, Debug, Deserialize)]
-pub struct DockSRV {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    #[serde(rename = "ID")]
+    pub id: u64,
 
     #[serde(rename = "SRVType")]
     pub srv_type: Option<String>,
@@ -2778,418 +97,104 @@ pub struct DockSRV {
     #[serde(rename = "SRVType_Localised")]
     pub srv_type_localised: Option<String>,
 
-    #[serde(rename = "ID")]
-    pub id: u64,
-
 }
 
-/// When discarding on-foot items from the player's inventory
+/// When written: when a ship-launched fighter is destroyed
 #[derive(Clone, Debug, Deserialize)]
-pub struct DropItems {
+pub struct FighterDestroyed {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Type")]
-    pub r#type: String,
-
-    #[serde(rename = "OwnerID")]
-    pub owner_id: u64,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: Option<u64>,
-
-}
-
-/// When exiting a shuttle dropship at a conflict zone
-#[derive(Clone, Debug, Deserialize)]
-pub struct DropshipDeploy {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "StarSystem")]
-    pub star_system: String,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-    #[serde(rename = "Body")]
-    pub body: String,
-
-    #[serde(rename = "BodyID")]
-    pub body_id: u64,
-
-    #[serde(rename = "OnStation")]
-    pub on_station: bool,
-
-    #[serde(rename = "OnPlanet")]
-    pub on_planet: bool,
-
-}
-
-/// When cargo is ejected
-#[derive(Clone, Debug, Deserialize)]
-pub struct EjectCargo {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Type")]
-    pub r#type: String,
-
-    /// The localised value will be omitted if it is exactly the same as Type
-    #[serde(rename = "Type_Localised")]
-    pub type_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-    #[serde(rename = "Abandoned")]
-    pub abandoned: bool,
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: Option<u64>,
-
-    /// If the cargo is related to powerplay delivery from outlying systems back to the centre. Starsystem name.
-    #[serde(rename = "PowerplayOrigin")]
-    pub powerplay_origin: Option<String>,
-
-}
-
-/// This event is logged when a player (on foot) gets into a ship or SRV
-#[derive(Clone, Debug, Deserialize)]
-pub struct Embark {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// true if getting into SRV, false if getting into a ship
-    #[serde(rename = "SRV")]
-    pub srv: bool,
-
-    /// true when boarding a taxi transport ship
-    #[serde(rename = "Taxi")]
-    pub taxi: bool,
-
-    /// true when boarding another player’s vessel
-    #[serde(rename = "Multicrew")]
-    pub multicrew: bool,
-
-    /// player’s ship ID (if players own vessel)
     #[serde(rename = "ID")]
     pub id: Option<u64>,
 
-    #[serde(rename = "StarSystem")]
-    pub star_system: String,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-    #[serde(rename = "Body")]
-    pub body: String,
-
-    #[serde(rename = "BodyID")]
-    pub body_id: u64,
-
-    #[serde(rename = "OnStation")]
-    pub on_station: bool,
-
-    #[serde(rename = "OnPlanet")]
-    pub on_planet: bool,
-
-    /// if at a station
-    #[serde(rename = "StationName")]
-    pub station_name: Option<String>,
-
-    /// if at a station
-    #[serde(rename = "StationType")]
-    pub station_type: Option<String>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: Option<u64>,
-
-    #[serde(rename = "Crew")]
-    pub crew: Option<Vec<EmbarkCrew>>,
-
 }
 
-
+/// When written: when paying off bounties
 #[derive(Clone, Debug, Deserialize)]
-pub struct EmbarkCrew {
+pub struct PayBounties {
 
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Role")]
-    pub role: String,
-
-}
-
-/// When written: when the captain in multicrew disbands the crew
-#[derive(Clone, Debug, Deserialize)]
-pub struct EndCrewSession {
-
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    /// true if crew disbanded as a result of a crime in a lawful session
-    #[serde(rename = "OnCrime")]
-    pub on_crime: bool,
+    /// Total amount paid, including any broker fee
+    #[serde(rename = "Amount")]
+    pub amount: u64,
 
-    /// only from Odyssey build
-    #[serde(rename = "Telepresence")]
-    pub telepresence: Option<bool>,
+    #[serde(rename = "AllFines")]
+    pub all_fines: Option<bool>,
+
+    #[serde(rename = "ShipID")]
+    pub ship_id: u64,
+
+    /// Present if paid via a broker
+    #[serde(rename = "BrokerPercentage")]
+    pub broker_percentage: Option<f64>,
+
+    /// If paying off an individual faction's fines
+    #[serde(rename = "Faction")]
+    pub faction: Option<String>,
+
+    /// If paying off an individual faction's fines
+    #[serde(rename = "Faction_Localised")]
+    pub faction_localised: Option<String>,
 
 }
 
-/// When written: when offering items cash or bounties to an Engineer to gain access
 #[derive(Clone, Debug, Deserialize)]
-pub struct EngineerContribution {
+pub struct InvitedToSquadron {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Engineer")]
-    pub engineer: String,
-
-    #[serde(rename = "EngineerID")]
-    pub engineer_id: u64,
-
-    #[serde(rename = "Type")]
-    pub r#type: String,
-
-    #[serde(rename = "Commodity")]
-    pub commodity: Option<String>,
-
-    #[serde(rename = "Commodity_Localised")]
-    pub commodity_localised: Option<String>,
-
-    /// Quantity offered this time
-    #[serde(rename = "Quantity")]
-    pub quantity: u64,
-
-    /// Total amount donated
-    #[serde(rename = "TotalQuantity")]
-    pub total_quantity: u64,
-
-    #[serde(rename = "Material")]
-    pub material: Option<String>,
-
-    #[serde(rename = "Material_Localised")]
-    pub material_localised: Option<String>,
+    #[serde(rename = "SquadronName")]
+    pub squadron_name: String,
 
 }
 
-/// When Written: when requesting an engineer upgrade
+/// When written: at startup
 #[derive(Clone, Debug, Deserialize)]
-pub struct EngineerCraft {
+pub struct Progress {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Slot")]
-    pub slot: String,
+    /// Percentage progress to next rank
+    #[serde(rename = "Combat")]
+    pub combat: u64,
 
-    #[serde(rename = "Module")]
-    pub module: String,
+    /// Percentage progress to next rank
+    #[serde(rename = "Trade")]
+    pub trade: u64,
 
-    #[serde(rename = "Ingredients")]
-    pub ingredients: Vec<EngineerCraftIngredients>,
+    /// Percentage progress to next rank
+    #[serde(rename = "Explore")]
+    pub explore: u64,
 
-    #[serde(rename = "Engineer")]
-    pub engineer: Option<String>,
+    /// Percentage progress to next rank
+    #[serde(rename = "Soldier")]
+    pub soldier: Option<u64>,
 
-    #[serde(rename = "EngineerID")]
-    pub engineer_id: u64,
+    /// Percentage progress to next rank
+    #[serde(rename = "Exobiologist")]
+    pub exobiologist: Option<u64>,
 
-    #[serde(rename = "BlueprintID")]
-    pub blueprint_id: u64,
+    /// Percentage progress to next rank
+    #[serde(rename = "Empire")]
+    pub empire: u64,
 
-    #[serde(rename = "BlueprintName")]
-    pub blueprint_name: String,
+    /// Percentage progress to next rank
+    #[serde(rename = "Federation")]
+    pub federation: u64,
 
-    #[serde(rename = "Level")]
-    pub level: u64,
-
-    #[serde(rename = "Quality")]
-    pub quality: f64,
-
-    #[serde(rename = "Modifiers")]
-    pub modifiers: Vec<EngineerCraftModifiers>,
-
-    /// when applying a new effect
-    #[serde(rename = "ApplyExperimentalEffect")]
-    pub apply_experimental_effect: Option<String>,
-
-    #[serde(rename = "ExperimentalEffect")]
-    pub experimental_effect: Option<String>,
-
-    #[serde(rename = "ExperimentalEffect_Localised")]
-    pub experimental_effect_localised: Option<String>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct EngineerCraftIngredients {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    /// The localised value will be omitted if it is exactly the same as Name
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct EngineerCraftModifiers {
-
-    #[serde(rename = "Label")]
-    pub label: String,
-
-    /// Either Value or ValueStr is used. These modification types have string values: WeaponMode, DamageType, CabinClass.
-    #[serde(rename = "Value")]
-    pub value: Option<f64>,
-
-    /// Either Value or ValueStr is used. These modification types have string values: WeaponMode, DamageType, CabinClass.
-    #[serde(rename = "ValueStr")]
-    pub value_str: Option<String>,
-
-    #[serde(rename = "ValueStr_Localised")]
-    pub value_str_localised: Option<String>,
-
-    #[serde(rename = "OriginalValue")]
-    pub original_value: Option<f64>,
-
-    /// Either 0 or 1
-    #[serde(rename = "LessIsGood")]
-    pub less_is_good: u64,
-
-}
-
-/// When written: when converting a pre-2.4 engineered module. This is generated when converting, or previewing a conversion of a legacy module to the new system.
-#[derive(Clone, Debug, Deserialize)]
-pub struct EngineerLegacyConvert {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Slot")]
-    pub slot: String,
-
-    #[serde(rename = "Module")]
-    pub module: String,
-
-    /// To indicate whether this entry has been generated from a conversion, or just a preview.
-    #[serde(rename = "IsPreview")]
-    pub is_preview: bool,
-
-    #[serde(rename = "Engineer")]
-    pub engineer: String,
-
-    #[serde(rename = "EngineerID")]
-    pub engineer_id: u64,
-
-    #[serde(rename = "BlueprintID")]
-    pub blueprint_id: u64,
-
-    #[serde(rename = "BlueprintName")]
-    pub blueprint_name: String,
-
-    #[serde(rename = "Level")]
-    pub level: u64,
-
-    #[serde(rename = "Quality")]
-    pub quality: f64,
-
-    #[serde(rename = "Modifiers")]
-    pub modifiers: Vec<EngineerLegacyConvertModifiers>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct EngineerLegacyConvertModifiers {
-
-    #[serde(rename = "Label")]
-    pub label: String,
-
-    #[serde(rename = "Value")]
-    pub value: f64,
-
-    #[serde(rename = "OriginalValue")]
-    pub original_value: f64,
-
-    #[serde(rename = "LessIsGood")]
-    pub less_is_good: u64,
-
-}
-
-/// When Written: when a player increases their access to an engineer
-#[derive(Clone, Debug, Deserialize)]
-pub struct EngineerProgress {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// Summary at startup
-    #[serde(rename = "Engineers")]
-    pub engineers: Option<Vec<EngineerProgressEngineers>>,
-
-    /// Update for one engineer
-    #[serde(rename = "Engineer")]
-    pub engineer: Option<String>,
-
-    /// Update for one engineer
-    #[serde(rename = "EngineerID")]
-    pub engineer_id: Option<u64>,
-
-    /// Update for one engineer
-    #[serde(rename = "Progress")]
-    pub progress: Option<String>,
-
-    /// Update for one engineer
-    #[serde(rename = "Rank")]
-    pub rank: Option<u64>,
-
-    /// Uncertain whether this is actually logged
-    #[serde(rename = "RankProgress")]
-    pub rank_progress: Option<u64>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct EngineerProgressEngineers {
-
-    #[serde(rename = "Engineer")]
-    pub engineer: String,
-
-    #[serde(rename = "EngineerID")]
-    pub engineer_id: u64,
-
-    #[serde(rename = "Progress")]
-    pub progress: String,
-
-    #[serde(rename = "RankProgress")]
-    pub rank_progress: Option<u64>,
-
-    #[serde(rename = "Rank")]
-    pub rank: Option<u64>,
+    /// Percentage progress to next rank
+    #[serde(rename = "CQC")]
+    pub cqc: u64,
 
 }
 
@@ -3197,6 +202,7 @@ pub struct EngineerProgressEngineers {
 #[derive(Clone, Debug, Deserialize)]
 pub struct EscapeInterdiction {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -3216,58 +222,8 @@ pub struct EscapeInterdiction {
 
 }
 
-/// When written: Player rewarded for taking part in a combat zone
 #[derive(Clone, Debug, Deserialize)]
-pub struct FactionKillBond {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Reward")]
-    pub reward: u64,
-
-    #[serde(rename = "AwardingFaction")]
-    pub awarding_faction: String,
-
-    #[serde(rename = "AwardingFaction_Localised")]
-    pub awarding_faction_localised: Option<String>,
-
-    #[serde(rename = "VictimFaction")]
-    pub victim_faction: String,
-
-    #[serde(rename = "VictimFaction_Localised")]
-    pub victim_faction_localised: Option<String>,
-
-}
-
-/// When trading with a Fleet Carrier Bartender for materials, a file is written with the pricelist to FCMaterials.json
-#[derive(Clone, Debug, Deserialize)]
-pub struct FCMaterials {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "CarrierName")]
-    pub carrier_name: String,
-
-    #[serde(rename = "CarrierID")]
-    pub carrier_id: String,
-
-    /// Only included in FCMaterials.json
-    #[serde(rename = "Items")]
-    pub items: Option<Vec<FCMaterialsItems>>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct FCMaterialsItems {
-
-    #[serde(rename = "id")]
-    pub id: u64,
+pub struct BuyMicroResourcesMicroResource {
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -3275,532 +231,155 @@ pub struct FCMaterialsItems {
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
 
-    #[serde(rename = "Price")]
-    pub price: u64,
-
-    #[serde(rename = "Stock")]
-    pub stock: u64,
-
-    #[serde(rename = "Demand")]
-    pub demand: u64,
-
-}
-
-/// When written: when requesting a module is transferred from storage at another station
-#[derive(Clone, Debug, Deserialize)]
-pub struct FetchRemoteModule {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "StorageSlot")]
-    pub storage_slot: u64,
-
-    #[serde(rename = "StoredItem")]
-    pub stored_item: String,
-
-    #[serde(rename = "StoredItem_Localised")]
-    pub stored_item_localised: Option<String>,
-
-    #[serde(rename = "ServerId")]
-    pub server_id: u64,
-
-    #[serde(rename = "TransferCost")]
-    pub transfer_cost: u64,
-
-    /// In seconds
-    #[serde(rename = "TransferTime")]
-    pub transfer_time: u64,
-
-    #[serde(rename = "Ship")]
-    pub ship: String,
-
-    #[serde(rename = "ShipID")]
-    pub ship_id: u64,
-
-}
-
-/// When written: when a ship-launched fighter is destroyed
-#[derive(Clone, Debug, Deserialize)]
-pub struct FighterDestroyed {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "ID")]
-    pub id: Option<u64>,
-
-}
-
-/// When written: when a ship's fighter is rebuilt in the hangar
-#[derive(Clone, Debug, Deserialize)]
-pub struct FighterRebuilt {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Loadout")]
-    pub loadout: String,
-
-    #[serde(rename = "ID")]
-    pub id: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct Fileheader {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// The file part number
-    #[serde(rename = "part")]
-    pub part: u64,
-
-    /// The language code
-    #[serde(rename = "language")]
-    pub language: String,
-
-    /// True for gameversions >= 4.0, both Horizons and Odyssey.
-    #[serde(rename = "Odyssey")]
-    pub odyssey: bool,
-
-    /// Which version of the game produced the log (will indicate if beta)
-    #[serde(rename = "gameversion")]
-    pub gameversion: String,
-
-    /// Game build number
-    #[serde(rename = "build")]
-    pub build: String,
-
-}
-
-/// When written: when receiving information about a change in a friend's status. Also written at startup for friends who are already online.
-#[derive(Clone, Debug, Deserialize)]
-pub struct Friends {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// One of the following: Requested, Declined, Added, Lost, Offline, Online
-    #[serde(rename = "Status")]
-    pub status: String,
-
-    /// the friend's commander name
-    #[serde(rename = "Name")]
-    pub name: String,
-
-}
-
-/// When written: when jumping from one star system to another
-#[derive(Clone, Debug, Deserialize)]
-pub struct FSDJump {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// True when inside a taxi transport ship
-    #[serde(rename = "Taxi")]
-    pub taxi: Option<bool>,
-
-    /// True when inside another player's ship
-    #[serde(rename = "Multicrew")]
-    pub multicrew: Option<bool>,
-
-    #[serde(rename = "Wanted")]
-    pub wanted: Option<bool>,
-
-    /// Name of destination starsystem
-    #[serde(rename = "StarSystem")]
-    pub star_system: String,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-    /// star position, as a Json array [x, y, z], relative to Sol in Ly
-    #[serde(rename = "StarPos")]
-    pub star_pos: Vec<f64>,
-
-    #[serde(rename = "SystemAllegiance")]
-    pub system_allegiance: String,
-
-    #[serde(rename = "SystemEconomy")]
-    pub system_economy: String,
-
-    #[serde(rename = "SystemEconomy_Localised")]
-    pub system_economy_localised: Option<String>,
-
-    #[serde(rename = "SystemSecondEconomy")]
-    pub system_second_economy: String,
-
-    #[serde(rename = "SystemSecondEconomy_Localised")]
-    pub system_second_economy_localised: Option<String>,
-
-    #[serde(rename = "SystemGovernment")]
-    pub system_government: String,
-
-    #[serde(rename = "SystemGovernment_Localised")]
-    pub system_government_localised: Option<String>,
-
-    #[serde(rename = "SystemSecurity")]
-    pub system_security: String,
-
-    #[serde(rename = "SystemSecurity_Localised")]
-    pub system_security_localised: Option<String>,
-
-    #[serde(rename = "Population")]
-    pub population: u64,
-
-    #[serde(rename = "Body")]
-    pub body: String,
-
-    #[serde(rename = "BodyID")]
-    pub body_id: u64,
-
-    #[serde(rename = "BodyType")]
-    pub body_type: String,
-
-    /// Distance jumped
-    #[serde(rename = "JumpDist")]
-    pub jump_dist: f64,
-
-    #[serde(rename = "FuelUsed")]
-    pub fuel_used: f64,
-
-    #[serde(rename = "FuelLevel")]
-    pub fuel_level: f64,
-
-    #[serde(rename = "Factions")]
-    pub factions: Option<Vec<FSDJumpFactions>>,
-
-    /// System controlling faction
-    #[serde(rename = "SystemFaction")]
-    pub system_faction: Option<FSDJumpSystemFaction>,
-
-    /// If the player is pledged to a Power in Powerplay, and the star system is involved in powerplay
-    #[serde(rename = "Powers")]
-    pub powers: Option<Vec<String>>,
-
-    /// Controlling power for the system
-    #[serde(rename = "ControllingPower")]
-    pub controlling_power: Option<String>,
-
-    /// Powerplay state for the system.
-    #[serde(rename = "PowerplayState")]
-    pub powerplay_state: Option<String>,
-
-    /// The current amount of control within the specific powerplay state
-    #[serde(rename = "PowerplayStateControlProgress")]
-    pub powerplay_state_control_progress: Option<f64>,
-
-    /// Merits gained towards reinforcing the system and increasing the system strength
-    #[serde(rename = "PowerplayStateReinforcement")]
-    pub powerplay_state_reinforcement: Option<u64>,
-
-    /// Merits gained towards undermining the system and decreasing the system strength
-    #[serde(rename = "PowerplayStateUndermining")]
-    pub powerplay_state_undermining: Option<u64>,
-
-    /// When the system is unoccupied and 1 or more powers are fighting for control by reaching 120k merits.
-    #[serde(rename = "PowerplayConflictProgress")]
-    pub powerplay_conflict_progress: Option<Vec<FSDJumpPowerplayConflictProgress>>,
-
-    #[serde(rename = "Conflicts")]
-    pub conflicts: Option<Vec<FSDJumpConflicts>>,
-
-    /// Thargoid war information
-    #[serde(rename = "ThargoidWar")]
-    pub thargoid_war: Option<FSDJumpThargoidWar>,
-
-    /// Whether FSD boost was used
-    #[serde(rename = "BoostUsed")]
-    pub boost_used: Option<u64>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct FSDJumpFactions {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "FactionState")]
-    pub faction_state: String,
-
-    #[serde(rename = "Government")]
-    pub government: String,
-
-    #[serde(rename = "Influence")]
-    pub influence: f64,
-
-    #[serde(rename = "Allegiance")]
-    pub allegiance: String,
-
-    #[serde(rename = "Happiness")]
-    pub happiness: String,
-
-    /// Happiness values are: Elated, Happy, Discontented, Unhappy, Despondent
-    #[serde(rename = "Happiness_Localised")]
-    pub happiness_localised: Option<String>,
-
-    #[serde(rename = "MyReputation")]
-    pub my_reputation: f64,
-
-    /// Array with State names (Note active states do not have a Trend value)
-    #[serde(rename = "ActiveStates")]
-    pub active_states: Option<Vec<FSDJumpFactionsActiveStates>>,
-
-    /// Array (if any) with State name and Trend value
-    #[serde(rename = "RecoveringStates")]
-    pub recovering_states: Option<Vec<FSDJumpFactionsRecoveringStates>>,
-
-    /// Array (if any) with State name and Trend value
-    #[serde(rename = "PendingStates")]
-    pub pending_states: Option<Vec<FSDJumpFactionsPendingStates>>,
-
-    /// If player is in squadron aligned to this faction
-    #[serde(rename = "SquadronFaction")]
-    pub squadron_faction: Option<bool>,
-
-    /// If player squadron faction, and this is happiest system
-    #[serde(rename = "HappiestSystem")]
-    pub happiest_system: Option<bool>,
-
-    /// If player squadron faction, and this is home system
-    #[serde(rename = "HomeSystem")]
-    pub home_system: Option<bool>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct FSDJumpFactionsActiveStates {
-
-    #[serde(rename = "State")]
-    pub state: String,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct FSDJumpFactionsPendingStates {
-
-    #[serde(rename = "State")]
-    pub state: String,
-
-    #[serde(rename = "Trend")]
-    pub trend: u64,
-
-}
-
-/// System controlling faction
-#[derive(Clone, Debug, Deserialize)]
-pub struct FSDJumpSystemFaction {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "FactionState")]
-    pub faction_state: Option<String>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct FSDJumpConflicts {
-
-    #[serde(rename = "WarType")]
-    pub war_type: String,
-
-    #[serde(rename = "Status")]
-    pub status: String,
-
-    #[serde(rename = "Faction1")]
-    pub faction1: FSDJumpConflictsFaction1,
-
-    #[serde(rename = "Faction2")]
-    pub faction2: FSDJumpConflictsFaction2,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct FSDJumpConflictsFaction2 {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Stake")]
-    pub stake: String,
-
-    #[serde(rename = "Stake_Localised")]
-    pub stake_localised: Option<String>,
-
-    #[serde(rename = "WonDays")]
-    pub won_days: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct FSDJumpConflictsFaction1 {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Stake")]
-    pub stake: String,
-
-    #[serde(rename = "Stake_Localised")]
-    pub stake_localised: Option<String>,
-
-    #[serde(rename = "WonDays")]
-    pub won_days: u64,
-
-}
-
-/// Thargoid war information
-#[derive(Clone, Debug, Deserialize)]
-pub struct FSDJumpThargoidWar {
-
-    #[serde(rename = "CurrentState")]
-    pub current_state: String,
-
-    #[serde(rename = "NextStateSuccess")]
-    pub next_state_success: Option<String>,
-
-    #[serde(rename = "NextStateFailure")]
-    pub next_state_failure: Option<String>,
-
-    #[serde(rename = "SuccessStateReached")]
-    pub success_state_reached: bool,
-
-    #[serde(rename = "WarProgress")]
-    pub war_progress: Option<f64>,
-
-    #[serde(rename = "RemainingPorts")]
-    pub remaining_ports: Option<u64>,
-
-    #[serde(rename = "EstimatedRemainingTime")]
-    pub estimated_remaining_time: Option<String>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct FSDJumpFactionsRecoveringStates {
-
-    #[serde(rename = "State")]
-    pub state: String,
-
-    #[serde(rename = "Trend")]
-    pub trend: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct FSDJumpPowerplayConflictProgress {
-
-    #[serde(rename = "Power")]
-    pub power: String,
-
-    /// Progress towards the control threshold of 120k merits. can exceed 100%(1.0).
-    #[serde(rename = "ConflictProgress")]
-    pub conflict_progress: f64,
-
-}
-
-/// When written: when selecting a star system to jump to. When following a multi-jump route, this will typically appear for the next star, during a jump, ie after StartJump but before the FSDJump
-#[derive(Clone, Debug, Deserialize)]
-pub struct FSDTarget {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-    #[serde(rename = "StarClass")]
-    pub star_class: String,
-
-    #[serde(rename = "RemainingJumpsInRoute")]
-    pub remaining_jumps_in_route: Option<u64>,
-
-}
-
-/// When written: after having identified all bodies in the system
-#[derive(Clone, Debug, Deserialize)]
-pub struct FSSAllBodiesFound {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "SystemName")]
-    pub system_name: String,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
+    #[serde(rename = "Category")]
+    pub category: String,
 
     #[serde(rename = "Count")]
     pub count: u64,
 
 }
 
-/// This event is written when completing a Full Spectrum Scan of a starsystem, to list the number of SAA signals found in the system (as shown in-game in the top-right panel)
+/// When Written: when repairing the ship. When repairing on a FleetCarrier, you can get a list of the modules repaired
 #[derive(Clone, Debug, Deserialize)]
-pub struct FSSBodySignals {
+pub struct Repair {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "BodyName")]
-    pub body_name: String,
+    #[serde(rename = "Cost")]
+    pub cost: u64,
 
-    #[serde(rename = "BodyID")]
-    pub body_id: u64,
+    /// all, wear, hull, paint, or name of module
+    #[serde(rename = "Item")]
+    pub item: Option<String>,
 
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-    #[serde(rename = "Signals")]
-    pub signals: Vec<FSSBodySignalsSignals>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct FSSBodySignalsSignals {
-
-    #[serde(rename = "Type")]
-    pub r#type: String,
-
-    #[serde(rename = "Type_Localised")]
-    pub type_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
+    /// when repairing on a FleetCarrier
+    #[serde(rename = "Items")]
+    pub items: Option<Vec<String>>,
 
 }
 
-/// When written: when performing a full system scan (Honk)
 #[derive(Clone, Debug, Deserialize)]
-pub struct FSSDiscoveryScan {
+pub struct StatisticsCrafting {
 
+    #[serde(rename = "Count_Of_Used_Engineers")]
+    pub count_of_used_engineers: u64,
+
+    #[serde(rename = "Recipes_Generated")]
+    pub recipes_generated: u64,
+
+    #[serde(rename = "Recipes_Generated_Rank_1")]
+    pub recipes_generated_rank_1: u64,
+
+    #[serde(rename = "Recipes_Generated_Rank_2")]
+    pub recipes_generated_rank_2: u64,
+
+    #[serde(rename = "Recipes_Generated_Rank_3")]
+    pub recipes_generated_rank_3: u64,
+
+    #[serde(rename = "Recipes_Generated_Rank_4")]
+    pub recipes_generated_rank_4: u64,
+
+    #[serde(rename = "Recipes_Generated_Rank_5")]
+    pub recipes_generated_rank_5: u64,
+
+    #[serde(rename = "Suit_Mods_Applied")]
+    pub suit_mods_applied: Option<u64>,
+
+    #[serde(rename = "Weapon_Mods_Applied")]
+    pub weapon_mods_applied: Option<u64>,
+
+    #[serde(rename = "Suits_Upgraded")]
+    pub suits_upgraded: Option<u64>,
+
+    #[serde(rename = "Weapons_Upgraded")]
+    pub weapons_upgraded: Option<u64>,
+
+    #[serde(rename = "Suits_Upgraded_Full")]
+    pub suits_upgraded_full: Option<u64>,
+
+    #[serde(rename = "Weapons_Upgraded_Full")]
+    pub weapons_upgraded_full: Option<u64>,
+
+    #[serde(rename = "Suit_Mods_Applied_Full")]
+    pub suit_mods_applied_full: Option<u64>,
+
+    #[serde(rename = "Weapon_Mods_Applied_Full")]
+    pub weapon_mods_applied_full: Option<u64>,
+
+    #[serde(rename = "Spent_On_Crafting")]
+    pub spent_on_crafting: Option<u64>,
+
+    #[serde(rename = "Recipes_Applied")]
+    pub recipes_applied: Option<u64>,
+
+    #[serde(rename = "Recipes_Applied_Rank_1")]
+    pub recipes_applied_rank_1: Option<u64>,
+
+    #[serde(rename = "Recipes_Applied_Rank_2")]
+    pub recipes_applied_rank_2: Option<u64>,
+
+    #[serde(rename = "Recipes_Applied_Rank_3")]
+    pub recipes_applied_rank_3: Option<u64>,
+
+    #[serde(rename = "Recipes_Applied_Rank_4")]
+    pub recipes_applied_rank_4: Option<u64>,
+
+    #[serde(rename = "Recipes_Applied_Rank_5")]
+    pub recipes_applied_rank_5: Option<u64>,
+
+    #[serde(rename = "Recipes_Applied_On_Previously_Modified_Modules")]
+    pub recipes_applied_on_previously_modified_modules: Option<u64>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ScanMaterial {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Percent")]
+    pub percent: f64,
+
+}
+
+/// When written: when the player's ship has been repaired by a repair drone. Each of the values indicate the amount of damage that has been repaired
+#[derive(Clone, Debug, Deserialize)]
+pub struct RepairDrone {
+
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Progress")]
-    pub progress: f64,
+    #[serde(rename = "HullRepaired")]
+    pub hull_repaired: Option<f64>,
 
-    #[serde(rename = "BodyCount")]
-    pub body_count: u64,
+    #[serde(rename = "CockpitRepaired")]
+    pub cockpit_repaired: Option<f64>,
 
-    #[serde(rename = "NonBodyCount")]
-    pub non_body_count: u64,
+    #[serde(rename = "CorrosionRepaired")]
+    pub corrosion_repaired: Option<f64>,
 
-    #[serde(rename = "SystemName")]
-    pub system_name: String,
+}
 
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
+/// When written: when a player defects from one power to another
+#[derive(Clone, Debug, Deserialize)]
+pub struct PowerplayDefect {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "FromPower")]
+    pub from_power: String,
+
+    #[serde(rename = "ToPower")]
+    pub to_power: String,
 
 }
 
@@ -3808,6 +387,7 @@ pub struct FSSDiscoveryScan {
 #[derive(Clone, Debug, Deserialize)]
 pub struct FSSSignalDiscovered {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -3867,20 +447,66 @@ pub struct FSSSignalDiscovered {
 
 }
 
-/// When written: when scooping fuel from a star
+/// When written: when synthesis is used to repair or rearm
 #[derive(Clone, Debug, Deserialize)]
-pub struct FuelScoop {
+pub struct Synthesis {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    /// Tons fuel scooped
-    #[serde(rename = "Scooped")]
-    pub scooped: f64,
+    /// Synthesis blueprint
+    #[serde(rename = "Name")]
+    pub name: String,
 
-    /// Total fuel level after scooping
-    #[serde(rename = "Total")]
-    pub total: f64,
+    /// Materials used with quantities
+    #[serde(rename = "Materials")]
+    pub materials: Vec<SynthesisMaterial>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct SquadronDemotion {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "SquadronName")]
+    pub squadron_name: String,
+
+    #[serde(rename = "OldRank")]
+    pub old_rank: u64,
+
+    #[serde(rename = "NewRank")]
+    pub new_rank: u64,
+
+}
+
+/// Written when accessing the outfitting menu. The full parts pricelist is written to a separate file Outfitting.json.
+#[derive(Clone, Debug, Deserialize)]
+pub struct Outfitting {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "StationName")]
+    pub station_name: String,
+
+    #[serde(rename = "StarSystem")]
+    pub star_system: String,
+
+    /// Only written in Outfitting.json
+    #[serde(rename = "Horizons")]
+    pub horizons: Option<bool>,
+
+    /// Only written in Outfitting.json
+    #[serde(rename = "Items")]
+    pub items: Option<Vec<OutfittingItem>>,
 
 }
 
@@ -3888,6 +514,7 @@ pub struct FuelScoop {
 #[derive(Clone, Debug, Deserialize)]
 pub struct HeatDamage {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -3896,282 +523,163 @@ pub struct HeatDamage {
 
 }
 
-/// When written: when heat exceeds 100%
+/// When written: at startup. This line contains the information displayed in the statistics panel on the right side of the cockpit
 #[derive(Clone, Debug, Deserialize)]
-pub struct HeatWarning {
+pub struct Statistics {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-}
+    #[serde(rename = "Bank_Account")]
+    pub bank_account: StatisticsBankAccount,
 
-/// When a holoscreen is hacked
-#[derive(Clone, Debug, Deserialize)]
-pub struct HoloscreenHacked {
+    #[serde(rename = "Combat")]
+    pub combat: StatisticsCombat,
 
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    #[serde(rename = "Crime")]
+    pub crime: StatisticsCrime,
 
-    /// The power that owned the holo screen
-    #[serde(rename = "PowerBefore")]
-    pub power_before: String,
+    #[serde(rename = "Smuggling")]
+    pub smuggling: StatisticsSmuggling,
 
-    /// The power that now owns the holo screen
-    #[serde(rename = "PowerAfter")]
-    pub power_after: String,
+    #[serde(rename = "Trading")]
+    pub trading: StatisticsTrading,
 
-}
+    #[serde(rename = "Mining")]
+    pub mining: StatisticsMining,
 
-/// When written: when hull health drops below a threshold (20% steps)
-#[derive(Clone, Debug, Deserialize)]
-pub struct HullDamage {
+    #[serde(rename = "Exploration")]
+    pub exploration: StatisticsExploration,
 
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    #[serde(rename = "Passengers")]
+    pub passengers: StatisticsPassengers,
 
-    #[serde(rename = "Health")]
-    pub health: f64,
+    #[serde(rename = "Search_And_Rescue")]
+    pub search_and_rescue: StatisticsSearchAndRescue,
 
-    /// True if player is piloting the ship/fighter taking damage
-    #[serde(rename = "PlayerPilot")]
-    pub player_pilot: bool,
-
-    /// True for ship-launched fighter
-    #[serde(rename = "Fighter")]
-    pub fighter: Option<bool>,
-
-}
-
-/// When written: player was interdicted by player or npc
-#[derive(Clone, Debug, Deserialize)]
-pub struct Interdicted {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Submitted")]
-    pub submitted: bool,
-
-    #[serde(rename = "Interdictor")]
-    pub interdictor: Option<String>,
-
-    /// Whether player or npc
-    #[serde(rename = "IsPlayer")]
-    pub is_player: bool,
-
-    /// Whether thargoid
-    #[serde(rename = "IsThargoid")]
-    pub is_thargoid: Option<bool>,
-
-    /// If player
-    #[serde(rename = "CombatRank")]
-    pub combat_rank: Option<u64>,
-
-    /// If npc
-    #[serde(rename = "Faction")]
-    pub faction: Option<String>,
-
-    /// If npc is working for a power
-    #[serde(rename = "Power")]
-    pub power: Option<String>,
-
-    #[serde(rename = "Interdictor_Localised")]
-    pub interdictor_localised: Option<String>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct Interdiction {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Success")]
-    pub success: bool,
-
-    #[serde(rename = "Submitted")]
-    pub submitted: Option<bool>,
-
-    /// Victim pilot name
-    #[serde(rename = "Interdicted")]
-    pub interdicted: String,
-
-    /// Victim pilot name
-    #[serde(rename = "Interdicted_Localised")]
-    pub interdicted_localised: Option<String>,
-
-    /// Whether player or npc
-    #[serde(rename = "IsPlayer")]
-    pub is_player: bool,
-
-    /// If a player
-    #[serde(rename = "CombatRank")]
-    pub combat_rank: Option<u64>,
-
-    /// If npc
-    #[serde(rename = "Faction")]
-    pub faction: Option<String>,
-
-    /// If npc is working for a power
-    #[serde(rename = "Power")]
-    pub power: Option<String>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct InvitedToSquadron {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "SquadronName")]
-    pub squadron_name: String,
-
-}
-
-/// When written: when enough material has been collected from a solar jet code (at a white dwarf or neutron star) for a jump boost
-#[derive(Clone, Debug, Deserialize)]
-pub struct JetConeBoost {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "BoostValue")]
-    pub boost_value: f64,
-
-}
-
-/// When written: when passing through the jet code from a white dwarf or neutron star has caused damage to a ship module
-#[derive(Clone, Debug, Deserialize)]
-pub struct JetConeDamage {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Module")]
-    pub module: String,
-
-    #[serde(rename = "Module_Localised")]
-    pub module_localised: Option<String>,
-
-}
-
-/// When written: When you join another player ship's crew
-#[derive(Clone, Debug, Deserialize)]
-pub struct JoinACrew {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Captain")]
-    pub captain: String,
-
-    #[serde(rename = "Telepresence")]
-    pub telepresence: Option<bool>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct JoinedSquadron {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "SquadronName")]
-    pub squadron_name: String,
-
-}
-
-/// When written: When you force another player to leave your ship's crew
-#[derive(Clone, Debug, Deserialize)]
-pub struct KickCrewMember {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    #[serde(rename = "Crafting")]
+    pub crafting: Option<StatisticsCrafting>,
 
     #[serde(rename = "Crew")]
-    pub crew: String,
+    pub crew: Option<StatisticsCrew>,
 
-    /// True if player is automatically kicked for committing a crime in a lawful session
-    #[serde(rename = "OnCrime")]
-    pub on_crime: bool,
+    #[serde(rename = "Multicrew")]
+    pub multicrew: Option<StatisticsMulticrew>,
 
-    /// only from Odyssey build
-    #[serde(rename = "Telepresence")]
-    pub telepresence: Option<bool>,
+    #[serde(rename = "Material_Trader_Stats")]
+    pub material_trader_stats: Option<StatisticsMaterialTraderStats>,
+
+    #[serde(rename = "FLEETCARRIER")]
+    pub fleet_carrier: Option<StatisticsFLEETCARRIER>,
+
+    #[serde(rename = "Exobiology")]
+    pub exobiology: Option<StatisticsExobiology>,
+
+    #[serde(rename = "TG_ENCOUNTERS")]
+    pub tg_encounters: Option<StatisticsTgEncounters>,
+
+    #[serde(rename = "CQC")]
+    pub cqc: Option<StatisticsCQC>,
 
 }
 
+/// When written: player is awarded a bounty for a kill
 #[derive(Clone, Debug, Deserialize)]
-pub struct KickedFromSquadron {
+pub struct Bounty {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "SquadronName")]
-    pub squadron_name: String,
+    /// An array of Faction names and the Reward values, as the target can have multiple bounties payable by different factions. Not used for skimmers.(See Reward)
+    #[serde(rename = "Rewards")]
+    pub rewards: Option<Vec<BountyReward>>,
+
+    /// Name of the Pilot
+    #[serde(rename = "PilotName")]
+    pub pilot_name: Option<String>,
+
+    /// Name of the Pilot
+    #[serde(rename = "PilotName_Localised")]
+    pub pilot_name_localised: Option<String>,
+
+    /// type of ship
+    #[serde(rename = "Target")]
+    pub target: String,
+
+    #[serde(rename = "Target_Localised")]
+    pub target_localised: Option<String>,
+
+    /// Not used for skimmers.
+    #[serde(rename = "TotalReward")]
+    pub total_reward: Option<u64>,
+
+    #[serde(rename = "VictimFaction")]
+    pub victim_faction: String,
+
+    #[serde(rename = "VictimFaction_Localised")]
+    pub victim_faction_localised: Option<String>,
+
+    /// if credit for the kill is shared with other players, this has the number of other players involved
+    #[serde(rename = "SharedWithOthers")]
+    pub shared_with_others: Option<u64>,
+
+    /// Used instead of Rewards when the bounty is for a skimmer
+    #[serde(rename = "Reward")]
+    pub reward: Option<u64>,
+
+    #[serde(rename = "Faction")]
+    pub faction: Option<String>,
 
 }
 
-/// When written: when using any type of drone/limpet
+/// When Written: when claiming payment for combat bounties and bonds
 #[derive(Clone, Debug, Deserialize)]
-pub struct LaunchDrone {
+pub struct RedeemVoucher {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Type")]
     pub r#type: String,
 
-}
+    #[serde(rename = "Faction")]
+    pub faction: Option<String>,
 
-/// When written: when launching a fighter
-#[derive(Clone, Debug, Deserialize)]
-pub struct LaunchFighter {
+    /// Net amount received, after any broker fee
+    #[serde(rename = "Amount")]
+    pub amount: u64,
 
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    /// For type bounty
+    #[serde(rename = "Factions")]
+    pub factions: Option<Vec<RedeemVoucherFaction>>,
 
-    #[serde(rename = "Loadout")]
-    pub loadout: String,
-
-    #[serde(rename = "ID")]
-    pub id: u64,
-
-    /// Whether player is controlling the fighter from launch
-    #[serde(rename = "PlayerControlled")]
-    pub player_controlled: bool,
+    #[serde(rename = "BrokerPercentage")]
+    pub broker_percentage: Option<f64>,
 
 }
 
-/// When written: deploying the SRV from a ship onto planet surface
 #[derive(Clone, Debug, Deserialize)]
-pub struct LaunchSRV {
+pub struct MissionCompletedFactionEffectInfluence {
 
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
 
-    #[serde(rename = "SRVType")]
-    pub srv_type: Option<String>,
+    #[serde(rename = "Trend")]
+    pub trend: String,
 
-    #[serde(rename = "SRVType_Localised")]
-    pub srv_type_localised: Option<String>,
-
-    #[serde(rename = "Loadout")]
-    pub loadout: String,
-
-    #[serde(rename = "ID")]
-    pub id: u64,
-
-    #[serde(rename = "PlayerControlled")]
-    pub player_controlled: bool,
+    #[serde(rename = "Influence")]
+    pub influence: String,
 
 }
 
-/// When written: when flying away from a planet, and distance increases above the 'Orbital Cruise' altitude
+/// When Written: when a colonisation claim is released
 #[derive(Clone, Debug, Deserialize)]
-pub struct LeaveBody {
+pub struct ColonisationSystemClaimRelease {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -4181,79 +689,253 @@ pub struct LeaveBody {
     #[serde(rename = "SystemAddress")]
     pub system_address: u64,
 
-    #[serde(rename = "Body")]
-    pub body: String,
+}
 
-    #[serde(rename = "BodyID")]
-    pub body_id: u64,
+/// When Written: when buying system data via the galaxy map
+#[derive(Clone, Debug, Deserialize)]
+pub struct BuyExplorationData {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "System")]
+    pub system: String,
+
+    #[serde(rename = "Cost")]
+    pub cost: u64,
+
+}
+
+/// Thargoid war information
+#[derive(Clone, Debug, Deserialize)]
+pub struct FSDJumpThargoidWar {
+
+    #[serde(rename = "CurrentState")]
+    pub current_state: String,
+
+    #[serde(rename = "NextStateSuccess")]
+    pub next_state_success: Option<String>,
+
+    #[serde(rename = "NextStateFailure")]
+    pub next_state_failure: Option<String>,
+
+    #[serde(rename = "SuccessStateReached")]
+    pub success_state_reached: bool,
+
+    #[serde(rename = "WarProgress")]
+    pub war_progress: Option<f64>,
+
+    #[serde(rename = "RemainingPorts")]
+    pub remaining_ports: Option<u64>,
+
+    #[serde(rename = "EstimatedRemainingTime")]
+    pub estimated_remaining_time: Option<String>,
+
+}
+
+/// Changes to crew
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierCrewServices {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: u64,
+
+    #[serde(rename = "CrewRole")]
+    pub crew_role: String,
+
+    #[serde(rename = "Operation")]
+    pub operation: String,
+
+    #[serde(rename = "CrewName")]
+    pub crew_name: String,
 
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct LeftSquadron {
+pub struct ShipLockerMaterialsData {
 
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    #[serde(rename = "Name")]
+    pub name: String,
 
-    #[serde(rename = "SquadronName")]
-    pub squadron_name: String,
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "OwnerID")]
+    pub owner_id: u64,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: Option<u64>,
 
 }
 
-/// When written: when taking off from planet surface
+/// When written: If you should ever reset your game
 #[derive(Clone, Debug, Deserialize)]
-pub struct Liftoff {
+pub struct ClearSavedGame {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    /// false if ship dismissed when player is in SRV, true if player is taking off
-    #[serde(rename = "PlayerControlled")]
-    pub player_controlled: bool,
+    #[serde(rename = "Name")]
+    pub name: String,
 
-    #[serde(rename = "Taxi")]
-    pub taxi: Option<bool>,
+    #[serde(rename = "FID")]
+    pub fid: String,
 
-    #[serde(rename = "Multicrew")]
-    pub multicrew: Option<bool>,
+}
 
-    #[serde(rename = "StarSystem")]
-    pub star_system: Option<String>,
+/// This event is logged when a player sells Microresources for cash
+#[derive(Clone, Debug, Deserialize)]
+pub struct SellMicroResources {
 
-    #[serde(rename = "SystemAddress")]
-    pub system_address: Option<u64>,
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Body")]
-    pub body: Option<String>,
+    #[serde(rename = "TotalCount")]
+    pub total_count: u64,
 
-    #[serde(rename = "BodyID")]
-    pub body_id: Option<u64>,
+    #[serde(rename = "MicroResources")]
+    pub micro_resources: Vec<SellMicroResourcesMicroResource>,
 
-    #[serde(rename = "OnStation")]
-    pub on_station: Option<bool>,
+    #[serde(rename = "Price")]
+    pub price: u64,
 
-    #[serde(rename = "OnPlanet")]
-    pub on_planet: Option<bool>,
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
 
-    /// only if player flying in ship)
-    #[serde(rename = "Latitude")]
-    pub latitude: Option<f64>,
+}
 
-    /// only if player flying in ship)
-    #[serde(rename = "Longitude")]
-    pub longitude: Option<f64>,
+/// When written: when receiving salary payment from a power
+#[derive(Clone, Debug, Deserialize)]
+pub struct PowerplayRank {
 
-    #[serde(rename = "NearestDestination")]
-    pub nearest_destination: Option<String>,
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "NearestDestination_Localised")]
-    pub nearest_destination_localised: Option<String>,
+    #[serde(rename = "Power")]
+    pub power: String,
+
+    #[serde(rename = "Rank")]
+    pub rank: u64,
+
+}
+
+/// When written: when the player's ship systems shut down (eg in a Thargoid encounter)
+#[derive(Clone, Debug, Deserialize)]
+pub struct SystemsShutdown {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+}
+
+/// When written: when collecting or delivering cargo for a wing mission, or if a wing member updates progress. The CargoType and Count are included when you collect or deliver goods, they are not included for a wing update. The Progress value actually represents pending progress for goods in transit: (ItemsCollected-ItemsDelivered)/TotalItemsToDeliver
+#[derive(Clone, Debug, Deserialize)]
+pub struct CargoDepot {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: u64,
+
+    #[serde(rename = "UpdateType")]
+    pub update_type: String,
+
+    /// Not included for UpdateType of WingUpdate
+    #[serde(rename = "CargoType")]
+    pub cargo_type: Option<String>,
+
+    /// Not included for UpdateType of WingUpdate
+    #[serde(rename = "Count")]
+    pub count: Option<u64>,
+
+    #[serde(rename = "StartMarketID")]
+    pub start_market_id: u64,
+
+    #[serde(rename = "EndMarketID")]
+    pub end_market_id: u64,
+
+    #[serde(rename = "ItemsCollected")]
+    pub items_collected: u64,
+
+    #[serde(rename = "ItemsDelivered")]
+    pub items_delivered: u64,
+
+    #[serde(rename = "TotalItemsToDeliver")]
+    pub total_items_to_deliver: u64,
+
+    #[serde(rename = "Progress")]
+    pub progress: f64,
+
+    #[serde(rename = "CargoType_Localised")]
+    pub cargo_type_localised: Option<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct Data {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "OwnerID")]
+    pub owner_id: u64,
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: Option<u64>,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierJumpSystemFaction {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "FactionState")]
+    pub faction_state: Option<String>,
+
+}
+
+/// When written: when a ship's fighter is rebuilt in the hangar
+#[derive(Clone, Debug, Deserialize)]
+pub struct FighterRebuilt {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Loadout")]
+    pub loadout: String,
+
+    #[serde(rename = "ID")]
+    pub id: u64,
 
 }
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct LoadGame {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -4331,271 +1013,102 @@ pub struct LoadGame {
 
 }
 
-/// When written: at startup, when loading from main menu, or when switching ships, or after changing the ship in Outfitting, or when docking SRV back in mothership
+/// When Written: when a mission has been abandoned
 #[derive(Clone, Debug, Deserialize)]
-pub struct Loadout {
+pub struct MissionAbandoned {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Ship")]
-    pub ship: String,
+    #[serde(rename = "Name")]
+    pub name: String,
 
-    /// Ship id number (indicates which of your ships you are in)
-    #[serde(rename = "ShipID")]
-    pub ship_id: u64,
+    #[serde(rename = "LocalisedName")]
+    pub localised_name: Option<String>,
 
-    /// User-defined ship name
-    #[serde(rename = "ShipName")]
-    pub ship_name: String,
+    #[serde(rename = "MissionID")]
+    pub mission_id: u64,
 
-    /// User-defined ship ID string
-    #[serde(rename = "ShipIdent")]
-    pub ship_ident: String,
-
-    #[serde(rename = "HullValue")]
-    pub hull_value: Option<u64>,
-
-    #[serde(rename = "ModulesValue")]
-    pub modules_value: Option<u64>,
-
-    #[serde(rename = "HullHealth")]
-    pub hull_health: f64,
-
-    /// Mass of Hull and Modules, excludes fuel and cargo
-    #[serde(rename = "UnladenMass")]
-    pub unladen_mass: f64,
-
-    #[serde(rename = "CargoCapacity")]
-    pub cargo_capacity: u64,
-
-    /// based on zero cargo, and just enough fuel for 1 jump
-    #[serde(rename = "MaxJumpRange")]
-    pub max_jump_range: f64,
-
-    #[serde(rename = "FuelCapacity")]
-    pub fuel_capacity: LoadoutFuelCapacity,
-
-    #[serde(rename = "Rebuy")]
-    pub rebuy: u64,
-
-    #[serde(rename = "Modules")]
-    pub modules: Vec<LoadoutModules>,
-
-    /// If wanted at startup
-    #[serde(rename = "Hot")]
-    pub hot: Option<bool>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct LoadoutModules {
-
-    /// Slot name
-    #[serde(rename = "Slot")]
-    pub slot: String,
-
-    /// Module name - lowercase
-    #[serde(rename = "Item")]
-    pub item: String,
-
-    #[serde(rename = "On")]
-    pub on: bool,
-
-    #[serde(rename = "Priority")]
-    pub priority: u64,
-
-    /// If relevant. For a passenger cabin, AmmoInClip holds the number of places in the cabin.
-    #[serde(rename = "AmmoInClip")]
-    pub ammo_in_clip: Option<u64>,
-
-    /// if relevant
-    #[serde(rename = "AmmoInHopper")]
-    pub ammo_in_hopper: Option<u64>,
-
-    #[serde(rename = "Health")]
-    pub health: f64,
-
-    #[serde(rename = "Value")]
-    pub value: Option<u64>,
-
-    /// If engineered
-    #[serde(rename = "Engineering")]
-    pub engineering: Option<LoadoutModulesEngineering>,
+    #[serde(rename = "Fine")]
+    pub fine: Option<u64>,
 
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct LoadoutFuelCapacity {
+pub struct SAASignalsFoundGenus {
 
-    #[serde(rename = "Main")]
-    pub main: f64,
+    #[serde(rename = "Genus")]
+    pub genus: String,
 
-    #[serde(rename = "Reserve")]
-    pub reserve: f64,
-
-}
-
-/// If engineered
-#[derive(Clone, Debug, Deserialize)]
-pub struct LoadoutModulesEngineering {
-
-    #[serde(rename = "EngineerID")]
-    pub engineer_id: u64,
-
-    #[serde(rename = "BlueprintID")]
-    pub blueprint_id: u64,
-
-    #[serde(rename = "BlueprintName")]
-    pub blueprint_name: String,
-
-    #[serde(rename = "Level")]
-    pub level: u64,
-
-    #[serde(rename = "Quality")]
-    pub quality: f64,
-
-    #[serde(rename = "Modifiers")]
-    pub modifiers: Vec<LoadoutModulesEngineeringModifiers>,
-
-    #[serde(rename = "Engineer")]
-    pub engineer: Option<String>,
-
-    #[serde(rename = "ExperimentalEffect")]
-    pub experimental_effect: Option<String>,
-
-    #[serde(rename = "ExperimentalEffect_Localised")]
-    pub experimental_effect_localised: Option<String>,
+    #[serde(rename = "Genus_Localised")]
+    pub genus_localised: Option<String>,
 
 }
 
+/// When Written: when purchasing an SRV or Fighter
 #[derive(Clone, Debug, Deserialize)]
-pub struct LoadoutModulesEngineeringModifiers {
+pub struct RestockVehicle {
 
-    #[serde(rename = "Label")]
-    pub label: String,
-
-    /// Either Value or ValueStr is used. These modification types have string values: WeaponMode, DamageType, CabinClass.
-    #[serde(rename = "Value")]
-    pub value: Option<f64>,
-
-    #[serde(rename = "OriginalValue")]
-    pub original_value: Option<f64>,
-
-    /// Either 0 or 1
-    #[serde(rename = "LessIsGood")]
-    pub less_is_good: Option<u64>,
-
-    /// Either Value or ValueStr is used. These modification types have string values: WeaponMode, DamageType, CabinClass.
-    #[serde(rename = "ValueStr")]
-    pub value_str: Option<String>,
-
-    #[serde(rename = "ValueStr_Localised")]
-    pub value_str_localised: Option<String>,
-
-}
-
-/// This event is logged when a player adds a weapon to a suit loadout
-#[derive(Clone, Debug, Deserialize)]
-pub struct LoadoutEquipModule {
-
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "LoadoutName")]
-    pub loadout_name: String,
+    #[serde(rename = "Type")]
+    pub r#type: String,
 
-    #[serde(rename = "SuitID")]
-    pub suit_id: u64,
+    #[serde(rename = "Type_Localised")]
+    pub type_localised: Option<String>,
 
-    #[serde(rename = "SuitName")]
-    pub suit_name: String,
+    #[serde(rename = "Loadout")]
+    pub loadout: String,
 
-    #[serde(rename = "SuitName_Localised")]
-    pub suit_name_localised: Option<String>,
+    #[serde(rename = "ID")]
+    pub id: Option<u64>,
 
-    #[serde(rename = "LoadoutID")]
-    pub loadout_id: u64,
+    #[serde(rename = "Cost")]
+    pub cost: u64,
 
-    #[serde(rename = "SlotName")]
-    pub slot_name: String,
-
-    /// New weapon or other item added to loadout
-    #[serde(rename = "ModuleName")]
-    pub module_name: String,
-
-    #[serde(rename = "ModuleName_Localised")]
-    pub module_name_localised: Option<String>,
-
-    #[serde(rename = "Class")]
-    pub class: u64,
-
-    #[serde(rename = "WeaponMods")]
-    pub weapon_mods: Vec<String>,
-
-    #[serde(rename = "SuitModuleID")]
-    pub suit_module_id: u64,
+    /// Number of vehicles purchased
+    #[serde(rename = "Count")]
+    pub count: u64,
 
 }
 
-/// This event is logged when a player removes a weapon from a suit loadout
 #[derive(Clone, Debug, Deserialize)]
-pub struct LoadoutRemoveModule {
+pub struct CarrierShipPack {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "LoadoutName")]
-    pub loadout_name: String,
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: u64,
 
-    #[serde(rename = "SuitID")]
-    pub suit_id: u64,
+    #[serde(rename = "Operation")]
+    pub operation: String,
 
-    #[serde(rename = "SuitName")]
-    pub suit_name: String,
+    #[serde(rename = "PackTheme")]
+    pub pack_theme: String,
 
-    #[serde(rename = "SuitName_Localised")]
-    pub suit_name_localised: Option<String>,
+    #[serde(rename = "PackTier")]
+    pub pack_tier: u64,
 
-    #[serde(rename = "LoadoutID")]
-    pub loadout_id: u64,
+    #[serde(rename = "Refund")]
+    pub refund: Option<u64>,
 
-    #[serde(rename = "SlotName")]
-    pub slot_name: String,
-
-    /// Weapon or other item removed from loadout
-    #[serde(rename = "ModuleName")]
-    pub module_name: String,
-
-    #[serde(rename = "ModuleName_Localised")]
-    pub module_name_localised: Option<String>,
-
-    #[serde(rename = "Class")]
-    pub class: u64,
-
-    #[serde(rename = "SuitModuleID")]
-    pub suit_module_id: u64,
-
-    #[serde(rename = "WeaponMods")]
-    pub weapon_mods: Vec<String>,
+    #[serde(rename = "Cost")]
+    pub cost: Option<u64>,
 
 }
 
-/// When written: at startup, or when being resurrected at a station
+/// When written: when jumping from one star system to another
 #[derive(Clone, Debug, Deserialize)]
-pub struct Location {
+pub struct FSDJump {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
-
-    /// If not close to main star
-    #[serde(rename = "DistFromStarLS")]
-    pub dist_from_star_ls: Option<f64>,
-
-    /// True if ship is docked
-    #[serde(rename = "Docked")]
-    pub docked: bool,
 
     /// True when inside a taxi transport ship
     #[serde(rename = "Taxi")]
@@ -4608,7 +1121,7 @@ pub struct Location {
     #[serde(rename = "Wanted")]
     pub wanted: Option<bool>,
 
-    /// Name of starsystem
+    /// Name of destination starsystem
     #[serde(rename = "StarSystem")]
     pub star_system: String,
 
@@ -4658,12 +1171,22 @@ pub struct Location {
     #[serde(rename = "BodyType")]
     pub body_type: String,
 
+    /// Distance jumped
+    #[serde(rename = "JumpDist")]
+    pub jump_dist: f64,
+
+    #[serde(rename = "FuelUsed")]
+    pub fuel_used: f64,
+
+    #[serde(rename = "FuelLevel")]
+    pub fuel_level: f64,
+
     #[serde(rename = "Factions")]
-    pub factions: Option<Vec<LocationFactions>>,
+    pub factions: Option<Vec<FSDJumpFaction>>,
 
     /// System controlling faction
     #[serde(rename = "SystemFaction")]
-    pub system_faction: Option<LocationSystemFaction>,
+    pub system_faction: Option<FSDJumpSystemFaction>,
 
     /// If the player is pledged to a Power in Powerplay, and the star system is involved in powerplay
     #[serde(rename = "Powers")]
@@ -4691,243 +1214,80 @@ pub struct Location {
 
     /// When the system is unoccupied and 1 or more powers are fighting for control by reaching 120k merits.
     #[serde(rename = "PowerplayConflictProgress")]
-    pub powerplay_conflict_progress: Option<Vec<LocationPowerplayConflictProgress>>,
+    pub powerplay_conflict_progress: Option<Vec<FSDJumpPowerplayConflictProgress>>,
 
     #[serde(rename = "Conflicts")]
-    pub conflicts: Option<Vec<LocationConflicts>>,
+    pub conflicts: Option<Vec<FSDJumpConflict>>,
 
     /// Thargoid war information
     #[serde(rename = "ThargoidWar")]
-    pub thargoid_war: Option<LocationThargoidWar>,
+    pub thargoid_war: Option<FSDJumpThargoidWar>,
 
-    #[serde(rename = "OnFoot")]
-    pub on_foot: Option<bool>,
-
-    #[serde(rename = "StationName")]
-    pub station_name: Option<String>,
-
-    #[serde(rename = "StationName_Localised")]
-    pub station_name_localised: Option<String>,
-
-    #[serde(rename = "StationType")]
-    pub station_type: Option<String>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: Option<u64>,
-
-    /// If starting docked in a station
-    #[serde(rename = "StationFaction")]
-    pub station_faction: Option<LocationStationFaction>,
-
-    /// If starting docked in a station
-    #[serde(rename = "StationGovernment")]
-    pub station_government: Option<String>,
-
-    /// If starting docked in a station
-    #[serde(rename = "StationGovernment_Localised")]
-    pub station_government_localised: Option<String>,
-
-    /// If starting docked in a station
-    #[serde(rename = "StationServices")]
-    pub station_services: Option<Vec<String>>,
-
-    /// If starting docked in a station
-    #[serde(rename = "StationEconomy")]
-    pub station_economy: Option<String>,
-
-    /// If starting docked in a station
-    #[serde(rename = "StationEconomy_Localised")]
-    pub station_economy_localised: Option<String>,
-
-    /// If starting docked in a station
-    #[serde(rename = "StationEconomies")]
-    pub station_economies: Option<Vec<LocationStationEconomies>>,
-
-    #[serde(rename = "Latitude")]
-    pub latitude: Option<f64>,
-
-    #[serde(rename = "Longitude")]
-    pub longitude: Option<f64>,
-
-    #[serde(rename = "InSRV")]
-    pub in_srv: Option<bool>,
-
-    #[serde(rename = "StationAllegiance")]
-    pub station_allegiance: Option<String>,
+    /// Whether FSD boost was used
+    #[serde(rename = "BoostUsed")]
+    pub boost_used: Option<u64>,
 
 }
 
-
-/// If starting docked in a station
+/// When owner opens carrier management
 #[derive(Clone, Debug, Deserialize)]
-pub struct LocationStationFaction {
+pub struct CarrierStats {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: u64,
+
+    #[serde(rename = "Callsign")]
+    pub callsign: String,
 
     #[serde(rename = "Name")]
     pub name: String,
 
-    #[serde(rename = "FactionState")]
-    pub faction_state: Option<String>,
+    #[serde(rename = "DockingAccess")]
+    pub docking_access: String,
+
+    #[serde(rename = "AllowNotorious")]
+    pub allow_notorious: bool,
+
+    #[serde(rename = "FuelLevel")]
+    pub fuel_level: u64,
+
+    #[serde(rename = "JumpRangeCurr")]
+    pub jump_range_curr: f64,
+
+    #[serde(rename = "JumpRangeMax")]
+    pub jump_range_max: f64,
+
+    #[serde(rename = "PendingDecommission")]
+    pub pending_decommission: bool,
+
+    #[serde(rename = "SpaceUsage")]
+    pub space_usage: CarrierStatsSpaceUsage,
+
+    #[serde(rename = "Finance")]
+    pub finance: CarrierStatsFinance,
+
+    #[serde(rename = "Crew")]
+    pub crew: Vec<CarrierStatsCrew>,
+
+    #[serde(rename = "ShipPacks")]
+    pub ship_packs: Vec<CarrierStatsShipPack>,
+
+    #[serde(rename = "ModulePacks")]
+    pub module_packs: Vec<CarrierStatsModulePack>,
 
 }
 
+/// When using an item from the player’s inventory (backpack)
 #[derive(Clone, Debug, Deserialize)]
-pub struct LocationConflicts {
+pub struct UseConsumable {
 
-    #[serde(rename = "WarType")]
-    pub war_type: String,
-
-    #[serde(rename = "Status")]
-    pub status: String,
-
-    #[serde(rename = "Faction1")]
-    pub faction1: LocationConflictsFaction1,
-
-    #[serde(rename = "Faction2")]
-    pub faction2: LocationConflictsFaction2,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct LocationConflictsFaction2 {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Stake")]
-    pub stake: String,
-
-    #[serde(rename = "WonDays")]
-    pub won_days: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct LocationConflictsFaction1 {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Stake")]
-    pub stake: String,
-
-    #[serde(rename = "Stake_Localised")]
-    pub stake_localised: Option<String>,
-
-    #[serde(rename = "WonDays")]
-    pub won_days: u64,
-
-}
-
-/// System controlling faction
-#[derive(Clone, Debug, Deserialize)]
-pub struct LocationSystemFaction {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "FactionState")]
-    pub faction_state: Option<String>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct LocationPowerplayConflictProgress {
-
-    #[serde(rename = "Power")]
-    pub power: String,
-
-    /// Progress towards the control threshold of 120k merits. can exceed 100%(1.0).
-    #[serde(rename = "ConflictProgress")]
-    pub conflict_progress: f64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct LocationFactions {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "FactionState")]
-    pub faction_state: String,
-
-    #[serde(rename = "Government")]
-    pub government: String,
-
-    #[serde(rename = "Influence")]
-    pub influence: f64,
-
-    #[serde(rename = "Allegiance")]
-    pub allegiance: String,
-
-    #[serde(rename = "Happiness")]
-    pub happiness: String,
-
-    /// Happiness values are: Elated, Happy, Discontented, Unhappy, Despondent
-    #[serde(rename = "Happiness_Localised")]
-    pub happiness_localised: Option<String>,
-
-    #[serde(rename = "MyReputation")]
-    pub my_reputation: f64,
-
-    /// Array with State names (Note active states do not have a Trend value)
-    #[serde(rename = "ActiveStates")]
-    pub active_states: Option<Vec<LocationFactionsActiveStates>>,
-
-    /// Array (if any) with State name and Trend value
-    #[serde(rename = "RecoveringStates")]
-    pub recovering_states: Option<Vec<LocationFactionsRecoveringStates>>,
-
-    /// Array (if any) with State name and Trend value
-    #[serde(rename = "PendingStates")]
-    pub pending_states: Option<Vec<LocationFactionsPendingStates>>,
-
-    /// If player is in squadron aligned to this faction
-    #[serde(rename = "SquadronFaction")]
-    pub squadron_faction: Option<bool>,
-
-    /// If player squadron faction, and this is happiest system
-    #[serde(rename = "HappiestSystem")]
-    pub happiest_system: Option<bool>,
-
-    /// If player squadron faction, and this is home system
-    #[serde(rename = "HomeSystem")]
-    pub home_system: Option<bool>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct LocationFactionsActiveStates {
-
-    #[serde(rename = "State")]
-    pub state: String,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct LocationFactionsPendingStates {
-
-    #[serde(rename = "State")]
-    pub state: String,
-
-    #[serde(rename = "Trend")]
-    pub trend: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct LocationFactionsRecoveringStates {
-
-    #[serde(rename = "State")]
-    pub state: String,
-
-    #[serde(rename = "Trend")]
-    pub trend: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct LocationStationEconomies {
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -4935,44 +1295,208 @@ pub struct LocationStationEconomies {
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
 
-    #[serde(rename = "Proportion")]
-    pub proportion: f64,
+    #[serde(rename = "Type")]
+    pub r#type: String,
 
 }
 
-/// Thargoid war information
 #[derive(Clone, Debug, Deserialize)]
-pub struct LocationThargoidWar {
+pub struct StatisticsBankAccount {
 
-    #[serde(rename = "CurrentState")]
-    pub current_state: String,
+    #[serde(rename = "Current_Wealth")]
+    pub current_wealth: u64,
 
-    #[serde(rename = "NextStateSuccess")]
-    pub next_state_success: Option<String>,
+    #[serde(rename = "Spent_On_Ships")]
+    pub spent_on_ships: u64,
 
-    #[serde(rename = "NextStateFailure")]
-    pub next_state_failure: Option<String>,
+    #[serde(rename = "Spent_On_Outfitting")]
+    pub spent_on_outfitting: u64,
 
-    #[serde(rename = "SuccessStateReached")]
-    pub success_state_reached: bool,
+    #[serde(rename = "Spent_On_Repairs")]
+    pub spent_on_repairs: u64,
 
-    #[serde(rename = "WarProgress")]
-    pub war_progress: Option<f64>,
+    #[serde(rename = "Spent_On_Fuel")]
+    pub spent_on_fuel: u64,
 
-    #[serde(rename = "RemainingPorts")]
-    pub remaining_ports: Option<u64>,
+    #[serde(rename = "Spent_On_Ammo_Consumables")]
+    pub spent_on_ammo_consumables: u64,
 
-    #[serde(rename = "EstimatedRemainingTime")]
-    pub estimated_remaining_time: Option<String>,
+    #[serde(rename = "Insurance_Claims")]
+    pub insurance_claims: u64,
+
+    #[serde(rename = "Spent_On_Insurance")]
+    pub spent_on_insurance: u64,
+
+    #[serde(rename = "Owned_Ship_Count")]
+    pub owned_ship_count: Option<u64>,
+
+    #[serde(rename = "Spent_On_Suits")]
+    pub spent_on_suits: Option<u64>,
+
+    #[serde(rename = "Spent_On_Weapons")]
+    pub spent_on_weapons: Option<u64>,
+
+    #[serde(rename = "Spent_On_Suit_Consumables")]
+    pub spent_on_suit_consumables: Option<u64>,
+
+    #[serde(rename = "Suits_Owned")]
+    pub suits_owned: Option<u64>,
+
+    #[serde(rename = "Weapons_Owned")]
+    pub weapons_owned: Option<u64>,
+
+    #[serde(rename = "Spent_On_Premium_Stock")]
+    pub spent_on_premium_stock: Option<u64>,
+
+    #[serde(rename = "Premium_Stock_Bought")]
+    pub premium_stock_bought: Option<u64>,
 
 }
 
-/// When written: when accessing the commodity market in a station. A separate file Market.json is written to the same folder as the journal, containing full market price info.
+/// When written: at startup, note this is now written slightly later in startup, after we have initialised missions, so we can detect if any cargo came from an abandoned delivery mission. The first Cargo event in the file will contain the full inventory, others just indicate a separate file has been written. The full data is now written to a separate file Cargo.json. A simple event (with no parameters) is written to the main journal file when the cargo file is updated.
 #[derive(Clone, Debug, Deserialize)]
-pub struct Market {
+pub struct Cargo {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Vessel")]
+    pub vessel: String,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+    #[serde(rename = "Inventory")]
+    pub inventory: Option<Vec<CargoInventory>>,
+
+}
+
+/// When written: in Multicrew, Helm's log, when another crew player changes role
+#[derive(Clone, Debug, Deserialize)]
+pub struct CrewMemberRoleChange {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// only from Odyssey build
+    #[serde(rename = "Telepresence")]
+    pub telepresence: Option<bool>,
+
+    /// Player's commander name
+    #[serde(rename = "Crew")]
+    pub crew: String,
+
+    #[serde(rename = "Role")]
+    pub role: String,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct MissionsActive {
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: u64,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "PassengerMission")]
+    pub passenger_mission: bool,
+
+    /// Time left in seconds
+    #[serde(rename = "Expires")]
+    pub expires: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierJumpConflictFaction2 {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Stake")]
+    pub stake: String,
+
+    #[serde(rename = "WonDays")]
+    pub won_days: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsFLEETCARRIER {
+
+    #[serde(rename = "FLEETCARRIER_EXPORT_TOTAL")]
+    pub fleet_carrier_export_total: u64,
+
+    #[serde(rename = "FLEETCARRIER_IMPORT_TOTAL")]
+    pub fleet_carrier_import_total: u64,
+
+    #[serde(rename = "FLEETCARRIER_TRADEPROFIT_TOTAL")]
+    pub fleet_carrier_trade_profit_total: u64,
+
+    #[serde(rename = "FLEETCARRIER_TRADESPEND_TOTAL")]
+    pub fleet_carrier_trade_spend_total: u64,
+
+    #[serde(rename = "FLEETCARRIER_STOLENPROFIT_TOTAL")]
+    pub fleet_carrier_stolen_profit_total: u64,
+
+    #[serde(rename = "FLEETCARRIER_STOLENSPEND_TOTAL")]
+    pub fleet_carrier_stolen_spend_total: u64,
+
+    #[serde(rename = "FLEETCARRIER_DISTANCE_TRAVELLED")]
+    pub fleet_carrier_distance_travelled: serde_json::Value,
+
+    #[serde(rename = "FLEETCARRIER_TOTAL_JUMPS")]
+    pub fleet_carrier_total_jumps: u64,
+
+    #[serde(rename = "FLEETCARRIER_SHIPYARD_SOLD")]
+    pub fleet_carrier_shipyard_sold: u64,
+
+    #[serde(rename = "FLEETCARRIER_SHIPYARD_PROFIT")]
+    pub fleet_carrier_shipyard_profit: u64,
+
+    #[serde(rename = "FLEETCARRIER_OUTFITTING_SOLD")]
+    pub fleet_carrier_outfitting_sold: u64,
+
+    #[serde(rename = "FLEETCARRIER_OUTFITTING_PROFIT")]
+    pub fleet_carrier_outfitting_profit: u64,
+
+    #[serde(rename = "FLEETCARRIER_REARM_TOTAL")]
+    pub fleet_carrier_rearm_total: u64,
+
+    #[serde(rename = "FLEETCARRIER_REFUEL_TOTAL")]
+    pub fleet_carrier_refuel_total: u64,
+
+    #[serde(rename = "FLEETCARRIER_REFUEL_PROFIT")]
+    pub fleet_carrier_refuel_profit: u64,
+
+    #[serde(rename = "FLEETCARRIER_REPAIRS_TOTAL")]
+    pub fleet_carrier_repairs_total: u64,
+
+    #[serde(rename = "FLEETCARRIER_VOUCHERS_REDEEMED")]
+    pub fleet_carrier_vouchers_redeemed: u64,
+
+    #[serde(rename = "FLEETCARRIER_VOUCHERS_PROFIT")]
+    pub fleet_carrier_vouchers_profit: u64,
+
+}
+
+/// When written: when a docking request is granted
+#[derive(Clone, Debug, Deserialize)]
+pub struct DockingGranted {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "LandingPad")]
+    pub landing_pad: u64,
 
     #[serde(rename = "MarketID")]
     pub market_id: u64,
@@ -4986,152 +1510,50 @@ pub struct Market {
     #[serde(rename = "StationType")]
     pub station_type: String,
 
-    #[serde(rename = "CarrierDockingAccess")]
-    pub carrier_docking_access: Option<String>,
-
-    #[serde(rename = "StarSystem")]
-    pub star_system: String,
-
-    /// When written to Market.json
-    #[serde(rename = "Items")]
-    pub items: Option<Vec<MarketItems>>,
-
 }
 
-
+/// When Written: when mining fragments are converted unto a unit of cargo by refinery
 #[derive(Clone, Debug, Deserialize)]
-pub struct MarketItems {
+pub struct MiningRefined {
 
-    #[serde(rename = "id")]
-    pub id: u64,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Category")]
-    pub category: String,
-
-    #[serde(rename = "Category_Localised")]
-    pub category_localised: Option<String>,
-
-    #[serde(rename = "BuyPrice")]
-    pub buy_price: u64,
-
-    #[serde(rename = "SellPrice")]
-    pub sell_price: u64,
-
-    #[serde(rename = "MeanPrice")]
-    pub mean_price: u64,
-
-    #[serde(rename = "StockBracket")]
-    pub stock_bracket: u64,
-
-    #[serde(rename = "DemandBracket")]
-    pub demand_bracket: u64,
-
-    #[serde(rename = "Stock")]
-    pub stock: u64,
-
-    #[serde(rename = "Demand")]
-    pub demand: u64,
-
-    #[serde(rename = "Consumer")]
-    pub consumer: bool,
-
-    #[serde(rename = "Producer")]
-    pub producer: bool,
-
-    #[serde(rename = "Rare")]
-    pub rare: bool,
-
-}
-
-/// When Written: when purchasing goods in the market
-#[derive(Clone, Debug, Deserialize)]
-pub struct MarketBuy {
-
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
 
     #[serde(rename = "Type")]
     pub r#type: String,
 
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-    #[serde(rename = "BuyPrice")]
-    pub buy_price: u64,
-
-    #[serde(rename = "TotalCost")]
-    pub total_cost: u64,
-
-    /// The localised value will be omitted if it is exactly the same as Type
     #[serde(rename = "Type_Localised")]
     pub type_localised: Option<String>,
 
 }
 
-/// When Written: when selling goods in the market
+/// When written: when requesting a module is transferred from storage at another station
 #[derive(Clone, Debug, Deserialize)]
-pub struct MarketSell {
+pub struct FetchRemoteModule {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
+    #[serde(rename = "StorageSlot")]
+    pub storage_slot: u64,
 
-    #[serde(rename = "Type")]
-    pub r#type: String,
+    #[serde(rename = "StoredItem")]
+    pub stored_item: String,
 
-    #[serde(rename = "Count")]
-    pub count: u64,
+    #[serde(rename = "StoredItem_Localised")]
+    pub stored_item_localised: Option<String>,
 
-    /// Price per unit
-    #[serde(rename = "SellPrice")]
-    pub sell_price: u64,
+    #[serde(rename = "ServerId")]
+    pub server_id: u64,
 
-    /// Total sale value
-    #[serde(rename = "TotalSale")]
-    pub total_sale: u64,
+    #[serde(rename = "TransferCost")]
+    pub transfer_cost: u64,
 
-    /// Average price paid
-    #[serde(rename = "AvgPricePaid")]
-    pub avg_price_paid: u64,
-
-    /// The localised value will be omitted if it is exactly the same as Type
-    #[serde(rename = "Type_Localised")]
-    pub type_localised: Option<String>,
-
-    /// Whether goods were stolen
-    #[serde(rename = "StolenGoods")]
-    pub stolen_goods: Option<bool>,
-
-    /// Whether goods are illegal here
-    #[serde(rename = "IllegalGoods")]
-    pub illegal_goods: Option<bool>,
-
-    /// Whether selling in a black market
-    #[serde(rename = "BlackMarket")]
-    pub black_market: Option<bool>,
-
-}
-
-/// When written: when putting multiple modules into storage
-#[derive(Clone, Debug, Deserialize)]
-pub struct MassModuleStore {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
+    /// In seconds
+    #[serde(rename = "TransferTime")]
+    pub transfer_time: u64,
 
     #[serde(rename = "Ship")]
     pub ship: String,
@@ -5139,270 +1561,13 @@ pub struct MassModuleStore {
     #[serde(rename = "ShipID")]
     pub ship_id: u64,
 
-    #[serde(rename = "Items")]
-    pub items: Vec<MassModuleStoreItems>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct MassModuleStoreItems {
-
-    #[serde(rename = "Slot")]
-    pub slot: String,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    /// If there is a fine/bounty associated with the module
-    #[serde(rename = "Hot")]
-    pub hot: bool,
-
-    /// Only if modifications are present
-    #[serde(rename = "EngineerModifications")]
-    pub engineer_modifications: Option<String>,
-
-    #[serde(rename = "Level")]
-    pub level: Option<u64>,
-
-    #[serde(rename = "Quality")]
-    pub quality: Option<f64>,
-
-}
-
-/// When Written: whenever materials are collected
-#[derive(Clone, Debug, Deserialize)]
-pub struct MaterialCollected {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Category")]
-    pub category: String,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    /// Number of units collected
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-    /// The localised value will be omitted if it is exactly the same as Name
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-}
-
-/// When Written: if materials are discarded
-#[derive(Clone, Debug, Deserialize)]
-pub struct MaterialDiscarded {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Category")]
-    pub category: String,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    /// Number of units discarded
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-    /// The localised value will be omitted if it is exactly the same as Name
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-}
-
-/// When Written: when a new material is discovered
-#[derive(Clone, Debug, Deserialize)]
-pub struct MaterialDiscovered {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Category")]
-    pub category: String,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    /// The localised value will be omitted if it is exactly the same as Name
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "DiscoveryNumber")]
-    pub discovery_number: u64,
-
-}
-
-/// When written: at startup, when loading from main menu into game
-#[derive(Clone, Debug, Deserialize)]
-pub struct Materials {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Raw")]
-    pub raw: Vec<MaterialsRaw>,
-
-    #[serde(rename = "Manufactured")]
-    pub manufactured: Vec<MaterialsManufactured>,
-
-    #[serde(rename = "Encoded")]
-    pub encoded: Vec<MaterialsEncoded>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct MaterialsRaw {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    /// The localised value will be omitted if it is exactly the same as Name
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct MaterialsEncoded {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    /// The localised value will be omitted if it is exactly the same as Name
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct MaterialsManufactured {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    /// The localised value will be omitted if it is exactly the same as Name
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-}
-
-/// When written: when exchanging materials at the Material trader contact
-#[derive(Clone, Debug, Deserialize)]
-pub struct MaterialTrade {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "TraderType")]
-    pub trader_type: String,
-
-    #[serde(rename = "Paid")]
-    pub paid: MaterialTradePaid,
-
-    #[serde(rename = "Received")]
-    pub received: MaterialTradeReceived,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct MaterialTradePaid {
-
-    #[serde(rename = "Material")]
-    pub material: String,
-
-    /// The localised value will be omitted if it is exactly the same as Material
-    #[serde(rename = "Material_Localised")]
-    pub material_localised: Option<String>,
-
-    #[serde(rename = "Category")]
-    pub category: String,
-
-    #[serde(rename = "Quantity")]
-    pub quantity: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct MaterialTradeReceived {
-
-    #[serde(rename = "Material")]
-    pub material: String,
-
-    /// The localised value will be omitted if it is exactly the same as Material
-    #[serde(rename = "Material_Localised")]
-    pub material_localised: Option<String>,
-
-    #[serde(rename = "Category")]
-    pub category: String,
-
-    #[serde(rename = "Quantity")]
-    pub quantity: u64,
-
-}
-
-/// When Written: when mining fragments are converted unto a unit of cargo by refinery
-#[derive(Clone, Debug, Deserialize)]
-pub struct MiningRefined {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Type")]
-    pub r#type: String,
-
-    #[serde(rename = "Type_Localised")]
-    pub type_localised: Option<String>,
-
-}
-
-/// When Written: when a mission has been abandoned
-#[derive(Clone, Debug, Deserialize)]
-pub struct MissionAbandoned {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "LocalisedName")]
-    pub localised_name: Option<String>,
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: u64,
-
-    #[serde(rename = "Fine")]
-    pub fine: Option<u64>,
-
 }
 
 /// When Written: when starting a mission
 #[derive(Clone, Debug, Deserialize)]
 pub struct MissionAccepted {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -5498,10 +1663,2001 @@ pub struct MissionAccepted {
 
 }
 
+/// When written: when hull health drops below a threshold (20% steps)
+#[derive(Clone, Debug, Deserialize)]
+pub struct HullDamage {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Health")]
+    pub health: f64,
+
+    /// True if player is piloting the ship/fighter taking damage
+    #[serde(rename = "PlayerPilot")]
+    pub player_pilot: bool,
+
+    /// True for ship-launched fighter
+    #[serde(rename = "Fighter")]
+    pub fighter: Option<bool>,
+
+}
+
+/// When written: at startup, if player has pledged to a power
+#[derive(Clone, Debug, Deserialize)]
+pub struct Powerplay {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Power")]
+    pub power: String,
+
+    #[serde(rename = "Rank")]
+    pub rank: u64,
+
+    #[serde(rename = "Merits")]
+    pub merits: u64,
+
+    #[serde(rename = "Votes")]
+    pub votes: Option<u64>,
+
+    /// Time pledged in seconds
+    #[serde(rename = "TimePledged")]
+    pub time_pledged: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct SharedBookmarkToSquadron {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "SquadronName")]
+    pub squadron_name: String,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierJumpFactionPendingState {
+
+    #[serde(rename = "State")]
+    pub state: String,
+
+    #[serde(rename = "Trend")]
+    pub trend: u64,
+
+}
+
+/// When written: when accessing shipyard in a station. The full price list is written to a separate file, in the same folder as the journal, Shipyard.json
+#[derive(Clone, Debug, Deserialize)]
+pub struct Shipyard {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "StationName")]
+    pub station_name: String,
+
+    #[serde(rename = "StarSystem")]
+    pub star_system: String,
+
+    /// Only written in Shipyard.json
+    #[serde(rename = "Horizons")]
+    pub horizons: Option<bool>,
+
+    /// Only written in Shipyard.json
+    #[serde(rename = "AllowCobraMkIV")]
+    pub allow_cobra_mk_iv: Option<bool>,
+
+    /// Only written in Shipyard.json
+    #[serde(rename = "PriceList")]
+    pub price_list: Option<Vec<ShipyardPriceList>>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct LoadoutModule {
+
+    /// Slot name
+    #[serde(rename = "Slot")]
+    pub slot: String,
+
+    /// Module name - lowercase
+    #[serde(rename = "Item")]
+    pub item: String,
+
+    #[serde(rename = "On")]
+    pub on: bool,
+
+    #[serde(rename = "Priority")]
+    pub priority: u64,
+
+    /// If relevant. For a passenger cabin, AmmoInClip holds the number of places in the cabin.
+    #[serde(rename = "AmmoInClip")]
+    pub ammo_in_clip: Option<u64>,
+
+    /// if relevant
+    #[serde(rename = "AmmoInHopper")]
+    pub ammo_in_hopper: Option<u64>,
+
+    #[serde(rename = "Health")]
+    pub health: f64,
+
+    #[serde(rename = "Value")]
+    pub value: Option<u64>,
+
+    /// If engineered
+    #[serde(rename = "Engineering")]
+    pub engineering: Option<LoadoutModuleEngineering>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct LocationConflict {
+
+    #[serde(rename = "WarType")]
+    pub war_type: String,
+
+    #[serde(rename = "Status")]
+    pub status: String,
+
+    #[serde(rename = "Faction1")]
+    pub faction1: LocationConflictFaction1,
+
+    #[serde(rename = "Faction2")]
+    pub faction2: LocationConflictFaction2,
+
+}
+
+/// When written: when the player restarts after death
+#[derive(Clone, Debug, Deserialize)]
+pub struct Resurrect {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// The option selected on the insurance rebuy screen
+    #[serde(rename = "Option")]
+    pub option: String,
+
+    /// The price paid
+    #[serde(rename = "Cost")]
+    pub cost: u64,
+
+    /// Whether the commander declared bankruptcy
+    #[serde(rename = "Bankrupt")]
+    pub bankrupt: bool,
+
+}
+
+/// When written: after a new ship has been unlocked in the Shipyard
+#[derive(Clone, Debug, Deserialize)]
+pub struct ShipyardRedeem {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "ShipType")]
+    pub ship_type: String,
+
+    #[serde(rename = "ShipType_Localised")]
+    pub ship_type_localised: Option<String>,
+
+    #[serde(rename = "BundleID")]
+    pub bundle_id: Option<u64>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: Option<u64>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct LocationConflictFaction2 {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Stake")]
+    pub stake: String,
+
+    #[serde(rename = "WonDays")]
+    pub won_days: u64,
+
+}
+
+/// When written: when under fire (same time as the Under Attack voice message)
+#[derive(Clone, Debug, Deserialize)]
+pub struct UnderAttack {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Target")]
+    pub target: Option<String>,
+
+}
+
+/// When Written: when selling a module in outfitting
+#[derive(Clone, Debug, Deserialize)]
+pub struct ModuleSell {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "Slot")]
+    pub slot: String,
+
+    #[serde(rename = "SellItem")]
+    pub sell_item: String,
+
+    #[serde(rename = "SellItem_Localised")]
+    pub sell_item_localised: Option<String>,
+
+    #[serde(rename = "SellPrice")]
+    pub sell_price: u64,
+
+    #[serde(rename = "Ship")]
+    pub ship: String,
+
+    #[serde(rename = "ShipID")]
+    pub ship_id: u64,
+
+}
+
+/// When Written: when moving a module to a different slot on the ship
+#[derive(Clone, Debug, Deserialize)]
+pub struct ModuleSwap {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "FromSlot")]
+    pub from_slot: String,
+
+    #[serde(rename = "ToSlot")]
+    pub to_slot: String,
+
+    #[serde(rename = "FromItem")]
+    pub from_item: String,
+
+    #[serde(rename = "FromItem_Localised")]
+    pub from_item_localised: Option<String>,
+
+    #[serde(rename = "ToItem")]
+    pub to_item: String,
+
+    #[serde(rename = "ToItem_Localised")]
+    pub to_item_localised: Option<String>,
+
+    #[serde(rename = "Ship")]
+    pub ship: String,
+
+    #[serde(rename = "ShipID")]
+    pub ship_id: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct TransferMicroResourcesTransfer {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Category")]
+    pub category: String,
+
+    #[serde(rename = "LockerOldCount")]
+    pub locker_old_count: u64,
+
+    #[serde(rename = "LockerNewCount")]
+    pub locker_new_count: u64,
+
+    #[serde(rename = "Direction")]
+    pub direction: String,
+
+}
+
+/// When written: when dismissing a member of crew
+#[derive(Clone, Debug, Deserialize)]
+pub struct CrewFire {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "CrewID")]
+    pub crew_id: u64,
+
+}
+
+/// When written: player was killed
+#[derive(Clone, Debug, Deserialize)]
+pub struct Died {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// When killed by a single entity
+    #[serde(rename = "KillerName")]
+    pub killer_name: Option<String>,
+
+    /// When killed by a single entity
+    #[serde(rename = "KillerShip")]
+    pub killer_ship: Option<String>,
+
+    /// When killed by a single entity
+    #[serde(rename = "KillerRank")]
+    pub killer_rank: Option<String>,
+
+    /// When killed by a single entity
+    #[serde(rename = "KillerName_Localised")]
+    pub killer_name_localised: Option<String>,
+
+    /// When killed by a wing
+    #[serde(rename = "Killers")]
+    pub killers: Option<Vec<serde_json::Value>>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CargoTransferTransfer {
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+    #[serde(rename = "Type_Localised")]
+    pub type_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+    #[serde(rename = "Direction")]
+    pub direction: String,
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: Option<u64>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct Fileheader {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// The file part number
+    #[serde(rename = "part")]
+    pub part: u64,
+
+    /// The language code
+    #[serde(rename = "language")]
+    pub language: String,
+
+    /// True for gameversions >= 4.0, both Horizons and Odyssey.
+    #[serde(rename = "Odyssey")]
+    pub odyssey: bool,
+
+    /// Which version of the game produced the log (will indicate if beta)
+    #[serde(rename = "gameversion")]
+    pub gameversion: String,
+
+    /// Game build number
+    #[serde(rename = "build")]
+    pub build: String,
+
+}
+
+/// When written: at startup, when loading the saved game file
+#[derive(Clone, Debug, Deserialize)]
+pub struct Passengers {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// Array of passenger records
+    #[serde(rename = "Manifest")]
+    pub manifest: Vec<PassengersManifest>,
+
+}
+
+/// When written: when paying fines
+#[derive(Clone, Debug, Deserialize)]
+pub struct PayFines {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// Total amount paid, including any broker fee
+    #[serde(rename = "Amount")]
+    pub amount: u64,
+
+    #[serde(rename = "AllFines")]
+    pub all_fines: Option<bool>,
+
+    #[serde(rename = "ShipID")]
+    pub ship_id: u64,
+
+    /// Present if paid via a broker
+    #[serde(rename = "BrokerPercentage")]
+    pub broker_percentage: Option<f64>,
+
+    /// If paying off an individual faction's fines
+    #[serde(rename = "Faction")]
+    pub faction: Option<String>,
+
+    /// If paying off an individual faction's fines
+    #[serde(rename = "Faction_Localised")]
+    pub faction_localised: Option<String>,
+
+}
+
+/// When written: when offering items cash or bounties to an Engineer to gain access
+#[derive(Clone, Debug, Deserialize)]
+pub struct EngineerContribution {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Engineer")]
+    pub engineer: String,
+
+    #[serde(rename = "EngineerID")]
+    pub engineer_id: u64,
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+    #[serde(rename = "Commodity")]
+    pub commodity: Option<String>,
+
+    #[serde(rename = "Commodity_Localised")]
+    pub commodity_localised: Option<String>,
+
+    /// Quantity offered this time
+    #[serde(rename = "Quantity")]
+    pub quantity: u64,
+
+    /// Total amount donated
+    #[serde(rename = "TotalQuantity")]
+    pub total_quantity: u64,
+
+    #[serde(rename = "Material")]
+    pub material: Option<String>,
+
+    #[serde(rename = "Material_Localised")]
+    pub material_localised: Option<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ApproachSettlementStationFaction {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "FactionState")]
+    pub faction_state: Option<String>,
+
+}
+
+/// When picking up items from the ground
+#[derive(Clone, Debug, Deserialize)]
+pub struct CollectItems {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    /// The localised value will be omitted if it is exactly the same as Name
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+    #[serde(rename = "OwnerID")]
+    pub owner_id: u64,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+    #[serde(rename = "Stolen")]
+    pub stolen: bool,
+
+}
+
+/// When written: when scooping fuel from a star
+#[derive(Clone, Debug, Deserialize)]
+pub struct FuelScoop {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// Tons fuel scooped
+    #[serde(rename = "Scooped")]
+    pub scooped: f64,
+
+    /// Total fuel level after scooping
+    #[serde(rename = "Total")]
+    pub total: f64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct MissionCompletedMaterialsReward {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    /// The localised value will be omitted if it is exactly the same as Name
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Category")]
+    pub category: String,
+
+    #[serde(rename = "Category_Localised")]
+    pub category_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+}
+
+/// When Written: when switching to another ship already stored at this station
+#[derive(Clone, Debug, Deserialize)]
+pub struct ShipyardSwap {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "ShipType")]
+    pub ship_type: String,
+
+    #[serde(rename = "ShipType_Localised")]
+    pub ship_type_localised: Option<String>,
+
+    #[serde(rename = "ShipID")]
+    pub ship_id: u64,
+
+    #[serde(rename = "StoreOldShip")]
+    pub store_old_ship: String,
+
+    #[serde(rename = "StoreShipID")]
+    pub store_ship_id: u64,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsSmuggling {
+
+    #[serde(rename = "Black_Markets_Traded_With")]
+    pub black_markets_traded_with: u64,
+
+    #[serde(rename = "Black_Markets_Profits")]
+    pub black_markets_profits: u64,
+
+    #[serde(rename = "Resources_Smuggled")]
+    pub resources_smuggled: u64,
+
+    #[serde(rename = "Average_Profit")]
+    pub average_profit: f64,
+
+    #[serde(rename = "Highest_Single_Transaction")]
+    pub highest_single_transaction: u64,
+
+}
+
+/// When written: when selling a module in storage at another station
+#[derive(Clone, Debug, Deserialize)]
+pub struct ModuleSellRemote {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "StorageSlot")]
+    pub storage_slot: u64,
+
+    #[serde(rename = "SellItem")]
+    pub sell_item: String,
+
+    #[serde(rename = "SellItem_Localised")]
+    pub sell_item_localised: Option<String>,
+
+    #[serde(rename = "ServerId")]
+    pub server_id: u64,
+
+    #[serde(rename = "SellPrice")]
+    pub sell_price: u64,
+
+    #[serde(rename = "Ship")]
+    pub ship: String,
+
+    #[serde(rename = "ShipID")]
+    pub ship_id: u64,
+
+}
+
+/// When Written: when buying a module and directly storing it in outfitting
+#[derive(Clone, Debug, Deserialize)]
+pub struct ModuleBuyAndStore {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// The module being purchased and stored
+    #[serde(rename = "BuyItem")]
+    pub buy_item: String,
+
+    #[serde(rename = "BuyItem_Localised")]
+    pub buy_item_localised: Option<String>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    /// Price paid
+    #[serde(rename = "BuyPrice")]
+    pub buy_price: u64,
+
+    /// The player's ship
+    #[serde(rename = "Ship")]
+    pub ship: String,
+
+    /// The player's ship ID
+    #[serde(rename = "ShipID")]
+    pub ship_id: u64,
+
+}
+
+/// This event is logged when a player sells a hand weapon
+#[derive(Clone, Debug, Deserialize)]
+pub struct SellWeapon {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Class")]
+    pub class: u64,
+
+    #[serde(rename = "WeaponMods")]
+    pub weapon_mods: Vec<String>,
+
+    #[serde(rename = "Price")]
+    pub price: u64,
+
+    #[serde(rename = "SuitModuleID")]
+    pub suit_module_id: u64,
+
+}
+
+/// When Written: when delivering power micro-resources.
+#[derive(Clone, Debug, Deserialize)]
+pub struct DeliverPowerMicroResources {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// The total number of micro-resources delivered.
+    #[serde(rename = "TotalCount")]
+    pub total_count: u64,
+
+    /// Details of the micro-resources delivered.
+    #[serde(rename = "MicroResources")]
+    pub micro_resources: Vec<DeliverPowerMicroResourcesMicroResource>,
+
+    /// The ID of the market where the delivery took place.
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+}
+
+/// When written: when passing through the jet code from a white dwarf or neutron star has caused damage to a ship module
+#[derive(Clone, Debug, Deserialize)]
+pub struct JetConeDamage {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Module")]
+    pub module: String,
+
+    #[serde(rename = "Module_Localised")]
+    pub module_localised: Option<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct EngineerProgressEngineer {
+
+    #[serde(rename = "Engineer")]
+    pub engineer: String,
+
+    #[serde(rename = "EngineerID")]
+    pub engineer_id: u64,
+
+    #[serde(rename = "Progress")]
+    pub progress: String,
+
+    #[serde(rename = "RankProgress")]
+    pub rank_progress: Option<u64>,
+
+    #[serde(rename = "Rank")]
+    pub rank: Option<u64>,
+
+}
+
+/// At the time the player requests the jump, not the jump itself
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierJumpRequest {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: u64,
+
+    #[serde(rename = "SystemName")]
+    pub system_name: String,
+
+    #[serde(rename = "Body")]
+    pub body: Option<String>,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    #[serde(rename = "BodyID")]
+    pub body_id: u64,
+
+    #[serde(rename = "DepartureTime", with = "crate::event::format::optional_date")]
+    pub departure_time: Option<DateTime<Utc>>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ColonisationConstructionDepotResourcesRequired {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: String,
+
+    #[serde(rename = "RequiredAmount")]
+    pub required_amount: u64,
+
+    #[serde(rename = "ProvidedAmount")]
+    pub provided_amount: u64,
+
+    #[serde(rename = "Payment")]
+    pub payment: u64,
+
+}
+
+/// When Written: when purchasing drones
+#[derive(Clone, Debug, Deserialize)]
+pub struct BuyDrones {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+    #[serde(rename = "BuyPrice")]
+    pub buy_price: u64,
+
+    #[serde(rename = "TotalCost")]
+    pub total_cost: u64,
+
+}
+
+/// When written: when a text message is sent to another player
+#[derive(Clone, Debug, Deserialize)]
+pub struct SendText {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "To")]
+    pub to: String,
+
+    #[serde(rename = "Message")]
+    pub message: String,
+
+    #[serde(rename = "Sent")]
+    pub sent: bool,
+
+}
+
+/// When written: when converting a pre-2.4 engineered module. This is generated when converting, or previewing a conversion of a legacy module to the new system.
+#[derive(Clone, Debug, Deserialize)]
+pub struct EngineerLegacyConvert {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Slot")]
+    pub slot: String,
+
+    #[serde(rename = "Module")]
+    pub module: String,
+
+    /// To indicate whether this entry has been generated from a conversion, or just a preview.
+    #[serde(rename = "IsPreview")]
+    pub is_preview: bool,
+
+    #[serde(rename = "Engineer")]
+    pub engineer: String,
+
+    #[serde(rename = "EngineerID")]
+    pub engineer_id: u64,
+
+    #[serde(rename = "BlueprintID")]
+    pub blueprint_id: u64,
+
+    #[serde(rename = "BlueprintName")]
+    pub blueprint_name: String,
+
+    #[serde(rename = "Level")]
+    pub level: u64,
+
+    #[serde(rename = "Quality")]
+    pub quality: f64,
+
+    #[serde(rename = "Modifiers")]
+    pub modifiers: Vec<EngineerLegacyConvertModifier>,
+
+}
+
+/// This event is logged when the player steps out of a ship or SRV
+#[derive(Clone, Debug, Deserialize)]
+pub struct Disembark {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// true if getting out of SRV, false if getting out of a ship
+    #[serde(rename = "SRV")]
+    pub srv: bool,
+
+    /// true when getting out of a taxi transposrt ship
+    #[serde(rename = "Taxi")]
+    pub taxi: bool,
+
+    /// true when getting out of another player’s vessel
+    #[serde(rename = "Multicrew")]
+    pub multicrew: bool,
+
+    /// player’s ship ID (if players own vessel)
+    #[serde(rename = "ID")]
+    pub id: Option<u64>,
+
+    #[serde(rename = "StarSystem")]
+    pub star_system: String,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    #[serde(rename = "Body")]
+    pub body: String,
+
+    #[serde(rename = "BodyID")]
+    pub body_id: u64,
+
+    #[serde(rename = "OnStation")]
+    pub on_station: bool,
+
+    #[serde(rename = "OnPlanet")]
+    pub on_planet: bool,
+
+    /// If at a station
+    #[serde(rename = "StationName")]
+    pub station_name: Option<String>,
+
+    /// If at a station
+    #[serde(rename = "StationType")]
+    pub station_type: Option<String>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: Option<u64>,
+
+}
+
+/// When Written: when requesting an engineer upgrade
+#[derive(Clone, Debug, Deserialize)]
+pub struct EngineerCraft {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Slot")]
+    pub slot: String,
+
+    #[serde(rename = "Module")]
+    pub module: String,
+
+    #[serde(rename = "Ingredients")]
+    pub ingredients: Vec<EngineerCraftIngredient>,
+
+    #[serde(rename = "Engineer")]
+    pub engineer: Option<String>,
+
+    #[serde(rename = "EngineerID")]
+    pub engineer_id: u64,
+
+    #[serde(rename = "BlueprintID")]
+    pub blueprint_id: u64,
+
+    #[serde(rename = "BlueprintName")]
+    pub blueprint_name: String,
+
+    #[serde(rename = "Level")]
+    pub level: u64,
+
+    #[serde(rename = "Quality")]
+    pub quality: f64,
+
+    #[serde(rename = "Modifiers")]
+    pub modifiers: Vec<EngineerCraftModifier>,
+
+    /// when applying a new effect
+    #[serde(rename = "ApplyExperimentalEffect")]
+    pub apply_experimental_effect: Option<String>,
+
+    #[serde(rename = "ExperimentalEffect")]
+    pub experimental_effect: Option<String>,
+
+    #[serde(rename = "ExperimentalEffect_Localised")]
+    pub experimental_effect_localised: Option<String>,
+
+}
+
+/// When Written: when a new material is discovered
+#[derive(Clone, Debug, Deserialize)]
+pub struct MaterialDiscovered {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Category")]
+    pub category: String,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    /// The localised value will be omitted if it is exactly the same as Name
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "DiscoveryNumber")]
+    pub discovery_number: u64,
+
+}
+
+/// When written: another player has joined the wing
+#[derive(Clone, Debug, Deserialize)]
+pub struct WingAdd {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatusFuel {
+
+    #[serde(rename = "FuelMain")]
+    pub fuel_main: f64,
+
+    #[serde(rename = "FuelReservoir")]
+    pub fuel_reservoir: f64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct MissionCompletedCommodityReward {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    /// The localised value will be omitted if it is exactly the same as Name
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierJumpFaction {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "FactionState")]
+    pub faction_state: String,
+
+    #[serde(rename = "Government")]
+    pub government: String,
+
+    #[serde(rename = "Influence")]
+    pub influence: f64,
+
+    #[serde(rename = "Allegiance")]
+    pub allegiance: String,
+
+    #[serde(rename = "Happiness")]
+    pub happiness: String,
+
+    #[serde(rename = "Happiness_Localised")]
+    pub happiness_localised: Option<String>,
+
+    /// If player squadron faction, and this is happiest system
+    #[serde(rename = "HappiestSystem")]
+    pub happiest_system: Option<bool>,
+
+    #[serde(rename = "MyReputation")]
+    pub my_reputation: f64,
+
+    #[serde(rename = "PendingStates")]
+    pub pending_states: Option<Vec<CarrierJumpFactionPendingState>>,
+
+    #[serde(rename = "ActiveStates")]
+    pub active_states: Option<Vec<CarrierJumpFactionActiveState>>,
+
+    #[serde(rename = "SquadronFaction")]
+    pub squadron_faction: Option<bool>,
+
+    #[serde(rename = "HomeSystem")]
+    pub home_system: Option<bool>,
+
+    #[serde(rename = "RecoveringStates")]
+    pub recovering_states: Option<Vec<CarrierJumpFactionRecoveringState>>,
+
+}
+
+/// When Written: when buying a new ship in the shipyard
+#[derive(Clone, Debug, Deserialize)]
+pub struct ShipyardBuy {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "ShipType")]
+    pub ship_type: String,
+
+    #[serde(rename = "ShipType_Localised")]
+    pub ship_type_localised: Option<String>,
+
+    #[serde(rename = "ShipPrice")]
+    pub ship_price: u64,
+
+    /// If storing old ship
+    #[serde(rename = "StoreOldShip")]
+    pub store_old_ship: Option<String>,
+
+    /// If storing old ship
+    #[serde(rename = "StoreShipID")]
+    pub store_ship_id: Option<u64>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    /// If selling current ship
+    #[serde(rename = "SellOldShip")]
+    pub sell_old_ship: Option<String>,
+
+    /// If selling current ship
+    #[serde(rename = "SellShipID")]
+    pub sell_ship_id: Option<u64>,
+
+    /// If selling current ship
+    #[serde(rename = "SellPrice")]
+    pub sell_price: Option<u64>,
+
+}
+
+/// When Written: when buying trade data in the galaxy map
+#[derive(Clone, Debug, Deserialize)]
+pub struct BuyTradeData {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "System")]
+    pub system: String,
+
+    #[serde(rename = "Cost")]
+    pub cost: u64,
+
+}
+
+/// When Written: when selling unwanted drones back to the market
+#[derive(Clone, Debug, Deserialize)]
+pub struct SellDrones {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+    #[serde(rename = "SellPrice")]
+    pub sell_price: u64,
+
+    #[serde(rename = "TotalSale")]
+    pub total_sale: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct FSDJumpConflictFaction2 {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Stake")]
+    pub stake: String,
+
+    #[serde(rename = "Stake_Localised")]
+    pub stake_localised: Option<String>,
+
+    #[serde(rename = "WonDays")]
+    pub won_days: u64,
+
+}
+
+/// When written: player was interdicted by player or npc
+#[derive(Clone, Debug, Deserialize)]
+pub struct Interdicted {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Submitted")]
+    pub submitted: bool,
+
+    #[serde(rename = "Interdictor")]
+    pub interdictor: Option<String>,
+
+    /// Whether player or npc
+    #[serde(rename = "IsPlayer")]
+    pub is_player: bool,
+
+    /// Whether thargoid
+    #[serde(rename = "IsThargoid")]
+    pub is_thargoid: Option<bool>,
+
+    /// If player
+    #[serde(rename = "CombatRank")]
+    pub combat_rank: Option<u64>,
+
+    /// If npc
+    #[serde(rename = "Faction")]
+    pub faction: Option<String>,
+
+    /// If npc is working for a power
+    #[serde(rename = "Power")]
+    pub power: Option<String>,
+
+    #[serde(rename = "Interdictor_Localised")]
+    pub interdictor_localised: Option<String>,
+
+}
+
+/// When Written: when refuelling (full tank)
+#[derive(Clone, Debug, Deserialize)]
+pub struct RefuelAll {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// Cost of fuel
+    #[serde(rename = "Cost")]
+    pub cost: u64,
+
+    /// Tons of fuel purchased
+    #[serde(rename = "Amount")]
+    pub amount: f64,
+
+}
+
+/// Any player giving fuel to the carrier
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierDepositFuel {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: u64,
+
+    #[serde(rename = "Amount")]
+    pub amount: u64,
+
+    /// Total amount of fuel after donation
+    #[serde(rename = "Total")]
+    pub total: u64,
+
+}
+
+/// This is similar to FSDJump and Location, but it is written if the player is online and docked at a fleet carrier when the carrier jumps. Note it does not include the distance jumped, or fuel used.
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierJump {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Docked")]
+    pub docked: bool,
+
+    #[serde(rename = "OnFoot")]
+    pub on_foot: Option<bool>,
+
+    #[serde(rename = "StationName")]
+    pub station_name: String,
+
+    #[serde(rename = "StationType")]
+    pub station_type: String,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "StationFaction")]
+    pub station_faction: Option<CarrierJumpStationFaction>,
+
+    #[serde(rename = "StationGovernment")]
+    pub station_government: String,
+
+    #[serde(rename = "StationGovernment_Localised")]
+    pub station_government_localised: Option<String>,
+
+    #[serde(rename = "StationServices")]
+    pub station_services: Option<Vec<String>>,
+
+    #[serde(rename = "StationEconomy")]
+    pub station_economy: String,
+
+    #[serde(rename = "StationEconomy_Localised")]
+    pub station_economy_localised: Option<String>,
+
+    #[serde(rename = "StationEconomies")]
+    pub station_economies: Option<Vec<CarrierJumpStationEconomy>>,
+
+    #[serde(rename = "Taxi")]
+    pub taxi: Option<bool>,
+
+    #[serde(rename = "Multicrew")]
+    pub multicrew: Option<bool>,
+
+    #[serde(rename = "Wanted")]
+    pub wanted: Option<bool>,
+
+    /// Name of destination starsystem
+    #[serde(rename = "StarSystem")]
+    pub star_system: String,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    /// star position, as a Json array [x, y, z], relative to Sol in Ly
+    #[serde(rename = "StarPos")]
+    pub star_pos: Vec<f64>,
+
+    #[serde(rename = "SystemAllegiance")]
+    pub system_allegiance: String,
+
+    #[serde(rename = "SystemEconomy")]
+    pub system_economy: String,
+
+    #[serde(rename = "SystemEconomy_Localised")]
+    pub system_economy_localised: Option<String>,
+
+    #[serde(rename = "SystemSecondEconomy")]
+    pub system_second_economy: String,
+
+    #[serde(rename = "SystemSecondEconomy_Localised")]
+    pub system_second_economy_localised: Option<String>,
+
+    #[serde(rename = "SystemGovernment")]
+    pub system_government: String,
+
+    #[serde(rename = "SystemGovernment_Localised")]
+    pub system_government_localised: Option<String>,
+
+    #[serde(rename = "SystemSecurity")]
+    pub system_security: String,
+
+    #[serde(rename = "SystemSecurity_Localised")]
+    pub system_security_localised: Option<String>,
+
+    #[serde(rename = "Population")]
+    pub population: u64,
+
+    #[serde(rename = "Body")]
+    pub body: String,
+
+    #[serde(rename = "BodyID")]
+    pub body_id: u64,
+
+    #[serde(rename = "BodyType")]
+    pub body_type: String,
+
+    #[serde(rename = "Factions")]
+    pub factions: Option<Vec<CarrierJumpFaction>>,
+
+    #[serde(rename = "SystemFaction")]
+    pub system_faction: Option<CarrierJumpSystemFaction>,
+
+    #[serde(rename = "Conflicts")]
+    pub conflicts: Option<Vec<CarrierJumpConflict>>,
+
+    /// Thargoid war information
+    #[serde(rename = "ThargoidWar")]
+    pub thargoid_war: Option<CarrierJumpThargoidWar>,
+
+    /// If the player is pledged to a Power in Powerplay, and the star system is involved in powerplay
+    #[serde(rename = "Powers")]
+    pub powers: Option<Vec<String>>,
+
+    /// Controlling power for the system
+    #[serde(rename = "ControllingPower")]
+    pub controlling_power: Option<String>,
+
+    /// Powerplay state for the system.
+    #[serde(rename = "PowerplayState")]
+    pub powerplay_state: Option<String>,
+
+    /// The current amount of control within the specific powerplay state
+    #[serde(rename = "PowerplayStateControlProgress")]
+    pub powerplay_state_control_progress: Option<f64>,
+
+    /// Merits gained towards reinforcing the system and increasing the system strength
+    #[serde(rename = "PowerplayStateReinforcement")]
+    pub powerplay_state_reinforcement: Option<u64>,
+
+    /// Merits gained towards undermining the system and decreasing the system strength
+    #[serde(rename = "PowerplayStateUndermining")]
+    pub powerplay_state_undermining: Option<u64>,
+
+    /// When the system is unoccupied and 1 or more powers are fighting for control by reaching 120k merits.
+    #[serde(rename = "PowerplayConflictProgress")]
+    pub powerplay_conflict_progress: Option<Vec<CarrierJumpPowerplayConflictProgress>>,
+
+}
+
+/// When written: this player has joined a wing
+#[derive(Clone, Debug, Deserialize)]
+pub struct WingJoin {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// Other player names already in wing
+    #[serde(rename = "Others")]
+    pub others: Vec<String>,
+
+}
+
+/// When written: deploying the SRV from a ship onto planet surface
+#[derive(Clone, Debug, Deserialize)]
+pub struct LaunchSRV {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "SRVType")]
+    pub srv_type: Option<String>,
+
+    #[serde(rename = "SRVType_Localised")]
+    pub srv_type_localised: Option<String>,
+
+    #[serde(rename = "Loadout")]
+    pub loadout: String,
+
+    #[serde(rename = "ID")]
+    pub id: u64,
+
+    #[serde(rename = "PlayerControlled")]
+    pub player_controlled: bool,
+
+}
+
+/// When written: when opting out of a community goal
+#[derive(Clone, Debug, Deserialize)]
+pub struct CommunityGoalDiscard {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CGID")]
+    pub cgid: u64,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "System")]
+    pub system: String,
+
+}
+
+/// System controlling faction
+#[derive(Clone, Debug, Deserialize)]
+pub struct LocationSystemFaction {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "FactionState")]
+    pub faction_state: Option<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct SellMicroResourcesMicroResource {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Category")]
+    pub category: String,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+}
+
+/// This is written when crew receive wages
+#[derive(Clone, Debug, Deserialize)]
+pub struct NpcCrewPaidWage {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "NpcCrewName")]
+    pub npc_crew_name: String,
+
+    #[serde(rename = "NpcCrewId")]
+    pub npc_crew_id: u64,
+
+    #[serde(rename = "Amount")]
+    pub amount: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct TechnologyBrokerItemsUnlocked {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct DisbandedSquadron {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "SquadronName")]
+    pub squadron_name: String,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct LocationFaction {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "FactionState")]
+    pub faction_state: String,
+
+    #[serde(rename = "Government")]
+    pub government: String,
+
+    #[serde(rename = "Influence")]
+    pub influence: f64,
+
+    #[serde(rename = "Allegiance")]
+    pub allegiance: String,
+
+    #[serde(rename = "Happiness")]
+    pub happiness: String,
+
+    /// Happiness values are: Elated, Happy, Discontented, Unhappy, Despondent
+    #[serde(rename = "Happiness_Localised")]
+    pub happiness_localised: Option<String>,
+
+    #[serde(rename = "MyReputation")]
+    pub my_reputation: f64,
+
+    /// Array with State names (Note active states do not have a Trend value)
+    #[serde(rename = "ActiveStates")]
+    pub active_states: Option<Vec<LocationFactionActiveState>>,
+
+    /// Array (if any) with State name and Trend value
+    #[serde(rename = "RecoveringStates")]
+    pub recovering_states: Option<Vec<LocationFactionRecoveringState>>,
+
+    /// Array (if any) with State name and Trend value
+    #[serde(rename = "PendingStates")]
+    pub pending_states: Option<Vec<LocationFactionPendingState>>,
+
+    /// If player is in squadron aligned to this faction
+    #[serde(rename = "SquadronFaction")]
+    pub squadron_faction: Option<bool>,
+
+    /// If player squadron faction, and this is happiest system
+    #[serde(rename = "HappiestSystem")]
+    pub happiest_system: Option<bool>,
+
+    /// If player squadron faction, and this is home system
+    #[serde(rename = "HomeSystem")]
+    pub home_system: Option<bool>,
+
+}
+
+/// This event is logged when buying a new suit
+#[derive(Clone, Debug, Deserialize)]
+pub struct BuySuit {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Price")]
+    pub price: u64,
+
+    #[serde(rename = "SuitID")]
+    pub suit_id: u64,
+
+    #[serde(rename = "SuitMods")]
+    pub suit_mods: Vec<String>,
+
+}
+
+/// When written: when engaging a new member of crew
+#[derive(Clone, Debug, Deserialize)]
+pub struct CrewHire {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "CrewID")]
+    pub crew_id: u64,
+
+    #[serde(rename = "Faction")]
+    pub faction: String,
+
+    #[serde(rename = "Cost")]
+    pub cost: u64,
+
+    #[serde(rename = "CombatRank")]
+    pub combat_rank: u64,
+
+}
+
+/// When written: when visiting shipyard
+#[derive(Clone, Debug, Deserialize)]
+pub struct StoredShips {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "StationName")]
+    pub station_name: String,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "StarSystem")]
+    pub star_system: String,
+
+    #[serde(rename = "ShipsHere")]
+    pub ships_here: Vec<StoredShipsShipsHere>,
+
+    #[serde(rename = "ShipsRemote")]
+    pub ships_remote: Vec<StoredShipsShipsRemote>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct Resupply {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+}
+
+/// When written: when the player’s rank increases. Only the relevant ranks are included.
+#[derive(Clone, Debug, Deserialize)]
+pub struct Promotion {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Explore")]
+    pub explore: Option<u64>,
+
+    #[serde(rename = "Combat")]
+    pub combat: Option<u64>,
+
+    #[serde(rename = "Soldier")]
+    pub soldier: Option<u64>,
+
+    #[serde(rename = "Federation")]
+    pub federation: Option<u64>,
+
+    #[serde(rename = "Exobiologist")]
+    pub exobiologist: Option<u64>,
+
+    #[serde(rename = "Empire")]
+    pub empire: Option<u64>,
+
+    #[serde(rename = "Trade")]
+    pub trade: Option<u64>,
+
+}
+
+/// System controlling faction
+#[derive(Clone, Debug, Deserialize)]
+pub struct FSDJumpSystemFaction {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "FactionState")]
+    pub faction_state: Option<String>,
+
+}
+
+/// When Written: when selling exploration data in Cartographics
+#[derive(Clone, Debug, Deserialize)]
+pub struct SellExplorationData {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Systems")]
+    pub systems: Vec<String>,
+
+    #[serde(rename = "Discovered")]
+    pub discovered: Vec<String>,
+
+    #[serde(rename = "BaseValue")]
+    pub base_value: u64,
+
+    /// Bonus for first discoveries
+    #[serde(rename = "Bonus")]
+    pub bonus: u64,
+
+    /// Total credits received (including for example the 200% bonus if rank 5 with Li Yong Rui)
+    #[serde(rename = "TotalEarnings")]
+    pub total_earnings: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct JoinedSquadron {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "SquadronName")]
+    pub squadron_name: String,
+
+}
+
+/// When written: when paying to fast-track allocation of commodities
+#[derive(Clone, Debug, Deserialize)]
+pub struct PowerplayFastTrack {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Power")]
+    pub power: String,
+
+    #[serde(rename = "Cost")]
+    pub cost: u64,
+
+}
+
+/// When written: Creating a new commander
+#[derive(Clone, Debug, Deserialize)]
+pub struct NewCommander {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "FID")]
+    pub fid: String,
+
+    /// Selected starter package
+    #[serde(rename = "Package")]
+    pub package: String,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct MissionCompletedFactionEffect {
+
+    #[serde(rename = "Faction")]
+    pub faction: String,
+
+    #[serde(rename = "Effects")]
+    pub effects: Vec<MissionCompletedFactionEffectEffect>,
+
+    #[serde(rename = "Influence")]
+    pub influence: Vec<MissionCompletedFactionEffectInfluence>,
+
+    #[serde(rename = "ReputationTrend")]
+    pub reputation_trend: String,
+
+    #[serde(rename = "Reputation")]
+    pub reputation: String,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct FSDJumpConflict {
+
+    #[serde(rename = "WarType")]
+    pub war_type: String,
+
+    #[serde(rename = "Status")]
+    pub status: String,
+
+    #[serde(rename = "Faction1")]
+    pub faction1: FSDJumpConflictFaction1,
+
+    #[serde(rename = "Faction2")]
+    pub faction2: FSDJumpConflictFaction2,
+
+}
+
+/// When written: after a new ship has been purchased
+#[derive(Clone, Debug, Deserialize)]
+pub struct ShipyardNew {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "ShipType")]
+    pub ship_type: String,
+
+    #[serde(rename = "ShipType_Localised")]
+    pub ship_type_localised: Option<String>,
+
+    #[serde(rename = "NewShipID")]
+    pub new_ship_id: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct LocationPowerplayConflictProgress {
+
+    #[serde(rename = "Power")]
+    pub power: String,
+
+    /// Progress towards the control threshold of 120k merits. can exceed 100%(1.0).
+    #[serde(rename = "ConflictProgress")]
+    pub conflict_progress: f64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct DeliverPowerMicroResourcesMicroResource {
+
+    /// The internal name of the micro-resource.
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    /// The localized name of the micro-resource.
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    /// The category of the micro-resource.
+    #[serde(rename = "Category")]
+    pub category: String,
+
+    /// The count of this type of micro-resource.
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CargoInventory {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+    #[serde(rename = "Stolen")]
+    pub stolen: u64,
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: Option<u64>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct MaterialsRaw {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    /// The localised value will be omitted if it is exactly the same as Name
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+}
+
+/// When written: at the start of the LoadGame process. This is written before the inventory, loadout, etc
+#[derive(Clone, Debug, Deserialize)]
+pub struct Commander {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "FID")]
+    pub fid: String,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierModulePack {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: u64,
+
+    #[serde(rename = "Operation")]
+    pub operation: String,
+
+    #[serde(rename = "PackTheme")]
+    pub pack_theme: String,
+
+    #[serde(rename = "PackTier")]
+    pub pack_tier: u64,
+
+    #[serde(rename = "Refund")]
+    pub refund: Option<u64>,
+
+    #[serde(rename = "Cost")]
+    pub cost: Option<u64>,
+
+}
+
 /// When Written: when a mission is completed
 #[derive(Clone, Debug, Deserialize)]
 pub struct MissionCompleted {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -5542,7 +3698,7 @@ pub struct MissionCompleted {
     pub materials_reward: Option<Vec<MissionCompletedMaterialsReward>>,
 
     #[serde(rename = "FactionEffects")]
-    pub faction_effects: Option<Vec<MissionCompletedFactionEffects>>,
+    pub faction_effects: Option<Vec<MissionCompletedFactionEffect>>,
 
     #[serde(rename = "Donation")]
     pub donation: Option<String>,
@@ -5585,16 +3741,305 @@ pub struct MissionCompleted {
 
 }
 
+/// When written: when voting for a system expansion
+#[derive(Clone, Debug, Deserialize)]
+pub struct PowerplayVote {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Power")]
+    pub power: String,
+
+    #[serde(rename = "Votes")]
+    pub votes: u64,
+
+    #[serde(rename = "VoteToConsolidate")]
+    pub vote_to_consolidate: u64,
+
+    /// Documented, but appears to be unused.
+    #[serde(rename = "System")]
+    pub system: Option<String>,
+
+}
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct MissionCompletedCommodityReward {
+pub struct ScanParent {
+
+    #[serde(rename = "Star")]
+    pub star: Option<u64>,
+
+    #[serde(rename = "Null")]
+    pub null: Option<u64>,
+
+    #[serde(rename = "Ring")]
+    pub ring: Option<u64>,
+
+    #[serde(rename = "Planet")]
+    pub planet: Option<u64>,
+
+}
+
+/// When written: When another player leaves your ship's crew
+#[derive(Clone, Debug, Deserialize)]
+pub struct CrewMemberQuits {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// only from Odyssey build
+    #[serde(rename = "Telepresence")]
+    pub telepresence: Option<bool>,
+
+    /// Player's commander name
+    #[serde(rename = "Crew")]
+    pub crew: String,
+
+}
+
+/// When written: when accessing the commodity market in a station. A separate file Market.json is written to the same folder as the journal, containing full market price info.
+#[derive(Clone, Debug, Deserialize)]
+pub struct Market {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "StationName")]
+    pub station_name: String,
+
+    #[serde(rename = "StationName_Localised")]
+    pub station_name_localised: Option<String>,
+
+    #[serde(rename = "StationType")]
+    pub station_type: String,
+
+    #[serde(rename = "CarrierDockingAccess")]
+    pub carrier_docking_access: Option<String>,
+
+    #[serde(rename = "StarSystem")]
+    pub star_system: String,
+
+    /// When written to Market.json
+    #[serde(rename = "Items")]
+    pub items: Option<Vec<MarketItem>>,
+
+}
+
+/// When written: when scanning a datalink generates a reward
+#[derive(Clone, Debug, Deserialize)]
+pub struct DatalinkVoucher {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Reward")]
+    pub reward: u64,
+
+    #[serde(rename = "VictimFaction")]
+    pub victim_faction: String,
+
+    #[serde(rename = "PayeeFaction")]
+    pub payee_faction: String,
+
+}
+
+/// When written: when leaving a power
+#[derive(Clone, Debug, Deserialize)]
+pub struct PowerplayLeave {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Power")]
+    pub power: String,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct Consumable {
 
     #[serde(rename = "Name")]
     pub name: String,
 
-    /// The localised value will be omitted if it is exactly the same as Name
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
+
+    #[serde(rename = "OwnerID")]
+    pub owner_id: u64,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+}
+
+/// When scanning one body of a binary pair, you will get an event detailing the orbital parameters of their BaryCentre
+#[derive(Clone, Debug, Deserialize)]
+pub struct ScanBaryCentre {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "StarSystem")]
+    pub star_system: String,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    #[serde(rename = "BodyID")]
+    pub body_id: u64,
+
+    #[serde(rename = "SemiMajorAxis")]
+    pub semi_major_axis: f64,
+
+    #[serde(rename = "Eccentricity")]
+    pub eccentricity: f64,
+
+    #[serde(rename = "OrbitalInclination")]
+    pub orbital_inclination: f64,
+
+    #[serde(rename = "Periapsis")]
+    pub periapsis: f64,
+
+    #[serde(rename = "OrbitalPeriod")]
+    pub orbital_period: f64,
+
+    #[serde(rename = "AscendingNode")]
+    pub ascending_node: f64,
+
+    #[serde(rename = "MeanAnomaly")]
+    pub mean_anomaly: f64,
+
+}
+
+/// When written: when taking off from planet surface
+#[derive(Clone, Debug, Deserialize)]
+pub struct Liftoff {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// false if ship dismissed when player is in SRV, true if player is taking off
+    #[serde(rename = "PlayerControlled")]
+    pub player_controlled: bool,
+
+    #[serde(rename = "Taxi")]
+    pub taxi: Option<bool>,
+
+    #[serde(rename = "Multicrew")]
+    pub multicrew: Option<bool>,
+
+    #[serde(rename = "StarSystem")]
+    pub star_system: Option<String>,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: Option<u64>,
+
+    #[serde(rename = "Body")]
+    pub body: Option<String>,
+
+    #[serde(rename = "BodyID")]
+    pub body_id: Option<u64>,
+
+    #[serde(rename = "OnStation")]
+    pub on_station: Option<bool>,
+
+    #[serde(rename = "OnPlanet")]
+    pub on_planet: Option<bool>,
+
+    /// only if player flying in ship)
+    #[serde(rename = "Latitude")]
+    pub latitude: Option<f64>,
+
+    /// only if player flying in ship)
+    #[serde(rename = "Longitude")]
+    pub longitude: Option<f64>,
+
+    #[serde(rename = "NearestDestination")]
+    pub nearest_destination: Option<String>,
+
+    #[serde(rename = "NearestDestination_Localised")]
+    pub nearest_destination_localised: Option<String>,
+
+}
+
+/// When Written: when purchasing ammunition
+#[derive(Clone, Debug, Deserialize)]
+pub struct BuyAmmo {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Cost")]
+    pub cost: u64,
+
+}
+
+/// When Written: when selling goods in the market
+#[derive(Clone, Debug, Deserialize)]
+pub struct MarketSell {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+    /// Price per unit
+    #[serde(rename = "SellPrice")]
+    pub sell_price: u64,
+
+    /// Total sale value
+    #[serde(rename = "TotalSale")]
+    pub total_sale: u64,
+
+    /// Average price paid
+    #[serde(rename = "AvgPricePaid")]
+    pub avg_price_paid: u64,
+
+    /// The localised value will be omitted if it is exactly the same as Type
+    #[serde(rename = "Type_Localised")]
+    pub type_localised: Option<String>,
+
+    /// Whether goods were stolen
+    #[serde(rename = "StolenGoods")]
+    pub stolen_goods: Option<bool>,
+
+    /// Whether goods are illegal here
+    #[serde(rename = "IllegalGoods")]
+    pub illegal_goods: Option<bool>,
+
+    /// Whether selling in a black market
+    #[serde(rename = "BlackMarket")]
+    pub black_market: Option<bool>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct FSSBodySignalsSignal {
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+    #[serde(rename = "Type_Localised")]
+    pub type_localised: Option<String>,
 
     #[serde(rename = "Count")]
     pub count: u64,
@@ -5602,60 +4047,877 @@ pub struct MissionCompletedCommodityReward {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct MissionCompletedFactionEffects {
+pub struct StatisticsMining {
 
-    #[serde(rename = "Faction")]
-    pub faction: String,
+    #[serde(rename = "Mining_Profits")]
+    pub mining_profits: u64,
 
-    #[serde(rename = "Effects")]
-    pub effects: Vec<MissionCompletedFactionEffectsEffects>,
+    #[serde(rename = "Quantity_Mined")]
+    pub quantity_mined: u64,
 
-    #[serde(rename = "Influence")]
-    pub influence: Vec<MissionCompletedFactionEffectsInfluence>,
-
-    #[serde(rename = "ReputationTrend")]
-    pub reputation_trend: String,
-
-    #[serde(rename = "Reputation")]
-    pub reputation: String,
+    #[serde(rename = "Materials_Collected")]
+    pub materials_collected: Option<u64>,
 
 }
 
+/// When written: when the game retrieves info on community goals from the server, and the data has changed since last time. This event contains the current status of all community goals the player is currently subscribed to.
 #[derive(Clone, Debug, Deserialize)]
-pub struct MissionCompletedFactionEffectsInfluence {
+pub struct CommunityGoal {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CurrentGoals")]
+    pub current_goals: Vec<CommunityGoalCurrentGoal>,
+
+}
+
+/// When written: entering supercruise from normal space
+#[derive(Clone, Debug, Deserialize)]
+pub struct SupercruiseEntry {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Taxi")]
+    pub taxi: Option<bool>,
+
+    #[serde(rename = "Multicrew")]
+    pub multicrew: Option<bool>,
+
+    #[serde(rename = "StarSystem")]
+    pub star_system: String,
 
     #[serde(rename = "SystemAddress")]
     pub system_address: u64,
 
-    #[serde(rename = "Trend")]
-    pub trend: String,
+    #[serde(rename = "Wanted")]
+    pub wanted: Option<bool>,
 
-    #[serde(rename = "Influence")]
-    pub influence: String,
+}
+
+/// This event is logged when signing up to fight at a recruitment desk
+#[derive(Clone, Debug, Deserialize)]
+pub struct BookDropship {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Retreat")]
+    pub retreat: Option<bool>,
+
+    #[serde(rename = "Cost")]
+    pub cost: u64,
+
+    #[serde(rename = "DestinationSystem")]
+    pub destination_system: String,
+
+    #[serde(rename = "DestinationLocation")]
+    pub destination_location: String,
+
+}
+
+/// Lists the contents of the backpack, in a separate backpack.json file
+#[derive(Clone, Debug, Deserialize)]
+pub struct Backpack {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Items")]
+    pub items: Option<Vec<Item>>,
+
+    #[serde(rename = "Components")]
+    pub components: Option<Vec<Component>>,
+
+    #[serde(rename = "Consumables")]
+    pub consumables: Option<Vec<Consumable>>,
+
+    #[serde(rename = "Data")]
+    pub data: Option<Vec<Data>>,
+
+}
+
+/// Player has bought a fleet carrier
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierBuy {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: u64,
+
+    #[serde(rename = "BoughtAtMarket")]
+    pub bought_at_market: u64,
+
+    #[serde(rename = "Location")]
+    pub location: String,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    #[serde(rename = "Price")]
+    pub price: u64,
+
+    #[serde(rename = "Variant")]
+    pub variant: String,
+
+    #[serde(rename = "Callsign")]
+    pub callsign: String,
 
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct MissionCompletedFactionEffectsEffects {
-
-    #[serde(rename = "Effect")]
-    pub effect: String,
-
-    #[serde(rename = "Effect_Localised")]
-    pub effect_localised: Option<String>,
-
-    #[serde(rename = "Trend")]
-    pub trend: String,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct MissionCompletedMaterialsReward {
+pub struct Item {
 
     #[serde(rename = "Name")]
     pub name: String,
 
-    /// The localised value will be omitted if it is exactly the same as Name
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "OwnerID")]
+    pub owner_id: u64,
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: Option<u64>,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+}
+
+/// When written: when another player commits a crime against the current player
+#[derive(Clone, Debug, Deserialize)]
+pub struct CrimeVictim {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Offender")]
+    pub offender: String,
+
+    #[serde(rename = "CrimeType")]
+    pub crime_type: String,
+
+    /// Fine or Bounty
+    #[serde(rename = "Fine")]
+    pub fine: Option<u64>,
+
+    /// Fine or Bounty
+    #[serde(rename = "Bounty")]
+    pub bounty: Option<u64>,
+
+}
+
+/// When written: when landing at landing pad in a space station, outpost, or surface settlement
+#[derive(Clone, Debug, Deserialize)]
+pub struct Docked {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "StationName")]
+    pub station_name: String,
+
+    #[serde(rename = "StationName_Localised")]
+    pub station_name_localised: Option<String>,
+
+    #[serde(rename = "StationType")]
+    pub station_type: String,
+
+    #[serde(rename = "Taxi")]
+    pub taxi: Option<bool>,
+
+    #[serde(rename = "Multicrew")]
+    pub multicrew: Option<bool>,
+
+    #[serde(rename = "StarSystem")]
+    pub star_system: String,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "StationFaction")]
+    pub station_faction: DockedStationFaction,
+
+    #[serde(rename = "StationGovernment")]
+    pub station_government: String,
+
+    #[serde(rename = "StationGovernment_Localised")]
+    pub station_government_localised: Option<String>,
+
+    /// StationServices can include: Dock, Autodock, BlackMarket, Commodities, Contacts, Exploration, Initiatives, Missions, Outfitting, CrewLounge, Rearm, Refuel, Repair, Shipyard, Tuning, Workshop, MissionsGenerated, Facilitator, Research, FlightController, StationOperations, OnDockMission, Powerplay, SearchAndRescue. New in v3.7: shop, carriermanagement, carrierfuel, carriervendor, livery, modulepacks, voucherredemption
+    #[serde(rename = "StationServices")]
+    pub station_services: Vec<String>,
+
+    /// Only if station has a single economy
+    #[serde(rename = "StationEconomy")]
+    pub station_economy: Option<String>,
+
+    /// Only if station has a single economy
+    #[serde(rename = "StationEconomy_Localised")]
+    pub station_economy_localised: Option<String>,
+
+    /// Only if station has multiple economies
+    #[serde(rename = "StationEconomies")]
+    pub station_economies: Option<Vec<DockedStationEconomy>>,
+
+    #[serde(rename = "DistFromStarLS")]
+    pub dist_from_star_ls: f64,
+
+    #[serde(rename = "LandingPads")]
+    pub landing_pads: Option<DockedLandingPads>,
+
+    /// Only if docking when wanted locally
+    #[serde(rename = "Wanted")]
+    pub wanted: Option<bool>,
+
+    /// Only if any fine is active
+    #[serde(rename = "ActiveFine")]
+    pub active_fine: Option<bool>,
+
+    #[serde(rename = "StationAllegiance")]
+    pub station_allegiance: Option<String>,
+
+    /// true (only if landing with breached cockpit)
+    #[serde(rename = "CockpitBreach")]
+    pub cockpit_breach: Option<bool>,
+
+    #[serde(rename = "StationState")]
+    pub station_state: Option<String>,
+
+}
+
+/// When written: when delivering items to a Search and Rescue contact
+#[derive(Clone, Debug, Deserialize)]
+pub struct SearchAndRescue {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+    #[serde(rename = "Reward")]
+    pub reward: u64,
+
+}
+
+/// This event is logged when a player removes a weapon from a suit loadout
+#[derive(Clone, Debug, Deserialize)]
+pub struct LoadoutRemoveModule {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "LoadoutName")]
+    pub loadout_name: String,
+
+    #[serde(rename = "SuitID")]
+    pub suit_id: u64,
+
+    #[serde(rename = "SuitName")]
+    pub suit_name: String,
+
+    #[serde(rename = "SuitName_Localised")]
+    pub suit_name_localised: Option<String>,
+
+    #[serde(rename = "LoadoutID")]
+    pub loadout_id: u64,
+
+    #[serde(rename = "SlotName")]
+    pub slot_name: String,
+
+    /// Weapon or other item removed from loadout
+    #[serde(rename = "ModuleName")]
+    pub module_name: String,
+
+    #[serde(rename = "ModuleName_Localised")]
+    pub module_name_localised: Option<String>,
+
+    #[serde(rename = "Class")]
+    pub class: u64,
+
+    #[serde(rename = "SuitModuleID")]
+    pub suit_module_id: u64,
+
+    #[serde(rename = "WeaponMods")]
+    pub weapon_mods: Vec<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct BackpackChangeEntry {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "OwnerID")]
+    pub owner_id: u64,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: Option<u64>,
+
+}
+
+/// When written: when a crime is recorded against the player
+#[derive(Clone, Debug, Deserialize)]
+pub struct CommitCrime {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CrimeType")]
+    pub crime_type: String,
+
+    #[serde(rename = "Faction")]
+    pub faction: String,
+
+    #[serde(rename = "Victim")]
+    pub victim: Option<String>,
+
+    #[serde(rename = "Bounty")]
+    pub bounty: Option<u64>,
+
+    #[serde(rename = "Fine")]
+    pub fine: Option<u64>,
+
+    #[serde(rename = "Victim_Localised")]
+    pub victim_localised: Option<String>,
+
+}
+
+/// When Written: when requesting power micro-resources.
+#[derive(Clone, Debug, Deserialize)]
+pub struct RequestPowerMicroResources {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// The total number of micro-resources requested.
+    #[serde(rename = "TotalCount")]
+    pub total_count: u64,
+
+    /// Details of the micro-resources requested.
+    #[serde(rename = "MicroResources")]
+    pub micro_resources: Vec<RequestPowerMicroResourcesMicroResource>,
+
+    /// The ID of the market where the request took place.
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+}
+
+/// When Written: when refuelling (10%)
+#[derive(Clone, Debug, Deserialize)]
+pub struct RefuelPartial {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// Cost of fuel
+    #[serde(rename = "Cost")]
+    pub cost: u64,
+
+    /// Tons of fuel purchased
+    #[serde(rename = "Amount")]
+    pub amount: f64,
+
+}
+
+/// This event is logged when booking a taxi transport
+#[derive(Clone, Debug, Deserialize)]
+pub struct BookTaxi {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Cost")]
+    pub cost: u64,
+
+    #[serde(rename = "DestinationSystem")]
+    pub destination_system: String,
+
+    #[serde(rename = "DestinationLocation")]
+    pub destination_location: String,
+
+    /// indicates if requested for exit from combat zone
+    #[serde(rename = "Retreat")]
+    pub retreat: Option<bool>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierJumpStationEconomy {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Proportion")]
+    pub proportion: f64,
+
+}
+
+/// When written: when collecting powerplay commodities for delivery
+#[derive(Clone, Debug, Deserialize)]
+pub struct PowerplayCollect {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Power")]
+    pub power: String,
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+    #[serde(rename = "Type_Localised")]
+    pub type_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+}
+
+/// When written: when performing a full system scan (Honk)
+#[derive(Clone, Debug, Deserialize)]
+pub struct FSSDiscoveryScan {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Progress")]
+    pub progress: f64,
+
+    #[serde(rename = "BodyCount")]
+    pub body_count: u64,
+
+    #[serde(rename = "NonBodyCount")]
+    pub non_body_count: u64,
+
+    #[serde(rename = "SystemName")]
+    pub system_name: String,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+}
+
+/// When written: leaving supercruise for normal space
+#[derive(Clone, Debug, Deserialize)]
+pub struct SupercruiseExit {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Taxi")]
+    pub taxi: Option<bool>,
+
+    #[serde(rename = "Multicrew")]
+    pub multicrew: Option<bool>,
+
+    #[serde(rename = "StarSystem")]
+    pub star_system: String,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    #[serde(rename = "Body")]
+    pub body: String,
+
+    #[serde(rename = "BodyID")]
+    pub body_id: u64,
+
+    #[serde(rename = "BodyType")]
+    pub body_type: String,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierStatsFinance {
+
+    #[serde(rename = "CarrierBalance")]
+    pub carrier_balance: u64,
+
+    #[serde(rename = "ReserveBalance")]
+    pub reserve_balance: u64,
+
+    #[serde(rename = "AvailableBalance")]
+    pub available_balance: u64,
+
+    #[serde(rename = "ReservePercent")]
+    pub reserve_percent: Option<u64>,
+
+    #[serde(rename = "TaxRate_shipyard")]
+    pub tax_rate_shipyard: Option<u64>,
+
+    #[serde(rename = "TaxRate_rearm")]
+    pub tax_rate_rearm: Option<u64>,
+
+    #[serde(rename = "TaxRate_outfitting")]
+    pub tax_rate_outfitting: Option<u64>,
+
+    #[serde(rename = "TaxRate_refuel")]
+    pub tax_rate_refuel: Option<u64>,
+
+    #[serde(rename = "TaxRate_repair")]
+    pub tax_rate_repair: Option<u64>,
+
+    #[serde(rename = "TaxRate_pioneersupplies")]
+    pub tax_rate_pioneer_supplies: Option<u64>,
+
+    #[serde(rename = "TaxRate")]
+    pub tax_rate: Option<u64>,
+
+}
+
+/// When written: liftoff from a landing pad in a station, outpost or settlement
+#[derive(Clone, Debug, Deserialize)]
+pub struct Undocked {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "StationName")]
+    pub station_name: String,
+
+    #[serde(rename = "StationName_Localised")]
+    pub station_name_localised: Option<String>,
+
+    #[serde(rename = "StationType")]
+    pub station_type: String,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "Taxi")]
+    pub taxi: Option<bool>,
+
+    #[serde(rename = "Multicrew")]
+    pub multicrew: Option<bool>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ScanAtmosphereComposition {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Percent")]
+    pub percent: f64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct StoredModulesItem {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "StorageSlot")]
+    pub storage_slot: u64,
+
+    #[serde(rename = "StarSystem")]
+    pub star_system: Option<String>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: Option<u64>,
+
+    #[serde(rename = "TransferCost")]
+    pub transfer_cost: Option<u64>,
+
+    #[serde(rename = "TransferTime")]
+    pub transfer_time: Option<u64>,
+
+    #[serde(rename = "BuyPrice")]
+    pub buy_price: u64,
+
+    #[serde(rename = "Hot")]
+    pub hot: bool,
+
+    /// If engineered module
+    #[serde(rename = "EngineerModifications")]
+    pub engineer_modifications: Option<String>,
+
+    /// If engineered module
+    #[serde(rename = "Level")]
+    pub level: Option<u64>,
+
+    /// If engineered module
+    #[serde(rename = "Quality")]
+    pub quality: Option<f64>,
+
+    /// If the module is being transferred
+    #[serde(rename = "InTransit")]
+    pub in_transit: Option<bool>,
+
+}
+
+/// This event is logged when the player uses the Organic Sampling Tool to scan, log or analyse organic discoveries. The first scan is Log, subsequent scans are Sample until fully scanned, final scan is Analyse
+#[derive(Clone, Debug, Deserialize)]
+pub struct ScanOrganic {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "ScanType")]
+    pub scan_type: String,
+
+    #[serde(rename = "Genus")]
+    pub genus: String,
+
+    #[serde(rename = "Genus_Localised")]
+    pub genus_localised: Option<String>,
+
+    #[serde(rename = "Species")]
+    pub species: String,
+
+    #[serde(rename = "Species_Localised")]
+    pub species_localised: Option<String>,
+
+    #[serde(rename = "Variant")]
+    pub variant: Option<String>,
+
+    #[serde(rename = "Variant_Localised")]
+    pub variant_localised: Option<String>,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    #[serde(rename = "Body")]
+    pub body: u64,
+
+}
+
+/// When written: this player has left a wing
+#[derive(Clone, Debug, Deserialize)]
+pub struct WingLeave {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct TechnologyBrokerMaterial {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+    #[serde(rename = "Category")]
+    pub category: String,
+
+}
+
+/// When written: after a new ship has been redeemed
+#[derive(Clone, Debug, Deserialize)]
+pub struct ShipRedeemed {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "ShipType")]
+    pub ship_type: String,
+
+    #[serde(rename = "ShipType_Localised")]
+    pub ship_type_localised: Option<String>,
+
+    #[serde(rename = "NewShipID")]
+    pub new_ship_id: u64,
+
+}
+
+/// When written: after using the Surface Area Analysis Scanner
+#[derive(Clone, Debug, Deserialize)]
+pub struct SAAScanComplete {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "BodyName")]
+    pub body_name: String,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    #[serde(rename = "BodyID")]
+    pub body_id: u64,
+
+    #[serde(rename = "ProbesUsed")]
+    pub probes_used: u64,
+
+    #[serde(rename = "EfficiencyTarget")]
+    pub efficiency_target: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct LoadoutModuleEngineeringModifier {
+
+    #[serde(rename = "Label")]
+    pub label: String,
+
+    /// Either Value or ValueStr is used. These modification types have string values: WeaponMode, DamageType, CabinClass.
+    #[serde(rename = "Value")]
+    pub value: Option<f64>,
+
+    #[serde(rename = "OriginalValue")]
+    pub original_value: Option<f64>,
+
+    /// Either 0 or 1
+    #[serde(rename = "LessIsGood")]
+    pub less_is_good: Option<u64>,
+
+    /// Either Value or ValueStr is used. These modification types have string values: WeaponMode, DamageType, CabinClass.
+    #[serde(rename = "ValueStr")]
+    pub value_str: Option<String>,
+
+    #[serde(rename = "ValueStr_Localised")]
+    pub value_str_localised: Option<String>,
+
+}
+
+/// The carrier owner has changed the docking permission criteria
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierDockingPermission {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: u64,
+
+    #[serde(rename = "DockingAccess")]
+    pub docking_access: String,
+
+    #[serde(rename = "AllowNotorious")]
+    pub allow_notorious: bool,
+
+}
+
+/// When written: When you force another player to leave your ship's crew
+#[derive(Clone, Debug, Deserialize)]
+pub struct KickCrewMember {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Crew")]
+    pub crew: String,
+
+    /// True if player is automatically kicked for committing a crime in a lawful session
+    #[serde(rename = "OnCrime")]
+    pub on_crime: bool,
+
+    /// only from Odyssey build
+    #[serde(rename = "Telepresence")]
+    pub telepresence: Option<bool>,
+
+}
+
+/// When written: if the journal file grows to 500k lines, we write this event, close the file, and start a new one. The new journalname will increase the partnumber, ex: {datetime}.02.log. The new journal will start with a Fileheader and continue.
+#[derive(Clone, Debug, Deserialize)]
+pub struct Continued {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Part")]
+    pub part: u64,
+
+}
+
+/// When written: When selling a stored ship to raise funds when on insurance/rebuy screen
+#[derive(Clone, Debug, Deserialize)]
+pub struct SellShipOnRebuy {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "ShipType")]
+    pub ship_type: String,
+
+    #[serde(rename = "System")]
+    pub system: String,
+
+    #[serde(rename = "SellShipId")]
+    pub sell_ship_id: u64,
+
+    #[serde(rename = "ShipPrice")]
+    pub ship_price: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct MarketItem {
+
+    #[serde(rename = "id")]
+    pub id: u64,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
 
@@ -5665,29 +4927,893 @@ pub struct MissionCompletedMaterialsReward {
     #[serde(rename = "Category_Localised")]
     pub category_localised: Option<String>,
 
+    #[serde(rename = "BuyPrice")]
+    pub buy_price: u64,
+
+    #[serde(rename = "SellPrice")]
+    pub sell_price: u64,
+
+    #[serde(rename = "MeanPrice")]
+    pub mean_price: u64,
+
+    #[serde(rename = "StockBracket")]
+    pub stock_bracket: u64,
+
+    #[serde(rename = "DemandBracket")]
+    pub demand_bracket: u64,
+
+    #[serde(rename = "Stock")]
+    pub stock: u64,
+
+    #[serde(rename = "Demand")]
+    pub demand: u64,
+
+    #[serde(rename = "Consumer")]
+    pub consumer: bool,
+
+    #[serde(rename = "Producer")]
+    pub producer: bool,
+
+    #[serde(rename = "Rare")]
+    pub rare: bool,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ShipLockerMaterialsConsumable {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "OwnerID")]
+    pub owner_id: u64,
+
     #[serde(rename = "Count")]
     pub count: u64,
 
 }
 
-/// When Written: when a mission has failed
 #[derive(Clone, Debug, Deserialize)]
-pub struct MissionFailed {
+pub struct StatisticsTrading {
 
+    #[serde(rename = "Markets_Traded_With")]
+    pub markets_traded_with: u64,
+
+    #[serde(rename = "Market_Profits")]
+    pub market_profits: u64,
+
+    #[serde(rename = "Resources_Traded")]
+    pub resources_traded: u64,
+
+    #[serde(rename = "Average_Profit")]
+    pub average_profit: f64,
+
+    #[serde(rename = "Highest_Single_Transaction")]
+    pub highest_single_transaction: u64,
+
+    #[serde(rename = "Data_Sold")]
+    pub data_sold: Option<u64>,
+
+    #[serde(rename = "Goods_Sold")]
+    pub goods_sold: Option<u64>,
+
+    #[serde(rename = "Assets_Sold")]
+    pub assets_sold: Option<u64>,
+
+}
+
+/// The carrier owner has requested the carrier buys or sells goods (or cancels such an order)
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierTradeOrder {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: u64,
+
+    #[serde(rename = "BlackMarket")]
+    pub black_market: bool,
+
+    #[serde(rename = "Commodity")]
+    pub commodity: String,
+
+    #[serde(rename = "Commodity_Localised")]
+    pub commodity_localised: Option<String>,
+
+    /// PurchaseOrder or SaleOrder or CancelTrade
+    #[serde(rename = "PurchaseOrder")]
+    pub purchase_order: Option<u64>,
+
+    /// PurchaseOrder or SaleOrder or CancelTrade
+    #[serde(rename = "SaleOrder")]
+    pub sale_order: Option<u64>,
+
+    /// PurchaseOrder or SaleOrder or CancelTrade
+    #[serde(rename = "CancelTrade")]
+    pub cancel_trade: Option<bool>,
+
+    #[serde(rename = "Price")]
+    pub price: Option<u64>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct SquadronCreated {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "SquadronName")]
+    pub squadron_name: String,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ShipLockerMaterialsItem {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "OwnerID")]
+    pub owner_id: u64,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: Option<u64>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsExploration {
+
+    #[serde(rename = "Systems_Visited")]
+    pub systems_visited: u64,
+
+    #[serde(rename = "Exploration_Profits")]
+    pub exploration_profits: u64,
+
+    #[serde(rename = "Planets_Scanned_To_Level_2")]
+    pub planets_scanned_to_level_2: u64,
+
+    #[serde(rename = "Planets_Scanned_To_Level_3")]
+    pub planets_scanned_to_level_3: u64,
+
+    #[serde(rename = "Efficient_Scans")]
+    pub efficient_scans: Option<u64>,
+
+    #[serde(rename = "Highest_Payout")]
+    pub highest_payout: u64,
+
+    #[serde(rename = "Total_Hyperspace_Distance")]
+    pub total_hyperspace_distance: u64,
+
+    #[serde(rename = "Total_Hyperspace_Jumps")]
+    pub total_hyperspace_jumps: u64,
+
+    #[serde(rename = "Greatest_Distance_From_Start")]
+    pub greatest_distance_from_start: f64,
+
+    #[serde(rename = "Time_Played")]
+    pub time_played: u64,
+
+    #[serde(rename = "OnFoot_Distance_Travelled")]
+    pub on_foot_distance_travelled: Option<u64>,
+
+    #[serde(rename = "Shuttle_Journeys")]
+    pub shuttle_journeys: Option<u64>,
+
+    #[serde(rename = "Shuttle_Distance_Travelled")]
+    pub shuttle_distance_travelled: Option<f64>,
+
+    #[serde(rename = "Spent_On_Shuttles")]
+    pub spent_on_shuttles: Option<u64>,
+
+    #[serde(rename = "First_Footfalls")]
+    pub first_footfalls: Option<u64>,
+
+    #[serde(rename = "Planet_Footfalls")]
+    pub planet_footfalls: Option<u64>,
+
+    #[serde(rename = "Settlements_Visited")]
+    pub settlements_visited: Option<u64>,
+
+    #[serde(rename = "Fuel_Scooped")]
+    pub fuel_scooped: Option<u64>,
+
+    #[serde(rename = "Fuel_Purchased")]
+    pub fuel_purchased: Option<u64>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsCombat {
+
+    #[serde(rename = "Bounties_Claimed")]
+    pub bounties_claimed: u64,
+
+    #[serde(rename = "Bounty_Hunting_Profit")]
+    pub bounty_hunting_profit: f64,
+
+    #[serde(rename = "Combat_Bonds")]
+    pub combat_bonds: u64,
+
+    #[serde(rename = "Combat_Bond_Profits")]
+    pub combat_bond_profits: u64,
+
+    #[serde(rename = "Assassinations")]
+    pub assassinations: u64,
+
+    #[serde(rename = "Assassination_Profits")]
+    pub assassination_profits: u64,
+
+    #[serde(rename = "Highest_Single_Reward")]
+    pub highest_single_reward: u64,
+
+    #[serde(rename = "Skimmers_Killed")]
+    pub skimmers_killed: Option<u64>,
+
+    #[serde(rename = "OnFoot_Combat_Bonds")]
+    pub on_foot_combat_bonds: Option<u64>,
+
+    #[serde(rename = "OnFoot_Combat_Bonds_Profits")]
+    pub on_foot_combat_bonds_profits: Option<u64>,
+
+    #[serde(rename = "OnFoot_Vehicles_Destroyed")]
+    pub on_foot_vehicles_destroyed: Option<u64>,
+
+    #[serde(rename = "OnFoot_Ships_Destroyed")]
+    pub on_foot_ships_destroyed: Option<u64>,
+
+    #[serde(rename = "Dropships_Taken")]
+    pub dropships_taken: Option<u64>,
+
+    #[serde(rename = "Dropships_Booked")]
+    pub dropships_booked: Option<u64>,
+
+    #[serde(rename = "Dropships_Cancelled")]
+    pub dropships_cancelled: Option<u64>,
+
+    #[serde(rename = "ConflictZone_High")]
+    pub conflict_zone_high: Option<u64>,
+
+    #[serde(rename = "ConflictZone_Medium")]
+    pub conflict_zone_medium: Option<u64>,
+
+    #[serde(rename = "ConflictZone_Low")]
+    pub conflict_zone_low: Option<u64>,
+
+    #[serde(rename = "ConflictZone_Total")]
+    pub conflict_zone_total: Option<u64>,
+
+    #[serde(rename = "ConflictZone_High_Wins")]
+    pub conflict_zone_high_wins: Option<u64>,
+
+    #[serde(rename = "ConflictZone_Medium_Wins")]
+    pub conflict_zone_medium_wins: Option<u64>,
+
+    #[serde(rename = "ConflictZone_Low_Wins")]
+    pub conflict_zone_low_wins: Option<u64>,
+
+    #[serde(rename = "ConflictZone_Total_Wins")]
+    pub conflict_zone_total_wins: Option<u64>,
+
+    #[serde(rename = "Settlement_Defended")]
+    pub settlement_defended: Option<u64>,
+
+    #[serde(rename = "Settlement_Conquered")]
+    pub settlement_conquered: Option<u64>,
+
+    #[serde(rename = "OnFoot_Skimmers_Killed")]
+    pub on_foot_skimmers_killed: Option<u64>,
+
+    #[serde(rename = "OnFoot_Scavs_Killed")]
+    pub on_foot_scavs_killed: Option<u64>,
+
+}
+
+/// This event is logged when the player creates a new suit loadout
+#[derive(Clone, Debug, Deserialize)]
+pub struct CreateSuitLoadout {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "SuitID")]
+    pub suit_id: u64,
+
+    #[serde(rename = "SuitName")]
+    pub suit_name: String,
+
+    #[serde(rename = "SuitName_Localised")]
+    pub suit_name_localised: Option<String>,
+
+    #[serde(rename = "SuitMods")]
+    pub suit_mods: Vec<String>,
+
+    #[serde(rename = "LoadoutID")]
+    pub loadout_id: u64,
+
+    #[serde(rename = "LoadoutName")]
+    pub loadout_name: String,
+
+    #[serde(rename = "Modules")]
+    pub modules: Vec<CreateSuitLoadoutModule>,
+
+}
+
+/// When written: when scanning a navigation beacon, before the scan data for all the bodies in the system is written into the journal
+#[derive(Clone, Debug, Deserialize)]
+pub struct NavBeaconScan {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    #[serde(rename = "NumBodies")]
+    pub num_bodies: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct LocationStationEconomy {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Proportion")]
+    pub proportion: f64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ApproachSettlementStationEconomy {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Proportion")]
+    pub proportion: f64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierStatsShipPack {
+
+    #[serde(rename = "PackTheme")]
+    pub pack_theme: String,
+
+    #[serde(rename = "PackTier")]
+    pub pack_tier: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct EngineerCraftModifier {
+
+    #[serde(rename = "Label")]
+    pub label: String,
+
+    /// Either Value or ValueStr is used. These modification types have string values: WeaponMode, DamageType, CabinClass.
+    #[serde(rename = "Value")]
+    pub value: Option<f64>,
+
+    /// Either Value or ValueStr is used. These modification types have string values: WeaponMode, DamageType, CabinClass.
+    #[serde(rename = "ValueStr")]
+    pub value_str: Option<String>,
+
+    #[serde(rename = "ValueStr_Localised")]
+    pub value_str_localised: Option<String>,
+
+    #[serde(rename = "OriginalValue")]
+    pub original_value: Option<f64>,
+
+    /// Either 0 or 1
+    #[serde(rename = "LessIsGood")]
+    pub less_is_good: u64,
+
+}
+
+/// When written: when switching control between the main ship and a fighter
+#[derive(Clone, Debug, Deserialize)]
+pub struct VehicleSwitch {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "To")]
+    pub to: String,
+
+}
+
+/// When written: when the self destruct function is used
+#[derive(Clone, Debug, Deserialize)]
+pub struct SelfDestruct {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct EngineerCraftIngredient {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    /// The localised value will be omitted if it is exactly the same as Name
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct SuitLoadoutModule {
+
+    #[serde(rename = "SlotName")]
+    pub slot_name: String,
+
+    #[serde(rename = "SuitModuleID")]
+    pub suit_module_id: u64,
+
+    #[serde(rename = "ModuleName")]
+    pub module_name: String,
+
+    #[serde(rename = "ModuleName_Localised")]
+    pub module_name_localised: Option<String>,
+
+    #[serde(rename = "Class")]
+    pub class: u64,
+
+    #[serde(rename = "WeaponMods")]
+    pub weapon_mods: Vec<String>,
+
+}
+
+/// When written: when exchanging materials at the Material trader contact
+#[derive(Clone, Debug, Deserialize)]
+pub struct MaterialTrade {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "TraderType")]
+    pub trader_type: String,
+
+    #[serde(rename = "Paid")]
+    pub paid: MaterialTradePaid,
+
+    #[serde(rename = "Received")]
+    pub received: MaterialTradeReceived,
+
+}
+
+/// If engineered
+#[derive(Clone, Debug, Deserialize)]
+pub struct LoadoutModuleEngineering {
+
+    #[serde(rename = "EngineerID")]
+    pub engineer_id: u64,
+
+    #[serde(rename = "BlueprintID")]
+    pub blueprint_id: u64,
+
+    #[serde(rename = "BlueprintName")]
+    pub blueprint_name: String,
+
+    #[serde(rename = "Level")]
+    pub level: u64,
+
+    #[serde(rename = "Quality")]
+    pub quality: f64,
+
+    #[serde(rename = "Modifiers")]
+    pub modifiers: Vec<LoadoutModuleEngineeringModifier>,
+
+    #[serde(rename = "Engineer")]
+    pub engineer: Option<String>,
+
+    #[serde(rename = "ExperimentalEffect")]
+    pub experimental_effect: Option<String>,
+
+    #[serde(rename = "ExperimentalEffect_Localised")]
+    pub experimental_effect_localised: Option<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct SwitchSuitLoadoutModule {
+
+    #[serde(rename = "SlotName")]
+    pub slot_name: String,
+
+    #[serde(rename = "SuitModuleID")]
+    pub suit_module_id: u64,
+
+    #[serde(rename = "ModuleName")]
+    pub module_name: String,
+
+    #[serde(rename = "ModuleName_Localised")]
+    pub module_name_localised: Option<String>,
+
+    #[serde(rename = "Class")]
+    pub class: u64,
+
+    #[serde(rename = "WeaponMods")]
+    pub weapon_mods: Vec<String>,
+
+}
+
+/// When written: at startup, or when being resurrected at a station
+#[derive(Clone, Debug, Deserialize)]
+pub struct Location {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// If not close to main star
+    #[serde(rename = "DistFromStarLS")]
+    pub dist_from_star_ls: Option<f64>,
+
+    /// True if ship is docked
+    #[serde(rename = "Docked")]
+    pub docked: bool,
+
+    /// True when inside a taxi transport ship
+    #[serde(rename = "Taxi")]
+    pub taxi: Option<bool>,
+
+    /// True when inside another player's ship
+    #[serde(rename = "Multicrew")]
+    pub multicrew: Option<bool>,
+
+    #[serde(rename = "Wanted")]
+    pub wanted: Option<bool>,
+
+    /// Name of starsystem
+    #[serde(rename = "StarSystem")]
+    pub star_system: String,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    /// star position, as a Json array [x, y, z], relative to Sol in Ly
+    #[serde(rename = "StarPos")]
+    pub star_pos: Vec<f64>,
+
+    #[serde(rename = "SystemAllegiance")]
+    pub system_allegiance: String,
+
+    #[serde(rename = "SystemEconomy")]
+    pub system_economy: String,
+
+    #[serde(rename = "SystemEconomy_Localised")]
+    pub system_economy_localised: Option<String>,
+
+    #[serde(rename = "SystemSecondEconomy")]
+    pub system_second_economy: String,
+
+    #[serde(rename = "SystemSecondEconomy_Localised")]
+    pub system_second_economy_localised: Option<String>,
+
+    #[serde(rename = "SystemGovernment")]
+    pub system_government: String,
+
+    #[serde(rename = "SystemGovernment_Localised")]
+    pub system_government_localised: Option<String>,
+
+    #[serde(rename = "SystemSecurity")]
+    pub system_security: String,
+
+    #[serde(rename = "SystemSecurity_Localised")]
+    pub system_security_localised: Option<String>,
+
+    #[serde(rename = "Population")]
+    pub population: u64,
+
+    #[serde(rename = "Body")]
+    pub body: String,
+
+    #[serde(rename = "BodyID")]
+    pub body_id: u64,
+
+    #[serde(rename = "BodyType")]
+    pub body_type: String,
+
+    #[serde(rename = "Factions")]
+    pub factions: Option<Vec<LocationFaction>>,
+
+    /// System controlling faction
+    #[serde(rename = "SystemFaction")]
+    pub system_faction: Option<LocationSystemFaction>,
+
+    /// If the player is pledged to a Power in Powerplay, and the star system is involved in powerplay
+    #[serde(rename = "Powers")]
+    pub powers: Option<Vec<String>>,
+
+    /// Controlling power for the system
+    #[serde(rename = "ControllingPower")]
+    pub controlling_power: Option<String>,
+
+    /// Powerplay state for the system.
+    #[serde(rename = "PowerplayState")]
+    pub powerplay_state: Option<String>,
+
+    /// The current amount of control within the specific powerplay state
+    #[serde(rename = "PowerplayStateControlProgress")]
+    pub powerplay_state_control_progress: Option<f64>,
+
+    /// Merits gained towards reinforcing the system and increasing the system strength
+    #[serde(rename = "PowerplayStateReinforcement")]
+    pub powerplay_state_reinforcement: Option<u64>,
+
+    /// Merits gained towards undermining the system and decreasing the system strength
+    #[serde(rename = "PowerplayStateUndermining")]
+    pub powerplay_state_undermining: Option<u64>,
+
+    /// When the system is unoccupied and 1 or more powers are fighting for control by reaching 120k merits.
+    #[serde(rename = "PowerplayConflictProgress")]
+    pub powerplay_conflict_progress: Option<Vec<LocationPowerplayConflictProgress>>,
+
+    #[serde(rename = "Conflicts")]
+    pub conflicts: Option<Vec<LocationConflict>>,
+
+    /// Thargoid war information
+    #[serde(rename = "ThargoidWar")]
+    pub thargoid_war: Option<LocationThargoidWar>,
+
+    #[serde(rename = "OnFoot")]
+    pub on_foot: Option<bool>,
+
+    #[serde(rename = "StationName")]
+    pub station_name: Option<String>,
+
+    #[serde(rename = "StationName_Localised")]
+    pub station_name_localised: Option<String>,
+
+    #[serde(rename = "StationType")]
+    pub station_type: Option<String>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: Option<u64>,
+
+    /// If starting docked in a station
+    #[serde(rename = "StationFaction")]
+    pub station_faction: Option<LocationStationFaction>,
+
+    /// If starting docked in a station
+    #[serde(rename = "StationGovernment")]
+    pub station_government: Option<String>,
+
+    /// If starting docked in a station
+    #[serde(rename = "StationGovernment_Localised")]
+    pub station_government_localised: Option<String>,
+
+    /// If starting docked in a station
+    #[serde(rename = "StationServices")]
+    pub station_services: Option<Vec<String>>,
+
+    /// If starting docked in a station
+    #[serde(rename = "StationEconomy")]
+    pub station_economy: Option<String>,
+
+    /// If starting docked in a station
+    #[serde(rename = "StationEconomy_Localised")]
+    pub station_economy_localised: Option<String>,
+
+    /// If starting docked in a station
+    #[serde(rename = "StationEconomies")]
+    pub station_economies: Option<Vec<LocationStationEconomy>>,
+
+    #[serde(rename = "Latitude")]
+    pub latitude: Option<f64>,
+
+    #[serde(rename = "Longitude")]
+    pub longitude: Option<f64>,
+
+    #[serde(rename = "InSRV")]
+    pub in_srv: Option<bool>,
+
+    #[serde(rename = "StationAllegiance")]
+    pub station_allegiance: Option<String>,
+
+}
+
+/// This event is logged when a player selects a different flight suit from the ship’s locker
+#[derive(Clone, Debug, Deserialize)]
+pub struct SwitchSuitLoadout {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "SuitID")]
+    pub suit_id: u64,
+
+    #[serde(rename = "SuitName")]
+    pub suit_name: String,
+
+    #[serde(rename = "SuitName_Localised")]
+    pub suit_name_localised: Option<String>,
+
+    #[serde(rename = "SuitMods")]
+    pub suit_mods: Vec<String>,
+
+    #[serde(rename = "LoadoutID")]
+    pub loadout_id: u64,
+
+    #[serde(rename = "LoadoutName")]
+    pub loadout_name: String,
+
+    #[serde(rename = "Modules")]
+    pub modules: Vec<SwitchSuitLoadoutModule>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsSearchAndRescue {
+
+    #[serde(rename = "SearchRescue_Traded")]
+    pub search_rescue_traded: u64,
+
+    #[serde(rename = "SearchRescue_Profit")]
+    pub search_rescue_profit: u64,
+
+    #[serde(rename = "SearchRescue_Count")]
+    pub search_rescue_count: u64,
+
+    #[serde(rename = "Salvage_Legal_POI")]
+    pub salvage_legal_poi: Option<u64>,
+
+    #[serde(rename = "Salvage_Legal_Settlements")]
+    pub salvage_legal_settlements: Option<u64>,
+
+    #[serde(rename = "Salvage_Illegal_POI")]
+    pub salvage_illegal_poi: Option<u64>,
+
+    #[serde(rename = "Salvage_Illegal_Settlements")]
+    pub salvage_illegal_settlements: Option<u64>,
+
+    #[serde(rename = "Maglocks_Opened")]
+    pub maglocks_opened: Option<u64>,
+
+    #[serde(rename = "Panels_Opened")]
+    pub panels_opened: Option<u64>,
+
+    #[serde(rename = "Settlements_State_FireOut")]
+    pub settlements_state_fire_out: Option<u64>,
+
+    #[serde(rename = "Settlements_State_Reboot")]
+    pub settlements_state_reboot: Option<u64>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct Component {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "OwnerID")]
+    pub owner_id: u64,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: Option<u64>,
+
+}
+
+/// When discarding on-foot items from the player's inventory
+#[derive(Clone, Debug, Deserialize)]
+pub struct DropItems {
+
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Name")]
     pub name: String,
 
-    #[serde(rename = "LocalisedName")]
-    pub localised_name: Option<String>,
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+    #[serde(rename = "OwnerID")]
+    pub owner_id: u64,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
 
     #[serde(rename = "MissionID")]
-    pub mission_id: u64,
+    pub mission_id: Option<u64>,
 
-    #[serde(rename = "Fine")]
-    pub fine: Option<u64>,
+}
+
+/// If starting docked in a station
+#[derive(Clone, Debug, Deserialize)]
+pub struct LocationStationFaction {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "FactionState")]
+    pub faction_state: Option<String>,
+
+}
+
+/// This event is logged when buying microresources
+#[derive(Clone, Debug, Deserialize)]
+pub struct BuyMicroResources {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// Old format (used for example at supplies vendor)
+    #[serde(rename = "Name")]
+    pub name: Option<String>,
+
+    /// Old format (used for example at supplies vendor)
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Category")]
+    pub category: Option<String>,
+
+    /// Old format (used for example at supplies vendor)
+    #[serde(rename = "Count")]
+    pub count: Option<u64>,
+
+    #[serde(rename = "Price")]
+    pub price: u64,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    /// New format (eg at Fleet Carrier bartender)
+    #[serde(rename = "TotalCount")]
+    pub total_count: Option<u64>,
+
+    /// New format (eg at Fleet Carrier bartender)
+    #[serde(rename = "MicroResources")]
+    pub micro_resources: Option<Vec<BuyMicroResourcesMicroResource>>,
 
 }
 
@@ -5695,6 +5821,7 @@ pub struct MissionFailed {
 #[derive(Clone, Debug, Deserialize)]
 pub struct MissionRedirected {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -5724,473 +5851,63 @@ pub struct MissionRedirected {
 
 }
 
-/// When written: at startup
+/// When written: at the start of a Hyperspace or Supercruise jump (start of countdown)
 #[derive(Clone, Debug, Deserialize)]
-pub struct Missions {
+pub struct StartJump {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Active")]
-    pub active: Vec<MissionsActive>,
+    #[serde(rename = "Taxi")]
+    pub taxi: Option<bool>,
 
-    #[serde(rename = "Failed")]
-    pub failed: Vec<MissionsFailed>,
+    #[serde(rename = "JumpType")]
+    pub jump_type: String,
 
-    #[serde(rename = "Complete")]
-    pub complete: Vec<MissionsComplete>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct MissionsComplete {
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: u64,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "PassengerMission")]
-    pub passenger_mission: bool,
-
-    /// Time left in seconds
-    #[serde(rename = "Expires")]
-    pub expires: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct MissionsActive {
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: u64,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "PassengerMission")]
-    pub passenger_mission: bool,
-
-    /// Time left in seconds
-    #[serde(rename = "Expires")]
-    pub expires: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct MissionsFailed {
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: u64,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "PassengerMission")]
-    pub passenger_mission: bool,
-
-    /// Time left in seconds
-    #[serde(rename = "Expires")]
-    pub expires: u64,
-
-}
-
-/// When Written: when buying a module in outfitting
-#[derive(Clone, Debug, Deserialize)]
-pub struct ModuleBuy {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// Slot that is outfitted
-    #[serde(rename = "Slot")]
-    pub slot: String,
-
-    /// The module being purchased
-    #[serde(rename = "BuyItem")]
-    pub buy_item: String,
-
-    #[serde(rename = "BuyItem_Localised")]
-    pub buy_item_localised: Option<String>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    /// Price paid
-    #[serde(rename = "BuyPrice")]
-    pub buy_price: u64,
-
-    /// The player's ship
-    #[serde(rename = "Ship")]
-    pub ship: String,
-
-    /// The player's ship ID
-    #[serde(rename = "ShipID")]
-    pub ship_id: u64,
-
-    /// If existing module in slot is stored
-    #[serde(rename = "StoredItem")]
-    pub stored_item: Option<String>,
-
-    /// If existing module in slot is stored
-    #[serde(rename = "StoredItem_Localised")]
-    pub stored_item_localised: Option<String>,
-
-    /// If existing module in slot is sold
-    #[serde(rename = "SellItem")]
-    pub sell_item: Option<String>,
-
-    /// If existing module in slot is sold
-    #[serde(rename = "SellItem_Localised")]
-    pub sell_item_localised: Option<String>,
-
-    /// If existing module in slot is sold
-    #[serde(rename = "SellPrice")]
-    pub sell_price: Option<u64>,
-
-}
-
-/// When Written: when buying a module and directly storing it in outfitting
-#[derive(Clone, Debug, Deserialize)]
-pub struct ModuleBuyAndStore {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// The module being purchased and stored
-    #[serde(rename = "BuyItem")]
-    pub buy_item: String,
-
-    #[serde(rename = "BuyItem_Localised")]
-    pub buy_item_localised: Option<String>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    /// Price paid
-    #[serde(rename = "BuyPrice")]
-    pub buy_price: u64,
-
-    /// The player's ship
-    #[serde(rename = "Ship")]
-    pub ship: String,
-
-    /// The player's ship ID
-    #[serde(rename = "ShipID")]
-    pub ship_id: u64,
-
-}
-
-/// When written: when looking at the cockpit Right Hand Side modules info panel, if data has changed. This also writes a ModulesInfo.json file alongside the journal, listing the modules in the same order as displayed.
-#[derive(Clone, Debug, Deserialize)]
-pub struct ModuleInfo {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// When written to ModulesInfo.json
-    #[serde(rename = "Modules")]
-    pub modules: Option<Vec<ModuleInfoModules>>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct ModuleInfoModules {
-
-    #[serde(rename = "Slot")]
-    pub slot: String,
-
-    #[serde(rename = "Item")]
-    pub item: String,
-
-    #[serde(rename = "Power")]
-    pub power: f64,
-
-    #[serde(rename = "Priority")]
-    pub priority: Option<u64>,
-
-}
-
-/// When written: when fetching a previously stored module
-#[derive(Clone, Debug, Deserialize)]
-pub struct ModuleRetrieve {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "Slot")]
-    pub slot: String,
-
-    #[serde(rename = "RetrievedItem")]
-    pub retrieved_item: String,
-
-    #[serde(rename = "RetrievedItem_Localised")]
-    pub retrieved_item_localised: Option<String>,
-
-    #[serde(rename = "Ship")]
-    pub ship: String,
-
-    #[serde(rename = "ShipID")]
-    pub ship_id: u64,
-
-    #[serde(rename = "Hot")]
-    pub hot: bool,
-
-    #[serde(rename = "EngineerModifications")]
-    pub engineer_modifications: Option<String>,
-
-    #[serde(rename = "Level")]
-    pub level: Option<u64>,
-
-    #[serde(rename = "Quality")]
-    pub quality: Option<f64>,
-
-    /// If slot was not empty
-    #[serde(rename = "SwapOutItem")]
-    pub swap_out_item: Option<String>,
-
-    /// If slot was not empty
-    #[serde(rename = "SwapOutItem_Localised")]
-    pub swap_out_item_localised: Option<String>,
-
-}
-
-/// When Written: when selling a module in outfitting
-#[derive(Clone, Debug, Deserialize)]
-pub struct ModuleSell {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "Slot")]
-    pub slot: String,
-
-    #[serde(rename = "SellItem")]
-    pub sell_item: String,
-
-    #[serde(rename = "SellItem_Localised")]
-    pub sell_item_localised: Option<String>,
-
-    #[serde(rename = "SellPrice")]
-    pub sell_price: u64,
-
-    #[serde(rename = "Ship")]
-    pub ship: String,
-
-    #[serde(rename = "ShipID")]
-    pub ship_id: u64,
-
-}
-
-/// When written: when selling a module in storage at another station
-#[derive(Clone, Debug, Deserialize)]
-pub struct ModuleSellRemote {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "StorageSlot")]
-    pub storage_slot: u64,
-
-    #[serde(rename = "SellItem")]
-    pub sell_item: String,
-
-    #[serde(rename = "SellItem_Localised")]
-    pub sell_item_localised: Option<String>,
-
-    #[serde(rename = "ServerId")]
-    pub server_id: u64,
-
-    #[serde(rename = "SellPrice")]
-    pub sell_price: u64,
-
-    #[serde(rename = "Ship")]
-    pub ship: String,
-
-    #[serde(rename = "ShipID")]
-    pub ship_id: u64,
-
-}
-
-/// When written: when storing a module in Outfitting
-#[derive(Clone, Debug, Deserialize)]
-pub struct ModuleStore {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "Slot")]
-    pub slot: String,
-
-    #[serde(rename = "StoredItem")]
-    pub stored_item: String,
-
-    /// If a core module is stored. Documented, but appears to be unused.
-    #[serde(rename = "ReplacementItem")]
-    pub replacement_item: Option<String>,
-
-    /// If a core module is stored. Documented, but appears to be unused.
-    #[serde(rename = "StoredItem_Localised")]
-    pub stored_item_localised: Option<String>,
-
-    #[serde(rename = "Ship")]
-    pub ship: String,
-
-    #[serde(rename = "ShipID")]
-    pub ship_id: u64,
-
-    #[serde(rename = "Hot")]
-    pub hot: Option<bool>,
-
-    #[serde(rename = "EngineerModifications")]
-    pub engineer_modifications: Option<String>,
-
-    #[serde(rename = "Level")]
-    pub level: Option<u64>,
-
-    #[serde(rename = "Quality")]
-    pub quality: Option<f64>,
-
-    #[serde(rename = "Cost")]
-    pub cost: Option<u64>,
-
-}
-
-/// When Written: when moving a module to a different slot on the ship
-#[derive(Clone, Debug, Deserialize)]
-pub struct ModuleSwap {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "FromSlot")]
-    pub from_slot: String,
-
-    #[serde(rename = "ToSlot")]
-    pub to_slot: String,
-
-    #[serde(rename = "FromItem")]
-    pub from_item: String,
-
-    #[serde(rename = "FromItem_Localised")]
-    pub from_item_localised: Option<String>,
-
-    #[serde(rename = "ToItem")]
-    pub to_item: String,
-
-    #[serde(rename = "ToItem_Localised")]
-    pub to_item_localised: Option<String>,
-
-    #[serde(rename = "Ship")]
-    pub ship: String,
-
-    #[serde(rename = "ShipID")]
-    pub ship_id: u64,
-
-}
-
-/// When written: when selling exploration data in Cartographics, a page at a time
-#[derive(Clone, Debug, Deserialize)]
-pub struct MultiSellExplorationData {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Discovered")]
-    pub discovered: Vec<MultiSellExplorationDataDiscovered>,
-
-    #[serde(rename = "BaseValue")]
-    pub base_value: u64,
-
-    #[serde(rename = "Bonus")]
-    pub bonus: u64,
-
-    #[serde(rename = "TotalEarnings")]
-    pub total_earnings: u64,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct MultiSellExplorationDataDiscovered {
-
-    #[serde(rename = "SystemName")]
-    pub system_name: String,
-
-    /// This field sometime appears in this event containing random data (bug)
-    #[serde(rename = "SystemName_Localised")]
-    pub system_name_localised: Option<String>,
-
-    #[serde(rename = "NumBodies")]
-    pub num_bodies: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct Music {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MusicTrack")]
-    pub music_track: String,
-
-}
-
-/// When written: when scanning a navigation beacon, before the scan data for all the bodies in the system is written into the journal
-#[derive(Clone, Debug, Deserialize)]
-pub struct NavBeaconScan {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    #[serde(rename = "StarSystem")]
+    pub star_system: Option<String>,
 
     #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
+    pub system_address: Option<u64>,
 
-    #[serde(rename = "NumBodies")]
-    pub num_bodies: u64,
+    /// only for a hyperspace jump
+    #[serde(rename = "StarClass")]
+    pub star_class: Option<String>,
 
 }
 
-/// When plotting a multi-star route, the file NavRoute.json is written in the same directory as the journal, with a list of stars along that route
 #[derive(Clone, Debug, Deserialize)]
-pub struct NavRoute {
+pub struct LocationFactionActiveState {
 
+    #[serde(rename = "State")]
+    pub state: String,
+
+}
+
+/// This event is logged when a player (on foot) gets into a ship or SRV
+#[derive(Clone, Debug, Deserialize)]
+pub struct Embark {
+
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Route")]
-    pub route: Option<Vec<NavRouteRoute>>,
+    /// true if getting into SRV, false if getting into a ship
+    #[serde(rename = "SRV")]
+    pub srv: bool,
 
-}
+    /// true when boarding a taxi transport ship
+    #[serde(rename = "Taxi")]
+    pub taxi: bool,
 
+    /// true when boarding another player’s vessel
+    #[serde(rename = "Multicrew")]
+    pub multicrew: bool,
 
-#[derive(Clone, Debug, Deserialize)]
-pub struct NavRouteRoute {
+    /// player’s ship ID (if players own vessel)
+    #[serde(rename = "ID")]
+    pub id: Option<u64>,
 
     #[serde(rename = "StarSystem")]
     pub star_system: String,
@@ -6198,92 +5915,39 @@ pub struct NavRouteRoute {
     #[serde(rename = "SystemAddress")]
     pub system_address: u64,
 
-    /// star position, as a Json array [x, y, z], relative to Sol in Ly
-    #[serde(rename = "StarPos")]
-    pub star_pos: Vec<f64>,
+    #[serde(rename = "Body")]
+    pub body: String,
 
-    #[serde(rename = "StarClass")]
-    pub star_class: String,
+    #[serde(rename = "BodyID")]
+    pub body_id: u64,
 
-}
+    #[serde(rename = "OnStation")]
+    pub on_station: bool,
 
-/// When written: When the current plotted nav route is cleared. Can be written to NavRoute.json with an empty Route array.
-#[derive(Clone, Debug, Deserialize)]
-pub struct NavRouteClear {
+    #[serde(rename = "OnPlanet")]
+    pub on_planet: bool,
 
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    /// if at a station
+    #[serde(rename = "StationName")]
+    pub station_name: Option<String>,
 
-    #[serde(rename = "Route")]
-    pub route: Option<Vec<NavRouteClearRoute>>,
+    /// if at a station
+    #[serde(rename = "StationType")]
+    pub station_type: Option<String>,
 
-}
+    #[serde(rename = "MarketID")]
+    pub market_id: Option<u64>,
 
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct NavRouteClearRoute {
-
-}
-
-/// When written: Creating a new commander
-#[derive(Clone, Debug, Deserialize)]
-pub struct NewCommander {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "FID")]
-    pub fid: String,
-
-    /// Selected starter package
-    #[serde(rename = "Package")]
-    pub package: String,
+    #[serde(rename = "Crew")]
+    pub crew: Option<Vec<EmbarkCrew>>,
 
 }
 
-/// This is written when crew receive wages
+/// When written: when first visiting Outfitting, and when the set of stored modules has changed
 #[derive(Clone, Debug, Deserialize)]
-pub struct NpcCrewPaidWage {
+pub struct StoredModules {
 
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "NpcCrewName")]
-    pub npc_crew_name: String,
-
-    #[serde(rename = "NpcCrewId")]
-    pub npc_crew_id: u64,
-
-    #[serde(rename = "Amount")]
-    pub amount: u64,
-
-}
-
-/// This is written when a crew member's combat rank increases
-#[derive(Clone, Debug, Deserialize)]
-pub struct NpcCrewRank {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "NpcCrewName")]
-    pub npc_crew_name: String,
-
-    #[serde(rename = "NpcCrewId")]
-    pub npc_crew_id: u64,
-
-    #[serde(rename = "RankCombat")]
-    pub rank_combat: u64,
-
-}
-
-/// Written when accessing the outfitting menu. The full parts pricelist is written to a separate file Outfitting.json.
-#[derive(Clone, Debug, Deserialize)]
-pub struct Outfitting {
-
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -6296,437 +5960,49 @@ pub struct Outfitting {
     #[serde(rename = "StarSystem")]
     pub star_system: String,
 
-    /// Only written in Outfitting.json
-    #[serde(rename = "Horizons")]
-    pub horizons: Option<bool>,
-
-    /// Only written in Outfitting.json
     #[serde(rename = "Items")]
-    pub items: Option<Vec<OutfittingItems>>,
+    pub items: Vec<StoredModulesItem>,
 
 }
 
+/// This event is logged if the player cancels their journey to a combat zone
+#[derive(Clone, Debug, Deserialize)]
+pub struct CancelDropship {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Refund")]
+    pub refund: u64,
+
+}
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct OutfittingItems {
+pub struct StoredShipsShipsHere {
 
-    #[serde(rename = "id")]
-    pub id: u64,
+    #[serde(rename = "ShipID")]
+    pub ship_id: u64,
+
+    #[serde(rename = "ShipType")]
+    pub ship_type: String,
+
+    #[serde(rename = "Value")]
+    pub value: u64,
+
+    #[serde(rename = "Hot")]
+    pub hot: bool,
+
+    #[serde(rename = "ShipType_Localised")]
+    pub ship_type_localised: Option<String>,
 
     #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "BuyPrice")]
-    pub buy_price: u64,
+    pub name: Option<String>,
 
 }
 
-/// When written: at startup, when loading the saved game file
 #[derive(Clone, Debug, Deserialize)]
-pub struct Passengers {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// Array of passenger records
-    #[serde(rename = "Manifest")]
-    pub manifest: Vec<PassengersManifest>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct PassengersManifest {
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: u64,
-
-    #[serde(rename = "Type")]
-    pub r#type: String,
-
-    #[serde(rename = "VIP")]
-    pub vip: bool,
-
-    #[serde(rename = "Wanted")]
-    pub wanted: bool,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-}
-
-/// When written: when paying off bounties
-#[derive(Clone, Debug, Deserialize)]
-pub struct PayBounties {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// Total amount paid, including any broker fee
-    #[serde(rename = "Amount")]
-    pub amount: u64,
-
-    #[serde(rename = "AllFines")]
-    pub all_fines: Option<bool>,
-
-    #[serde(rename = "ShipID")]
-    pub ship_id: u64,
-
-    /// Present if paid via a broker
-    #[serde(rename = "BrokerPercentage")]
-    pub broker_percentage: Option<f64>,
-
-    /// If paying off an individual faction's fines
-    #[serde(rename = "Faction")]
-    pub faction: Option<String>,
-
-    /// If paying off an individual faction's fines
-    #[serde(rename = "Faction_Localised")]
-    pub faction_localised: Option<String>,
-
-}
-
-/// When written: when paying fines
-#[derive(Clone, Debug, Deserialize)]
-pub struct PayFines {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// Total amount paid, including any broker fee
-    #[serde(rename = "Amount")]
-    pub amount: u64,
-
-    #[serde(rename = "AllFines")]
-    pub all_fines: Option<bool>,
-
-    #[serde(rename = "ShipID")]
-    pub ship_id: u64,
-
-    /// Present if paid via a broker
-    #[serde(rename = "BrokerPercentage")]
-    pub broker_percentage: Option<f64>,
-
-    /// If paying off an individual faction's fines
-    #[serde(rename = "Faction")]
-    pub faction: Option<String>,
-
-    /// If paying off an individual faction's fines
-    #[serde(rename = "Faction_Localised")]
-    pub faction_localised: Option<String>,
-
-}
-
-/// When written: at startup, if player has pledged to a power
-#[derive(Clone, Debug, Deserialize)]
-pub struct Powerplay {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Power")]
-    pub power: String,
-
-    #[serde(rename = "Rank")]
-    pub rank: u64,
-
-    #[serde(rename = "Merits")]
-    pub merits: u64,
-
-    #[serde(rename = "Votes")]
-    pub votes: Option<u64>,
-
-    /// Time pledged in seconds
-    #[serde(rename = "TimePledged")]
-    pub time_pledged: u64,
-
-}
-
-/// When written: when collecting powerplay commodities for delivery
-#[derive(Clone, Debug, Deserialize)]
-pub struct PowerplayCollect {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Power")]
-    pub power: String,
-
-    #[serde(rename = "Type")]
-    pub r#type: String,
-
-    #[serde(rename = "Type_Localised")]
-    pub type_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-}
-
-/// When written: when a player defects from one power to another
-#[derive(Clone, Debug, Deserialize)]
-pub struct PowerplayDefect {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "FromPower")]
-    pub from_power: String,
-
-    #[serde(rename = "ToPower")]
-    pub to_power: String,
-
-}
-
-/// When written: when delivering powerplay commodities
-#[derive(Clone, Debug, Deserialize)]
-pub struct PowerplayDeliver {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Power")]
-    pub power: String,
-
-    #[serde(rename = "Type")]
-    pub r#type: String,
-
-    #[serde(rename = "Type_Localised")]
-    pub type_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-}
-
-/// When written: when paying to fast-track allocation of commodities
-#[derive(Clone, Debug, Deserialize)]
-pub struct PowerplayFastTrack {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Power")]
-    pub power: String,
-
-    #[serde(rename = "Cost")]
-    pub cost: u64,
-
-}
-
-/// When written: when joining up with a power
-#[derive(Clone, Debug, Deserialize)]
-pub struct PowerplayJoin {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Power")]
-    pub power: String,
-
-}
-
-/// When written: when leaving a power
-#[derive(Clone, Debug, Deserialize)]
-pub struct PowerplayLeave {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Power")]
-    pub power: String,
-
-}
-
-/// When written: when receiving salary payment from a power
-#[derive(Clone, Debug, Deserialize)]
-pub struct PowerplayMerits {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Power")]
-    pub power: String,
-
-    #[serde(rename = "MeritsGained")]
-    pub merits_gained: u64,
-
-    #[serde(rename = "TotalMerits")]
-    pub total_merits: u64,
-
-}
-
-/// When written: when receiving salary payment from a power
-#[derive(Clone, Debug, Deserialize)]
-pub struct PowerplayRank {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Power")]
-    pub power: String,
-
-    #[serde(rename = "Rank")]
-    pub rank: u64,
-
-}
-
-/// When written: when receiving salary payment from a power
-#[derive(Clone, Debug, Deserialize)]
-pub struct PowerplaySalary {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Power")]
-    pub power: String,
-
-    #[serde(rename = "Amount")]
-    pub amount: u64,
-
-}
-
-/// When written: when voting for a system expansion
-#[derive(Clone, Debug, Deserialize)]
-pub struct PowerplayVote {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Power")]
-    pub power: String,
-
-    #[serde(rename = "Votes")]
-    pub votes: u64,
-
-    #[serde(rename = "VoteToConsolidate")]
-    pub vote_to_consolidate: u64,
-
-    /// Documented, but appears to be unused.
-    #[serde(rename = "System")]
-    pub system: Option<String>,
-
-}
-
-/// When written: when receiving payment for powerplay combat
-#[derive(Clone, Debug, Deserialize)]
-pub struct PowerplayVoucher {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Power")]
-    pub power: String,
-
-    #[serde(rename = "Systems")]
-    pub systems: Vec<String>,
-
-}
-
-/// When written: at startup
-#[derive(Clone, Debug, Deserialize)]
-pub struct Progress {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// Percentage progress to next rank
-    #[serde(rename = "Combat")]
-    pub combat: u64,
-
-    /// Percentage progress to next rank
-    #[serde(rename = "Trade")]
-    pub trade: u64,
-
-    /// Percentage progress to next rank
-    #[serde(rename = "Explore")]
-    pub explore: u64,
-
-    /// Percentage progress to next rank
-    #[serde(rename = "Soldier")]
-    pub soldier: Option<u64>,
-
-    /// Percentage progress to next rank
-    #[serde(rename = "Exobiologist")]
-    pub exobiologist: Option<u64>,
-
-    /// Percentage progress to next rank
-    #[serde(rename = "Empire")]
-    pub empire: u64,
-
-    /// Percentage progress to next rank
-    #[serde(rename = "Federation")]
-    pub federation: u64,
-
-    /// Percentage progress to next rank
-    #[serde(rename = "CQC")]
-    pub cqc: u64,
-
-}
-
-/// When written: when the player’s rank increases. Only the relevant ranks are included.
-#[derive(Clone, Debug, Deserialize)]
-pub struct Promotion {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Explore")]
-    pub explore: Option<u64>,
-
-    #[serde(rename = "Combat")]
-    pub combat: Option<u64>,
-
-    #[serde(rename = "Soldier")]
-    pub soldier: Option<u64>,
-
-    #[serde(rename = "Federation")]
-    pub federation: Option<u64>,
-
-    #[serde(rename = "Exobiologist")]
-    pub exobiologist: Option<u64>,
-
-    #[serde(rename = "Empire")]
-    pub empire: Option<u64>,
-
-    #[serde(rename = "Trade")]
-    pub trade: Option<u64>,
-
-}
-
-/// When using a prospecting drone
-#[derive(Clone, Debug, Deserialize)]
-pub struct ProspectedAsteroid {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Materials")]
-    pub materials: Vec<ProspectedAsteroidMaterials>,
-
-    #[serde(rename = "Content")]
-    pub content: String,
-
-    #[serde(rename = "Content_Localised")]
-    pub content_localised: Option<String>,
-
-    /// Percentage of materials remaining
-    #[serde(rename = "Remaining")]
-    pub remaining: f64,
-
-    /// If it’s a motherlode
-    #[serde(rename = "MotherlodeMaterial")]
-    pub motherlode_material: Option<String>,
-
-    /// If it’s a motherlode. The localised value will be omitted if it is exactly the same as MotherlodeMaterial
-    #[serde(rename = "MotherlodeMaterial_Localised")]
-    pub motherlode_material_localised: Option<String>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct ProspectedAsteroidMaterials {
+pub struct ShipLockerMaterialsComponent {
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -6734,87 +6010,14 @@ pub struct ProspectedAsteroidMaterials {
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
 
-    #[serde(rename = "Proportion")]
-    pub proportion: f64,
+    #[serde(rename = "OwnerID")]
+    pub owner_id: u64,
 
-}
+    #[serde(rename = "Count")]
+    pub count: u64,
 
-/// When written: when this player has killed another player
-#[derive(Clone, Debug, Deserialize)]
-pub struct PVPKill {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// Name of the victim
-    #[serde(rename = "Victim")]
-    pub victim: String,
-
-    /// Victim’s rank in range 0..8
-    #[serde(rename = "CombatRank")]
-    pub combat_rank: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct QuitACrew {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// Helm player's commander name
-    #[serde(rename = "Captain")]
-    pub captain: String,
-
-    /// only from Odyssey build
-    #[serde(rename = "Telepresence")]
-    pub telepresence: Option<bool>,
-
-}
-
-/// When written: at startup
-#[derive(Clone, Debug, Deserialize)]
-pub struct Rank {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Combat")]
-    pub combat: u64,
-
-    #[serde(rename = "Trade")]
-    pub trade: u64,
-
-    #[serde(rename = "Explore")]
-    pub explore: u64,
-
-    #[serde(rename = "Soldier")]
-    pub soldier: Option<u64>,
-
-    #[serde(rename = "Exobiologist")]
-    pub exobiologist: Option<u64>,
-
-    #[serde(rename = "Empire")]
-    pub empire: u64,
-
-    #[serde(rename = "Federation")]
-    pub federation: u64,
-
-    #[serde(rename = "CQC")]
-    pub cqc: u64,
-
-}
-
-/// When written: when the reboot repair function is used
-#[derive(Clone, Debug, Deserialize)]
-pub struct RebootRepair {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// Array of names of modules repaired
-    #[serde(rename = "Modules")]
-    pub modules: Vec<String>,
+    #[serde(rename = "MissionID")]
+    pub mission_id: Option<u64>,
 
 }
 
@@ -6822,6 +6025,7 @@ pub struct RebootRepair {
 #[derive(Clone, Debug, Deserialize)]
 pub struct ReceiveText {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -6842,118 +6046,87 @@ pub struct ReceiveText {
 
 }
 
-/// When Written: when claiming payment for combat bounties and bonds
+/// When Written: when a player increases their access to an engineer
 #[derive(Clone, Debug, Deserialize)]
-pub struct RedeemVoucher {
+pub struct EngineerProgress {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Type")]
-    pub r#type: String,
+    /// Summary at startup
+    #[serde(rename = "Engineers")]
+    pub engineers: Option<Vec<EngineerProgressEngineer>>,
 
-    #[serde(rename = "Faction")]
-    pub faction: Option<String>,
+    /// Update for one engineer
+    #[serde(rename = "Engineer")]
+    pub engineer: Option<String>,
 
-    /// Net amount received, after any broker fee
-    #[serde(rename = "Amount")]
-    pub amount: u64,
+    /// Update for one engineer
+    #[serde(rename = "EngineerID")]
+    pub engineer_id: Option<u64>,
 
-    /// For type bounty
-    #[serde(rename = "Factions")]
-    pub factions: Option<Vec<RedeemVoucherFactions>>,
+    /// Update for one engineer
+    #[serde(rename = "Progress")]
+    pub progress: Option<String>,
 
-    #[serde(rename = "BrokerPercentage")]
-    pub broker_percentage: Option<f64>,
+    /// Update for one engineer
+    #[serde(rename = "Rank")]
+    pub rank: Option<u64>,
 
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct RedeemVoucherFactions {
-
-    #[serde(rename = "Faction")]
-    pub faction: String,
-
-    #[serde(rename = "Amount")]
-    pub amount: u64,
+    /// Uncertain whether this is actually logged
+    #[serde(rename = "RankProgress")]
+    pub rank_progress: Option<u64>,
 
 }
 
-/// When Written: when refuelling (full tank)
+/// When written: when in a crew on someone else's ship, player switched crew role
 #[derive(Clone, Debug, Deserialize)]
-pub struct RefuelAll {
+pub struct ChangeCrewRole {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    /// Cost of fuel
-    #[serde(rename = "Cost")]
-    pub cost: u64,
+    #[serde(rename = "Role")]
+    pub role: String,
 
-    /// Tons of fuel purchased
-    #[serde(rename = "Amount")]
-    pub amount: f64,
-
-}
-
-/// When Written: when refuelling (10%)
-#[derive(Clone, Debug, Deserialize)]
-pub struct RefuelPartial {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// Cost of fuel
-    #[serde(rename = "Cost")]
-    pub cost: u64,
-
-    /// Tons of fuel purchased
-    #[serde(rename = "Amount")]
-    pub amount: f64,
+    /// Only from Odyssey build
+    #[serde(rename = "Telepresence")]
+    pub telepresence: Option<bool>,
 
 }
 
+/// When written: when receiving salary payment from a power
 #[derive(Clone, Debug, Deserialize)]
-pub struct RenameSuitLoadout {
+pub struct PowerplayMerits {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "SuitID")]
-    pub suit_id: u64,
+    #[serde(rename = "Power")]
+    pub power: String,
 
-    #[serde(rename = "SuitName")]
-    pub suit_name: String,
+    #[serde(rename = "MeritsGained")]
+    pub merits_gained: u64,
 
-    #[serde(rename = "SuitName_Localised")]
-    pub suit_name_localised: Option<String>,
-
-    #[serde(rename = "LoadoutID")]
-    pub loadout_id: u64,
-
-    #[serde(rename = "LoadoutName")]
-    pub loadout_name: String,
+    #[serde(rename = "TotalMerits")]
+    pub total_merits: u64,
 
 }
 
-/// When Written: when repairing the ship. When repairing on a FleetCarrier, you can get a list of the modules repaired
 #[derive(Clone, Debug, Deserialize)]
-pub struct Repair {
+pub struct SynthesisMaterial {
 
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    #[serde(rename = "Name")]
+    pub name: String,
 
-    #[serde(rename = "Cost")]
-    pub cost: u64,
+    #[serde(rename = "Count")]
+    pub count: u64,
 
-    /// all, wear, hull, paint, or name of module
-    #[serde(rename = "Item")]
-    pub item: Option<String>,
-
-    /// when repairing on a FleetCarrier
-    #[serde(rename = "Items")]
-    pub items: Option<Vec<String>>,
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
 
 }
 
@@ -6961,6 +6134,7 @@ pub struct Repair {
 #[derive(Clone, Debug, Deserialize)]
 pub struct RepairAll {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -6969,85 +6143,384 @@ pub struct RepairAll {
 
 }
 
-/// When written: when the player's ship has been repaired by a repair drone. Each of the values indicate the amount of damage that has been repaired
+/// When written: When you join another player ship's crew
 #[derive(Clone, Debug, Deserialize)]
-pub struct RepairDrone {
+pub struct JoinACrew {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "HullRepaired")]
-    pub hull_repaired: Option<f64>,
+    #[serde(rename = "Captain")]
+    pub captain: String,
 
-    #[serde(rename = "CockpitRepaired")]
-    pub cockpit_repaired: Option<f64>,
-
-    #[serde(rename = "CorrosionRepaired")]
-    pub corrosion_repaired: Option<f64>,
+    #[serde(rename = "Telepresence")]
+    pub telepresence: Option<bool>,
 
 }
 
-/// When written: at startup (after Rank and Progress). This gives the player's reputation (on a scale of -100..+100) with the superpowers
 #[derive(Clone, Debug, Deserialize)]
-pub struct Reputation {
+pub struct FSDJumpFactionActiveState {
 
+    #[serde(rename = "State")]
+    pub state: String,
+
+}
+
+/// When written: When another player joins your ship's crew
+#[derive(Clone, Debug, Deserialize)]
+pub struct CrewMemberJoins {
+
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Empire")]
-    pub empire: Option<f64>,
+    /// only from Odyssey build
+    #[serde(rename = "Telepresence")]
+    pub telepresence: Option<bool>,
 
-    #[serde(rename = "Federation")]
-    pub federation: Option<f64>,
-
-    #[serde(rename = "Alliance")]
-    pub alliance: Option<f64>,
-
-    #[serde(rename = "Independent")]
-    pub independent: Option<f64>,
+    /// Player's commander name
+    #[serde(rename = "Crew")]
+    pub crew: String,
 
 }
 
-/// When Written: when requesting power micro-resources.
+/// When written: when flying away from a planet, and distance increases above the 'Orbital Cruise' altitude
 #[derive(Clone, Debug, Deserialize)]
-pub struct RequestPowerMicroResources {
+pub struct LeaveBody {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    /// The total number of micro-resources requested.
-    #[serde(rename = "TotalCount")]
-    pub total_count: u64,
+    #[serde(rename = "StarSystem")]
+    pub star_system: String,
 
-    /// Details of the micro-resources requested.
-    #[serde(rename = "MicroResources")]
-    pub micro_resources: Vec<RequestPowerMicroResourcesMicroResources>,
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
 
-    /// The ID of the market where the request took place.
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
+    #[serde(rename = "Body")]
+    pub body: String,
+
+    #[serde(rename = "BodyID")]
+    pub body_id: u64,
 
 }
 
+/// When transferring cargo between ship and fleet carrier, or between ship and SRV
+#[derive(Clone, Debug, Deserialize)]
+pub struct CargoTransfer {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Transfers")]
+    pub transfers: Vec<CargoTransferTransfer>,
+
+}
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct RequestPowerMicroResourcesMicroResources {
+pub struct StatisticsCrew {
 
-    /// The internal name of the micro-resource.
+    #[serde(rename = "NpcCrew_TotalWages")]
+    pub npc_crew_total_wages: Option<u64>,
+
+    #[serde(rename = "NpcCrew_Hired")]
+    pub npc_crew_hired: Option<u64>,
+
+    #[serde(rename = "NpcCrew_Fired")]
+    pub npc_crew_fired: Option<u64>,
+
+    #[serde(rename = "NpcCrew_Died")]
+    pub npc_crew_died: Option<u64>,
+
+}
+
+/// When written: when shields are disabled in combat, or recharged
+#[derive(Clone, Debug, Deserialize)]
+pub struct ShieldState {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// false when disabled, true when restored
+    #[serde(rename = "ShieldsUp")]
+    pub shields_up: bool,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CommunityGoalCurrentGoal {
+
+    /// A unique ID number for the CG
+    #[serde(rename = "CGID")]
+    pub cgid: u64,
+
+    /// A description for the CG
+    #[serde(rename = "Title")]
+    pub title: String,
+
+    #[serde(rename = "SystemName")]
+    pub system_name: String,
+
+    #[serde(rename = "MarketName")]
+    pub market_name: String,
+
+    #[serde(rename = "Expiry", with = "crate::event::format::date")]
+    pub expiry: DateTime<Utc>,
+
+    #[serde(rename = "IsComplete")]
+    pub is_complete: bool,
+
+    #[serde(rename = "CurrentTotal")]
+    pub current_total: u64,
+
+    #[serde(rename = "PlayerContribution")]
+    pub player_contribution: u64,
+
+    #[serde(rename = "NumContributors")]
+    pub num_contributors: u64,
+
+    #[serde(rename = "TopTier")]
+    pub top_tier: CommunityGoalCurrentGoalTopTier,
+
+    /// If the community goal is constructed with a fixed-size top rank (ie max reward for top 10 players)
+    #[serde(rename = "TopRankSize")]
+    pub top_rank_size: Option<u64>,
+
+    /// If the community goal is constructed with a fixed-size top rank (ie max reward for top 10 players)
+    #[serde(rename = "PlayerInTopRank")]
+    pub player_in_top_rank: Option<bool>,
+
+    /// If the community goal has reached the first success
+    #[serde(rename = "TierReached")]
+    pub tier_reached: Option<String>,
+
+    #[serde(rename = "PlayerPercentileBand")]
+    pub player_percentile_band: u64,
+
+    /// If the community goal has reached the first success
+    #[serde(rename = "Bonus")]
+    pub bonus: Option<u64>,
+
+}
+
+/// When written: when the current player selects a new target
+#[derive(Clone, Debug, Deserialize)]
+pub struct ShipTargeted {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "TargetLocked")]
+    pub target_locked: bool,
+
+    #[serde(rename = "Ship")]
+    pub ship: Option<String>,
+
+    #[serde(rename = "ScanStage")]
+    pub scan_stage: Option<u64>,
+
+    /// If Scan stage >= 1
+    #[serde(rename = "PilotName")]
+    pub pilot_name: Option<String>,
+
+    /// If Scan stage >= 1
+    #[serde(rename = "PilotName_Localised")]
+    pub pilot_name_localised: Option<String>,
+
+    /// If Scan stage >= 1
+    #[serde(rename = "PilotRank")]
+    pub pilot_rank: Option<String>,
+
+    /// If Scan stage >= 2
+    #[serde(rename = "ShieldHealth")]
+    pub shield_health: Option<f64>,
+
+    /// If Scan stage >= 2
+    #[serde(rename = "HullHealth")]
+    pub hull_health: Option<f64>,
+
+    /// If Scan stage >= 3
+    #[serde(rename = "Faction")]
+    pub faction: Option<String>,
+
+    /// If Scan stage >= 3
+    #[serde(rename = "LegalStatus")]
+    pub legal_status: Option<String>,
+
+    /// If target locked
+    #[serde(rename = "Ship_Localised")]
+    pub ship_localised: Option<String>,
+
+    /// If target in a squadron
+    #[serde(rename = "SquadronID")]
+    pub squadron_id: Option<String>,
+
+    /// If the player is aligned in powerplay and the target is also aligned to a power
+    #[serde(rename = "Power")]
+    pub power: Option<String>,
+
+    /// If Scan stage >= 3
+    #[serde(rename = "Bounty")]
+    pub bounty: Option<u64>,
+
+    /// If Scan stage >= 3
+    #[serde(rename = "Subsystem")]
+    pub subsystem: Option<String>,
+
+    /// If Scan stage >= 3
+    #[serde(rename = "Subsystem_Localised")]
+    pub subsystem_localised: Option<String>,
+
+    /// If Scan stage >= 3
+    #[serde(rename = "SubsystemHealth")]
+    pub subsystem_health: Option<f64>,
+
+}
+
+/// Carrier Location. Written on startup and after a carrier jump.
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierLocation {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: u64,
+
+    #[serde(rename = "StarSystem")]
+    pub star_system: String,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    #[serde(rename = "BodyID")]
+    pub body_id: u64,
+
+}
+
+/// When written: when selling exploration data in Cartographics, a page at a time
+#[derive(Clone, Debug, Deserialize)]
+pub struct MultiSellExplorationData {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Discovered")]
+    pub discovered: Vec<MultiSellExplorationDataDiscovered>,
+
+    #[serde(rename = "BaseValue")]
+    pub base_value: u64,
+
+    #[serde(rename = "Bonus")]
+    pub bonus: u64,
+
+    #[serde(rename = "TotalEarnings")]
+    pub total_earnings: u64,
+
+}
+
+/// When written: when launching a fighter
+#[derive(Clone, Debug, Deserialize)]
+pub struct LaunchFighter {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Loadout")]
+    pub loadout: String,
+
+    #[serde(rename = "ID")]
+    pub id: u64,
+
+    /// Whether player is controlling the fighter from launch
+    #[serde(rename = "PlayerControlled")]
+    pub player_controlled: bool,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct LocationConflictFaction1 {
+
     #[serde(rename = "Name")]
     pub name: String,
 
-    /// The localized name of the micro-resource.
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
+    #[serde(rename = "Stake")]
+    pub stake: String,
 
-    /// The category of the micro-resource.
-    #[serde(rename = "Category")]
-    pub category: String,
+    #[serde(rename = "Stake_Localised")]
+    pub stake_localised: Option<String>,
 
-    /// The count of this type of micro-resource.
-    #[serde(rename = "Count")]
-    pub count: u64,
+    #[serde(rename = "WonDays")]
+    pub won_days: u64,
+
+}
+
+/// When written: Player rewarded for taking part in a combat zone
+#[derive(Clone, Debug, Deserialize)]
+pub struct FactionKillBond {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Reward")]
+    pub reward: u64,
+
+    #[serde(rename = "AwardingFaction")]
+    pub awarding_faction: String,
+
+    #[serde(rename = "AwardingFaction_Localised")]
+    pub awarding_faction_localised: Option<String>,
+
+    #[serde(rename = "VictimFaction")]
+    pub victim_faction: String,
+
+    #[serde(rename = "VictimFaction_Localised")]
+    pub victim_faction_localised: Option<String>,
+
+}
+
+/// When written: when dropping from Supercruise at a Unidentified Signal Source
+#[derive(Clone, Debug, Deserialize)]
+pub struct USSDrop {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "USSType")]
+    pub uss_type: String,
+
+    #[serde(rename = "USSType_Localised")]
+    pub uss_type_localised: Option<String>,
+
+    #[serde(rename = "USSThreat")]
+    pub uss_threat: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct FSDJumpConflictFaction1 {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Stake")]
+    pub stake: String,
+
+    #[serde(rename = "Stake_Localised")]
+    pub stake_localised: Option<String>,
+
+    #[serde(rename = "WonDays")]
+    pub won_days: u64,
 
 }
 
@@ -7055,6 +6528,7 @@ pub struct RequestPowerMicroResourcesMicroResources {
 #[derive(Clone, Debug, Deserialize)]
 pub struct ReservoirReplenished {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -7066,134 +6540,199 @@ pub struct ReservoirReplenished {
 
 }
 
-/// When Written: when purchasing an SRV or Fighter
 #[derive(Clone, Debug, Deserialize)]
-pub struct RestockVehicle {
+pub struct FSDJumpFactionRecoveringState {
 
+    #[serde(rename = "State")]
+    pub state: String,
+
+    #[serde(rename = "Trend")]
+    pub trend: u64,
+
+}
+
+/// At the time the player cancels decommission
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierCancelDecommission {
+
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Type")]
-    pub r#type: String,
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: u64,
 
-    #[serde(rename = "Type_Localised")]
-    pub type_localised: Option<String>,
+}
 
-    #[serde(rename = "Loadout")]
-    pub loadout: String,
+#[derive(Clone, Debug, Deserialize)]
+pub struct ModuleInfoModule {
 
-    #[serde(rename = "ID")]
-    pub id: Option<u64>,
+    #[serde(rename = "Slot")]
+    pub slot: String,
 
-    #[serde(rename = "Cost")]
-    pub cost: u64,
+    #[serde(rename = "Item")]
+    pub item: String,
 
-    /// Number of vehicles purchased
+    #[serde(rename = "Power")]
+    pub power: f64,
+
+    #[serde(rename = "Priority")]
+    pub priority: Option<u64>,
+
+}
+
+/// When Written: when a mission has failed
+#[derive(Clone, Debug, Deserialize)]
+pub struct MissionFailed {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "LocalisedName")]
+    pub localised_name: Option<String>,
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: u64,
+
+    #[serde(rename = "Fine")]
+    pub fine: Option<u64>,
+
+}
+
+/// When written: when looking at the cockpit Right Hand Side modules info panel, if data has changed. This also writes a ModulesInfo.json file alongside the journal, listing the modules in the same order as displayed.
+#[derive(Clone, Debug, Deserialize)]
+pub struct ModuleInfo {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// When written to ModulesInfo.json
+    #[serde(rename = "Modules")]
+    pub modules: Option<Vec<ModuleInfoModule>>,
+
+}
+
+/// This is written when a crew member's combat rank increases
+#[derive(Clone, Debug, Deserialize)]
+pub struct NpcCrewRank {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "NpcCrewName")]
+    pub npc_crew_name: String,
+
+    #[serde(rename = "NpcCrewId")]
+    pub npc_crew_id: u64,
+
+    #[serde(rename = "RankCombat")]
+    pub rank_combat: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct AppliedToSquadron {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "SquadronName")]
+    pub squadron_name: String,
+
+}
+
+/// When Written: if materials are discarded
+#[derive(Clone, Debug, Deserialize)]
+pub struct MaterialDiscarded {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Category")]
+    pub category: String,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    /// Number of units discarded
     #[serde(rename = "Count")]
     pub count: u64,
 
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct Resupply {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    /// The localised value will be omitted if it is exactly the same as Name
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
 
 }
 
-/// When written: when the player restarts after death
+/// When written: when the player has broken up a ‘Motherlode’ asteroid for mining
 #[derive(Clone, Debug, Deserialize)]
-pub struct Resurrect {
+pub struct AsteroidCracked {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    /// The option selected on the insurance rebuy screen
-    #[serde(rename = "Option")]
-    pub option: String,
-
-    /// The price paid
-    #[serde(rename = "Cost")]
-    pub cost: u64,
-
-    /// Whether the commander declared bankruptcy
-    #[serde(rename = "Bankrupt")]
-    pub bankrupt: bool,
+    #[serde(rename = "Body")]
+    pub body: String,
 
 }
 
-/// When written: after using the Surface Area Analysis Scanner
+/// When written: when using the discovery scanner, and new body discoveries are displayed in the cockpit info window. Note you can get two or three of these in a row, where some bodies are discovered by the automatic passive scan, before the active scan is complete.
 #[derive(Clone, Debug, Deserialize)]
-pub struct SAAScanComplete {
+pub struct DiscoveryScan {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "BodyName")]
-    pub body_name: String,
 
     #[serde(rename = "SystemAddress")]
     pub system_address: u64,
 
-    #[serde(rename = "BodyID")]
-    pub body_id: u64,
-
-    #[serde(rename = "ProbesUsed")]
-    pub probes_used: u64,
-
-    #[serde(rename = "EfficiencyTarget")]
-    pub efficiency_target: u64,
+    /// Number of new bodies discovered
+    #[serde(rename = "Bodies")]
+    pub bodies: u64,
 
 }
 
-/// When written: when using Surface Area Analysis Scanner on a planet or rings
+/// When Written: When a system is claimed for colonisation by paying for the claim.
 #[derive(Clone, Debug, Deserialize)]
-pub struct SAASignalsFound {
+pub struct ColonisationSystemClaim {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "BodyName")]
-    pub body_name: String,
+    #[serde(rename = "StarSystem")]
+    pub star_system: String,
 
     #[serde(rename = "SystemAddress")]
     pub system_address: u64,
 
-    #[serde(rename = "BodyID")]
-    pub body_id: u64,
-
-    #[serde(rename = "Signals")]
-    pub signals: Vec<SAASignalsFoundSignals>,
-
-    #[serde(rename = "Genuses")]
-    pub genuses: Option<Vec<SAASignalsFoundGenuses>>,
-
 }
 
-
+/// When written: when in multicrew, in Helm player's log, when a crew member launches a fighter
 #[derive(Clone, Debug, Deserialize)]
-pub struct SAASignalsFoundGenuses {
+pub struct CrewLaunchFighter {
 
-    #[serde(rename = "Genus")]
-    pub genus: String,
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Genus_Localised")]
-    pub genus_localised: Option<String>,
+    /// only from Odyssey build
+    #[serde(rename = "Telepresence")]
+    pub telepresence: bool,
 
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct SAASignalsFoundSignals {
-
-    #[serde(rename = "Type")]
-    pub r#type: String,
-
-    #[serde(rename = "Type_Localised")]
-    pub type_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
+    /// Name of crew member launching in fighter
+    #[serde(rename = "Crew")]
+    pub crew: String,
 
 }
 
@@ -7201,6 +6740,7 @@ pub struct SAASignalsFoundSignals {
 #[derive(Clone, Debug, Deserialize)]
 pub struct Scan {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -7218,7 +6758,7 @@ pub struct Scan {
 
     /// Written for Star/Planet/Moon
     #[serde(rename = "Parents")]
-    pub parents: Option<Vec<ScanParents>>,
+    pub parents: Option<Vec<ScanParent>>,
 
     /// Written for Star
     #[serde(rename = "StarSystem")]
@@ -7358,11 +6898,11 @@ pub struct Scan {
 
     /// Written for Star/Planet/Moon. If rings present.
     #[serde(rename = "Rings")]
-    pub rings: Option<Vec<ScanRings>>,
+    pub rings: Option<Vec<ScanRing>>,
 
     /// Written for Planet/Moon
     #[serde(rename = "Materials")]
-    pub materials: Option<Vec<ScanMaterials>>,
+    pub materials: Option<Vec<ScanMaterial>>,
 
     /// Written for Planet/Moon. If rings present.
     #[serde(rename = "ReserveLevel")]
@@ -7370,52 +6910,22 @@ pub struct Scan {
 
 }
 
-
-/// Written for Planet/Moon
+/// When written: when the reboot repair function is used
 #[derive(Clone, Debug, Deserialize)]
-pub struct ScanComposition {
+pub struct RebootRepair {
 
-    #[serde(rename = "Ice")]
-    pub ice: f64,
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Rock")]
-    pub rock: f64,
-
-    #[serde(rename = "Metal")]
-    pub metal: f64,
+    /// Array of names of modules repaired
+    #[serde(rename = "Modules")]
+    pub modules: Vec<String>,
 
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct ScanAtmosphereComposition {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Percent")]
-    pub percent: f64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct ScanParents {
-
-    #[serde(rename = "Star")]
-    pub star: Option<u64>,
-
-    #[serde(rename = "Null")]
-    pub null: Option<u64>,
-
-    #[serde(rename = "Ring")]
-    pub ring: Option<u64>,
-
-    #[serde(rename = "Planet")]
-    pub planet: Option<u64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct ScanMaterials {
+pub struct TechnologyBrokerCommodity {
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -7423,41 +6933,116 @@ pub struct ScanMaterials {
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
 
-    #[serde(rename = "Percent")]
-    pub percent: f64,
+    #[serde(rename = "Count")]
+    pub count: u64,
 
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct ScanRings {
+pub struct EngineerLegacyConvertModifier {
+
+    #[serde(rename = "Label")]
+    pub label: String,
+
+    #[serde(rename = "Value")]
+    pub value: f64,
+
+    #[serde(rename = "OriginalValue")]
+    pub original_value: f64,
+
+    #[serde(rename = "LessIsGood")]
+    pub less_is_good: u64,
+
+}
+
+/// When written: when putting multiple modules into storage
+#[derive(Clone, Debug, Deserialize)]
+pub struct MassModuleStore {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "Ship")]
+    pub ship: String,
+
+    #[serde(rename = "ShipID")]
+    pub ship_id: u64,
+
+    #[serde(rename = "Items")]
+    pub items: Vec<MassModuleStoreItem>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct MissionsComplete {
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: u64,
 
     #[serde(rename = "Name")]
     pub name: String,
 
-    #[serde(rename = "RingClass")]
-    pub ring_class: String,
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
 
-    /// In megatons
-    #[serde(rename = "MassMT")]
-    pub mass_mt: f64,
+    #[serde(rename = "PassengerMission")]
+    pub passenger_mission: bool,
 
-    #[serde(rename = "InnerRad")]
-    pub inner_rad: f64,
-
-    #[serde(rename = "OuterRad")]
-    pub outer_rad: f64,
+    /// Time left in seconds
+    #[serde(rename = "Expires")]
+    pub expires: u64,
 
 }
 
-/// When scanning one body of a binary pair, you will get an event detailing the orbital parameters of their BaryCentre
 #[derive(Clone, Debug, Deserialize)]
-pub struct ScanBaryCentre {
+pub struct LeftSquadron {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "StarSystem")]
-    pub star_system: String,
+    #[serde(rename = "SquadronName")]
+    pub squadron_name: String,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsCQC {
+
+    #[serde(rename = "CQC_Credits_Earned")]
+    pub cqc_credits_earned: Option<u64>,
+
+    #[serde(rename = "CQC_Time_Played")]
+    pub cqc_time_played: u64,
+
+    #[serde(rename = "CQC_KD")]
+    pub cqc_kd: f64,
+
+    #[serde(rename = "CQC_Kills")]
+    pub cqc_kills: u64,
+
+    #[serde(rename = "CQC_WL")]
+    pub cqc_wl: f64,
+
+}
+
+/// When written: when approaching a planetary settlement
+#[derive(Clone, Debug, Deserialize)]
+pub struct ApproachSettlement {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: Option<u64>,
 
     #[serde(rename = "SystemAddress")]
     pub system_address: u64,
@@ -7465,124 +7050,8 @@ pub struct ScanBaryCentre {
     #[serde(rename = "BodyID")]
     pub body_id: u64,
 
-    #[serde(rename = "SemiMajorAxis")]
-    pub semi_major_axis: f64,
-
-    #[serde(rename = "Eccentricity")]
-    pub eccentricity: f64,
-
-    #[serde(rename = "OrbitalInclination")]
-    pub orbital_inclination: f64,
-
-    #[serde(rename = "Periapsis")]
-    pub periapsis: f64,
-
-    #[serde(rename = "OrbitalPeriod")]
-    pub orbital_period: f64,
-
-    #[serde(rename = "AscendingNode")]
-    pub ascending_node: f64,
-
-    #[serde(rename = "MeanAnomaly")]
-    pub mean_anomaly: f64,
-
-}
-
-/// When written: when the player's ship has been scanned (The Scan Detected indication is at the start of the scan, this is written at the end of a successful scan)
-#[derive(Clone, Debug, Deserialize)]
-pub struct Scanned {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "ScanType")]
-    pub scan_type: String,
-
-}
-
-/// This event is logged when the player uses the Organic Sampling Tool to scan, log or analyse organic discoveries. The first scan is Log, subsequent scans are Sample until fully scanned, final scan is Analyse
-#[derive(Clone, Debug, Deserialize)]
-pub struct ScanOrganic {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "ScanType")]
-    pub scan_type: String,
-
-    #[serde(rename = "Genus")]
-    pub genus: String,
-
-    #[serde(rename = "Genus_Localised")]
-    pub genus_localised: Option<String>,
-
-    #[serde(rename = "Species")]
-    pub species: String,
-
-    #[serde(rename = "Species_Localised")]
-    pub species_localised: Option<String>,
-
-    #[serde(rename = "Variant")]
-    pub variant: Option<String>,
-
-    #[serde(rename = "Variant_Localised")]
-    pub variant_localised: Option<String>,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-    #[serde(rename = "Body")]
-    pub body: u64,
-
-}
-
-/// When written: when contributing materials to a research community goal
-#[derive(Clone, Debug, Deserialize)]
-pub struct ScientificResearch {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "Category")]
-    pub category: String,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    /// The localised value will be omitted if it is exactly the same as Name
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-}
-
-/// When Written: when a screen snapshot is saved. The latitude, longitude, altitude and heading will be included if on a planet or in low-altitude flight.
-#[derive(Clone, Debug, Deserialize)]
-pub struct Screenshot {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// Filename of screenshot
-    #[serde(rename = "Filename")]
-    pub filename: String,
-
-    #[serde(rename = "Width")]
-    pub width: u64,
-
-    #[serde(rename = "Height")]
-    pub height: u64,
-
-    #[serde(rename = "System")]
-    pub system: Option<String>,
-
-    #[serde(rename = "Body")]
-    pub body: Option<String>,
+    #[serde(rename = "BodyName")]
+    pub body_name: String,
 
     #[serde(rename = "Latitude")]
     pub latitude: Option<f64>,
@@ -7590,227 +7059,79 @@ pub struct Screenshot {
     #[serde(rename = "Longitude")]
     pub longitude: Option<f64>,
 
-    #[serde(rename = "Altitude")]
-    pub altitude: Option<f64>,
-
-    #[serde(rename = "Heading")]
-    pub heading: Option<u64>,
-
-}
-
-/// When written: when delivering items to a Search and Rescue contact
-#[derive(Clone, Debug, Deserialize)]
-pub struct SearchAndRescue {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
 
-    #[serde(rename = "Count")]
-    pub count: u64,
+    #[serde(rename = "StationFaction")]
+    pub station_faction: Option<ApproachSettlementStationFaction>,
 
-    #[serde(rename = "Reward")]
-    pub reward: u64,
+    #[serde(rename = "StationGovernment")]
+    pub station_government: Option<String>,
+
+    #[serde(rename = "StationGovernment_Localised")]
+    pub station_government_localised: Option<String>,
+
+    #[serde(rename = "StationAllegiance")]
+    pub station_allegiance: Option<String>,
+
+    #[serde(rename = "StationServices")]
+    pub station_services: Option<Vec<String>>,
+
+    #[serde(rename = "StationEconomy")]
+    pub station_economy: Option<String>,
+
+    #[serde(rename = "StationEconomy_Localised")]
+    pub station_economy_localised: Option<String>,
+
+    #[serde(rename = "StationEconomies")]
+    pub station_economies: Option<Vec<ApproachSettlementStationEconomy>>,
 
 }
 
-/// When written: when the self destruct function is used
 #[derive(Clone, Debug, Deserialize)]
-pub struct SelfDestruct {
+pub struct Interdiction {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-}
+    #[serde(rename = "Success")]
+    pub success: bool,
 
-/// When Written: when selling unwanted drones back to the market
-#[derive(Clone, Debug, Deserialize)]
-pub struct SellDrones {
+    #[serde(rename = "Submitted")]
+    pub submitted: Option<bool>,
 
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    /// Victim pilot name
+    #[serde(rename = "Interdicted")]
+    pub interdicted: String,
 
-    #[serde(rename = "Type")]
-    pub r#type: String,
+    /// Victim pilot name
+    #[serde(rename = "Interdicted_Localised")]
+    pub interdicted_localised: Option<String>,
 
-    #[serde(rename = "Count")]
-    pub count: u64,
+    /// Whether player or npc
+    #[serde(rename = "IsPlayer")]
+    pub is_player: bool,
 
-    #[serde(rename = "SellPrice")]
-    pub sell_price: u64,
+    /// If a player
+    #[serde(rename = "CombatRank")]
+    pub combat_rank: Option<u64>,
 
-    #[serde(rename = "TotalSale")]
-    pub total_sale: u64,
+    /// If npc
+    #[serde(rename = "Faction")]
+    pub faction: Option<String>,
 
-}
-
-/// When Written: when selling exploration data in Cartographics
-#[derive(Clone, Debug, Deserialize)]
-pub struct SellExplorationData {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Systems")]
-    pub systems: Vec<String>,
-
-    #[serde(rename = "Discovered")]
-    pub discovered: Vec<String>,
-
-    #[serde(rename = "BaseValue")]
-    pub base_value: u64,
-
-    /// Bonus for first discoveries
-    #[serde(rename = "Bonus")]
-    pub bonus: u64,
-
-    /// Total credits received (including for example the 200% bonus if rank 5 with Li Yong Rui)
-    #[serde(rename = "TotalEarnings")]
-    pub total_earnings: u64,
+    /// If npc is working for a power
+    #[serde(rename = "Power")]
+    pub power: Option<String>,
 
 }
 
-/// This event is logged when a player sells Microresources for cash
+/// This event is logged when purchasing a new hand weapon
 #[derive(Clone, Debug, Deserialize)]
-pub struct SellMicroResources {
+pub struct BuyWeapon {
 
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "TotalCount")]
-    pub total_count: u64,
-
-    #[serde(rename = "MicroResources")]
-    pub micro_resources: Vec<SellMicroResourcesMicroResources>,
-
-    #[serde(rename = "Price")]
-    pub price: u64,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct SellMicroResourcesMicroResources {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Category")]
-    pub category: String,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-}
-
-/// This event records that a player has sold organic data (see ScanOrganic)
-#[derive(Clone, Debug, Deserialize)]
-pub struct SellOrganicData {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "BioData")]
-    pub bio_data: Vec<SellOrganicDataBioData>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct SellOrganicDataBioData {
-
-    #[serde(rename = "Genus")]
-    pub genus: String,
-
-    #[serde(rename = "Genus_Localised")]
-    pub genus_localised: Option<String>,
-
-    #[serde(rename = "Species")]
-    pub species: String,
-
-    #[serde(rename = "Species_Localised")]
-    pub species_localised: Option<String>,
-
-    #[serde(rename = "Variant")]
-    pub variant: Option<String>,
-
-    #[serde(rename = "Variant_Localised")]
-    pub variant_localised: Option<String>,
-
-    #[serde(rename = "Value")]
-    pub value: u64,
-
-    #[serde(rename = "Bonus")]
-    pub bonus: u64,
-
-}
-
-/// When written: When selling a stored ship to raise funds when on insurance/rebuy screen
-#[derive(Clone, Debug, Deserialize)]
-pub struct SellShipOnRebuy {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "ShipType")]
-    pub ship_type: String,
-
-    #[serde(rename = "System")]
-    pub system: String,
-
-    #[serde(rename = "SellShipId")]
-    pub sell_ship_id: u64,
-
-    #[serde(rename = "ShipPrice")]
-    pub ship_price: u64,
-
-}
-
-/// This event is logged when a player sells a flight suit
-#[derive(Clone, Debug, Deserialize)]
-pub struct SellSuit {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "SuitID")]
-    pub suit_id: u64,
-
-    #[serde(rename = "SuitMods")]
-    pub suit_mods: Vec<String>,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Price")]
-    pub price: u64,
-
-}
-
-/// This event is logged when a player sells a hand weapon
-#[derive(Clone, Debug, Deserialize)]
-pub struct SellWeapon {
-
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -7823,32 +7144,680 @@ pub struct SellWeapon {
     #[serde(rename = "Class")]
     pub class: u64,
 
-    #[serde(rename = "WeaponMods")]
-    pub weapon_mods: Vec<String>,
-
     #[serde(rename = "Price")]
     pub price: u64,
 
     #[serde(rename = "SuitModuleID")]
     pub suit_module_id: u64,
 
+    #[serde(rename = "WeaponMods")]
+    pub weapon_mods: Vec<String>,
+
 }
 
-/// When written: when a text message is sent to another player
 #[derive(Clone, Debug, Deserialize)]
-pub struct SendText {
+pub struct DockedStationFaction {
 
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "FactionState")]
+    pub faction_state: Option<String>,
+
+}
+
+/// This event is written to Status.json which is updated every few seconds
+#[derive(Clone, Debug, Deserialize)]
+pub struct Status {
+
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "To")]
-    pub to: String,
+    #[serde(rename = "Flags")]
+    pub flags: u64,
 
-    #[serde(rename = "Message")]
-    pub message: String,
+    #[serde(rename = "Pips")]
+    pub pips: Option<Vec<u64>>,
 
-    #[serde(rename = "Sent")]
-    pub sent: bool,
+    #[serde(rename = "FireGroup")]
+    pub fire_group: Option<u64>,
+
+    #[serde(rename = "Fuel")]
+    pub fuel: Option<StatusFuel>,
+
+    #[serde(rename = "GuiFocus")]
+    pub gui_focus: Option<u64>,
+
+    #[serde(rename = "Latitude")]
+    pub latitude: Option<f64>,
+
+    #[serde(rename = "Longitude")]
+    pub longitude: Option<f64>,
+
+    #[serde(rename = "Heading")]
+    pub heading: Option<u64>,
+
+    #[serde(rename = "Altitude")]
+    pub altitude: Option<u64>,
+
+    #[serde(rename = "Flags2")]
+    pub flags2: Option<u64>,
+
+    #[serde(rename = "Cargo")]
+    pub cargo: Option<f64>,
+
+    #[serde(rename = "LegalState")]
+    pub legal_state: Option<String>,
+
+    #[serde(rename = "Balance")]
+    pub balance: Option<u64>,
+
+    #[serde(rename = "Oxygen")]
+    pub oxygen: Option<f64>,
+
+    #[serde(rename = "Health")]
+    pub health: Option<f64>,
+
+    #[serde(rename = "Temperature")]
+    pub temperature: Option<f64>,
+
+    #[serde(rename = "SelectedWeapon")]
+    pub selected_weapon: Option<String>,
+
+    #[serde(rename = "BodyName")]
+    pub body_name: Option<String>,
+
+    #[serde(rename = "Destination")]
+    pub destination: Option<StatusDestination>,
+
+    #[serde(rename = "PlanetRadius")]
+    pub planet_radius: Option<f64>,
+
+    #[serde(rename = "SelectedWeapon_Localised")]
+    pub selected_weapon_localised: Option<String>,
+
+    #[serde(rename = "Gravity")]
+    pub gravity: Option<f64>,
+
+}
+
+/// When written: at startup (after Rank and Progress). This gives the player's reputation (on a scale of -100..+100) with the superpowers
+#[derive(Clone, Debug, Deserialize)]
+pub struct Reputation {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Empire")]
+    pub empire: Option<f64>,
+
+    #[serde(rename = "Federation")]
+    pub federation: Option<f64>,
+
+    #[serde(rename = "Alliance")]
+    pub alliance: Option<f64>,
+
+    #[serde(rename = "Independent")]
+    pub independent: Option<f64>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct RedeemVoucherFaction {
+
+    #[serde(rename = "Faction")]
+    pub faction: String,
+
+    #[serde(rename = "Amount")]
+    pub amount: u64,
+
+}
+
+/// When written: when storing a module in Outfitting
+#[derive(Clone, Debug, Deserialize)]
+pub struct ModuleStore {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "Slot")]
+    pub slot: String,
+
+    #[serde(rename = "StoredItem")]
+    pub stored_item: String,
+
+    /// If a core module is stored. Documented, but appears to be unused.
+    #[serde(rename = "ReplacementItem")]
+    pub replacement_item: Option<String>,
+
+    /// If a core module is stored. Documented, but appears to be unused.
+    #[serde(rename = "StoredItem_Localised")]
+    pub stored_item_localised: Option<String>,
+
+    #[serde(rename = "Ship")]
+    pub ship: String,
+
+    #[serde(rename = "ShipID")]
+    pub ship_id: u64,
+
+    #[serde(rename = "Hot")]
+    pub hot: Option<bool>,
+
+    #[serde(rename = "EngineerModifications")]
+    pub engineer_modifications: Option<String>,
+
+    #[serde(rename = "Level")]
+    pub level: Option<u64>,
+
+    #[serde(rename = "Quality")]
+    pub quality: Option<f64>,
+
+    #[serde(rename = "Cost")]
+    pub cost: Option<u64>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierJumpFactionRecoveringState {
+
+    #[serde(rename = "State")]
+    pub state: String,
+
+    #[serde(rename = "Trend")]
+    pub trend: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierStatsSpaceUsage {
+
+    #[serde(rename = "TotalCapacity")]
+    pub total_capacity: u64,
+
+    #[serde(rename = "Crew")]
+    pub crew: u64,
+
+    #[serde(rename = "Cargo")]
+    pub cargo: u64,
+
+    #[serde(rename = "CargoSpaceReserved")]
+    pub cargo_space_reserved: u64,
+
+    #[serde(rename = "ShipPacks")]
+    pub ship_packs: u64,
+
+    #[serde(rename = "ModulePacks")]
+    pub module_packs: u64,
+
+    #[serde(rename = "FreeSpace")]
+    pub free_space: u64,
+
+}
+
+/// When written: when the captain in multicrew disbands the crew
+#[derive(Clone, Debug, Deserialize)]
+pub struct EndCrewSession {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// true if crew disbanded as a result of a crime in a lawful session
+    #[serde(rename = "OnCrime")]
+    pub on_crime: bool,
+
+    /// only from Odyssey build
+    #[serde(rename = "Telepresence")]
+    pub telepresence: Option<bool>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct UpgradeWeapon {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Class")]
+    pub class: u64,
+
+    #[serde(rename = "SuitModuleID")]
+    pub suit_module_id: u64,
+
+    #[serde(rename = "Cost")]
+    pub cost: u64,
+
+    #[serde(rename = "Resources")]
+    pub resources: Option<Vec<UpgradeWeaponResource>>,
+
+}
+
+/// When written: when a new discovery is added to the Codex
+#[derive(Clone, Debug, Deserialize)]
+pub struct CodexEntry {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "EntryID")]
+    pub entry_id: u64,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "SubCategory")]
+    pub sub_category: String,
+
+    #[serde(rename = "SubCategory_Localised")]
+    pub sub_category_localised: Option<String>,
+
+    #[serde(rename = "Category")]
+    pub category: String,
+
+    #[serde(rename = "Category_Localised")]
+    pub category_localised: Option<String>,
+
+    #[serde(rename = "Region")]
+    pub region: String,
+
+    #[serde(rename = "Region_Localised")]
+    pub region_localised: Option<String>,
+
+    #[serde(rename = "System")]
+    pub system: String,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    #[serde(rename = "BodyID")]
+    pub body_id: Option<u64>,
+
+    #[serde(rename = "Latitude")]
+    pub latitude: Option<f64>,
+
+    #[serde(rename = "Longitude")]
+    pub longitude: Option<f64>,
+
+    #[serde(rename = "VoucherAmount")]
+    pub voucher_amount: Option<u64>,
+
+    /// The NearestDestination is added if within 50km of a location listed in the navigation panel
+    #[serde(rename = "NearestDestination")]
+    pub nearest_destination: Option<String>,
+
+    #[serde(rename = "NearestDestination_Localised")]
+    pub nearest_destination_localised: Option<String>,
+
+    /// The IsNewEntry field is optional depending on the results of the scan
+    #[serde(rename = "IsNewEntry")]
+    pub is_new_entry: Option<bool>,
+
+    /// The NewTraitsDiscovered field is optional depending on the results of the scan
+    #[serde(rename = "NewTraitsDiscovered")]
+    pub new_traits_discovered: Option<bool>,
+
+    /// The Traits field is only available for entries that have unlocked traits
+    #[serde(rename = "Traits")]
+    pub traits: Option<Vec<String>>,
+
+}
+
+/// When written: when the player cancels a docking request
+#[derive(Clone, Debug, Deserialize)]
+pub struct DockingCancelled {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "StationName")]
+    pub station_name: String,
+
+    #[serde(rename = "StationName_Localised")]
+    pub station_name_localised: Option<String>,
+
+    #[serde(rename = "StationType")]
+    pub station_type: String,
+
+}
+
+/// When written: on a clean shutdown of the game
+#[derive(Clone, Debug, Deserialize)]
+pub struct Shutdown {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+}
+
+/// When using a prospecting drone
+#[derive(Clone, Debug, Deserialize)]
+pub struct ProspectedAsteroid {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Materials")]
+    pub materials: Vec<ProspectedAsteroidMaterial>,
+
+    #[serde(rename = "Content")]
+    pub content: String,
+
+    #[serde(rename = "Content_Localised")]
+    pub content_localised: Option<String>,
+
+    /// Percentage of materials remaining
+    #[serde(rename = "Remaining")]
+    pub remaining: f64,
+
+    /// If it’s a motherlode
+    #[serde(rename = "MotherlodeMaterial")]
+    pub motherlode_material: Option<String>,
+
+    /// If it’s a motherlode. The localised value will be omitted if it is exactly the same as MotherlodeMaterial
+    #[serde(rename = "MotherlodeMaterial_Localised")]
+    pub motherlode_material_localised: Option<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct FSDJumpFaction {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "FactionState")]
+    pub faction_state: String,
+
+    #[serde(rename = "Government")]
+    pub government: String,
+
+    #[serde(rename = "Influence")]
+    pub influence: f64,
+
+    #[serde(rename = "Allegiance")]
+    pub allegiance: String,
+
+    #[serde(rename = "Happiness")]
+    pub happiness: String,
+
+    /// Happiness values are: Elated, Happy, Discontented, Unhappy, Despondent
+    #[serde(rename = "Happiness_Localised")]
+    pub happiness_localised: Option<String>,
+
+    #[serde(rename = "MyReputation")]
+    pub my_reputation: f64,
+
+    /// Array with State names (Note active states do not have a Trend value)
+    #[serde(rename = "ActiveStates")]
+    pub active_states: Option<Vec<FSDJumpFactionActiveState>>,
+
+    /// Array (if any) with State name and Trend value
+    #[serde(rename = "RecoveringStates")]
+    pub recovering_states: Option<Vec<FSDJumpFactionRecoveringState>>,
+
+    /// Array (if any) with State name and Trend value
+    #[serde(rename = "PendingStates")]
+    pub pending_states: Option<Vec<FSDJumpFactionPendingState>>,
+
+    /// If player is in squadron aligned to this faction
+    #[serde(rename = "SquadronFaction")]
+    pub squadron_faction: Option<bool>,
+
+    /// If player squadron faction, and this is happiest system
+    #[serde(rename = "HappiestSystem")]
+    pub happiest_system: Option<bool>,
+
+    /// If player squadron faction, and this is home system
+    #[serde(rename = "HomeSystem")]
+    pub home_system: Option<bool>,
+
+}
+
+/// When written: when the player is invited to a wing
+#[derive(Clone, Debug, Deserialize)]
+pub struct WingInvite {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+}
+
+/// When written: when fetching a previously stored module
+#[derive(Clone, Debug, Deserialize)]
+pub struct ModuleRetrieve {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "Slot")]
+    pub slot: String,
+
+    #[serde(rename = "RetrievedItem")]
+    pub retrieved_item: String,
+
+    #[serde(rename = "RetrievedItem_Localised")]
+    pub retrieved_item_localised: Option<String>,
+
+    #[serde(rename = "Ship")]
+    pub ship: String,
+
+    #[serde(rename = "ShipID")]
+    pub ship_id: u64,
+
+    #[serde(rename = "Hot")]
+    pub hot: bool,
+
+    #[serde(rename = "EngineerModifications")]
+    pub engineer_modifications: Option<String>,
+
+    #[serde(rename = "Level")]
+    pub level: Option<u64>,
+
+    #[serde(rename = "Quality")]
+    pub quality: Option<f64>,
+
+    /// If slot was not empty
+    #[serde(rename = "SwapOutItem")]
+    pub swap_out_item: Option<String>,
+
+    /// If slot was not empty
+    #[serde(rename = "SwapOutItem_Localised")]
+    pub swap_out_item_localised: Option<String>,
+
+}
+
+/// When Written: when scooping cargo from space or planet surface
+#[derive(Clone, Debug, Deserialize)]
+pub struct CollectCargo {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+    /// The localised value will be omitted if it is exactly the same as Type
+    #[serde(rename = "Type_Localised")]
+    pub type_localised: Option<String>,
+
+    #[serde(rename = "Stolen")]
+    pub stolen: bool,
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: Option<u64>,
+
+}
+
+/// When written: when changing the task assignment of a member of crew
+#[derive(Clone, Debug, Deserialize)]
+pub struct CrewAssign {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "CrewID")]
+    pub crew_id: u64,
+
+    #[serde(rename = "Role")]
+    pub role: String,
+
+}
+
+/// Thargoid war information
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierJumpThargoidWar {
+
+    #[serde(rename = "CurrentState")]
+    pub current_state: String,
+
+    #[serde(rename = "NextStateSuccess")]
+    pub next_state_success: Option<String>,
+
+    #[serde(rename = "NextStateFailure")]
+    pub next_state_failure: Option<String>,
+
+    #[serde(rename = "SuccessStateReached")]
+    pub success_state_reached: bool,
+
+    #[serde(rename = "WarProgress")]
+    pub war_progress: Option<f64>,
+
+    #[serde(rename = "RemainingPorts")]
+    pub remaining_ports: Option<u64>,
+
+    #[serde(rename = "EstimatedRemainingTime")]
+    pub estimated_remaining_time: Option<String>,
+
+}
+
+/// When plotting a multi-star route, the file NavRoute.json is written in the same directory as the journal, with a list of stars along that route
+#[derive(Clone, Debug, Deserialize)]
+pub struct NavRoute {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Route")]
+    pub route: Option<Vec<NavRouteRoute>>,
+
+}
+
+/// When written: at startup, when loading from main menu, or when switching ships, or after changing the ship in Outfitting, or when docking SRV back in mothership
+#[derive(Clone, Debug, Deserialize)]
+pub struct Loadout {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Ship")]
+    pub ship: String,
+
+    /// Ship id number (indicates which of your ships you are in)
+    #[serde(rename = "ShipID")]
+    pub ship_id: u64,
+
+    /// User-defined ship name
+    #[serde(rename = "ShipName")]
+    pub ship_name: String,
+
+    /// User-defined ship ID string
+    #[serde(rename = "ShipIdent")]
+    pub ship_ident: String,
+
+    #[serde(rename = "HullValue")]
+    pub hull_value: Option<u64>,
+
+    #[serde(rename = "ModulesValue")]
+    pub modules_value: Option<u64>,
+
+    #[serde(rename = "HullHealth")]
+    pub hull_health: f64,
+
+    /// Mass of Hull and Modules, excludes fuel and cargo
+    #[serde(rename = "UnladenMass")]
+    pub unladen_mass: f64,
+
+    #[serde(rename = "CargoCapacity")]
+    pub cargo_capacity: u64,
+
+    /// based on zero cargo, and just enough fuel for 1 jump
+    #[serde(rename = "MaxJumpRange")]
+    pub max_jump_range: f64,
+
+    #[serde(rename = "FuelCapacity")]
+    pub fuel_capacity: LoadoutFuelCapacity,
+
+    #[serde(rename = "Rebuy")]
+    pub rebuy: u64,
+
+    #[serde(rename = "Modules")]
+    pub modules: Vec<LoadoutModule>,
+
+    /// If wanted at startup
+    #[serde(rename = "Hot")]
+    pub hot: Option<bool>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierJumpFactionActiveState {
+
+    #[serde(rename = "State")]
+    pub state: String,
+
+}
+
+/// This is written when there is any change to the contents of the suit backpack – note this can be written at the same time as other events like UseConsumable
+#[derive(Clone, Debug, Deserialize)]
+pub struct BackpackChange {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Added")]
+    pub added: Option<Vec<BackpackChangeEntry>>,
+
+    #[serde(rename = "Removed")]
+    pub removed: Option<Vec<BackpackChangeEntry>>,
 
 }
 
@@ -7856,6 +7825,7 @@ pub struct SendText {
 #[derive(Clone, Debug, Deserialize)]
 pub struct SetUserShipName {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -7874,424 +7844,42 @@ pub struct SetUserShipName {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct SharedBookmarkToSquadron {
+pub struct StatusDestination {
 
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "SquadronName")]
-    pub squadron_name: String,
-
-}
-
-/// When written: when shields are disabled in combat, or recharged
-#[derive(Clone, Debug, Deserialize)]
-pub struct ShieldState {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// false when disabled, true when restored
-    #[serde(rename = "ShieldsUp")]
-    pub shields_up: bool,
-
-}
-
-/// Lists the contents of the ship locker, eg at startup. The full contents are written to a separate file, ShipLocker.json. The full list is also written into the journal at startup (if in a ship) and when boarding a ship. The shiplocker.json file is updated when the locker contents are changed.
-#[derive(Clone, Debug, Deserialize)]
-pub struct ShipLocker {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Items")]
-    pub items: Option<Vec<Item>>,
-
-    #[serde(rename = "Components")]
-    pub components: Option<Vec<Component>>,
-
-    #[serde(rename = "Consumables")]
-    pub consumables: Option<Vec<Consumable>>,
-
-    #[serde(rename = "Data")]
-    pub data: Option<Vec<Data>>,
-
-}
-
-/// Same as ShipLocker, but discontinued.
-#[derive(Clone, Debug, Deserialize)]
-pub struct ShipLockerMaterials {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Items")]
-    pub items: Vec<ShipLockerMaterialsItems>,
-
-    #[serde(rename = "Components")]
-    pub components: Vec<ShipLockerMaterialsComponents>,
-
-    #[serde(rename = "Consumables")]
-    pub consumables: Vec<ShipLockerMaterialsConsumables>,
-
-    #[serde(rename = "Data")]
-    pub data: Vec<ShipLockerMaterialsData>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct ShipLockerMaterialsConsumables {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "OwnerID")]
-    pub owner_id: u64,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct ShipLockerMaterialsItems {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "OwnerID")]
-    pub owner_id: u64,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: Option<u64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct ShipLockerMaterialsData {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "OwnerID")]
-    pub owner_id: u64,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: Option<u64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct ShipLockerMaterialsComponents {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "OwnerID")]
-    pub owner_id: u64,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-    #[serde(rename = "MissionID")]
-    pub mission_id: Option<u64>,
-
-}
-
-/// When written: after a new ship has been redeemed
-#[derive(Clone, Debug, Deserialize)]
-pub struct ShipRedeemed {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "ShipType")]
-    pub ship_type: String,
-
-    #[serde(rename = "ShipType_Localised")]
-    pub ship_type_localised: Option<String>,
-
-    #[serde(rename = "NewShipID")]
-    pub new_ship_id: u64,
-
-}
-
-/// When written: when the current player selects a new target
-#[derive(Clone, Debug, Deserialize)]
-pub struct ShipTargeted {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "TargetLocked")]
-    pub target_locked: bool,
-
-    #[serde(rename = "Ship")]
-    pub ship: Option<String>,
-
-    #[serde(rename = "ScanStage")]
-    pub scan_stage: Option<u64>,
-
-    /// If Scan stage >= 1
-    #[serde(rename = "PilotName")]
-    pub pilot_name: Option<String>,
-
-    /// If Scan stage >= 1
-    #[serde(rename = "PilotName_Localised")]
-    pub pilot_name_localised: Option<String>,
-
-    /// If Scan stage >= 1
-    #[serde(rename = "PilotRank")]
-    pub pilot_rank: Option<String>,
-
-    /// If Scan stage >= 2
-    #[serde(rename = "ShieldHealth")]
-    pub shield_health: Option<f64>,
-
-    /// If Scan stage >= 2
-    #[serde(rename = "HullHealth")]
-    pub hull_health: Option<f64>,
-
-    /// If Scan stage >= 3
-    #[serde(rename = "Faction")]
-    pub faction: Option<String>,
-
-    /// If Scan stage >= 3
-    #[serde(rename = "LegalStatus")]
-    pub legal_status: Option<String>,
-
-    /// If target locked
-    #[serde(rename = "Ship_Localised")]
-    pub ship_localised: Option<String>,
-
-    /// If target in a squadron
-    #[serde(rename = "SquadronID")]
-    pub squadron_id: Option<String>,
-
-    /// If the player is aligned in powerplay and the target is also aligned to a power
-    #[serde(rename = "Power")]
-    pub power: Option<String>,
-
-    /// If Scan stage >= 3
-    #[serde(rename = "Bounty")]
-    pub bounty: Option<u64>,
-
-    /// If Scan stage >= 3
-    #[serde(rename = "Subsystem")]
-    pub subsystem: Option<String>,
-
-    /// If Scan stage >= 3
-    #[serde(rename = "Subsystem_Localised")]
-    pub subsystem_localised: Option<String>,
-
-    /// If Scan stage >= 3
-    #[serde(rename = "SubsystemHealth")]
-    pub subsystem_health: Option<f64>,
-
-}
-
-/// When written: when accessing shipyard in a station. The full price list is written to a separate file, in the same folder as the journal, Shipyard.json
-#[derive(Clone, Debug, Deserialize)]
-pub struct Shipyard {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "StationName")]
-    pub station_name: String,
-
-    #[serde(rename = "StarSystem")]
-    pub star_system: String,
-
-    /// Only written in Shipyard.json
-    #[serde(rename = "Horizons")]
-    pub horizons: Option<bool>,
-
-    /// Only written in Shipyard.json
-    #[serde(rename = "AllowCobraMkIV")]
-    pub allow_cobra_mk_iv: Option<bool>,
-
-    /// Only written in Shipyard.json
-    #[serde(rename = "PriceList")]
-    pub price_list: Option<Vec<ShipyardPriceList>>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct ShipyardPriceList {
-
-    #[serde(rename = "id")]
-    pub id: u64,
-
-    #[serde(rename = "ShipType")]
-    pub ship_type: String,
-
-    #[serde(rename = "ShipPrice")]
-    pub ship_price: u64,
-
-    #[serde(rename = "ShipType_Localised")]
-    pub ship_type_localised: Option<String>,
-
-}
-
-/// When Written: when buying a new ship in the shipyard
-#[derive(Clone, Debug, Deserialize)]
-pub struct ShipyardBuy {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "ShipType")]
-    pub ship_type: String,
-
-    #[serde(rename = "ShipType_Localised")]
-    pub ship_type_localised: Option<String>,
-
-    #[serde(rename = "ShipPrice")]
-    pub ship_price: u64,
-
-    /// If storing old ship
-    #[serde(rename = "StoreOldShip")]
-    pub store_old_ship: Option<String>,
-
-    /// If storing old ship
-    #[serde(rename = "StoreShipID")]
-    pub store_ship_id: Option<u64>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    /// If selling current ship
-    #[serde(rename = "SellOldShip")]
-    pub sell_old_ship: Option<String>,
-
-    /// If selling current ship
-    #[serde(rename = "SellShipID")]
-    pub sell_ship_id: Option<u64>,
-
-    /// If selling current ship
-    #[serde(rename = "SellPrice")]
-    pub sell_price: Option<u64>,
-
-}
-
-/// When written: after a new ship has been purchased
-#[derive(Clone, Debug, Deserialize)]
-pub struct ShipyardNew {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "ShipType")]
-    pub ship_type: String,
-
-    #[serde(rename = "ShipType_Localised")]
-    pub ship_type_localised: Option<String>,
-
-    #[serde(rename = "NewShipID")]
-    pub new_ship_id: u64,
-
-}
-
-/// When written: after a new ship has been unlocked in the Shipyard
-#[derive(Clone, Debug, Deserialize)]
-pub struct ShipyardRedeem {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "ShipType")]
-    pub ship_type: String,
-
-    #[serde(rename = "ShipType_Localised")]
-    pub ship_type_localised: Option<String>,
-
-    #[serde(rename = "BundleID")]
-    pub bundle_id: Option<u64>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: Option<u64>,
-
-}
-
-/// When Written: when selling a ship stored in the shipyard
-#[derive(Clone, Debug, Deserialize)]
-pub struct ShipyardSell {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "ShipType")]
-    pub ship_type: String,
-
-    #[serde(rename = "SellShipID")]
-    pub sell_ship_id: u64,
-
-    #[serde(rename = "ShipPrice")]
-    pub ship_price: u64,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "ShipType_Localised")]
-    pub ship_type_localised: Option<String>,
-
-    /// If ship is in another system
     #[serde(rename = "System")]
-    pub system: Option<String>,
+    pub system: u64,
 
-    #[serde(rename = "ShipMarketID")]
-    pub ship_market_id: Option<u64>,
+    #[serde(rename = "Body")]
+    pub body: u64,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
 
 }
 
-/// When Written: when switching to another ship already stored at this station
 #[derive(Clone, Debug, Deserialize)]
-pub struct ShipyardSwap {
+pub struct CockpitBreached {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "ShipType")]
-    pub ship_type: String,
+}
 
-    #[serde(rename = "ShipType_Localised")]
-    pub ship_type_localised: Option<String>,
+#[derive(Clone, Debug, Deserialize)]
+pub struct UpgradeSuitResource {
 
-    #[serde(rename = "ShipID")]
-    pub ship_id: u64,
+    #[serde(rename = "Name")]
+    pub name: String,
 
-    #[serde(rename = "StoreOldShip")]
-    pub store_old_ship: String,
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
 
-    #[serde(rename = "StoreShipID")]
-    pub store_ship_id: u64,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
+    #[serde(rename = "Count")]
+    pub count: u64,
 
 }
 
@@ -8299,6 +7887,7 @@ pub struct ShipyardSwap {
 #[derive(Clone, Debug, Deserialize)]
 pub struct ShipyardTransfer {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -8333,83 +7922,213 @@ pub struct ShipyardTransfer {
 
 }
 
-/// When written: on a clean shutdown of the game
+/// When Written: when signing up to a community goal
 #[derive(Clone, Debug, Deserialize)]
-pub struct Shutdown {
+pub struct CommunityGoalJoin {
 
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CGID")]
+    pub cgid: u64,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "System")]
+    pub system: String,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct MaterialsEncoded {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    /// The localised value will be omitted if it is exactly the same as Name
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+}
+
+/// When Written: when a colonisation beacon is deployed
+#[derive(Clone, Debug, Deserialize)]
+pub struct ColonisationBeaconDeployed {
+
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct SquadronCreated {
+pub struct SellOrganicDataBioData {
 
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    #[serde(rename = "Genus")]
+    pub genus: String,
 
-    #[serde(rename = "SquadronName")]
-    pub squadron_name: String,
+    #[serde(rename = "Genus_Localised")]
+    pub genus_localised: Option<String>,
 
-}
+    #[serde(rename = "Species")]
+    pub species: String,
 
-#[derive(Clone, Debug, Deserialize)]
-pub struct SquadronDemotion {
+    #[serde(rename = "Species_Localised")]
+    pub species_localised: Option<String>,
 
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    #[serde(rename = "Variant")]
+    pub variant: Option<String>,
 
-    #[serde(rename = "SquadronName")]
-    pub squadron_name: String,
+    #[serde(rename = "Variant_Localised")]
+    pub variant_localised: Option<String>,
 
-    #[serde(rename = "OldRank")]
-    pub old_rank: u64,
+    #[serde(rename = "Value")]
+    pub value: u64,
 
-    #[serde(rename = "NewRank")]
-    pub new_rank: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct SquadronPromotion {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "SquadronName")]
-    pub squadron_name: String,
-
-    #[serde(rename = "OldRank")]
-    pub old_rank: u64,
-
-    #[serde(rename = "NewRank")]
-    pub new_rank: u64,
+    #[serde(rename = "Bonus")]
+    pub bonus: u64,
 
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct SquadronStartup {
+pub struct DockingRequestedLandingPads {
 
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    #[serde(rename = "Small")]
+    pub small: u64,
 
-    #[serde(rename = "SquadronName")]
-    pub squadron_name: String,
+    #[serde(rename = "Medium")]
+    pub medium: u64,
 
-    #[serde(rename = "CurrentRank")]
-    pub current_rank: u64,
+    #[serde(rename = "Large")]
+    pub large: u64,
 
 }
 
-/// When written: when the player's SRV is destroyed
+/// When written: when enough material has been collected from a solar jet code (at a white dwarf or neutron star) for a jump boost
 #[derive(Clone, Debug, Deserialize)]
-pub struct SRVDestroyed {
+pub struct JetConeBoost {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "ID")]
-    pub id: u64,
+    #[serde(rename = "BoostValue")]
+    pub boost_value: f64,
+
+}
+
+/// When written: when joining up with a power
+#[derive(Clone, Debug, Deserialize)]
+pub struct PowerplayJoin {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Power")]
+    pub power: String,
+
+}
+
+/// When Written: when receiving a reward for a community goal
+#[derive(Clone, Debug, Deserialize)]
+pub struct CommunityGoalReward {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CGID")]
+    pub cgid: u64,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "System")]
+    pub system: String,
+
+    #[serde(rename = "Reward")]
+    pub reward: u64,
+
+}
+
+/// Player transfers credits to/from carrier
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierBankTransfer {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: u64,
+
+    #[serde(rename = "Deposit")]
+    pub deposit: Option<u64>,
+
+    #[serde(rename = "Withdraw")]
+    pub withdraw: Option<u64>,
+
+    /// Player balance after transfer
+    #[serde(rename = "PlayerBalance")]
+    pub player_balance: u64,
+
+    /// Carrier balance after transfer
+    #[serde(rename = "CarrierBalance")]
+    pub carrier_balance: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CreateSuitLoadoutModule {
+
+    #[serde(rename = "SlotName")]
+    pub slot_name: String,
+
+    #[serde(rename = "SuitModuleID")]
+    pub suit_module_id: u64,
+
+    #[serde(rename = "ModuleName")]
+    pub module_name: String,
+
+    #[serde(rename = "ModuleName_Localised")]
+    pub module_name_localised: Option<String>,
+
+    #[serde(rename = "Class")]
+    pub class: u64,
+
+    #[serde(rename = "WeaponMods")]
+    pub weapon_mods: Vec<String>,
+
+}
+
+/// Written for Planet/Moon
+#[derive(Clone, Debug, Deserialize)]
+pub struct ScanComposition {
+
+    #[serde(rename = "Ice")]
+    pub ice: f64,
+
+    #[serde(rename = "Rock")]
+    pub rock: f64,
+
+    #[serde(rename = "Metal")]
+    pub metal: f64,
+
+}
+
+/// When written: when docking an SRV with the ship
+#[derive(Clone, Debug, Deserialize)]
+pub struct DockSRV {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "SRVType")]
     pub srv_type: Option<String>,
@@ -8417,442 +8136,145 @@ pub struct SRVDestroyed {
     #[serde(rename = "SRVType_Localised")]
     pub srv_type_localised: Option<String>,
 
+    #[serde(rename = "ID")]
+    pub id: u64,
+
 }
 
-/// When written: at the start of a Hyperspace or Supercruise jump (start of countdown)
+/// When a holoscreen is hacked
 #[derive(Clone, Debug, Deserialize)]
-pub struct StartJump {
+pub struct HoloscreenHacked {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Taxi")]
-    pub taxi: Option<bool>,
+    /// The power that owned the holo screen
+    #[serde(rename = "PowerBefore")]
+    pub power_before: String,
 
-    #[serde(rename = "JumpType")]
-    pub jump_type: String,
-
-    #[serde(rename = "StarSystem")]
-    pub star_system: Option<String>,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: Option<u64>,
-
-    /// only for a hyperspace jump
-    #[serde(rename = "StarClass")]
-    pub star_class: Option<String>,
+    /// The power that now owns the holo screen
+    #[serde(rename = "PowerAfter")]
+    pub power_after: String,
 
 }
 
-/// When written: at startup. This line contains the information displayed in the statistics panel on the right side of the cockpit
+/// When Written: when a screen snapshot is saved. The latitude, longitude, altitude and heading will be included if on a planet or in low-altitude flight.
 #[derive(Clone, Debug, Deserialize)]
-pub struct Statistics {
+pub struct Screenshot {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Bank_Account")]
-    pub bank_account: StatisticsBankAccount,
+    /// Filename of screenshot
+    #[serde(rename = "Filename")]
+    pub filename: String,
 
-    #[serde(rename = "Combat")]
-    pub combat: StatisticsCombat,
+    #[serde(rename = "Width")]
+    pub width: u64,
 
-    #[serde(rename = "Crime")]
-    pub crime: StatisticsCrime,
+    #[serde(rename = "Height")]
+    pub height: u64,
 
-    #[serde(rename = "Smuggling")]
-    pub smuggling: StatisticsSmuggling,
+    #[serde(rename = "System")]
+    pub system: Option<String>,
 
-    #[serde(rename = "Trading")]
-    pub trading: StatisticsTrading,
+    #[serde(rename = "Body")]
+    pub body: Option<String>,
 
-    #[serde(rename = "Mining")]
-    pub mining: StatisticsMining,
+    #[serde(rename = "Latitude")]
+    pub latitude: Option<f64>,
 
-    #[serde(rename = "Exploration")]
-    pub exploration: StatisticsExploration,
+    #[serde(rename = "Longitude")]
+    pub longitude: Option<f64>,
 
-    #[serde(rename = "Passengers")]
-    pub passengers: StatisticsPassengers,
+    #[serde(rename = "Altitude")]
+    pub altitude: Option<f64>,
 
-    #[serde(rename = "Search_And_Rescue")]
-    pub search_and_rescue: StatisticsSearchAndRescue,
-
-    #[serde(rename = "Crafting")]
-    pub crafting: Option<StatisticsCrafting>,
-
-    #[serde(rename = "Crew")]
-    pub crew: Option<StatisticsCrew>,
-
-    #[serde(rename = "Multicrew")]
-    pub multicrew: Option<StatisticsMulticrew>,
-
-    #[serde(rename = "Material_Trader_Stats")]
-    pub material_trader_stats: Option<StatisticsMaterialTraderStats>,
-
-    #[serde(rename = "FLEETCARRIER")]
-    pub fleet_carrier: Option<StatisticsFLEETCARRIER>,
-
-    #[serde(rename = "Exobiology")]
-    pub exobiology: Option<StatisticsExobiology>,
-
-    #[serde(rename = "TG_ENCOUNTERS")]
-    pub tg_encounters: Option<StatisticsTgEncounters>,
-
-    #[serde(rename = "CQC")]
-    pub cqc: Option<StatisticsCQC>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsSearchAndRescue {
-
-    #[serde(rename = "SearchRescue_Traded")]
-    pub search_rescue_traded: u64,
-
-    #[serde(rename = "SearchRescue_Profit")]
-    pub search_rescue_profit: u64,
-
-    #[serde(rename = "SearchRescue_Count")]
-    pub search_rescue_count: u64,
-
-    #[serde(rename = "Salvage_Legal_POI")]
-    pub salvage_legal_poi: Option<u64>,
-
-    #[serde(rename = "Salvage_Legal_Settlements")]
-    pub salvage_legal_settlements: Option<u64>,
-
-    #[serde(rename = "Salvage_Illegal_POI")]
-    pub salvage_illegal_poi: Option<u64>,
-
-    #[serde(rename = "Salvage_Illegal_Settlements")]
-    pub salvage_illegal_settlements: Option<u64>,
-
-    #[serde(rename = "Maglocks_Opened")]
-    pub maglocks_opened: Option<u64>,
-
-    #[serde(rename = "Panels_Opened")]
-    pub panels_opened: Option<u64>,
-
-    #[serde(rename = "Settlements_State_FireOut")]
-    pub settlements_state_fire_out: Option<u64>,
-
-    #[serde(rename = "Settlements_State_Reboot")]
-    pub settlements_state_reboot: Option<u64>,
+    #[serde(rename = "Heading")]
+    pub heading: Option<u64>,
 
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsSmuggling {
+pub struct QuitACrew {
 
-    #[serde(rename = "Black_Markets_Traded_With")]
-    pub black_markets_traded_with: u64,
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Black_Markets_Profits")]
-    pub black_markets_profits: u64,
+    /// Helm player's commander name
+    #[serde(rename = "Captain")]
+    pub captain: String,
 
-    #[serde(rename = "Resources_Smuggled")]
-    pub resources_smuggled: u64,
+    /// only from Odyssey build
+    #[serde(rename = "Telepresence")]
+    pub telepresence: Option<bool>,
 
-    #[serde(rename = "Average_Profit")]
-    pub average_profit: f64,
+}
 
-    #[serde(rename = "Highest_Single_Transaction")]
-    pub highest_single_transaction: u64,
+/// This is logged when a jump is cancelled
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierJumpCancelled {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: u64,
 
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsExobiology {
+pub struct StatisticsMulticrew {
 
-    #[serde(rename = "Organic_Genus_Encountered")]
-    pub organic_genus_encountered: u64,
+    #[serde(rename = "Multicrew_Time_Total")]
+    pub multicrew_time_total: u64,
 
-    #[serde(rename = "Organic_Species_Encountered")]
-    pub organic_species_encountered: u64,
+    #[serde(rename = "Multicrew_Gunner_Time_Total")]
+    pub multicrew_gunner_time_total: u64,
 
-    #[serde(rename = "Organic_Variant_Encountered")]
-    pub organic_variant_encountered: u64,
+    #[serde(rename = "Multicrew_Fighter_Time_Total")]
+    pub multicrew_fighter_time_total: u64,
 
-    #[serde(rename = "Organic_Data_Profits")]
-    pub organic_data_profits: u64,
+    #[serde(rename = "Multicrew_Credits_Total")]
+    pub multicrew_credits_total: u64,
 
-    #[serde(rename = "Organic_Data")]
-    pub organic_data: u64,
+    #[serde(rename = "Multicrew_Fines_Total")]
+    pub multicrew_fines_total: u64,
 
-    #[serde(rename = "First_Logged_Profits")]
-    pub first_logged_profits: u64,
+}
 
-    #[serde(rename = "First_Logged")]
-    pub first_logged: u64,
+/// When written: when the player's ship has been scanned (The Scan Detected indication is at the start of the scan, this is written at the end of a successful scan)
+#[derive(Clone, Debug, Deserialize)]
+pub struct Scanned {
 
-    #[serde(rename = "Organic_Systems")]
-    pub organic_systems: u64,
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Organic_Planets")]
-    pub organic_planets: u64,
-
-    #[serde(rename = "Organic_Genus")]
-    pub organic_genus: u64,
-
-    #[serde(rename = "Organic_Species")]
-    pub organic_species: u64,
+    #[serde(rename = "ScanType")]
+    pub scan_type: String,
 
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsBankAccount {
+pub struct MaterialTradeReceived {
 
-    #[serde(rename = "Current_Wealth")]
-    pub current_wealth: u64,
+    #[serde(rename = "Material")]
+    pub material: String,
 
-    #[serde(rename = "Spent_On_Ships")]
-    pub spent_on_ships: u64,
+    /// The localised value will be omitted if it is exactly the same as Material
+    #[serde(rename = "Material_Localised")]
+    pub material_localised: Option<String>,
 
-    #[serde(rename = "Spent_On_Outfitting")]
-    pub spent_on_outfitting: u64,
+    #[serde(rename = "Category")]
+    pub category: String,
 
-    #[serde(rename = "Spent_On_Repairs")]
-    pub spent_on_repairs: u64,
-
-    #[serde(rename = "Spent_On_Fuel")]
-    pub spent_on_fuel: u64,
-
-    #[serde(rename = "Spent_On_Ammo_Consumables")]
-    pub spent_on_ammo_consumables: u64,
-
-    #[serde(rename = "Insurance_Claims")]
-    pub insurance_claims: u64,
-
-    #[serde(rename = "Spent_On_Insurance")]
-    pub spent_on_insurance: u64,
-
-    #[serde(rename = "Owned_Ship_Count")]
-    pub owned_ship_count: Option<u64>,
-
-    #[serde(rename = "Spent_On_Suits")]
-    pub spent_on_suits: Option<u64>,
-
-    #[serde(rename = "Spent_On_Weapons")]
-    pub spent_on_weapons: Option<u64>,
-
-    #[serde(rename = "Spent_On_Suit_Consumables")]
-    pub spent_on_suit_consumables: Option<u64>,
-
-    #[serde(rename = "Suits_Owned")]
-    pub suits_owned: Option<u64>,
-
-    #[serde(rename = "Weapons_Owned")]
-    pub weapons_owned: Option<u64>,
-
-    #[serde(rename = "Spent_On_Premium_Stock")]
-    pub spent_on_premium_stock: Option<u64>,
-
-    #[serde(rename = "Premium_Stock_Bought")]
-    pub premium_stock_bought: Option<u64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsCrafting {
-
-    #[serde(rename = "Count_Of_Used_Engineers")]
-    pub count_of_used_engineers: u64,
-
-    #[serde(rename = "Recipes_Generated")]
-    pub recipes_generated: u64,
-
-    #[serde(rename = "Recipes_Generated_Rank_1")]
-    pub recipes_generated_rank_1: u64,
-
-    #[serde(rename = "Recipes_Generated_Rank_2")]
-    pub recipes_generated_rank_2: u64,
-
-    #[serde(rename = "Recipes_Generated_Rank_3")]
-    pub recipes_generated_rank_3: u64,
-
-    #[serde(rename = "Recipes_Generated_Rank_4")]
-    pub recipes_generated_rank_4: u64,
-
-    #[serde(rename = "Recipes_Generated_Rank_5")]
-    pub recipes_generated_rank_5: u64,
-
-    #[serde(rename = "Suit_Mods_Applied")]
-    pub suit_mods_applied: Option<u64>,
-
-    #[serde(rename = "Weapon_Mods_Applied")]
-    pub weapon_mods_applied: Option<u64>,
-
-    #[serde(rename = "Suits_Upgraded")]
-    pub suits_upgraded: Option<u64>,
-
-    #[serde(rename = "Weapons_Upgraded")]
-    pub weapons_upgraded: Option<u64>,
-
-    #[serde(rename = "Suits_Upgraded_Full")]
-    pub suits_upgraded_full: Option<u64>,
-
-    #[serde(rename = "Weapons_Upgraded_Full")]
-    pub weapons_upgraded_full: Option<u64>,
-
-    #[serde(rename = "Suit_Mods_Applied_Full")]
-    pub suit_mods_applied_full: Option<u64>,
-
-    #[serde(rename = "Weapon_Mods_Applied_Full")]
-    pub weapon_mods_applied_full: Option<u64>,
-
-    #[serde(rename = "Spent_On_Crafting")]
-    pub spent_on_crafting: Option<u64>,
-
-    #[serde(rename = "Recipes_Applied")]
-    pub recipes_applied: Option<u64>,
-
-    #[serde(rename = "Recipes_Applied_Rank_1")]
-    pub recipes_applied_rank_1: Option<u64>,
-
-    #[serde(rename = "Recipes_Applied_Rank_2")]
-    pub recipes_applied_rank_2: Option<u64>,
-
-    #[serde(rename = "Recipes_Applied_Rank_3")]
-    pub recipes_applied_rank_3: Option<u64>,
-
-    #[serde(rename = "Recipes_Applied_Rank_4")]
-    pub recipes_applied_rank_4: Option<u64>,
-
-    #[serde(rename = "Recipes_Applied_Rank_5")]
-    pub recipes_applied_rank_5: Option<u64>,
-
-    #[serde(rename = "Recipes_Applied_On_Previously_Modified_Modules")]
-    pub recipes_applied_on_previously_modified_modules: Option<u64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsTrading {
-
-    #[serde(rename = "Markets_Traded_With")]
-    pub markets_traded_with: u64,
-
-    #[serde(rename = "Market_Profits")]
-    pub market_profits: u64,
-
-    #[serde(rename = "Resources_Traded")]
-    pub resources_traded: u64,
-
-    #[serde(rename = "Average_Profit")]
-    pub average_profit: f64,
-
-    #[serde(rename = "Highest_Single_Transaction")]
-    pub highest_single_transaction: u64,
-
-    #[serde(rename = "Data_Sold")]
-    pub data_sold: Option<u64>,
-
-    #[serde(rename = "Goods_Sold")]
-    pub goods_sold: Option<u64>,
-
-    #[serde(rename = "Assets_Sold")]
-    pub assets_sold: Option<u64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsCQC {
-
-    #[serde(rename = "CQC_Credits_Earned")]
-    pub cqc_credits_earned: Option<u64>,
-
-    #[serde(rename = "CQC_Time_Played")]
-    pub cqc_time_played: u64,
-
-    #[serde(rename = "CQC_KD")]
-    pub cqc_kd: f64,
-
-    #[serde(rename = "CQC_Kills")]
-    pub cqc_kills: u64,
-
-    #[serde(rename = "CQC_WL")]
-    pub cqc_wl: f64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsCrew {
-
-    #[serde(rename = "NpcCrew_TotalWages")]
-    pub npc_crew_total_wages: Option<u64>,
-
-    #[serde(rename = "NpcCrew_Hired")]
-    pub npc_crew_hired: Option<u64>,
-
-    #[serde(rename = "NpcCrew_Fired")]
-    pub npc_crew_fired: Option<u64>,
-
-    #[serde(rename = "NpcCrew_Died")]
-    pub npc_crew_died: Option<u64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsExploration {
-
-    #[serde(rename = "Systems_Visited")]
-    pub systems_visited: u64,
-
-    #[serde(rename = "Exploration_Profits")]
-    pub exploration_profits: u64,
-
-    #[serde(rename = "Planets_Scanned_To_Level_2")]
-    pub planets_scanned_to_level_2: u64,
-
-    #[serde(rename = "Planets_Scanned_To_Level_3")]
-    pub planets_scanned_to_level_3: u64,
-
-    #[serde(rename = "Efficient_Scans")]
-    pub efficient_scans: Option<u64>,
-
-    #[serde(rename = "Highest_Payout")]
-    pub highest_payout: u64,
-
-    #[serde(rename = "Total_Hyperspace_Distance")]
-    pub total_hyperspace_distance: u64,
-
-    #[serde(rename = "Total_Hyperspace_Jumps")]
-    pub total_hyperspace_jumps: u64,
-
-    #[serde(rename = "Greatest_Distance_From_Start")]
-    pub greatest_distance_from_start: f64,
-
-    #[serde(rename = "Time_Played")]
-    pub time_played: u64,
-
-    #[serde(rename = "OnFoot_Distance_Travelled")]
-    pub on_foot_distance_travelled: Option<u64>,
-
-    #[serde(rename = "Shuttle_Journeys")]
-    pub shuttle_journeys: Option<u64>,
-
-    #[serde(rename = "Shuttle_Distance_Travelled")]
-    pub shuttle_distance_travelled: Option<f64>,
-
-    #[serde(rename = "Spent_On_Shuttles")]
-    pub spent_on_shuttles: Option<u64>,
-
-    #[serde(rename = "First_Footfalls")]
-    pub first_footfalls: Option<u64>,
-
-    #[serde(rename = "Planet_Footfalls")]
-    pub planet_footfalls: Option<u64>,
-
-    #[serde(rename = "Settlements_Visited")]
-    pub settlements_visited: Option<u64>,
-
-    #[serde(rename = "Fuel_Scooped")]
-    pub fuel_scooped: Option<u64>,
-
-    #[serde(rename = "Fuel_Purchased")]
-    pub fuel_purchased: Option<u64>,
+    #[serde(rename = "Quantity")]
+    pub quantity: u64,
 
 }
 
@@ -8931,369 +8353,24 @@ pub struct StatisticsCrime {
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsMining {
+pub struct CarrierJumpConflictFaction1 {
 
-    #[serde(rename = "Mining_Profits")]
-    pub mining_profits: u64,
+    #[serde(rename = "Name")]
+    pub name: String,
 
-    #[serde(rename = "Quantity_Mined")]
-    pub quantity_mined: u64,
+    #[serde(rename = "Stake")]
+    pub stake: String,
 
-    #[serde(rename = "Materials_Collected")]
-    pub materials_collected: Option<u64>,
+    #[serde(rename = "Stake_Localised")]
+    pub stake_localised: Option<String>,
 
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsMulticrew {
-
-    #[serde(rename = "Multicrew_Time_Total")]
-    pub multicrew_time_total: u64,
-
-    #[serde(rename = "Multicrew_Gunner_Time_Total")]
-    pub multicrew_gunner_time_total: u64,
-
-    #[serde(rename = "Multicrew_Fighter_Time_Total")]
-    pub multicrew_fighter_time_total: u64,
-
-    #[serde(rename = "Multicrew_Credits_Total")]
-    pub multicrew_credits_total: u64,
-
-    #[serde(rename = "Multicrew_Fines_Total")]
-    pub multicrew_fines_total: u64,
+    #[serde(rename = "WonDays")]
+    pub won_days: u64,
 
 }
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsCombat {
-
-    #[serde(rename = "Bounties_Claimed")]
-    pub bounties_claimed: u64,
-
-    #[serde(rename = "Bounty_Hunting_Profit")]
-    pub bounty_hunting_profit: f64,
-
-    #[serde(rename = "Combat_Bonds")]
-    pub combat_bonds: u64,
-
-    #[serde(rename = "Combat_Bond_Profits")]
-    pub combat_bond_profits: u64,
-
-    #[serde(rename = "Assassinations")]
-    pub assassinations: u64,
-
-    #[serde(rename = "Assassination_Profits")]
-    pub assassination_profits: u64,
-
-    #[serde(rename = "Highest_Single_Reward")]
-    pub highest_single_reward: u64,
-
-    #[serde(rename = "Skimmers_Killed")]
-    pub skimmers_killed: Option<u64>,
-
-    #[serde(rename = "OnFoot_Combat_Bonds")]
-    pub on_foot_combat_bonds: Option<u64>,
-
-    #[serde(rename = "OnFoot_Combat_Bonds_Profits")]
-    pub on_foot_combat_bonds_profits: Option<u64>,
-
-    #[serde(rename = "OnFoot_Vehicles_Destroyed")]
-    pub on_foot_vehicles_destroyed: Option<u64>,
-
-    #[serde(rename = "OnFoot_Ships_Destroyed")]
-    pub on_foot_ships_destroyed: Option<u64>,
-
-    #[serde(rename = "Dropships_Taken")]
-    pub dropships_taken: Option<u64>,
-
-    #[serde(rename = "Dropships_Booked")]
-    pub dropships_booked: Option<u64>,
-
-    #[serde(rename = "Dropships_Cancelled")]
-    pub dropships_cancelled: Option<u64>,
-
-    #[serde(rename = "ConflictZone_High")]
-    pub conflict_zone_high: Option<u64>,
-
-    #[serde(rename = "ConflictZone_Medium")]
-    pub conflict_zone_medium: Option<u64>,
-
-    #[serde(rename = "ConflictZone_Low")]
-    pub conflict_zone_low: Option<u64>,
-
-    #[serde(rename = "ConflictZone_Total")]
-    pub conflict_zone_total: Option<u64>,
-
-    #[serde(rename = "ConflictZone_High_Wins")]
-    pub conflict_zone_high_wins: Option<u64>,
-
-    #[serde(rename = "ConflictZone_Medium_Wins")]
-    pub conflict_zone_medium_wins: Option<u64>,
-
-    #[serde(rename = "ConflictZone_Low_Wins")]
-    pub conflict_zone_low_wins: Option<u64>,
-
-    #[serde(rename = "ConflictZone_Total_Wins")]
-    pub conflict_zone_total_wins: Option<u64>,
-
-    #[serde(rename = "Settlement_Defended")]
-    pub settlement_defended: Option<u64>,
-
-    #[serde(rename = "Settlement_Conquered")]
-    pub settlement_conquered: Option<u64>,
-
-    #[serde(rename = "OnFoot_Skimmers_Killed")]
-    pub on_foot_skimmers_killed: Option<u64>,
-
-    #[serde(rename = "OnFoot_Scavs_Killed")]
-    pub on_foot_scavs_killed: Option<u64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsTgEncounters {
-
-    #[serde(rename = "TG_ENCOUNTER_IMPRINT")]
-    pub tg_encounter_imprint: Option<u64>,
-
-    #[serde(rename = "TG_ENCOUNTER_WAKES")]
-    pub tg_encounter_wakes: Option<u64>,
-
-    #[serde(rename = "TG_ENCOUNTER_KILLED")]
-    pub tg_encounter_killed: Option<u64>,
-
-    #[serde(rename = "TG_ENCOUNTER_TOTAL")]
-    pub tg_encounter_total: u64,
-
-    #[serde(rename = "TG_ENCOUNTER_TOTAL_LAST_SYSTEM")]
-    pub tg_encounter_total_last_system: String,
-
-    #[serde(rename = "TG_ENCOUNTER_TOTAL_LAST_TIMESTAMP")]
-    pub tg_encounter_total_last_timestamp: String,
-
-    #[serde(rename = "TG_ENCOUNTER_TOTAL_LAST_SHIP")]
-    pub tg_encounter_total_last_ship: String,
-
-    #[serde(rename = "TG_SCOUT_COUNT")]
-    pub tg_scout_count: Option<u64>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsFLEETCARRIER {
-
-    #[serde(rename = "FLEETCARRIER_EXPORT_TOTAL")]
-    pub fleet_carrier_export_total: u64,
-
-    #[serde(rename = "FLEETCARRIER_IMPORT_TOTAL")]
-    pub fleet_carrier_import_total: u64,
-
-    #[serde(rename = "FLEETCARRIER_TRADEPROFIT_TOTAL")]
-    pub fleet_carrier_trade_profit_total: u64,
-
-    #[serde(rename = "FLEETCARRIER_TRADESPEND_TOTAL")]
-    pub fleet_carrier_trade_spend_total: u64,
-
-    #[serde(rename = "FLEETCARRIER_STOLENPROFIT_TOTAL")]
-    pub fleet_carrier_stolen_profit_total: u64,
-
-    #[serde(rename = "FLEETCARRIER_STOLENSPEND_TOTAL")]
-    pub fleet_carrier_stolen_spend_total: u64,
-
-    #[serde(rename = "FLEETCARRIER_DISTANCE_TRAVELLED")]
-    pub fleet_carrier_distance_travelled: serde_json::Value,
-
-    #[serde(rename = "FLEETCARRIER_TOTAL_JUMPS")]
-    pub fleet_carrier_total_jumps: u64,
-
-    #[serde(rename = "FLEETCARRIER_SHIPYARD_SOLD")]
-    pub fleet_carrier_shipyard_sold: u64,
-
-    #[serde(rename = "FLEETCARRIER_SHIPYARD_PROFIT")]
-    pub fleet_carrier_shipyard_profit: u64,
-
-    #[serde(rename = "FLEETCARRIER_OUTFITTING_SOLD")]
-    pub fleet_carrier_outfitting_sold: u64,
-
-    #[serde(rename = "FLEETCARRIER_OUTFITTING_PROFIT")]
-    pub fleet_carrier_outfitting_profit: u64,
-
-    #[serde(rename = "FLEETCARRIER_REARM_TOTAL")]
-    pub fleet_carrier_rearm_total: u64,
-
-    #[serde(rename = "FLEETCARRIER_REFUEL_TOTAL")]
-    pub fleet_carrier_refuel_total: u64,
-
-    #[serde(rename = "FLEETCARRIER_REFUEL_PROFIT")]
-    pub fleet_carrier_refuel_profit: u64,
-
-    #[serde(rename = "FLEETCARRIER_REPAIRS_TOTAL")]
-    pub fleet_carrier_repairs_total: u64,
-
-    #[serde(rename = "FLEETCARRIER_VOUCHERS_REDEEMED")]
-    pub fleet_carrier_vouchers_redeemed: u64,
-
-    #[serde(rename = "FLEETCARRIER_VOUCHERS_PROFIT")]
-    pub fleet_carrier_vouchers_profit: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsPassengers {
-
-    #[serde(rename = "Passengers_Missions_Accepted")]
-    pub passengers_missions_accepted: Option<u64>,
-
-    #[serde(rename = "Passengers_Missions_Disgruntled")]
-    pub passengers_missions_disgruntled: Option<u64>,
-
-    #[serde(rename = "Passengers_Missions_Bulk")]
-    pub passengers_missions_bulk: u64,
-
-    #[serde(rename = "Passengers_Missions_VIP")]
-    pub passengers_missions_vip: u64,
-
-    #[serde(rename = "Passengers_Missions_Delivered")]
-    pub passengers_missions_delivered: u64,
-
-    #[serde(rename = "Passengers_Missions_Ejected")]
-    pub passengers_missions_ejected: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatisticsMaterialTraderStats {
-
-    #[serde(rename = "Trades_Completed")]
-    pub trades_completed: u64,
-
-    #[serde(rename = "Materials_Traded")]
-    pub materials_traded: u64,
-
-    #[serde(rename = "Encoded_Materials_Traded")]
-    pub encoded_materials_traded: Option<u64>,
-
-    #[serde(rename = "Raw_Materials_Traded")]
-    pub raw_materials_traded: Option<u64>,
-
-    #[serde(rename = "Grade_1_Materials_Traded")]
-    pub grade_1_materials_traded: Option<u64>,
-
-    #[serde(rename = "Grade_2_Materials_Traded")]
-    pub grade_2_materials_traded: Option<u64>,
-
-    #[serde(rename = "Grade_3_Materials_Traded")]
-    pub grade_3_materials_traded: Option<u64>,
-
-    #[serde(rename = "Grade_4_Materials_Traded")]
-    pub grade_4_materials_traded: Option<u64>,
-
-    #[serde(rename = "Grade_5_Materials_Traded")]
-    pub grade_5_materials_traded: Option<u64>,
-
-    #[serde(rename = "Assets_Traded_In")]
-    pub assets_traded_in: Option<u64>,
-
-    #[serde(rename = "Assets_Traded_Out")]
-    pub assets_traded_out: Option<u64>,
-
-}
-
-/// This event is written to Status.json which is updated every few seconds
-#[derive(Clone, Debug, Deserialize)]
-pub struct Status {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Flags")]
-    pub flags: u64,
-
-    #[serde(rename = "Pips")]
-    pub pips: Option<Vec<u64>>,
-
-    #[serde(rename = "FireGroup")]
-    pub fire_group: Option<u64>,
-
-    #[serde(rename = "Fuel")]
-    pub fuel: Option<StatusFuel>,
-
-    #[serde(rename = "GuiFocus")]
-    pub gui_focus: Option<u64>,
-
-    #[serde(rename = "Latitude")]
-    pub latitude: Option<f64>,
-
-    #[serde(rename = "Longitude")]
-    pub longitude: Option<f64>,
-
-    #[serde(rename = "Heading")]
-    pub heading: Option<u64>,
-
-    #[serde(rename = "Altitude")]
-    pub altitude: Option<u64>,
-
-    #[serde(rename = "Flags2")]
-    pub flags2: Option<u64>,
-
-    #[serde(rename = "Cargo")]
-    pub cargo: Option<f64>,
-
-    #[serde(rename = "LegalState")]
-    pub legal_state: Option<String>,
-
-    #[serde(rename = "Balance")]
-    pub balance: Option<u64>,
-
-    #[serde(rename = "Oxygen")]
-    pub oxygen: Option<f64>,
-
-    #[serde(rename = "Health")]
-    pub health: Option<f64>,
-
-    #[serde(rename = "Temperature")]
-    pub temperature: Option<f64>,
-
-    #[serde(rename = "SelectedWeapon")]
-    pub selected_weapon: Option<String>,
-
-    #[serde(rename = "BodyName")]
-    pub body_name: Option<String>,
-
-    #[serde(rename = "Destination")]
-    pub destination: Option<StatusDestination>,
-
-    #[serde(rename = "PlanetRadius")]
-    pub planet_radius: Option<f64>,
-
-    #[serde(rename = "SelectedWeapon_Localised")]
-    pub selected_weapon_localised: Option<String>,
-
-    #[serde(rename = "Gravity")]
-    pub gravity: Option<f64>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatusFuel {
-
-    #[serde(rename = "FuelMain")]
-    pub fuel_main: f64,
-
-    #[serde(rename = "FuelReservoir")]
-    pub fuel_reservoir: f64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StatusDestination {
-
-    #[serde(rename = "System")]
-    pub system: u64,
-
-    #[serde(rename = "Body")]
-    pub body: u64,
+pub struct TradeMicroResourcesOffered {
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -9301,32 +8378,68 @@ pub struct StatusDestination {
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
 
+    #[serde(rename = "Category")]
+    pub category: String,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
 }
 
-/// When written: when first visiting Outfitting, and when the set of stored modules has changed
+/// When trading with a Fleet Carrier Bartender for materials, a file is written with the pricelist to FCMaterials.json
 #[derive(Clone, Debug, Deserialize)]
-pub struct StoredModules {
+pub struct FCMaterials {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
     pub market_id: u64,
 
-    #[serde(rename = "StationName")]
-    pub station_name: String,
+    #[serde(rename = "CarrierName")]
+    pub carrier_name: String,
 
-    #[serde(rename = "StarSystem")]
-    pub star_system: String,
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: String,
 
+    /// Only included in FCMaterials.json
     #[serde(rename = "Items")]
-    pub items: Vec<StoredModulesItems>,
+    pub items: Option<Vec<FCMaterialsItem>>,
 
 }
 
-
 #[derive(Clone, Debug, Deserialize)]
-pub struct StoredModulesItems {
+pub struct NavRouteRoute {
+
+    #[serde(rename = "StarSystem")]
+    pub star_system: String,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    /// star position, as a Json array [x, y, z], relative to Sol in Ly
+    #[serde(rename = "StarPos")]
+    pub star_pos: Vec<f64>,
+
+    #[serde(rename = "StarClass")]
+    pub star_class: String,
+
+}
+
+/// This event is logged when a player sells a flight suit
+#[derive(Clone, Debug, Deserialize)]
+pub struct SellSuit {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "SuitID")]
+    pub suit_id: u64,
+
+    #[serde(rename = "SuitMods")]
+    pub suit_mods: Vec<String>,
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -9334,90 +8447,8 @@ pub struct StoredModulesItems {
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
 
-    #[serde(rename = "StorageSlot")]
-    pub storage_slot: u64,
-
-    #[serde(rename = "StarSystem")]
-    pub star_system: Option<String>,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: Option<u64>,
-
-    #[serde(rename = "TransferCost")]
-    pub transfer_cost: Option<u64>,
-
-    #[serde(rename = "TransferTime")]
-    pub transfer_time: Option<u64>,
-
-    #[serde(rename = "BuyPrice")]
-    pub buy_price: u64,
-
-    #[serde(rename = "Hot")]
-    pub hot: bool,
-
-    /// If engineered module
-    #[serde(rename = "EngineerModifications")]
-    pub engineer_modifications: Option<String>,
-
-    /// If engineered module
-    #[serde(rename = "Level")]
-    pub level: Option<u64>,
-
-    /// If engineered module
-    #[serde(rename = "Quality")]
-    pub quality: Option<f64>,
-
-    /// If the module is being transferred
-    #[serde(rename = "InTransit")]
-    pub in_transit: Option<bool>,
-
-}
-
-/// When written: when visiting shipyard
-#[derive(Clone, Debug, Deserialize)]
-pub struct StoredShips {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "StationName")]
-    pub station_name: String,
-
-    #[serde(rename = "MarketID")]
-    pub market_id: u64,
-
-    #[serde(rename = "StarSystem")]
-    pub star_system: String,
-
-    #[serde(rename = "ShipsHere")]
-    pub ships_here: Vec<StoredShipsShipsHere>,
-
-    #[serde(rename = "ShipsRemote")]
-    pub ships_remote: Vec<StoredShipsShipsRemote>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct StoredShipsShipsHere {
-
-    #[serde(rename = "ShipID")]
-    pub ship_id: u64,
-
-    #[serde(rename = "ShipType")]
-    pub ship_type: String,
-
-    #[serde(rename = "Value")]
-    pub value: u64,
-
-    #[serde(rename = "Hot")]
-    pub hot: bool,
-
-    #[serde(rename = "ShipType_Localised")]
-    pub ship_type_localised: Option<String>,
-
-    #[serde(rename = "Name")]
-    pub name: Option<String>,
+    #[serde(rename = "Price")]
+    pub price: u64,
 
 }
 
@@ -9464,10 +8495,10 @@ pub struct StoredShipsShipsRemote {
 
 }
 
-/// This event is logged when starting on-foot or when disembarking
 #[derive(Clone, Debug, Deserialize)]
-pub struct SuitLoadout {
+pub struct RenameSuitLoadout {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -9480,30 +8511,283 @@ pub struct SuitLoadout {
     #[serde(rename = "SuitName_Localised")]
     pub suit_name_localised: Option<String>,
 
-    #[serde(rename = "SuitMods")]
-    pub suit_mods: Vec<String>,
-
     #[serde(rename = "LoadoutID")]
     pub loadout_id: u64,
 
     #[serde(rename = "LoadoutName")]
     pub loadout_name: String,
 
-    #[serde(rename = "Modules")]
-    pub modules: Vec<SuitLoadoutModules>,
+}
+
+/// When written: when repairing modules using the Auto Field Maintenance Unit (AFMU)
+#[derive(Clone, Debug, Deserialize)]
+pub struct AfmuRepairs {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Module")]
+    pub module: String,
+
+    #[serde(rename = "Module_Localised")]
+    pub module_localised: Option<String>,
+
+    #[serde(rename = "FullyRepaired")]
+    pub fully_repaired: bool,
+
+    #[serde(rename = "Health")]
+    pub health: f64,
 
 }
 
+/// When written: when this player has killed another player
+#[derive(Clone, Debug, Deserialize)]
+pub struct PVPKill {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// Name of the victim
+    #[serde(rename = "Victim")]
+    pub victim: String,
+
+    /// Victim’s rank in range 0..8
+    #[serde(rename = "CombatRank")]
+    pub combat_rank: u64,
+
+}
+
+/// At the time the player requests decommission
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierDecommission {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: u64,
+
+    #[serde(rename = "ScrapRefund")]
+    pub scrap_refund: u64,
+
+    #[serde(rename = "ScrapTime")]
+    pub scrap_time: u64,
+
+}
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct SuitLoadoutModules {
+pub struct ClearImpound {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "ShipType")]
+    pub ship_type: String,
+
+    #[serde(rename = "ShipType_Localised")]
+    pub ship_type_localised: Option<String>,
+
+    #[serde(rename = "ShipID")]
+    pub ship_id: u64,
+
+    #[serde(rename = "ShipMarketID")]
+    pub ship_market_id: u64,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "System")]
+    pub system: Option<String>,
+
+}
+
+/// When written: when scanning a data link
+#[derive(Clone, Debug, Deserialize)]
+pub struct DatalinkScan {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// Message identifier from data link
+    #[serde(rename = "Message")]
+    pub message: String,
+
+    /// Localized message from data link
+    #[serde(rename = "Message_Localised")]
+    pub message_localised: Option<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct MissionsFailed {
+
+    #[serde(rename = "MissionID")]
+    pub mission_id: u64,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "PassengerMission")]
+    pub passenger_mission: bool,
+
+    /// Time left in seconds
+    #[serde(rename = "Expires")]
+    pub expires: u64,
+
+}
+
+/// When Written: when contributing materials to a colonisation effort
+#[derive(Clone, Debug, Deserialize)]
+pub struct ColonisationContribution {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "Contributions")]
+    pub contributions: Vec<ColonisationContributionContribution>,
+
+}
+
+/// When written: when delivering powerplay commodities
+#[derive(Clone, Debug, Deserialize)]
+pub struct PowerplayDeliver {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Power")]
+    pub power: String,
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+    #[serde(rename = "Type_Localised")]
+    pub type_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+}
+
+/// When written: after having identified all bodies in the system
+#[derive(Clone, Debug, Deserialize)]
+pub struct FSSAllBodiesFound {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "SystemName")]
+    pub system_name: String,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+}
+
+/// Written when transferring items between backpack and ship locker
+#[derive(Clone, Debug, Deserialize)]
+pub struct TransferMicroResources {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Transfers")]
+    pub transfers: Vec<TransferMicroResourcesTransfer>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct OutfittingItem {
+
+    #[serde(rename = "id")]
+    pub id: u64,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "BuyPrice")]
+    pub buy_price: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ProspectedAsteroidMaterial {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Proportion")]
+    pub proportion: f64,
+
+}
+
+/// When written: at startup, when loading from main menu into game
+#[derive(Clone, Debug, Deserialize)]
+pub struct Materials {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Raw")]
+    pub raw: Vec<MaterialsRaw>,
+
+    #[serde(rename = "Manufactured")]
+    pub manufactured: Vec<MaterialsManufactured>,
+
+    #[serde(rename = "Encoded")]
+    pub encoded: Vec<MaterialsEncoded>,
+
+}
+
+/// This event is logged when a player adds a weapon to a suit loadout
+#[derive(Clone, Debug, Deserialize)]
+pub struct LoadoutEquipModule {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "LoadoutName")]
+    pub loadout_name: String,
+
+    #[serde(rename = "SuitID")]
+    pub suit_id: u64,
+
+    #[serde(rename = "SuitName")]
+    pub suit_name: String,
+
+    #[serde(rename = "SuitName_Localised")]
+    pub suit_name_localised: Option<String>,
+
+    #[serde(rename = "LoadoutID")]
+    pub loadout_id: u64,
 
     #[serde(rename = "SlotName")]
     pub slot_name: String,
 
-    #[serde(rename = "SuitModuleID")]
-    pub suit_module_id: u64,
-
+    /// New weapon or other item added to loadout
     #[serde(rename = "ModuleName")]
     pub module_name: String,
 
@@ -9516,65 +8800,275 @@ pub struct SuitLoadoutModules {
     #[serde(rename = "WeaponMods")]
     pub weapon_mods: Vec<String>,
 
+    #[serde(rename = "SuitModuleID")]
+    pub suit_module_id: u64,
+
 }
 
-/// When dropping out of supercruise at a targeted destination
+/// Change to tax rate or reserve
 #[derive(Clone, Debug, Deserialize)]
-pub struct SupercruiseDestinationDrop {
+pub struct CarrierFinance {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: u64,
+
+    #[serde(rename = "CarrierBalance")]
+    pub carrier_balance: u64,
+
+    #[serde(rename = "ReserveBalance")]
+    pub reserve_balance: u64,
+
+    #[serde(rename = "AvailableBalance")]
+    pub available_balance: u64,
+
+    #[serde(rename = "ReservePercent")]
+    pub reserve_percent: u64,
+
+    #[serde(rename = "TaxRate_pioneersupplies")]
+    pub tax_rate_pioneer_supplies: Option<u64>,
+
+    #[serde(rename = "TaxRate_shipyard")]
+    pub tax_rate_shipyard: Option<u64>,
+
+    #[serde(rename = "TaxRate_rearm")]
+    pub tax_rate_rearm: Option<u64>,
+
+    #[serde(rename = "TaxRate_outfitting")]
+    pub tax_rate_outfitting: Option<u64>,
+
+    #[serde(rename = "TaxRate_refuel")]
+    pub tax_rate_refuel: Option<u64>,
+
+    #[serde(rename = "TaxRate_repair")]
+    pub tax_rate_repair: Option<u64>,
+
+    #[serde(rename = "TaxRate")]
+    pub tax_rate: Option<u64>,
+
+}
+
+/// Lists the contents of the ship locker, eg at startup. The full contents are written to a separate file, ShipLocker.json. The full list is also written into the journal at startup (if in a ship) and when boarding a ship. The shiplocker.json file is updated when the locker contents are changed.
+#[derive(Clone, Debug, Deserialize)]
+pub struct ShipLocker {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Items")]
+    pub items: Option<Vec<Item>>,
+
+    #[serde(rename = "Components")]
+    pub components: Option<Vec<Component>>,
+
+    #[serde(rename = "Consumables")]
+    pub consumables: Option<Vec<Consumable>>,
+
+    #[serde(rename = "Data")]
+    pub data: Option<Vec<Data>>,
+
+}
+
+/// When Written: when purchasing goods in the market
+#[derive(Clone, Debug, Deserialize)]
+pub struct MarketBuy {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
 
     #[serde(rename = "Type")]
     pub r#type: String,
 
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+    #[serde(rename = "BuyPrice")]
+    pub buy_price: u64,
+
+    #[serde(rename = "TotalCost")]
+    pub total_cost: u64,
+
+    /// The localised value will be omitted if it is exactly the same as Type
     #[serde(rename = "Type_Localised")]
     pub type_localised: Option<String>,
 
+}
+
+/// This event is logged when the player deletes a suit loadout
+#[derive(Clone, Debug, Deserialize)]
+pub struct DeleteSuitLoadout {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "SuitID")]
+    pub suit_id: u64,
+
+    #[serde(rename = "SuitName")]
+    pub suit_name: String,
+
+    #[serde(rename = "SuitName_Localised")]
+    pub suit_name_localised: Option<String>,
+
+    #[serde(rename = "LoadoutID")]
+    pub loadout_id: u64,
+
+    #[serde(rename = "LoadoutName")]
+    pub loadout_name: String,
+
+}
+
+/// When written: at startup
+#[derive(Clone, Debug, Deserialize)]
+pub struct Missions {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Active")]
+    pub active: Vec<MissionsActive>,
+
+    #[serde(rename = "Failed")]
+    pub failed: Vec<MissionsFailed>,
+
+    #[serde(rename = "Complete")]
+    pub complete: Vec<MissionsComplete>,
+
+}
+
+/// When Written: Every 15 seconds while docked at a construction depot
+#[derive(Clone, Debug, Deserialize)]
+pub struct ColonisationConstructionDepot {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
     #[serde(rename = "MarketID")]
-    pub market_id: Option<u64>,
+    pub market_id: u64,
 
-    #[serde(rename = "Threat")]
-    pub threat: u64,
+    #[serde(rename = "ConstructionProgress")]
+    pub construction_progress: f64,
 
-}
+    #[serde(rename = "ConstructionComplete")]
+    pub construction_complete: bool,
 
-/// When written: entering supercruise from normal space
-#[derive(Clone, Debug, Deserialize)]
-pub struct SupercruiseEntry {
+    #[serde(rename = "ConstructionFailed")]
+    pub construction_failed: bool,
 
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Taxi")]
-    pub taxi: Option<bool>,
-
-    #[serde(rename = "Multicrew")]
-    pub multicrew: Option<bool>,
-
-    #[serde(rename = "StarSystem")]
-    pub star_system: String,
-
-    #[serde(rename = "SystemAddress")]
-    pub system_address: u64,
-
-    #[serde(rename = "Wanted")]
-    pub wanted: Option<bool>,
+    #[serde(rename = "ResourcesRequired")]
+    pub resources_required: Vec<ColonisationConstructionDepotResourcesRequired>,
 
 }
 
-/// When written: leaving supercruise for normal space
 #[derive(Clone, Debug, Deserialize)]
-pub struct SupercruiseExit {
+pub struct CarrierNameChange {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Taxi")]
-    pub taxi: Option<bool>,
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: u64,
 
-    #[serde(rename = "Multicrew")]
-    pub multicrew: Option<bool>,
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Callsign")]
+    pub callsign: String,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct NavRouteClearRoute {
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierJumpStationFaction {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierStatsCrew {
+
+    #[serde(rename = "CrewRole")]
+    pub crew_role: String,
+
+    #[serde(rename = "Activated")]
+    pub activated: bool,
+
+    #[serde(rename = "Enabled")]
+    pub enabled: Option<bool>,
+
+    #[serde(rename = "CrewName")]
+    pub crew_name: Option<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierJumpConflict {
+
+    #[serde(rename = "WarType")]
+    pub war_type: String,
+
+    #[serde(rename = "Status")]
+    pub status: String,
+
+    #[serde(rename = "Faction1")]
+    pub faction1: CarrierJumpConflictFaction1,
+
+    #[serde(rename = "Faction2")]
+    pub faction2: CarrierJumpConflictFaction2,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct UpgradeWeaponResource {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct Music {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MusicTrack")]
+    pub music_track: String,
+
+}
+
+/// When written: when in Supercruise, and distance from planet drops to within the 'Orbital Cruise' zone
+#[derive(Clone, Debug, Deserialize)]
+pub struct ApproachBody {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "StarSystem")]
     pub star_system: String,
@@ -9588,15 +9082,54 @@ pub struct SupercruiseExit {
     #[serde(rename = "BodyID")]
     pub body_id: u64,
 
-    #[serde(rename = "BodyType")]
-    pub body_type: String,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct DockedLandingPads {
+
+    #[serde(rename = "Small")]
+    pub small: u64,
+
+    #[serde(rename = "Medium")]
+    pub medium: u64,
+
+    #[serde(rename = "Large")]
+    pub large: u64,
 
 }
 
-/// This event is logged when a player selects a different flight suit from the ship’s locker
 #[derive(Clone, Debug, Deserialize)]
-pub struct SwitchSuitLoadout {
+pub struct MaterialsManufactured {
 
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    /// The localised value will be omitted if it is exactly the same as Name
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct KickedFromSquadron {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "SquadronName")]
+    pub squadron_name: String,
+
+}
+
+/// This event is logged when starting on-foot or when disembarking
+#[derive(Clone, Debug, Deserialize)]
+pub struct SuitLoadout {
+
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -9619,139 +9152,241 @@ pub struct SwitchSuitLoadout {
     pub loadout_name: String,
 
     #[serde(rename = "Modules")]
-    pub modules: Vec<SwitchSuitLoadoutModules>,
+    pub modules: Vec<SuitLoadoutModule>,
 
 }
 
-
 #[derive(Clone, Debug, Deserialize)]
-pub struct SwitchSuitLoadoutModules {
-
-    #[serde(rename = "SlotName")]
-    pub slot_name: String,
-
-    #[serde(rename = "SuitModuleID")]
-    pub suit_module_id: u64,
-
-    #[serde(rename = "ModuleName")]
-    pub module_name: String,
-
-    #[serde(rename = "ModuleName_Localised")]
-    pub module_name_localised: Option<String>,
-
-    #[serde(rename = "Class")]
-    pub class: u64,
-
-    #[serde(rename = "WeaponMods")]
-    pub weapon_mods: Vec<String>,
-
-}
-
-/// When written: when synthesis is used to repair or rearm
-#[derive(Clone, Debug, Deserialize)]
-pub struct Synthesis {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// Synthesis blueprint
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    /// Materials used with quantities
-    #[serde(rename = "Materials")]
-    pub materials: Vec<SynthesisMaterials>,
-
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct SynthesisMaterials {
+pub struct DockedStationEconomy {
 
     #[serde(rename = "Name")]
     pub name: String,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
 
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
 
-}
-
-/// When written: when the player's ship systems shut down (eg in a Thargoid encounter)
-#[derive(Clone, Debug, Deserialize)]
-pub struct SystemsShutdown {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    #[serde(rename = "Proportion")]
+    pub proportion: f64,
 
 }
 
-/// When written: when using the Technology Broker to unlock new purchasable technology
+/// This event records that a player has sold organic data (see ScanOrganic)
 #[derive(Clone, Debug, Deserialize)]
-pub struct TechnologyBroker {
+pub struct SellOrganicData {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "BrokerType")]
-    pub broker_type: String,
 
     #[serde(rename = "MarketID")]
     pub market_id: u64,
 
-    #[serde(rename = "ItemsUnlocked")]
-    pub items_unlocked: Vec<TechnologyBrokerItemsUnlocked>,
-
-    #[serde(rename = "Commodities")]
-    pub commodities: Vec<TechnologyBrokerCommodities>,
-
-    #[serde(rename = "Materials")]
-    pub materials: Vec<TechnologyBrokerMaterials>,
+    #[serde(rename = "BioData")]
+    pub bio_data: Vec<SellOrganicDataBioData>,
 
 }
 
-
+/// When Written: whenever materials are collected
 #[derive(Clone, Debug, Deserialize)]
-pub struct TechnologyBrokerCommodities {
+pub struct MaterialCollected {
 
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct TechnologyBrokerItemsUnlocked {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-}
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct TechnologyBrokerMaterials {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Category")]
     pub category: String,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    /// Number of units collected
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+    /// The localised value will be omitted if it is exactly the same as Name
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+}
+
+/// When Written: when buying a module in outfitting
+#[derive(Clone, Debug, Deserialize)]
+pub struct ModuleBuy {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// Slot that is outfitted
+    #[serde(rename = "Slot")]
+    pub slot: String,
+
+    /// The module being purchased
+    #[serde(rename = "BuyItem")]
+    pub buy_item: String,
+
+    #[serde(rename = "BuyItem_Localised")]
+    pub buy_item_localised: Option<String>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    /// Price paid
+    #[serde(rename = "BuyPrice")]
+    pub buy_price: u64,
+
+    /// The player's ship
+    #[serde(rename = "Ship")]
+    pub ship: String,
+
+    /// The player's ship ID
+    #[serde(rename = "ShipID")]
+    pub ship_id: u64,
+
+    /// If existing module in slot is stored
+    #[serde(rename = "StoredItem")]
+    pub stored_item: Option<String>,
+
+    /// If existing module in slot is stored
+    #[serde(rename = "StoredItem_Localised")]
+    pub stored_item_localised: Option<String>,
+
+    /// If existing module in slot is sold
+    #[serde(rename = "SellItem")]
+    pub sell_item: Option<String>,
+
+    /// If existing module in slot is sold
+    #[serde(rename = "SellItem_Localised")]
+    pub sell_item_localised: Option<String>,
+
+    /// If existing module in slot is sold
+    #[serde(rename = "SellPrice")]
+    pub sell_price: Option<u64>,
+
+}
+
+/// When written: When the current plotted nav route is cleared. Can be written to NavRoute.json with an empty Route array.
+#[derive(Clone, Debug, Deserialize)]
+pub struct NavRouteClear {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Route")]
+    pub route: Option<Vec<NavRouteClearRoute>>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct FSDJumpFactionPendingState {
+
+    #[serde(rename = "State")]
+    pub state: String,
+
+    #[serde(rename = "Trend")]
+    pub trend: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct RequestPowerMicroResourcesMicroResource {
+
+    /// The internal name of the micro-resource.
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    /// The localized name of the micro-resource.
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+    /// The category of the micro-resource.
+    #[serde(rename = "Category")]
+    pub category: String,
+
+    /// The count of this type of micro-resource.
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct BountyReward {
+
+    #[serde(rename = "Faction")]
+    pub faction: String,
+
+    #[serde(rename = "Reward")]
+    pub reward: u64,
+
+}
+
+/// When written: when the player requests docking at a station
+#[derive(Clone, Debug, Deserialize)]
+pub struct DockingRequested {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "StationName")]
+    pub station_name: String,
+
+    #[serde(rename = "StationName_Localised")]
+    pub station_name_localised: Option<String>,
+
+    #[serde(rename = "StationType")]
+    pub station_type: String,
+
+    #[serde(rename = "LandingPads")]
+    pub landing_pads: Option<DockingRequestedLandingPads>,
+
+}
+
+/// When written: when receiving salary payment from a power
+#[derive(Clone, Debug, Deserialize)]
+pub struct PowerplaySalary {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Power")]
+    pub power: String,
+
+    #[serde(rename = "Amount")]
+    pub amount: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct MissionCompletedFactionEffectEffect {
+
+    #[serde(rename = "Effect")]
+    pub effect: String,
+
+    #[serde(rename = "Effect_Localised")]
+    pub effect_localised: Option<String>,
+
+    #[serde(rename = "Trend")]
+    pub trend: String,
+
+}
+
+/// When written: when docking a fighter back with the mothership
+#[derive(Clone, Debug, Deserialize)]
+pub struct DockFighter {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "ID")]
+    pub id: u64,
 
 }
 
@@ -9759,6 +9394,7 @@ pub struct TechnologyBrokerMaterials {
 #[derive(Clone, Debug, Deserialize)]
 pub struct Touchdown {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -9806,10 +9442,519 @@ pub struct Touchdown {
 
 }
 
+/// When written: when a docking request has timed out
+#[derive(Clone, Debug, Deserialize)]
+pub struct DockingTimeout {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: Option<u64>,
+
+    #[serde(rename = "StationName")]
+    pub station_name: Option<String>,
+
+    #[serde(rename = "StationName_Localised")]
+    pub station_name_localised: Option<String>,
+
+    #[serde(rename = "StationType")]
+    pub station_type: Option<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct LoadoutFuelCapacity {
+
+    #[serde(rename = "Main")]
+    pub main: f64,
+
+    #[serde(rename = "Reserve")]
+    pub reserve: f64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ScanRing {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "RingClass")]
+    pub ring_class: String,
+
+    /// In megatons
+    #[serde(rename = "MassMT")]
+    pub mass_mt: f64,
+
+    #[serde(rename = "InnerRad")]
+    pub inner_rad: f64,
+
+    #[serde(rename = "OuterRad")]
+    pub outer_rad: f64,
+
+}
+
+/// Same as ShipLocker, but discontinued.
+#[derive(Clone, Debug, Deserialize)]
+pub struct ShipLockerMaterials {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Items")]
+    pub items: Vec<ShipLockerMaterialsItem>,
+
+    #[serde(rename = "Components")]
+    pub components: Vec<ShipLockerMaterialsComponent>,
+
+    #[serde(rename = "Consumables")]
+    pub consumables: Vec<ShipLockerMaterialsConsumable>,
+
+    #[serde(rename = "Data")]
+    pub data: Vec<ShipLockerMaterialsData>,
+
+}
+
+/// When written: when receiving information about a change in a friend's status. Also written at startup for friends who are already online.
+#[derive(Clone, Debug, Deserialize)]
+pub struct Friends {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    /// One of the following: Requested, Declined, Added, Lost, Offline, Online
+    #[serde(rename = "Status")]
+    pub status: String,
+
+    /// the friend's commander name
+    #[serde(rename = "Name")]
+    pub name: String,
+
+}
+
+/// Thargoid war information
+#[derive(Clone, Debug, Deserialize)]
+pub struct LocationThargoidWar {
+
+    #[serde(rename = "CurrentState")]
+    pub current_state: String,
+
+    #[serde(rename = "NextStateSuccess")]
+    pub next_state_success: Option<String>,
+
+    #[serde(rename = "NextStateFailure")]
+    pub next_state_failure: Option<String>,
+
+    #[serde(rename = "SuccessStateReached")]
+    pub success_state_reached: bool,
+
+    #[serde(rename = "WarProgress")]
+    pub war_progress: Option<f64>,
+
+    #[serde(rename = "RemainingPorts")]
+    pub remaining_ports: Option<u64>,
+
+    #[serde(rename = "EstimatedRemainingTime")]
+    pub estimated_remaining_time: Option<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ShipyardPriceList {
+
+    #[serde(rename = "id")]
+    pub id: u64,
+
+    #[serde(rename = "ShipType")]
+    pub ship_type: String,
+
+    #[serde(rename = "ShipPrice")]
+    pub ship_price: u64,
+
+    #[serde(rename = "ShipType_Localised")]
+    pub ship_type_localised: Option<String>,
+
+}
+
+/// When written: when scanning some types of data links
+#[derive(Clone, Debug, Deserialize)]
+pub struct DataScanned {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+    #[serde(rename = "Type_Localised")]
+    pub type_localised: Option<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct MaterialTradePaid {
+
+    #[serde(rename = "Material")]
+    pub material: String,
+
+    /// The localised value will be omitted if it is exactly the same as Material
+    #[serde(rename = "Material_Localised")]
+    pub material_localised: Option<String>,
+
+    #[serde(rename = "Category")]
+    pub category: String,
+
+    #[serde(rename = "Quantity")]
+    pub quantity: u64,
+
+}
+
+/// When exiting a shuttle dropship at a conflict zone
+#[derive(Clone, Debug, Deserialize)]
+pub struct DropshipDeploy {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "StarSystem")]
+    pub star_system: String,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    #[serde(rename = "Body")]
+    pub body: String,
+
+    #[serde(rename = "BodyID")]
+    pub body_id: u64,
+
+    #[serde(rename = "OnStation")]
+    pub on_station: bool,
+
+    #[serde(rename = "OnPlanet")]
+    pub on_planet: bool,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct FSDJumpPowerplayConflictProgress {
+
+    #[serde(rename = "Power")]
+    pub power: String,
+
+    /// Progress towards the control threshold of 120k merits. can exceed 100%(1.0).
+    #[serde(rename = "ConflictProgress")]
+    pub conflict_progress: f64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct SquadronStartup {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "SquadronName")]
+    pub squadron_name: String,
+
+    #[serde(rename = "CurrentRank")]
+    pub current_rank: u64,
+
+}
+
+/// When Written: when selling a ship stored in the shipyard
+#[derive(Clone, Debug, Deserialize)]
+pub struct ShipyardSell {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "ShipType")]
+    pub ship_type: String,
+
+    #[serde(rename = "SellShipID")]
+    pub sell_ship_id: u64,
+
+    #[serde(rename = "ShipPrice")]
+    pub ship_price: u64,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "ShipType_Localised")]
+    pub ship_type_localised: Option<String>,
+
+    /// If ship is in another system
+    #[serde(rename = "System")]
+    pub system: Option<String>,
+
+    #[serde(rename = "ShipMarketID")]
+    pub ship_market_id: Option<u64>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct SAASignalsFoundSignal {
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+    #[serde(rename = "Type_Localised")]
+    pub type_localised: Option<String>,
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsMaterialTraderStats {
+
+    #[serde(rename = "Trades_Completed")]
+    pub trades_completed: u64,
+
+    #[serde(rename = "Materials_Traded")]
+    pub materials_traded: u64,
+
+    #[serde(rename = "Encoded_Materials_Traded")]
+    pub encoded_materials_traded: Option<u64>,
+
+    #[serde(rename = "Raw_Materials_Traded")]
+    pub raw_materials_traded: Option<u64>,
+
+    #[serde(rename = "Grade_1_Materials_Traded")]
+    pub grade_1_materials_traded: Option<u64>,
+
+    #[serde(rename = "Grade_2_Materials_Traded")]
+    pub grade_2_materials_traded: Option<u64>,
+
+    #[serde(rename = "Grade_3_Materials_Traded")]
+    pub grade_3_materials_traded: Option<u64>,
+
+    #[serde(rename = "Grade_4_Materials_Traded")]
+    pub grade_4_materials_traded: Option<u64>,
+
+    #[serde(rename = "Grade_5_Materials_Traded")]
+    pub grade_5_materials_traded: Option<u64>,
+
+    #[serde(rename = "Assets_Traded_In")]
+    pub assets_traded_in: Option<u64>,
+
+    #[serde(rename = "Assets_Traded_Out")]
+    pub assets_traded_out: Option<u64>,
+
+}
+
+/// When written: when using the Technology Broker to unlock new purchasable technology
+#[derive(Clone, Debug, Deserialize)]
+pub struct TechnologyBroker {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "BrokerType")]
+    pub broker_type: String,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "ItemsUnlocked")]
+    pub items_unlocked: Vec<TechnologyBrokerItemsUnlocked>,
+
+    #[serde(rename = "Commodities")]
+    pub commodities: Vec<TechnologyBrokerCommodity>,
+
+    #[serde(rename = "Materials")]
+    pub materials: Vec<TechnologyBrokerMaterial>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierJumpPowerplayConflictProgress {
+
+    #[serde(rename = "Power")]
+    pub power: String,
+
+    /// Progress towards the control threshold of 120k merits. can exceed 100%(1.0).
+    #[serde(rename = "ConflictProgress")]
+    pub conflict_progress: f64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CommunityGoalCurrentGoalTopTier {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Bonus")]
+    pub bonus: String,
+
+}
+
+/// When written: at startup
+#[derive(Clone, Debug, Deserialize)]
+pub struct Rank {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Combat")]
+    pub combat: u64,
+
+    #[serde(rename = "Trade")]
+    pub trade: u64,
+
+    #[serde(rename = "Explore")]
+    pub explore: u64,
+
+    #[serde(rename = "Soldier")]
+    pub soldier: Option<u64>,
+
+    #[serde(rename = "Exobiologist")]
+    pub exobiologist: Option<u64>,
+
+    #[serde(rename = "Empire")]
+    pub empire: u64,
+
+    #[serde(rename = "Federation")]
+    pub federation: u64,
+
+    #[serde(rename = "CQC")]
+    pub cqc: u64,
+
+}
+
+/// When written: when using any type of drone/limpet
+#[derive(Clone, Debug, Deserialize)]
+pub struct LaunchDrone {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Type")]
+    pub r#type: String,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct ColonisationContributionContribution {
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: String,
+
+    #[serde(rename = "Amount")]
+    pub amount: u64,
+
+}
+
+/// When written: when using Surface Area Analysis Scanner on a planet or rings
+#[derive(Clone, Debug, Deserialize)]
+pub struct SAASignalsFound {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "BodyName")]
+    pub body_name: String,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    #[serde(rename = "BodyID")]
+    pub body_id: u64,
+
+    #[serde(rename = "Signals")]
+    pub signals: Vec<SAASignalsFoundSignal>,
+
+    #[serde(rename = "Genuses")]
+    pub genuses: Option<Vec<SAASignalsFoundGenus>>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsPassengers {
+
+    #[serde(rename = "Passengers_Missions_Accepted")]
+    pub passengers_missions_accepted: Option<u64>,
+
+    #[serde(rename = "Passengers_Missions_Disgruntled")]
+    pub passengers_missions_disgruntled: Option<u64>,
+
+    #[serde(rename = "Passengers_Missions_Bulk")]
+    pub passengers_missions_bulk: u64,
+
+    #[serde(rename = "Passengers_Missions_VIP")]
+    pub passengers_missions_vip: u64,
+
+    #[serde(rename = "Passengers_Missions_Delivered")]
+    pub passengers_missions_delivered: u64,
+
+    #[serde(rename = "Passengers_Missions_Ejected")]
+    pub passengers_missions_ejected: u64,
+
+}
+
+/// This event is written when completing a Full Spectrum Scan of a starsystem, to list the number of SAA signals found in the system (as shown in-game in the top-right panel)
+#[derive(Clone, Debug, Deserialize)]
+pub struct FSSBodySignals {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "BodyName")]
+    pub body_name: String,
+
+    #[serde(rename = "BodyID")]
+    pub body_id: u64,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    #[serde(rename = "Signals")]
+    pub signals: Vec<FSSBodySignalsSignal>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct SquadronPromotion {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "SquadronName")]
+    pub squadron_name: String,
+
+    #[serde(rename = "OldRank")]
+    pub old_rank: u64,
+
+    #[serde(rename = "NewRank")]
+    pub new_rank: u64,
+
+}
+
 /// This event is logged when the player exchanges owned microresources to receive some other type of microresource
 #[derive(Clone, Debug, Deserialize)]
 pub struct TradeMicroResources {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -9836,9 +9981,73 @@ pub struct TradeMicroResources {
 
 }
 
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsTgEncounters {
+
+    #[serde(rename = "TG_ENCOUNTER_IMPRINT")]
+    pub tg_encounter_imprint: Option<u64>,
+
+    #[serde(rename = "TG_ENCOUNTER_WAKES")]
+    pub tg_encounter_wakes: Option<u64>,
+
+    #[serde(rename = "TG_ENCOUNTER_KILLED")]
+    pub tg_encounter_killed: Option<u64>,
+
+    #[serde(rename = "TG_ENCOUNTER_TOTAL")]
+    pub tg_encounter_total: u64,
+
+    #[serde(rename = "TG_ENCOUNTER_TOTAL_LAST_SYSTEM")]
+    pub tg_encounter_total_last_system: String,
+
+    #[serde(rename = "TG_ENCOUNTER_TOTAL_LAST_TIMESTAMP")]
+    pub tg_encounter_total_last_timestamp: String,
+
+    #[serde(rename = "TG_ENCOUNTER_TOTAL_LAST_SHIP")]
+    pub tg_encounter_total_last_ship: String,
+
+    #[serde(rename = "TG_SCOUT_COUNT")]
+    pub tg_scout_count: Option<u64>,
+
+}
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct TradeMicroResourcesOffered {
+pub struct LocationFactionPendingState {
+
+    #[serde(rename = "State")]
+    pub state: String,
+
+    #[serde(rename = "Trend")]
+    pub trend: u64,
+
+}
+
+/// When written: when selecting a star system to jump to. When following a multi-jump route, this will typically appear for the next star, during a jump, ie after StartJump but before the FSDJump
+#[derive(Clone, Debug, Deserialize)]
+pub struct FSDTarget {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "SystemAddress")]
+    pub system_address: u64,
+
+    #[serde(rename = "StarClass")]
+    pub star_class: String,
+
+    #[serde(rename = "RemainingJumpsInRoute")]
+    pub remaining_jumps_in_route: Option<u64>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct FCMaterialsItem {
+
+    #[serde(rename = "id")]
+    pub id: u64,
 
     #[serde(rename = "Name")]
     pub name: String,
@@ -9846,86 +10055,131 @@ pub struct TradeMicroResourcesOffered {
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
 
-    #[serde(rename = "Category")]
-    pub category: String,
+    #[serde(rename = "Price")]
+    pub price: u64,
 
-    #[serde(rename = "Count")]
-    pub count: u64,
+    #[serde(rename = "Stock")]
+    pub stock: u64,
+
+    #[serde(rename = "Demand")]
+    pub demand: u64,
 
 }
 
-/// Written when transferring items between backpack and ship locker
+/// When dropping out of supercruise at a targeted destination
 #[derive(Clone, Debug, Deserialize)]
-pub struct TransferMicroResources {
+pub struct SupercruiseDestinationDrop {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Transfers")]
-    pub transfers: Vec<TransferMicroResourcesTransfers>,
+    #[serde(rename = "Type")]
+    pub r#type: String,
 
-}
-
-
-#[derive(Clone, Debug, Deserialize)]
-pub struct TransferMicroResourcesTransfers {
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Category")]
-    pub category: String,
-
-    #[serde(rename = "LockerOldCount")]
-    pub locker_old_count: u64,
-
-    #[serde(rename = "LockerNewCount")]
-    pub locker_new_count: u64,
-
-    #[serde(rename = "Direction")]
-    pub direction: String,
-
-}
-
-/// When written: when under fire (same time as the Under Attack voice message)
-#[derive(Clone, Debug, Deserialize)]
-pub struct UnderAttack {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Target")]
-    pub target: Option<String>,
-
-}
-
-/// When written: liftoff from a landing pad in a station, outpost or settlement
-#[derive(Clone, Debug, Deserialize)]
-pub struct Undocked {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "StationName")]
-    pub station_name: String,
-
-    #[serde(rename = "StationName_Localised")]
-    pub station_name_localised: Option<String>,
-
-    #[serde(rename = "StationType")]
-    pub station_type: String,
+    #[serde(rename = "Type_Localised")]
+    pub type_localised: Option<String>,
 
     #[serde(rename = "MarketID")]
-    pub market_id: u64,
+    pub market_id: Option<u64>,
 
-    #[serde(rename = "Taxi")]
-    pub taxi: Option<bool>,
+    #[serde(rename = "Threat")]
+    pub threat: u64,
 
-    #[serde(rename = "Multicrew")]
-    pub multicrew: Option<bool>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct LocationFactionRecoveringState {
+
+    #[serde(rename = "State")]
+    pub state: String,
+
+    #[serde(rename = "Trend")]
+    pub trend: u64,
+
+}
+
+/// When written: The player has been rewarded for a capital ship combat
+#[derive(Clone, Debug, Deserialize)]
+pub struct CapShipBond {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Reward")]
+    pub reward: u64,
+
+    #[serde(rename = "AwardingFaction")]
+    pub awarding_faction: String,
+
+    #[serde(rename = "VictimFaction")]
+    pub victim_faction: String,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct StatisticsExobiology {
+
+    #[serde(rename = "Organic_Genus_Encountered")]
+    pub organic_genus_encountered: u64,
+
+    #[serde(rename = "Organic_Species_Encountered")]
+    pub organic_species_encountered: u64,
+
+    #[serde(rename = "Organic_Variant_Encountered")]
+    pub organic_variant_encountered: u64,
+
+    #[serde(rename = "Organic_Data_Profits")]
+    pub organic_data_profits: u64,
+
+    #[serde(rename = "Organic_Data")]
+    pub organic_data: u64,
+
+    #[serde(rename = "First_Logged_Profits")]
+    pub first_logged_profits: u64,
+
+    #[serde(rename = "First_Logged")]
+    pub first_logged: u64,
+
+    #[serde(rename = "Organic_Systems")]
+    pub organic_systems: u64,
+
+    #[serde(rename = "Organic_Planets")]
+    pub organic_planets: u64,
+
+    #[serde(rename = "Organic_Genus")]
+    pub organic_genus: u64,
+
+    #[serde(rename = "Organic_Species")]
+    pub organic_species: u64,
+
+}
+
+/// When written: when receiving payment for powerplay combat
+#[derive(Clone, Debug, Deserialize)]
+pub struct PowerplayVoucher {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Power")]
+    pub power: String,
+
+    #[serde(rename = "Systems")]
+    pub systems: Vec<String>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierStatsModulePack {
+
+    #[serde(rename = "PackTheme")]
+    pub pack_theme: String,
+
+    #[serde(rename = "PackTier")]
+    pub pack_tier: u64,
 
 }
 
@@ -9933,6 +10187,7 @@ pub struct Undocked {
 #[derive(Clone, Debug, Deserialize)]
 pub struct UpgradeSuit {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
@@ -9952,17 +10207,28 @@ pub struct UpgradeSuit {
     pub cost: u64,
 
     #[serde(rename = "Resources")]
-    pub resources: Option<Vec<UpgradeSuitResources>>,
+    pub resources: Option<Vec<UpgradeSuitResource>>,
 
 }
 
-
+/// When written: when contributing materials to a research community goal
 #[derive(Clone, Debug, Deserialize)]
-pub struct UpgradeSuitResources {
+pub struct ScientificResearch {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "MarketID")]
+    pub market_id: u64,
+
+    #[serde(rename = "Category")]
+    pub category: String,
 
     #[serde(rename = "Name")]
     pub name: String,
 
+    /// The localised value will be omitted if it is exactly the same as Name
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
 
@@ -9971,156 +10237,88 @@ pub struct UpgradeSuitResources {
 
 }
 
+/// This event is logged if the player cancels a booked taxi trip
 #[derive(Clone, Debug, Deserialize)]
-pub struct UpgradeWeapon {
+pub struct CancelTaxi {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Class")]
-    pub class: u64,
-
-    #[serde(rename = "SuitModuleID")]
-    pub suit_module_id: u64,
-
-    #[serde(rename = "Cost")]
-    pub cost: u64,
-
-    #[serde(rename = "Resources")]
-    pub resources: Option<Vec<UpgradeWeaponResources>>,
+    #[serde(rename = "Refund")]
+    pub refund: u64,
 
 }
 
-
+/// When cargo is ejected
 #[derive(Clone, Debug, Deserialize)]
-pub struct UpgradeWeaponResources {
+pub struct EjectCargo {
 
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
-
-    #[serde(rename = "Count")]
-    pub count: u64,
-
-}
-
-/// When using an item from the player’s inventory (backpack)
-#[derive(Clone, Debug, Deserialize)]
-pub struct UseConsumable {
-
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-    #[serde(rename = "Name_Localised")]
-    pub name_localised: Option<String>,
 
     #[serde(rename = "Type")]
     pub r#type: String,
 
-}
+    /// The localised value will be omitted if it is exactly the same as Type
+    #[serde(rename = "Type_Localised")]
+    pub type_localised: Option<String>,
 
-/// When written: when dropping from Supercruise at a Unidentified Signal Source
-#[derive(Clone, Debug, Deserialize)]
-pub struct USSDrop {
+    #[serde(rename = "Count")]
+    pub count: u64,
 
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    #[serde(rename = "Abandoned")]
+    pub abandoned: bool,
 
-    #[serde(rename = "USSType")]
-    pub uss_type: String,
+    #[serde(rename = "MissionID")]
+    pub mission_id: Option<u64>,
 
-    #[serde(rename = "USSType_Localised")]
-    pub uss_type_localised: Option<String>,
-
-    #[serde(rename = "USSThreat")]
-    pub uss_threat: u64,
-
-}
-
-/// When written: when switching control between the main ship and a fighter
-#[derive(Clone, Debug, Deserialize)]
-pub struct VehicleSwitch {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "To")]
-    pub to: String,
+    /// If the cargo is related to powerplay delivery from outlying systems back to the centre. Starsystem name.
+    #[serde(rename = "PowerplayOrigin")]
+    pub powerplay_origin: Option<String>,
 
 }
 
-/// When written: another player has joined the wing
+/// When written: when heat exceeds 100%
 #[derive(Clone, Debug, Deserialize)]
-pub struct WingAdd {
+pub struct HeatWarning {
 
+    /// Event timestamp
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct MultiSellExplorationDataDiscovered {
+
+    #[serde(rename = "SystemName")]
+    pub system_name: String,
+
+    /// This field sometime appears in this event containing random data (bug)
+    #[serde(rename = "SystemName_Localised")]
+    pub system_name_localised: Option<String>,
+
+    #[serde(rename = "NumBodies")]
+    pub num_bodies: u64,
+
+}
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct EmbarkCrew {
 
     #[serde(rename = "Name")]
     pub name: String,
 
-}
-
-/// When written: when the player is invited to a wing
-#[derive(Clone, Debug, Deserialize)]
-pub struct WingInvite {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    #[serde(rename = "Name")]
-    pub name: String,
-
-}
-
-/// When written: this player has joined a wing
-#[derive(Clone, Debug, Deserialize)]
-pub struct WingJoin {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
-
-    /// Other player names already in wing
-    #[serde(rename = "Others")]
-    pub others: Vec<String>,
-
-}
-
-/// When written: this player has left a wing
-#[derive(Clone, Debug, Deserialize)]
-pub struct WingLeave {
-
-    #[serde(with = "crate::event::format::date")]
-    pub timestamp: DateTime<Utc>,
+    #[serde(rename = "Role")]
+    pub role: String,
 
 }
 
 #[derive(Clone, Debug, Deserialize)]
 #[serde(tag = "event")]
 pub enum JournalEvent {
-    #[serde(rename = "Item")]
-    Item(Item),
-
-    #[serde(rename = "Component")]
-    Component(Component),
-
-    #[serde(rename = "Consumable")]
-    Consumable(Consumable),
-
-    #[serde(rename = "Data")]
-    Data(Data),
-
     #[serde(rename = "AfmuRepairs")]
     AfmuRepairs(AfmuRepairs),
 

@@ -2,6 +2,90 @@
 
 # Script to generate Rust structs from JSON schemas in ed-journal-schemas/schemas
 
+# Define a class to represent a Rust struct
+class RustStruct {
+    [string]$Name
+    [string]$Description
+    [System.Collections.ArrayList]$Attributes = @()
+    [System.Collections.ArrayList]$Fields = @()
+    [hashtable]$NestedStructs = @{}
+    
+    # Constructor
+    RustStruct([string]$name) {
+        $this.Name = $name
+    }
+    
+    # Add an attribute to the struct (e.g., #[derive(...)])
+    [void] AddAttribute([string]$attribute) {
+        $this.Attributes.Add($attribute)
+    }
+    
+    # Add a field to the struct
+    [void] AddField([string]$name, [string]$type, [string]$rename, [string]$description) {
+        $this.AddFieldWithSerdeAttrs($name, $type, $rename, $description, "")
+    }
+    
+    # Add a field to the struct with custom serde attributes
+    [void] AddFieldWithSerdeAttrs([string]$name, [string]$type, [string]$rename, [string]$description, [string]$serde_attributes) {
+        $field = @{
+            Name = $name
+            Type = $type
+            Rename = $rename
+            Description = $description
+            SerdeAttributes = $serde_attributes
+        }
+        $this.Fields.Add($field)
+    }
+    
+    # Add a nested struct
+    [void] AddNestedStruct([string]$key, [RustStruct]$struct) {
+        $this.NestedStructs[$key] = $struct
+    }
+    
+    # Convert the struct to a string representation
+    [string] ToString() {
+        $output = @()
+        
+        # Add description as doc comment if available
+        if ($this.Description) {
+            $output += "/// $($this.Description)"
+        }
+        
+        # Add attributes
+        foreach ($attr in $this.Attributes) {
+            $output += $attr
+        }
+        
+        # Add struct declaration
+        $output += "pub struct $($this.Name) {"
+        $output += ""
+        
+        # Add fields
+        foreach ($field in $this.Fields) {
+            # Add description as doc comment if available
+            if ($field.Description) {
+                $output += "    /// $($field.Description)"
+            }
+            
+            # Add serde attribute
+            if ($field.SerdeAttributes) {
+                $output += "    #[serde($($field.SerdeAttributes))]"
+            } else {
+                $output += "    #[serde(rename = ""$($field.Rename)"")]"
+            }
+            
+            # Add field declaration
+            $output += "    pub $($field.Name): $($field.Type),"
+            $output += ""
+        }
+        
+        # Close the struct
+        $output += "}"
+        
+        return $output -join "`n"
+    }
+}
+
 # Helper function to convert PascalCase to snake_case
 function ConvertTo-SnakeCase {
     param (
@@ -130,6 +214,28 @@ function Escape-RustKeyword {
     }
 }
 
+# Helper function to singularize a name (e.g., convert "Items" to "Item")
+function Singularize-Name {
+    param (
+        [string]$name
+    )
+
+    # Common plural endings and their singular forms
+    if ($name -match 'ies$') {
+        return $name -replace 'ies$', 'y'
+    }
+    elseif ($name -match 'ses$') {
+        return $name -replace 'es$', ''
+    }
+    elseif ($name -match 's$' -and -not ($name -match 'ss$')) {
+        return $name -replace 's$', ''
+    }
+    else {
+        # If no rule matches or it's already singular, return as is
+        return $name
+    }
+}
+
 # Helper function to generate a struct name for a nested object
 function Get-NestedStructName {
     param (
@@ -175,7 +281,9 @@ function Process-ArrayItemObject {
 
     # If the items schema is an object with properties, add it to the nested structs
     if ($itemsSchema.type -eq "object" -and $itemsSchema.properties) {
-        $itemStructName = Get-NestedStructName -parentName $parentName -propertyName $propertyName
+        # Singularize the property name for array items
+        $singularPropertyName = Singularize-Name -name $propertyName
+        $itemStructName = Get-NestedStructName -parentName $parentName -propertyName $singularPropertyName
 
         # Check if we've already processed this type globally
         if ($processedTypes.ContainsKey($itemStructName)) {
@@ -379,7 +487,7 @@ function Generate-NestedStruct {
     if ($processedTypes.ContainsKey($structName)) {
         # Return empty result since this struct has already been generated
         return @{
-            StructCode = ""
+            Struct = $null
             NestedStructs = @{}
         }
     }
@@ -387,17 +495,17 @@ function Generate-NestedStruct {
     # Mark this type as being processed to prevent duplicate generation
     $processedTypes[$structName] = $true
 
-    $output = @()
+    # Create a new RustStruct object
+    $rustStruct = [RustStruct]::new($structName)
     
-    # Add description as doc comment if available
+    # Add description if available
     if ($definition.description) {
-        $output += "/// $($definition.description)"
+        $rustStruct.Description = $definition.description
     }
     
-    $output += "#[derive(Clone, Debug, Deserialize)]"
-    $output += "pub struct $structName {"
-    $output += ""
-
+    # Add attributes
+    $rustStruct.AddAttribute("#[derive(Clone, Debug, Deserialize)]")
+    
     # Process properties from the definition
     if ($definition.properties) {
         $requiredProps = @()
@@ -445,15 +553,8 @@ function Generate-NestedStruct {
                     # Check if the property name is a Rust reserved keyword and escape it if needed
                     $rustPropName = Escape-RustKeyword -name $rustPropName
 
-                    # Add description as doc comment if available
-                    if ($prop.description) {
-                        $output += "    /// $($prop.description)"
-                    }
-
-                    # Add the property to the struct
-                    $output += ('    #[serde(rename = "' + $propName + '")]')
-                    $output += "    pub ${rustPropName}: ${rustType},"
-                    $output += ""
+                    # Add the field to the struct
+                    $rustStruct.AddField($rustPropName, $rustType, $propName, $prop.description)
 
                     # Skip the rest of the type determination since we've already processed this property
                     continue
@@ -469,28 +570,18 @@ function Generate-NestedStruct {
             # Check if the property name is a Rust reserved keyword and escape it if needed
             $rustPropName = Escape-RustKeyword -name $rustPropName
 
-            # Add description as doc comment if available
-            if ($prop.description) {
-                $output += "    /// $($prop.description)"
-            }
-
-            # Add the property to the struct
-            # Check if this is a DateTime field and add the appropriate format
+            # Add the field to the struct with appropriate serde attributes
             if ($jsonType -eq "string" -and $format -eq "date-time") {
-                $output += ('    #[serde(rename = "' + $propName + '", with = "crate::event::format::date")]')
+                $serdeAttrs = "rename = ""$propName"", with = ""crate::event::format::date"""
+                $rustStruct.AddFieldWithSerdeAttrs($rustPropName, $rustType, $propName, $prop.description, $serdeAttrs)
             } else {
-                $output += ('    #[serde(rename = "' + $propName + '")]')
+                $rustStruct.AddField($rustPropName, $rustType, $propName, $prop.description)
             }
-            $output += "    pub ${rustPropName}: ${rustType},"
-            $output += ""
         }
     }
 
-    # Close the struct
-    $output += "}"
-
     # Process nested structs recursively
-    $nestedStructOutput = @()
+    $nestedStructsResult = @{}
 
     # Create a copy of the keys to avoid modifying the collection during iteration
     $keys = @($nestedStructs.Keys)
@@ -508,21 +599,20 @@ function Generate-NestedStruct {
 
         # Generate the nested struct
         $result = Generate-NestedStruct -structName $nestedStruct.Name -definition $nestedStruct.Definition -topLevelSchema $topLevelSchema -nestedStructs $newNestedStructs
-        if ($result.StructCode -ne "") {
-            $nestedStructOutput += $result.StructCode
+        if ($result.Struct -ne $null) {
+            $nestedStructsResult[$nestedStruct.Name] = $result.Struct
+            
+            # Add nested structs to the current struct
+            foreach ($nestedKey in $result.NestedStructs.Keys) {
+                $nestedStructsResult[$nestedKey] = $result.NestedStructs[$nestedKey]
+            }
         }
     }
 
-    # Combine the main struct and nested structs
-    $structCode = $output -join "`n"
-    if ($nestedStructOutput.Count -gt 0) {
-        $structCode += "`n`n" + ($nestedStructOutput -join "`n`n")
-    }
-
-    # Return both the struct code and the nested structs collection
+    # Return both the struct and the nested structs collection
     return @{
-        StructCode = $structCode
-        NestedStructs = $nestedStructs
+        Struct = $rustStruct
+        NestedStructs = $nestedStructsResult
     }
 }
 
@@ -538,7 +628,7 @@ function Generate-RustStruct {
     if ($processedTypes.ContainsKey($structName)) {
         # Return empty result since this struct has already been generated
         return @{
-            StructCode = ""
+            Struct = $null
             NestedStructs = @{}
         }
     }
@@ -546,22 +636,20 @@ function Generate-RustStruct {
     # Mark this type as being processed to prevent duplicate generation
     $processedTypes[$structName] = $true
 
-    $output = @()
+    # Create a new RustStruct object
+    $rustStruct = [RustStruct]::new($structName)
     $nestedStructs = @{}
 
-    # Add description as doc comment if available
+    # Add description if available
     if ($schema.description) {
-        $output += "/// $($schema.description)"
+        $rustStruct.Description = $schema.description
     }
 
-    $output += "#[derive(Clone, Debug, Deserialize)]"
-    $output += "pub struct $structName {"
-    $output += ""
+    # Add attributes
+    $rustStruct.AddAttribute("#[derive(Clone, Debug, Deserialize)]")
 
     # Add timestamp field from base schema
-    $output += '    #[serde(with = "crate::event::format::date")]'
-    $output += "    pub timestamp: DateTime<Utc>,"
-    $output += ""
+    $rustStruct.AddFieldWithSerdeAttrs("timestamp", "DateTime<Utc>", "timestamp", "Event timestamp", "with = ""crate::event::format::date""")
 
     # Process properties from the schema
     if ($schema.properties) {
@@ -614,15 +702,8 @@ function Generate-RustStruct {
                         # Check if the property name is a Rust reserved keyword and escape it if needed
                         $rustPropName = Escape-RustKeyword -name $rustPropName
 
-                        # Add description as doc comment if available
-                        if ($prop.description) {
-                            $output += "    /// $($prop.description)"
-                        }
-
-                        # Add the property to the struct
-                        $output += ('    #[serde(rename = "' + $propName + '")]')
-                        $output += "    pub ${rustPropName}: ${rustType},"
-                        $output += ""
+                        # Add the field to the struct
+                        $rustStruct.AddField($rustPropName, $rustType, $propName, $prop.description)
 
                         # Skip the rest of the type determination since we've already processed this property
                         continue
@@ -638,28 +719,18 @@ function Generate-RustStruct {
             # Check if the property name is a Rust reserved keyword and escape it if needed
             $rustPropName = Escape-RustKeyword -name $rustPropName
 
-            # Add description as doc comment if available
-            if ($prop.description) {
-                $output += "    /// $($prop.description)"
-            }
-
-            # Add the property to the struct
-            # Check if this is an optional DateTime field and add the appropriate format
+            # Add the field to the struct with appropriate serde attributes
             if ($isOptional -and $jsonType -eq "string" -and $format -eq "date-time") {
-                $output += ('    #[serde(rename = "' + $propName + '", with = "crate::event::format::optional_date")]')
+                $serdeAttrs = "rename = ""$propName"", with = ""crate::event::format::optional_date"""
+                $rustStruct.AddFieldWithSerdeAttrs($rustPropName, $rustType, $propName, $prop.description, $serdeAttrs)
             } else {
-                $output += ('    #[serde(rename = "' + $propName + '")]')
+                $rustStruct.AddField($rustPropName, $rustType, $propName, $prop.description)
             }
-            $output += "    pub ${rustPropName}: ${rustType},"
-            $output += ""
         }
     }
 
-    # Close the struct
-    $output += "}"
-
     # Generate nested structs if needed
-    $nestedStructOutput = @()
+    $nestedStructsResult = @{}
 
     # Process definitions from the schema
     if ($schema.definitions) {
@@ -670,9 +741,13 @@ function Generate-RustStruct {
             # Check if we've already processed this type
             if (-not $processedTypes.ContainsKey($nestedStructName)) {
                 $result = Generate-NestedStruct -structName $nestedStructName -definition $definition -topLevelSchema $schema -nestedStructs $nestedStructs
-                if ($result.StructCode -ne "") {
-                    $nestedStructOutput += ""
-                    $nestedStructOutput += $result.StructCode
+                if ($result.Struct -ne $null) {
+                    $nestedStructsResult[$nestedStructName] = $result.Struct
+                    
+                    # Add nested structs to the current struct
+                    foreach ($nestedKey in $result.NestedStructs.Keys) {
+                        $nestedStructsResult[$nestedKey] = $result.NestedStructs[$nestedKey]
+                    }
                 }
             }
         }
@@ -685,23 +760,21 @@ function Generate-RustStruct {
         # Check if we've already processed this type
         if (-not $processedTypes.ContainsKey($nestedStruct.Name)) {
             $result = Generate-NestedStruct -structName $nestedStruct.Name -definition $nestedStruct.Definition -topLevelSchema $schema -nestedStructs $nestedStructs
-            if ($result.StructCode -ne "") {
-                $nestedStructOutput += ""
-                $nestedStructOutput += $result.StructCode
+            if ($result.Struct -ne $null) {
+                $nestedStructsResult[$nestedStruct.Name] = $result.Struct
+                
+                # Add nested structs to the current struct
+                foreach ($nestedKey in $result.NestedStructs.Keys) {
+                    $nestedStructsResult[$nestedKey] = $result.NestedStructs[$nestedKey]
+                }
             }
         }
     }
 
-    # Combine the main struct and nested structs
-    $structCode = $output -join "`n"
-    if ($nestedStructOutput.Count -gt 0) {
-        $structCode += "`n`n" + ($nestedStructOutput -join "`n")
-    }
-
-    # Return both the struct code and the nested structs collection
+    # Return both the struct and the nested structs collection
     return @{
-        StructCode = $structCode
-        NestedStructs = $nestedStructs
+        Struct = $rustStruct
+        NestedStructs = $nestedStructsResult
     }
 }
 
@@ -715,8 +788,9 @@ $baseSchema = Get-Content $baseSchemaPath -Raw | ConvertFrom-Json
 $schemaDir = Join-Path (Get-Location) "ed-journal-schemas/schemas"
 $schemaDirs = Get-ChildItem -Path $schemaDir -Directory
 
-# Create an array to store all structs
-$allStructs = @()
+# Create a model to store all structs
+$allStructs = @{}
+$allStructNames = @()
 
 # Create a hashtable to track which types have already been processed
 # This will help us avoid generating duplicate structs
@@ -745,8 +819,15 @@ if (Test-Path $commonDir) {
                 # Generate a struct for this definition
                 $result = Generate-NestedStruct -structName $defName -definition $definition -topLevelSchema $schema
 
-                # Add the struct to our collection
-                $allStructs += $result.StructCode
+                # Add the struct to our model if it's not null
+                if ($result.Struct -ne $null) {
+                    $allStructs[$defName] = $result.Struct
+                    
+                    # Add nested structs to our model
+                    foreach ($nestedKey in $result.NestedStructs.Keys) {
+                        $allStructs[$nestedKey] = $result.NestedStructs[$nestedKey]
+                    }
+                }
 
                 # Mark this type as processed
                 $processedTypes[$defName] = $true
@@ -781,26 +862,14 @@ foreach ($dir in $schemaDirs) {
         # Generate the Rust struct
         $result = Generate-RustStruct -structName $eventName -schema $schema -baseSchema $baseSchema
 
-        # Add the struct to our collection if it's not empty
-        if ($result.StructCode -ne "") {
-            $allStructs += $result.StructCode
-        }
-
-        # Process nested structs
-        foreach ($key in $result.NestedStructs.Keys) {
-            $nestedStruct = $result.NestedStructs[$key]
-
-            # Skip if we've already processed this type
-            if ($processedTypes.ContainsKey($nestedStruct.Name)) {
-                continue
-            }
-
-            # Generate the nested struct
-            $nestedResult = Generate-NestedStruct -structName $nestedStruct.Name -definition $nestedStruct.Definition -topLevelSchema $schema
-
-            # Add the nested struct to our collection if it's not empty
-            if ($nestedResult.StructCode -ne "") {
-                $allStructs += $nestedResult.StructCode
+        # Add the struct to our model if it's not null
+        if ($result.Struct -ne $null) {
+            $allStructs[$eventName] = $result.Struct
+            $allStructNames += $eventName
+            
+            # Add nested structs to our model
+            foreach ($nestedKey in $result.NestedStructs.Keys) {
+                $allStructs[$nestedKey] = $result.NestedStructs[$nestedKey]
             }
         }
     }
@@ -827,8 +896,9 @@ use serde::Deserialize;
 '@
 
 # Add all structs to the file
-foreach ($structCode in $allStructs) {
-    $fileContent += $structCode
+foreach ($key in $allStructs.Keys) {
+    $struct = $allStructs[$key]
+    $fileContent += $struct.ToString()
     $fileContent += "`n`n"
 }
 
@@ -838,19 +908,11 @@ $fileContent += "`n#[serde(tag = ""event"")]"
 $fileContent += "`npub enum JournalEvent {"
 $fileContent += "`n"
 
-# Extract struct names from the struct code
-$structNames = @()
-foreach ($structCode in $allStructs) {
-    if ($structCode -match "pub struct (\w+) \{") {
-        $structName = $matches[1]
-        # Only include top-level structs in the enum (not nested ones)
-        if (-not $structName.Contains("_")) {
-            $structNames += $structName
-            $fileContent += "    #[serde(rename = ""$structName"")]"
-            $fileContent += "`n    $structName($structName),"
-            $fileContent += "`n`n"
-        }
-    }
+# Add enum variants for top-level structs
+foreach ($structName in $allStructNames) {
+    $fileContent += "    #[serde(rename = ""$structName"")]"
+    $fileContent += "`n    $structName($structName),"
+    $fileContent += "`n`n"
 }
 
 $fileContent += "}"
@@ -859,6 +921,6 @@ $fileContent += "`n"
 # Write the file
 Set-Content -Path $eventFilePath -Value $fileContent
 
-Write-Host "Generated $eventFilePath with $(($structNames).Count) structs and JournalEvent enum"
+Write-Host "Generated $eventFilePath with $($allStructNames.Count) structs and JournalEvent enum"
 
 Write-Host "Done!"

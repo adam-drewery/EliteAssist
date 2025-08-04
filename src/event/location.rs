@@ -17,9 +17,10 @@ impl Into<state::CurrentLocation> for event::Location {
             station_economy: self.station_economy_localised,
             station_economies: self
                 .station_economies
+                .unwrap_or_default()
                 .into_iter()
                 .map(|economy| state::StationEconomy {
-                    name: economy.name_localised.unwrap_or(economy.name),
+                    name: economy.name_localised.unwrap_or_default(),
                     proportion: economy.proportion,
                 })
                 .collect(),
@@ -52,6 +53,7 @@ impl Into<state::CurrentLocation> for event::Location {
             powerplay_state_undermining: self.powerplay_state_undermining,
             factions: self
                 .factions
+                .unwrap_or_default()
                 .into_iter()
                 .map(|faction| state::Faction {
                     name: faction.name,
@@ -59,22 +61,34 @@ impl Into<state::CurrentLocation> for event::Location {
                     government: faction.government,
                     influence: faction.influence,
                     allegiance: faction.allegiance,
-                    happiness: faction.happiness_localised.unwrap_or(faction.happiness),
+                    happiness: faction.happiness_localised.unwrap_or_default(),
                     my_reputation: faction.my_reputation,
                     recovering_states: faction
                         .recovering_states
+                        .unwrap_or_default()
                         .into_iter()
-                        .map(|s| state::FactionState {
-                            state: s.state,
-                            trend: 0,
+                        .map(|states| {
+                            states
+                                .into_iter()
+                                .map(|state| state::FactionState {
+                                    state: state.state,
+                                    trend: state.trend,
+                                })
+                                .collect()
                         })
                         .collect(),
                     active_states: faction
                         .active_states
+                        .unwrap_or_default()
                         .into_iter()
-                        .map(|state| state::FactionState {
-                            state: state.state,
-                            trend: 0,
+                        .map(|states| {
+                            states
+                                .into_iter()
+                                .map(|state| state::FactionState {
+                                    state: state.state,
+                                    trend: 0,
+                                })
+                                .collect()
                         })
                         .collect(),
                 })
