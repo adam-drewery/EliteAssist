@@ -75,10 +75,10 @@ impl State {
             }
 
             JournalEvent::Location(e) => {
-                self.current_system = e.star_system.clone();
+                self.current_system = e.star_system;
 
                 if e.body_type != "Star" {
-                    self.current_body = e.body.clone();
+                    self.current_body = e.body;
                 }
 
                 self.location = e.into();

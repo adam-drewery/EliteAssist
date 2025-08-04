@@ -169,7 +169,8 @@ function Process-ArrayItemObject {
         [string]$parentName,
         [string]$propertyName,
         [hashtable]$nestedStructs,
-        [PSCustomObject]$topLevelSchema
+        [PSCustomObject]$topLevelSchema,
+        [bool]$isOptional
     )
 
     # If the items schema is an object with properties, add it to the nested structs
@@ -421,11 +422,16 @@ function Generate-NestedStruct {
 
             # Process array item objects
             if ($isArray -and $prop.items.type -eq "object" -and $prop.items.properties) {
-                $itemStructName = Process-ArrayItemObject -itemsSchema $prop.items -parentName $structName -propertyName $propName -nestedStructs $nestedStructs -topLevelSchema $topLevelSchema
+                $itemStructName = Process-ArrayItemObject -itemsSchema $prop.items -parentName $structName -propertyName $propName -nestedStructs $nestedStructs -topLevelSchema $topLevelSchema -isOptional $isOptional
 
                 if ($itemStructName) {
                     # Use the nested struct name for the array item type
                     $rustType = "Vec<${itemStructName}>"
+                    
+                    # If the property is optional, wrap it in Option<>
+                    if ($isOptional) {
+                        $rustType = "Option<${rustType}>"
+                    }
 
                     # Convert property name to snake_case for Rust
                     $rustPropName = ConvertTo-SnakeCase -str $propName
@@ -570,11 +576,16 @@ function Generate-RustStruct {
 
                 # Process array item objects
                 if ($prop.items.type -eq "object" -and $prop.items.properties) {
-                    $itemStructName = Process-ArrayItemObject -itemsSchema $prop.items -parentName $structName -propertyName $propName -nestedStructs $nestedStructs -topLevelSchema $schema
+                    $itemStructName = Process-ArrayItemObject -itemsSchema $prop.items -parentName $structName -propertyName $propName -nestedStructs $nestedStructs -topLevelSchema $schema -isOptional $isOptional
 
                     if ($itemStructName) {
                         # Use the nested struct name for the array item type
                         $rustType = "Vec<${itemStructName}>"
+                        
+                        # If the property is optional, wrap it in Option<>
+                        if ($isOptional) {
+                            $rustType = "Option<${rustType}>"
+                        }
 
                         # Convert property name to snake_case for Rust
                         $rustPropName = ConvertTo-SnakeCase -str $propName
@@ -777,6 +788,7 @@ $fileContent = @'
 
 pub mod format;
 pub mod cargo;
+pub mod location;
 
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
