@@ -388,6 +388,12 @@ function Generate-NestedStruct {
     $processedTypes[$structName] = $true
 
     $output = @()
+    
+    # Add description as doc comment if available
+    if ($definition.description) {
+        $output += "/// $($definition.description)"
+    }
+    
     $output += "#[derive(Clone, Debug, Deserialize)]"
     $output += "pub struct $structName {"
     $output += ""
@@ -439,6 +445,11 @@ function Generate-NestedStruct {
                     # Check if the property name is a Rust reserved keyword and escape it if needed
                     $rustPropName = Escape-RustKeyword -name $rustPropName
 
+                    # Add description as doc comment if available
+                    if ($prop.description) {
+                        $output += "    /// $($prop.description)"
+                    }
+
                     # Add the property to the struct
                     $output += ('    #[serde(rename = "' + $propName + '")]')
                     $output += "    pub ${rustPropName}: ${rustType},"
@@ -457,6 +468,11 @@ function Generate-NestedStruct {
 
             # Check if the property name is a Rust reserved keyword and escape it if needed
             $rustPropName = Escape-RustKeyword -name $rustPropName
+
+            # Add description as doc comment if available
+            if ($prop.description) {
+                $output += "    /// $($prop.description)"
+            }
 
             # Add the property to the struct
             # Check if this is a DateTime field and add the appropriate format
@@ -533,6 +549,11 @@ function Generate-RustStruct {
     $output = @()
     $nestedStructs = @{}
 
+    # Add description as doc comment if available
+    if ($schema.description) {
+        $output += "/// $($schema.description)"
+    }
+
     $output += "#[derive(Clone, Debug, Deserialize)]"
     $output += "pub struct $structName {"
     $output += ""
@@ -593,6 +614,11 @@ function Generate-RustStruct {
                         # Check if the property name is a Rust reserved keyword and escape it if needed
                         $rustPropName = Escape-RustKeyword -name $rustPropName
 
+                        # Add description as doc comment if available
+                        if ($prop.description) {
+                            $output += "    /// $($prop.description)"
+                        }
+
                         # Add the property to the struct
                         $output += ('    #[serde(rename = "' + $propName + '")]')
                         $output += "    pub ${rustPropName}: ${rustType},"
@@ -611,6 +637,11 @@ function Generate-RustStruct {
 
             # Check if the property name is a Rust reserved keyword and escape it if needed
             $rustPropName = Escape-RustKeyword -name $rustPropName
+
+            # Add description as doc comment if available
+            if ($prop.description) {
+                $output += "    /// $($prop.description)"
+            }
 
             # Add the property to the struct
             # Check if this is an optional DateTime field and add the appropriate format

@@ -1,10 +1,10 @@
 use std::collections::HashMap;
-use crate::event::*;
+use crate::event;
 use crate::fdev_ids::all_materials;
 use crate::state;
 use crate::text::title_case;
 
-impl Materials {
+impl event::Materials {
 
     fn apply_counts_to(&self, target: &mut Vec<state::MaterialGroup>) {
 
@@ -32,7 +32,7 @@ impl Materials {
     }
 }
 
-impl Into<state::Materials> for Materials {
+impl Into<state::Materials> for event::Materials {
     fn into(self) -> state::Materials {
 
         let mut materials = all_materials().clone();
@@ -43,7 +43,7 @@ impl Into<state::Materials> for Materials {
     }
 }
 
-impl ShipLocker {
+impl event::ShipLocker {
     pub fn is_empty(&self) -> bool {
         self.items.is_none()
             && self.components.is_none()
@@ -52,7 +52,7 @@ impl ShipLocker {
     }
 }
 
-impl Into<state::ShipLocker> for ShipLocker {
+impl Into<state::ShipLocker> for event::ShipLocker {
 
     fn into(self) -> state::ShipLocker {
 
@@ -66,7 +66,7 @@ impl Into<state::ShipLocker> for ShipLocker {
     }
 }
 
-impl Into<crate::state::ShipLockerItem> for Item {
+impl Into<crate::state::ShipLockerItem> for event::Item {
 
     fn into(self) -> state::ShipLockerItem {
 
@@ -78,9 +78,9 @@ impl Into<crate::state::ShipLockerItem> for Item {
     }
 }
 
-fn group_and_sort(items: Vec<Item>) -> Vec<Item> {
+fn group_and_sort(items: Vec<event::Item>) -> Vec<event::Item> {
 
-    let mut grouped_items: HashMap<(String, Option<u64>), Item> = HashMap::new();
+    let mut grouped_items: HashMap<(String, Option<u64>), event::Item> = HashMap::new();
 
     for item in items {
         grouped_items
@@ -94,7 +94,7 @@ fn group_and_sort(items: Vec<Item>) -> Vec<Item> {
     items
 }
 
-fn map_vec(vec: Option<Vec<Item>>) -> Vec<state::ShipLockerItem> {
+fn map_vec(vec: Option<Vec<event::Item>>) -> Vec<state::ShipLockerItem> {
 
     group_and_sort(vec.unwrap_or_default())
         .into_iter()
