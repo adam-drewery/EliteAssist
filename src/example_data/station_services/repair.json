@@ -1,0 +1,20 @@
+[
+  {
+    "timestamp": "2016-06-10T14:32:03Z",
+    "event": "Repair",
+    "Item": "int_powerplant_size3_class5",
+    "Cost": 1100
+  },
+  {
+    "timestamp": "2020-03-31T13:39:42Z",
+    "event": "Repair",
+    "Items": [
+      "$hpt_dumbfiremissilerack_fixed_large_name;",
+      "$hpt_beamlaser_gimbal_medium_name;",
+      "$hpt_railgun_fixed_medium_name;",
+      "$hpt_beamlaser_gimbal_medium_name;",
+      "$hpt_dumbfiremissilerack_fixed_large_name;"
+    ],
+    "Cost": 34590
+  }
+]

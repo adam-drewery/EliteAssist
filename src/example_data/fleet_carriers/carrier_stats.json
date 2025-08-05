@@ -1,0 +1,121 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "CarrierStats",
+    "CarrierID": 3700005632,
+    "Callsign": "L14X1J",
+    "Name": "Nomad Explorer",
+    "DockingAccess": "all",
+    "AllowNotorious": false,
+    "FuelLevel": 1000,
+    "JumpRangeCurr": 500.0,
+    "JumpRangeMax": 500.0,
+    "PendingDecommission": false,
+    "PackTheme": "Explorer",
+    "PackTier": 1,
+    "ShipPacks": [
+      {
+        "PackTheme": "Zorgon Peterson - Cargo",
+        "PackTier": 1
+      }
+    ],
+    "ModulePacks": [
+      {
+        "PackTheme": "Mining Tools",
+        "PackTier": 2
+      },
+      {
+        "PackTheme": "Limpets",
+        "PackTier": 1
+      }
+    ],
+    "SpaceUsage": {
+      "TotalCapacity": 25000,
+      "Crew": 5250,
+      "Cargo": 10000,
+      "CargoSpaceReserved": 1000,
+      "ShipPacks": 2500,
+      "ModulePacks": 2500,
+      "FreeSpace": 4750
+    },
+    "Finance": {
+      "CarrierBalance": 500000000,
+      "ReserveBalance": 50000000,
+      "AvailableBalance": 450000000,
+      "ReservePercent": 10,
+      "TaxRate": 5
+    },
+    "Crew": [
+      {
+        "CrewRole": "BlackMarket",
+        "Activated": true
+      },
+      {
+        "CrewRole": "Refuel",
+        "Activated": true
+      },
+      {
+        "CrewRole": "Repair",
+        "Activated": true
+      },
+      {
+        "CrewRole": "Rearm",
+        "Activated": true
+      },
+      {
+        "CrewRole": "VoucherRedemption",
+        "Activated": true
+      },
+      {
+        "CrewRole": "Shipyard",
+        "Activated": true
+      },
+      {
+        "CrewRole": "Outfitting",
+        "Activated": true
+      },
+      {
+        "CrewRole": "Commodities",
+        "Activated": true
+      }
+    ],
+    "Services": {
+      "refuel": {
+        "Status": "ok",
+        "Enabled": true
+      },
+      "repair": {
+        "Status": "ok",
+        "Enabled": true
+      },
+      "rearm": {
+        "Status": "ok",
+        "Enabled": true
+      },
+      "shipyard": {
+        "Status": "ok",
+        "Enabled": true
+      },
+      "outfitting": {
+        "Status": "ok",
+        "Enabled": true
+      },
+      "blackmarket": {
+        "Status": "ok",
+        "Enabled": true
+      },
+      "voucherredemption": {
+        "Status": "ok",
+        "Enabled": true
+      },
+      "exploration": {
+        "Status": "ok",
+        "Enabled": true
+      },
+      "commodities": {
+        "Status": "ok",
+        "Enabled": true
+      }
+    }
+  }
+]

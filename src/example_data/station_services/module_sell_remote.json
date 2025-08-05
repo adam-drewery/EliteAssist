@@ -1,0 +1,12 @@
+[
+  {
+    "timestamp": "2025-07-31T10:00:00Z",
+    "event": "ModuleSellRemote",
+    "StorageSlot": 12,
+    "SellItem": "int_powerplant_size2_class5",
+    "ServerId": 123456789,
+    "SellPrice": 54321,
+    "Ship": "empire_trader",
+    "ShipID": 42
+  }
+]

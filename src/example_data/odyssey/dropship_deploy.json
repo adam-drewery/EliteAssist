@@ -1,0 +1,15 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "DropshipDeploy",
+    "StarSystem": "Shinrarta Dezhra",
+    "SystemAddress": 3932277478106,
+    "Body": "Founders World",
+    "BodyID": 7,
+    "OnStation": false,
+    "OnPlanet": true,
+    "Latitude": 31.5678,
+    "Longitude": -75.4321,
+    "DestinationSettlement": "Jameson Base"
+  }
+]

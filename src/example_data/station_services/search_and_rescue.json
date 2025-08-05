@@ -1,0 +1,10 @@
+[
+  {
+    "timestamp": "2025-07-31T10:00:00Z",
+    "event": "SearchAndRescue",
+    "MarketID": 128001234,
+    "Name": "escape_pods",
+    "Count": 2,
+    "Reward": 50000
+  }
+]

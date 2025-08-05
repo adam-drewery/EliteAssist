@@ -1,0 +1,9 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "CarrierDepositFuel",
+    "CarrierID": 3700005632,
+    "Amount": 500,
+    "Total": 1500
+  }
+]

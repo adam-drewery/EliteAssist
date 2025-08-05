@@ -1,15 +1,15 @@
-use iced::{Element, Fill};
-use crate::event::JournalEvent;
 use crate::gui::components::*;
+use crate::gui::Message;
 use crate::state::State;
-use iced::widget::{column, row, scrollable, text, Column};
 use crate::theme::{GRAY, ORANGE, WHITE};
+use iced::widget::{column, row, scrollable, text, Column};
+use iced::{Element, Fill};
 
-pub fn personal(state: &State) -> Column<JournalEvent> {
+pub fn personal(state: &State) -> Column<Message> {
 
     column![
         header("Personal"),
-        details("Suit Name", &state.suit_loadout.suit_name_localised),
+        details("Suit Name", &state.suit_loadout.suit_name),
         details("Loadout", &state.suit_loadout.loadout_name),
         details("Empire", state.reputation.empire.to_string()),
         details("Federation", state.reputation.federation.to_string()),
@@ -18,7 +18,7 @@ pub fn personal(state: &State) -> Column<JournalEvent> {
     .padding(8)
 }
 
-pub fn messages(state: &State) -> Column<JournalEvent> {
+pub fn messages(state: &State) -> Column<Message> {
     column![
         header("Messages"),
         scrollable(column(
@@ -45,7 +45,7 @@ pub fn messages(state: &State) -> Column<JournalEvent> {
 }
 
 
-pub fn claims(state: &State) -> Column<JournalEvent> {
+pub fn claims(state: &State) -> Column<Message> {
 
     if (state.bounties.len() == 0) && (state.combat_bonds.len() == 0) {
         return column![
@@ -68,7 +68,7 @@ pub fn claims(state: &State) -> Column<JournalEvent> {
     ].height(Fill)
 }
 
-pub fn missions(state: &State) -> Column<JournalEvent> {
+pub fn missions(state: &State) -> Column<Message> {
 
     if state.missions.len() == 0 {
         return column![

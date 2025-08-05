@@ -1,0 +1,12 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "CarrierFinance",
+    "CarrierID": 3700005632,
+    "TaxRate": 5,
+    "CarrierBalance": 550000000,
+    "ReserveBalance": 55000000,
+    "AvailableBalance": 495000000,
+    "ReservePercent": 10
+  }
+]

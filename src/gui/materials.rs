@@ -1,5 +1,5 @@
-use crate::event::JournalEvent;
 use crate::gui::components::sub_header;
+use crate::gui::Message;
 use crate::image::*;
 use crate::state::{MaterialGroup, State};
 use crate::theme::*;
@@ -7,7 +7,7 @@ use iced::widget::svg::Handle;
 use iced::widget::{column, row, scrollable, svg, text, Column, Row};
 use iced::{Element, Fill, Top};
 
-pub fn materials(state: &State) -> Row<JournalEvent> {
+pub fn materials(state: &State) -> Row<Message> {
     row![
         materials_list("Raw", &state.materials.raw),
         materials_list("Manufactured", &state.materials.manufactured),
@@ -17,7 +17,7 @@ pub fn materials(state: &State) -> Row<JournalEvent> {
     .height(Fill)
 }
 
-fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a, JournalEvent> {
+fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a, Message> {
     iced::widget::column![
         sub_header(title),
         scrollable(column(

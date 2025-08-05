@@ -1,0 +1,46 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "CreateSuitLoadout",
+    "SuitID": 12345678,
+    "SuitName": "explorationsuit_class1",
+    "SuitName_Localised": "Artemis Suit",
+    "SuitMods": ["suit_improvedjumpassist", "suit_improvedradar"],
+    "LoadoutID": 98765432,
+    "LoadoutName": "Explorer Loadout",
+    "Modules": [
+      {
+        "SlotName": "PrimaryWeapon",
+        "SuitModuleID": 1001,
+        "ModuleName": "wpn_s_plasma_pistol_charged",
+        "ModuleName_Localised": "Manticore Executioner",
+        "Class": 1,
+        "WeaponMods": []
+      },
+      {
+        "SlotName": "SecondaryWeapon",
+        "SuitModuleID": 1002,
+        "ModuleName": "wpn_s_laser_rifle",
+        "ModuleName_Localised": "TK Aphelion",
+        "Class": 1,
+        "WeaponMods": []
+      },
+      {
+        "SlotName": "Utility1",
+        "SuitModuleID": 1003,
+        "ModuleName": "wpn_t_scanner_profile",
+        "ModuleName_Localised": "Profile Analyzer",
+        "Class": 1,
+        "WeaponMods": []
+      },
+      {
+        "SlotName": "Utility2",
+        "SuitModuleID": 1004,
+        "ModuleName": "wpn_t_scanner_energy",
+        "ModuleName_Localised": "Energy Link Scanner",
+        "Class": 1,
+        "WeaponMods": []
+      }
+    ]
+  }
+]

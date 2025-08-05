@@ -1,0 +1,11 @@
+[
+  {
+    "timestamp": "2025-07-31T10:15:00Z",
+    "event": "FSSDiscoveryScan",
+    "Progress": 0.75,
+    "BodyCount": 12,
+    "NonBodyCount": 4,
+    "SystemName": "Sol",
+    "SystemAddress": 10477373803
+  }
+]

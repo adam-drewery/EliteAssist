@@ -1,0 +1,15 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "CarrierTradeOrder",
+    "CarrierID": 3700005632,
+    "BlackMarket": false,
+    "Commodity": "Tritium",
+    "CommodityLocalised": "Tritium",
+    "Category": "$MARKET_category_chemicals;",
+    "CategoryLocalised": "Chemicals",
+    "PurchaseOrder": 1000,
+    "Price": 50000,
+    "BlackMarketPrice": 0
+  }
+]

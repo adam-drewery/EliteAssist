@@ -3,14 +3,14 @@ use chrono::{DateTime, Utc};
 #[derive(Default)]
 pub struct Rank {
     pub timestamp: DateTime<Utc>,
-    pub combat: u8,
-    pub trade: u8,
-    pub explore: u8,
-    pub soldier: u8,
-    pub exobiologist: u8,
-    pub empire: u8,
-    pub federation: u8,
-    pub cqc: u8
+    pub combat: u64,
+    pub trade: u64,
+    pub explore: u64,
+    pub soldier: u64,
+    pub exobiologist: u64,
+    pub empire: u64,
+    pub federation: u64,
+    pub cqc: u64
     
 }
 

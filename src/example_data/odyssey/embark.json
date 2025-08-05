@@ -1,0 +1,19 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "Embark",
+    "SRV": false,
+    "Taxi": false,
+    "Multicrew": false,
+    "ID": 12,
+    "StarSystem": "Shinrarta Dezhra",
+    "SystemAddress": 3932277478106,
+    "Body": "Jameson Memorial",
+    "BodyID": 66,
+    "OnStation": true,
+    "OnPlanet": false,
+    "StationName": "Jameson Memorial",
+    "StationType": "Orbis",
+    "MarketID": 128666762
+  }
+]

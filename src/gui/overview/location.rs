@@ -1,5 +1,5 @@
-use crate::event::JournalEvent;
 use crate::gui::components::*;
+use crate::gui::Message;
 use crate::image::FUEL_STAR_PNG;
 use crate::state::State;
 use crate::theme::{styles, GRAY, RED};
@@ -8,7 +8,7 @@ use iced::widget::{column, container, image, row, scrollable, text, Column};
 use iced::Fill;
 use thousands::Separable;
 
-pub fn location(state: &State) -> Column<JournalEvent> {
+pub fn location(state: &State) -> Column<Message> {
     column![
         header("Location"),
         row![
@@ -20,25 +20,23 @@ pub fn location(state: &State) -> Column<JournalEvent> {
     .padding(8)
 }
 
-fn factions(state: &State) -> Column<JournalEvent> {
+fn factions(state: &State) -> Column<Message> {
 
-    if state.location.factions.is_none() { return column![] }
+    if state.location.factions.is_empty() { return column![] }
 
     let mut result = column![sub_header("Factions")];
 
     // todo: why do i have to clone this, i don't wanna
-    for faction in state.location.factions.clone().unwrap() {
-        let states = if let Some(active_states) = &faction.active_states {
-            let state_names: Vec<String> = active_states.iter().map(|s| s.state.clone()).collect();
+    for faction in &state.location.factions {
+        let states =  {
+            let state_names: Vec<String> = faction.active_states.iter().map(|s| s.state.clone()).collect();
             format!("{} | {} | {}", faction.allegiance, faction.government, state_names.join(" | "))
-        } else {
-            format!("{} | {}", faction.allegiance, faction.government)
         };
 
         result = result.push(
             column![
                 row![
-                    column![text(faction.name)],
+                    column![text(&faction.name)],
                     column![].width(Fill),
                     column![text(states).color(GRAY)],
                 ]
@@ -49,7 +47,7 @@ fn factions(state: &State) -> Column<JournalEvent> {
     result
 }
 
-fn powerplay(state: &State) -> Column<JournalEvent> {
+fn powerplay(state: &State) -> Column<Message> {
 
     if state.location.powerplay_state.is_none() { return column![] }
 
@@ -63,7 +61,7 @@ fn powerplay(state: &State) -> Column<JournalEvent> {
     ]
 }
 
-fn system(state: &State) -> Column<JournalEvent> {
+fn system(state: &State) -> Column<Message> {
     column![
         sub_header("System"),
         details("Government", &state.location.system_government),
@@ -74,7 +72,7 @@ fn system(state: &State) -> Column<JournalEvent> {
     ]
 }
 
-pub fn route(state: &State) -> Column<JournalEvent> {
+pub fn route(state: &State) -> Column<Message> {
     let title_column = column![header("Route")].padding(8);
 
     if state.nav_route.len() == 0 {

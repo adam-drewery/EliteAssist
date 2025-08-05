@@ -1,0 +1,12 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "CollectItems",
+    "Name": "healthpack",
+    "Name_Localised": "Medkit",
+    "Type": "Consumable",
+    "OwnerID": 0,
+    "Count": 2,
+    "Stolen": false
+  }
+]

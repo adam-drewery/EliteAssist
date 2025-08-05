@@ -1,0 +1,12 @@
+[
+  {
+    "timestamp": "2017-08-01T09:04:07Z",
+    "event": "MissionRedirected",
+    "Name": "Mission_DeliveryWing_Agriculture",
+    "MissionID": 65367315,
+    "NewDestinationStation": "Metcalf Orbital",
+    "OldDestinationStation": "Cuffey Orbital",
+    "NewDestinationSystem": "Cemiess",
+    "OldDestinationSystem": "Vequess"
+  }
+]

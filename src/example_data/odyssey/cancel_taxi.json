@@ -1,0 +1,7 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "CancelTaxi",
+    "Refund": 2700
+  }
+]

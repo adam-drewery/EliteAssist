@@ -1,0 +1,9 @@
+[
+  {
+    "timestamp": "2025-07-31T16:06:00Z",
+    "event": "NpcCrewPaidWage",
+    "NpcCrewId": 123456789,
+    "NpcCrewName": "Jane Doe",
+    "Amount": 15000
+  }
+]

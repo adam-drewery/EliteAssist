@@ -1,0 +1,10 @@
+[
+  {
+    "timestamp": "2017-01-24T10:42:38Z",
+    "event": "SetUserShipName",
+    "Ship": "cobramkiii",
+    "ShipID": 2,
+    "UserShipName": "Enterprise",
+    "UserShipId": "NCC 1701"
+  }
+]

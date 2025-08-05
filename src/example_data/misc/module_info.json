@@ -1,0 +1,20 @@
+[
+  {
+    "timestamp": "2025-07-31T16:06:00Z",
+    "event": "ModuleInfo",
+    "Modules": [
+      {
+        "Slot": "MainEngines",
+        "Item": "int_engine_size4_class5",
+        "Power": 5.4,
+        "Priority": 2
+      },
+      {
+        "Slot": "FrameShiftDrive",
+        "Item": "int_hyperdrive_size4_class5",
+        "Power": 0.45,
+        "Priority": 1
+      }
+    ]
+  }
+]

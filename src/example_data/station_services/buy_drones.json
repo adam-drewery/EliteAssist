@@ -1,0 +1,10 @@
+[
+  {
+    "timestamp": "2016-06-10T14:32:03Z",
+    "event": "BuyDrones",
+    "Type": "Drones",
+    "Count": 2,
+    "BuyPrice": 101,
+    "TotalCost": 202
+  }
+]

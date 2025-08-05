@@ -1,0 +1,10 @@
+[
+  {
+    "timestamp": "2025-07-31T14:32:03Z",
+    "event": "DockingDenied",
+    "StationName": "Jameson Memorial",
+    "StationType": "Orbis",
+    "MarketID": 128666762,
+    "Reason": "NoSpace"
+  }
+]

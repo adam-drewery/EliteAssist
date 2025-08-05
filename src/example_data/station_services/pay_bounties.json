@@ -1,0 +1,11 @@
+[
+  {
+    "timestamp": "2018-03-19T10:25:10Z",
+    "event": "PayBounties",
+    "Amount": 400,
+    "Faction": "$faction_Federation;",
+    "Faction_Localised": "Federation",
+    "ShipID": 9,
+    "BrokerPercentage": 25
+  }
+]

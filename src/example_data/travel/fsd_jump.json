@@ -1,0 +1,150 @@
+[
+  {
+    "timestamp": "2018-10-29T10:05:21Z",
+    "event": "FSDJump",
+    "StarSystem": "Eranin",
+    "Body": "Eranin A",
+    "BodyID": 34985,
+    "BodyType": "Star",
+    "SystemAddress": 2832631632594,
+    "StarPos": [
+      -22.84375,
+      36.53125,
+      -1.1875
+    ],
+    "SystemAllegiance": "Independent",
+    "SystemEconomy": "$economy_Agri;",
+    "SystemEconomy_Localised": "Agriculture",
+    "SystemSecondEconomy": "$economy_Refinery;",
+    "SystemSecondEconomy_Localised": "Refinery",
+    "SystemGovernment": "$government_Anarchy;",
+    "SystemGovernment_Localised": "Anarchy",
+    "SystemSecurity": "$GAlAXY_MAP_INFO_state_anarchy;",
+    "SystemSecurity_Localised": "Anarchy",
+    "Population": 450000,
+    "JumpDist": 13.334,
+    "FuelUsed": 0,
+    "FuelLevel": 25.630281,
+    "Factions": [
+      {
+        "Name": "Eranin Expeditionary Institute",
+        "FactionState": "None",
+        "Government": "Cooperative",
+        "Influence": 0.17,
+        "Allegiance": "Independent",
+        "Happiness": "$Faction_HappinessBand2;",
+        "Happiness_Localised": "Happy",
+        "MyReputation": 0
+      },
+      {
+        "Name": "Eranin Peoples Party",
+        "FactionState": "CivilWar",
+        "Government": "Communism",
+        "Influence": 0.226,
+        "Allegiance": "Independent",
+        "Happiness": "$Faction_HappinessBand2;",
+        "Happiness_Localised": "Happy",
+        "MyReputation": 29.9743,
+        "ActiveStates": [
+          {
+            "State": "CivilWar"
+          }
+        ]
+      },
+      {
+        "Name": "Pilots Federation Local Branch",
+        "FactionState": "None",
+        "Government": "Democracy",
+        "Influence": 0,
+        "Allegiance": "PilotsFederation",
+        "Happiness": "$Faction_HappinessBand2;",
+        "Happiness_Localised": "Happy",
+        "MyReputation": 82.918297
+      },
+      {
+        "Name": "Eranin Industry",
+        "FactionState": "Outbreak",
+        "Government": "Corporate",
+        "Influence": 0.209,
+        "Allegiance": "Independent",
+        "Happiness": "$Faction_HappinessBand3;",
+        "Happiness_Localised": "Discontented",
+        "MyReputation": 0,
+        "ActiveStates": [
+          {
+            "State": "Famine"
+          },
+          {
+            "State": "Lockdown"
+          },
+          {
+            "State": "Outbreak"
+          }
+        ]
+      },
+      {
+        "Name": "Eranin Federal Bridge",
+        "FactionState": "CivilWar",
+        "Government": "Dictatorship",
+        "Influence": 0.226,
+        "Allegiance": "Independent",
+        "Happiness": "$Faction_HappinessBand2;",
+        "Happiness_Localised": "Happy",
+        "MyReputation": 0,
+        "ActiveStates": [
+          {
+            "State": "CivilWar"
+          }
+        ]
+      },
+      {
+        "Name": "Mob of Eranin",
+        "FactionState": "CivilLiberty",
+        "Government": "Anarchy",
+        "Influence": 0.134,
+        "Allegiance": "Independent",
+        "Happiness": "$Faction_HappinessBand1;",
+        "Happiness_Localised": "Elated",
+        "MyReputation": 0,
+        "ActiveStates": [
+          {
+            "State": "Boom"
+          },
+          {
+            "State": "CivilLiberty"
+          }
+        ]
+      },
+      {
+        "Name": "Terran Colonial Forces",
+        "FactionState": "CivilUnrest",
+        "Government": "Confederacy",
+        "Influence": 0.035,
+        "Allegiance": "Alliance",
+        "Happiness": "$Faction_HappinessBand2;",
+        "Happiness_Localised": "Happy",
+        "MyReputation": 0,
+        "ActiveStates": [
+          {
+            "State": "Boom"
+          },
+          {
+            "State": "CivilUnrest"
+          }
+        ]
+      }
+    ],
+    "SystemFaction": {
+      "Name": "Mob of Eranin",
+      "FactionState": "CivilLiberty"
+    },
+    "Conflicts": [
+      {
+        "WarType": "war",
+        "Status": "active",
+        "Faction1": {"Name": "Movement for LHS 3163 League","Stake": "","WonDays": 0},
+        "Faction2": {"Name": "Official i Bootis Liberty Party","Stake": "Red Bronco Farms","WonDays": 1}
+      }
+    ]
+  }
+]

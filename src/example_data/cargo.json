@@ -1,0 +1,67 @@
+[
+  {
+    "timestamp": "2018-06-26T08:21:17Z",
+    "event": "Cargo",
+    "Vessel": "Ship",
+    "Count": 92,
+    "Inventory": [
+      {
+        "Name": "gold",
+        "Count": 2,
+        "Stolen": 0
+      },
+      {
+        "Name": "gold",
+        "MissionID": 65397935,
+        "Count": 14,
+        "Stolen": 0
+      },
+      {
+        "Name": "iondistributor",
+        "Name_Localised": "Ion Distributor",
+        "Count": 2,
+        "Stolen": 0
+      },
+      {
+        "Name": "platinum",
+        "Count": 8,
+        "Stolen": 0
+      },
+      {
+        "Name": "palladium",
+        "Count": 12,
+        "Stolen": 0
+      },
+      {
+        "Name": "medicalsupplies",
+        "Name_Localised": "Medical Supplies",
+        "Count": 16,
+        "Stolen": 0
+      },
+      {
+        "Name": "imperialslaves",
+        "Name_Localised": "Imperial Slaves",
+        "Count": 10,
+        "Stolen": 0
+      },
+      {
+        "Name": "agronomictreatment",
+        "Name_Localised": "Agronomic Treatment",
+        "Count": 20,
+        "Stolen": 0
+      },
+      {
+        "Name": "advancedcatalysers",
+        "Name_Localised": "Advanced Catalysers",
+        "Count": 5,
+        "Stolen": 0
+      },
+      {
+        "Name": "resonatingseparators",
+        "Name_Localised": "Resonating Separators",
+        "Count": 3,
+        "Stolen": 2
+      }
+    ]
+  }
+]

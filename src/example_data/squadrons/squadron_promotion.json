@@ -1,0 +1,9 @@
+[
+  {
+    "timestamp": "2025-07-31T15:52:00Z",
+    "event": "SquadronPromotion",
+    "SquadronName": "TestSquadron",
+    "OldRank": 2,
+    "NewRank": 3
+  }
+]

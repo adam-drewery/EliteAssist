@@ -1,0 +1,16 @@
+[
+  {
+    "timestamp": "2018-01-31T10:55:15Z",
+    "event": "ModuleStore",
+    "MarketID": 128676487,
+    "Slot": "TinyHardpoint1",
+    "StoredItem": "$hpt_shieldbooster_size0_class3_name;",
+    "StoredItem_Localised": "Shield Booster",
+    "Ship": "empire_courier",
+    "ShipID": 11,
+    "Hot": false,
+    "EngineerModifications": "ShieldBooster_Explosive",
+    "Level": 1,
+    "Quality": 0.5271
+  }
+]

@@ -1,5 +1,6 @@
-use crate::event::JournalEvent;
+use crate::font::eurocaps::FONT;
 use crate::gui::components::{details, header};
+use crate::gui::Message;
 use crate::image::{CORE_INTERNAL_PNG, ENGINEER_ICON_PNG, FIXED_PNG, GIMBALLED_PNG, HARDPOINTS_PNG, OPTIONAL_INTERNAL_PNG, TURRET_PNG, UTILITIES_PNG};
 use crate::state::{ShipLoadout, ShipModule, SlotType, State};
 use crate::theme::{GRAY, ORANGE, WHITE, YELLOW};
@@ -8,13 +9,12 @@ use iced::widget::image::Handle;
 use iced::widget::{column, container, image, row, scrollable, text, Column, Row};
 use iced::{Border, Center, Element, Fill, Left, Right, Theme, Top};
 use thousands::Separable;
-use crate::font::eurocaps::FONT;
 
-pub fn ship_modules(state: &State) -> Column<JournalEvent> {
-    let mut hardpoints: Vec<Element<JournalEvent>> = vec![];
-    let mut utilities: Vec<Element<JournalEvent>> = vec![];
-    let mut core_internals: Vec<Element<JournalEvent>> = vec![];
-    let mut optional_internals: Vec<Element<JournalEvent>> = vec![];
+pub fn ship_modules(state: &State) -> Column<Message> {
+    let mut hardpoints: Vec<Element<Message>> = vec![];
+    let mut utilities: Vec<Element<Message>> = vec![];
+    let mut core_internals: Vec<Element<Message>> = vec![];
+    let mut optional_internals: Vec<Element<Message>> = vec![];
 
     for module in state.ship_loadout.modules.iter() {
         match &module.slot {
@@ -79,7 +79,7 @@ pub fn ship_modules(state: &State) -> Column<JournalEvent> {
     .height(Fill)
 }
 
-pub fn ship_details(state: &State) -> Column<JournalEvent> {
+pub fn ship_details(state: &State) -> Column<Message> {
     column![
         header("Ship"),
         ship_title(&state.ship_loadout),
@@ -94,7 +94,7 @@ pub fn ship_details(state: &State) -> Column<JournalEvent> {
     .padding(8)
 }
 
-fn module_group_title(title: &str, icon: Handle) -> Column<JournalEvent> {
+fn module_group_title(title: &str, icon: Handle) -> Column<Message> {
     column![row![
         column![image(icon).width(40).height(40)],
         column![].width(12),
@@ -102,7 +102,7 @@ fn module_group_title(title: &str, icon: Handle) -> Column<JournalEvent> {
     ]]
 }
 
-fn ship_title(ship_loadout: &ShipLoadout) -> Row<JournalEvent> {
+fn ship_title(ship_loadout: &ShipLoadout) -> Row<Message> {
     row![
             column![
                 text(&ship_loadout.ship_name)
@@ -130,7 +130,7 @@ fn ship_title(ship_loadout: &ShipLoadout) -> Row<JournalEvent> {
         .align_y(Top)
 }
 
-fn module_details(module: &ShipModule, size: u8) -> Row<JournalEvent> {
+fn module_details(module: &ShipModule, size: u8) -> Row<Message> {
     
     let mut size_column = column![];
     if size != 0 { size_column = size_column.push(text(size).size(24).color(GRAY)); }
@@ -161,7 +161,7 @@ fn module_details(module: &ShipModule, size: u8) -> Row<JournalEvent> {
     .align_y(Center)
 }
 
-fn mount_type_icon(module: &ShipModule, size: u8) -> Column<JournalEvent> {
+fn mount_type_icon(module: &ShipModule, size: u8) -> Column<Message> {
     column![
         row![].height(Fill),
         if size == 0 {
@@ -183,7 +183,7 @@ fn mount_type_icon(module: &ShipModule, size: u8) -> Column<JournalEvent> {
     .align_x(Right)
 }
 
-fn engineering_levels(module: &ShipModule) -> Column<JournalEvent> {
+fn engineering_levels(module: &ShipModule) -> Column<Message> {
     if let Some(engineering) = &module.engineering {
         column![
             row((0..engineering.level).map(|_| image(Handle::from_bytes(ENGINEER_ICON_PNG)).into()))
@@ -196,7 +196,7 @@ fn engineering_levels(module: &ShipModule) -> Column<JournalEvent> {
     .height(30)
 }
 
-fn engineering_details(module: &ShipModule) -> Column<JournalEvent> {
+fn engineering_details(module: &ShipModule) -> Column<Message> {
     if let Some(engineering) = &module.engineering {
         column![
             row![

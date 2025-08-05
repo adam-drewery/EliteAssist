@@ -340,7 +340,7 @@ fn check_snapshot_file(file_details: &mut FileDetails) -> Option<JournalEvent> {
         if file_reader.read_to_string(&mut line).is_ok() && !line.is_empty() {
             file_details.last_modified = modified;
 
-            info!("Snapshot file updated: {}", &file_details.path.display());
+            info!("Snapshot file updated: {:?}", &file_details.path.file_name().unwrap_or_default());
             let deserialize_result = serde_json::from_str(&line);
             if let Ok(event) = deserialize_result {
                 return Some(event);

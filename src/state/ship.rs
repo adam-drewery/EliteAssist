@@ -26,7 +26,7 @@ pub struct ShipModule {
     pub slot: SlotType,
     pub name: String,
     pub on: bool,
-    pub priority: u8,
+    pub priority: u64,
     pub health: f64,
     pub value: Option<u64>,
     pub class: u8,
@@ -50,7 +50,7 @@ pub struct Engineering {
     pub engineer_id: u64,
     pub blueprint_id: u64,
     pub blueprint_name: String,
-    pub level: u8,
+    pub level: u64,
     pub quality: f64,
     pub experimental_effect: Option<String>,
     pub modifiers: Vec<Modifier>,
@@ -61,7 +61,7 @@ pub struct Modifier {
     pub label: String,
     pub value: f64,
     pub original_value: f64,
-    pub less_is_good: u32,
+    pub less_is_good: u64,
 }
 
 #[derive(Default)]

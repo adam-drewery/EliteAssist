@@ -43,7 +43,7 @@ Remember to mark the file as executable: `chmod +x`.
 
 You need [Elite:Dangerous](https://store.steampowered.com/app/359320/Elite_Dangerous/) installed via steam. The application expects the default `.steam` symlink in your home directory.
 
-## Current Limitations
+## Current limitations
 
 - Currently the market screen only updates when you open the market in game. So... not so useful yet.
 - Some journal events aren't handled yet. In particular the fleet carrier and colonization stuff.

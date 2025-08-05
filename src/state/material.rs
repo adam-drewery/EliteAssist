@@ -16,6 +16,6 @@ pub struct Material {
     pub id: String,
     pub name: String,
     pub rarity: u8,
-    pub count: u16,
+    pub count: u64,
     pub locations: Vec<String>,
 }

@@ -1,0 +1,11 @@
+[
+  {
+    "timestamp": "2018-10-05T15:06:12Z",
+    "event": "SAAScanComplete",
+    "BodyName": "Eranin 5",
+    "BodyID": 5,
+    "ProbesUsed": 6,
+    "EfficiencyTarget": 9,
+    "SystemAddress": 3657131070154
+  }
+]

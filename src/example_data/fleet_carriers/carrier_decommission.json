@@ -1,0 +1,9 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "CarrierDecommission",
+    "CarrierID": 3700005632,
+    "ScrapRefund": 3000000000,
+    "ScrapTime": 1754054160
+  }
+]

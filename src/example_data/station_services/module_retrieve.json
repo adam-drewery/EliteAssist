@@ -1,0 +1,17 @@
+[
+  {
+    "timestamp": "2025-07-31T14:23:45Z",
+    "event": "ModuleRetrieve",
+    "MarketID": 128666762,
+    "Slot": "Slot03_Size4",
+    "Ship": "federation_corvette",
+    "ShipID": 42,
+    "RetrievedItem": "int_fighterbay_size4_class1",
+    "Hot": false,
+    "EngineerModifications": "Engine_Dirty",
+    "Level": 4,
+    "Quality": 0.89,
+    "SwapOutItem": "int_cargorack_size4_class1",
+    "Cost": 12500
+  }
+]

@@ -1,0 +1,8 @@
+[
+  {
+    "timestamp": "2025-07-31T10:00:00Z",
+    "event": "NavBeaconScan",
+    "NumBodies": 12,
+    "SystemAddress": 3932277478106
+  }
+]

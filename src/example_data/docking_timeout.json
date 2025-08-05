@@ -1,0 +1,9 @@
+[
+  {
+    "timestamp": "2025-07-31T10:00:00Z",
+    "event": "DockingTimeout",
+    "StationName": "Jameson Memorial",
+    "StationType": "Orbis",
+    "MarketID": 128666762
+  }
+]

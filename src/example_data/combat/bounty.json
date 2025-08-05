@@ -1,0 +1,28 @@
+[
+  {
+    "timestamp": "2018-04-17T11:11:02Z",
+    "event": "Bounty",
+    "Rewards": [
+      {
+        "Faction": "Nehet Patron's Principles",
+        "Reward": 5620
+      }
+    ],
+    "Target": "empire_eagle",
+    "TotalReward": 5620,
+    "VictimFaction": "Nehet Progressive Party"
+  },
+  {
+    "timestamp": "2018-05-20T21:19:58Z",
+    "event": "Bounty",
+    "Rewards": [
+      {
+        "Faction": "HIP 18828 Empire Consulate",
+        "Reward": 1000
+      }
+    ],
+    "Target": "Skimmer",
+    "TotalReward": 1000,
+    "VictimFaction": "HIP 18828 Empire Consulate"
+  }
+]

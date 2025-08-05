@@ -2,7 +2,7 @@
 pub struct NavRouteStep {
 
     pub star_system: String,
-    pub system_address: i64,
+    pub system_address: u64,
     pub star_pos: Vec<f64>,
     pub star_class: String,
 }
@@ -17,7 +17,7 @@ pub struct CurrentLocation {
     pub station_government: Option<String>,
     pub station_services: Option<Vec<String>>,
     pub station_economy: Option<String>,
-    pub station_economies: Option<Vec<StationEconomy>>,
+    pub station_economies: Vec<StationEconomy>,
     pub taxi: Option<bool>,
     pub multicrew: Option<bool>,
     pub star_system: String,
@@ -37,9 +37,9 @@ pub struct CurrentLocation {
     pub powerplay_state: Option<String>,
     pub powerplay_state_conflict_progress: Option<f64>,
     pub powerplay_state_control_progress: Option<f64>,
-    pub powerplay_state_reinforcement: Option<u32>,
-    pub powerplay_state_undermining: Option<u32>,
-    pub factions: Option<Vec<Faction>>,
+    pub powerplay_state_reinforcement: Option<u64>,
+    pub powerplay_state_undermining: Option<u64>,
+    pub factions: Vec<Faction>,
     pub system_faction: Option<SystemFaction>
 }
 
@@ -58,20 +58,20 @@ pub struct StationEconomy {
 #[derive(Default, Clone, Debug)]
 pub struct Faction {
     pub name: String,
-    pub faction_state: Option<String>,
+    pub faction_state: String,
     pub government: String,
     pub influence: f64,
     pub allegiance: String,
     pub happiness: String,
     pub my_reputation: f64,
-    pub recovering_states: Option<Vec<FactionState>>,
-    pub active_states: Option<Vec<FactionState>>
+    pub recovering_states: Vec<FactionState>,
+    pub active_states: Vec<FactionState>
 }
 
 #[derive(Default, Clone, Debug)]
 pub struct FactionState {
     pub state: String,
-    pub trend: Option<u8>,
+    pub trend: u64,
 }
 
 impl NavRouteStep {

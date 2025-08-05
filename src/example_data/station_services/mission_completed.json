@@ -1,0 +1,41 @@
+[
+  {
+    "timestamp": "2018-12-19T21:41:09Z",
+    "event": "MissionCompleted",
+    "Faction": "Inara Nexus",
+    "Name": "Mission_Courier_Elections_name",
+    "MissionID": 442511682,
+    "TargetFaction": "Tougeir Blue Clan",
+    "DestinationSystem": "Tougeir",
+    "DestinationStation": "Janes Dock",
+    "Reward": 10000,
+    "FactionEffects": [{
+      "Faction": "Tougeir Blue Clan",
+      "Effects": [{
+        "Effect": "$MISSIONUTIL_Interaction_Summary_EP_up;",
+        "Effect_Localised": "The economic status of $#MinorFaction; has improved in the $#System; system.",
+        "Trend": "UpGood"
+      }],
+      "Influence": [{
+        "SystemAddress": 5067927397769,
+        "Trend": "UpGood",
+        "Influence": "++++"
+      }],
+      "ReputationTrend": "UpGood",
+      "Reputation": ""
+    },
+      {
+        "Faction": "Inara Nexus",
+        "Effects": [{
+          "Effect": "$MISSIONUTIL_Interaction_Summary_EP_up;",
+          "Effect_Localised": "The economic status of $#MinorFaction; has improved in the $#System; system.",
+          "Trend": "UpGood"
+        }
+        ],
+        "Influence": [],
+        "ReputationTrend": "UpGood",
+        "Reputation": "+"
+      }
+    ]
+  }
+]

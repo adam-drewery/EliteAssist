@@ -1,0 +1,20 @@
+[
+  {
+    "timestamp": "2018-02-21T15:23:49Z",
+    "event": "MaterialTrade",
+    "MarketID": 3221397760,
+    "TraderType": "encoded",
+    "Paid": {
+      "Material": "scandatabanks",
+      "Material_Localised": "Classified Scan Databanks",
+      "Category": "Encoded",
+      "Quantity": 6
+    },
+    "Received": {
+      "Material": "encodedscandata",
+      "Material_Localised": "Divergent Scan Data",
+      "Category": "Encoded",
+      "Quantity": 1
+    }
+  }
+]

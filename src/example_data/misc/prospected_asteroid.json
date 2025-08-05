@@ -1,0 +1,20 @@
+[
+  {
+    "timestamp": "2025-07-31T16:06:00Z",
+    "event": "ProspectedAsteroid",
+    "Materials": [
+      {
+        "Name": "platinum",
+        "Name_Localised": "Platinum",
+        "Proportion": 0.35
+      },
+      {
+        "Name": "palladium",
+        "Name_Localised": "Palladium",
+        "Proportion": 0.25
+      }
+    ],
+    "Content": "High",
+    "Remaining": 0.75
+  }
+]

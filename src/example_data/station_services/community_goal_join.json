@@ -1,0 +1,27 @@
+[
+  {
+    "timestamp": "2025-07-31T10:00:00Z",
+    "event": "CommunityGoalJoin",
+    "CGID": 123456,
+    "Name": "Brewer corporation calls for Trailblazer resupply",
+    "System": "Sol",
+    "CurrentGoals": [
+      {
+        "CGID": 123456,
+        "Title": "Brewer corporation calls for Trailblazer resupply",
+        "SystemName": "Sol",
+        "MarketName": "Abraham Lincoln",
+        "Expiry": "2025-08-07T10:00:00Z",
+        "IsComplete": false,
+        "CurrentTotal": 10000000,
+        "PlayerContribution": 0,
+        "NumContributors": 5000,
+        "PlayerPercentileBand": 0,
+        "TopTier": {
+          "Name": "Tier 8",
+          "Bonus": "50000000"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "timestamp": "2025-07-31T16:06:00Z",
+    "event": "Promotion",
+    "Combat": 4,
+    "Trade": 3,
+    "Explore": 5,
+    "CQC": 0,
+    "Federation": 2,
+    "Empire": 1
+  }
+]

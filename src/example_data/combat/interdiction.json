@@ -1,0 +1,11 @@
+[
+  {
+    "timestamp": "2016-06-10T14:32:03Z",
+    "event": "Interdiction",
+    "Success": true,
+    "Interdicted": "Fred Flintstone",
+    "IsPlayer": true,
+    "CombatRank": 5,
+    "Faction": "Pilots Federation"
+  }
+]

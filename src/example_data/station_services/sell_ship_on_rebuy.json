@@ -1,0 +1,10 @@
+[
+  {
+    "timestamp": "2017-07-20T08:56:39Z",
+    "event": "SellShipOnRebuy",
+    "ShipType": "Dolphin",
+    "System": "Shinrarta Dezhra",
+    "SellShipId": 4,
+    "ShipPrice": 4110183
+  }
+]

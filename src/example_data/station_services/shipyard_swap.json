@@ -1,0 +1,11 @@
+[
+  {
+    "timestamp": "2016-07-21T14:36:06Z",
+    "event": "ShipyardSwap",
+    "ShipType": "sidewinder",
+    "ShipID": 10,
+    "StoreOldShip": "Asp",
+    "StoreShipID": 2,
+    "MarketID": 128666762
+  }
+]

@@ -1,0 +1,9 @@
+[
+  {
+    "timestamp": "2025-07-31T10:00:00Z",
+    "event": "FSSAllBodiesFound",
+    "SystemName": "Sol",
+    "SystemAddress": 10477373803,
+    "Count": 8
+  }
+]

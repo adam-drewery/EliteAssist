@@ -1,0 +1,14 @@
+[
+  {
+    "timestamp": "2025-07-31T10:00:00Z",
+    "event": "DockingRequested",
+    "StationName": "Jameson Memorial",
+    "StationType": "Orbis Starport",
+    "MarketID": 128666762,
+    "LandingPads": {
+      "Small": 10,
+      "Medium": 4,
+      "Large": 3
+    }
+  }
+]

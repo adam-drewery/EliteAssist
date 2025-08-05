@@ -1,0 +1,16 @@
+[
+  {
+    "timestamp": "2018-03-07T15:47:03Z",
+    "event": "CargoDepot",
+    "MissionID": 65394170,
+    "UpdateType": "Deliver",
+    "CargoType": "BasicMedicines",
+    "Count": 8,
+    "StartMarketID": 3228867072,
+    "EndMarketID": 3534964736,
+    "ItemsCollected": 16,
+    "ItemsDelivered": 16,
+    "TotalItemsToDeliver": 3020,
+    "Progress": 0
+  }
+]

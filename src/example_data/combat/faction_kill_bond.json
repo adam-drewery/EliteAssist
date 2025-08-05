@@ -1,0 +1,9 @@
+[
+  {
+    "timestamp": "2016-06-10T14:32:03Z",
+    "event": "FactionKillBond",
+    "Reward": 500,
+    "AwardingFaction": "Jarildekald Public Industry",
+    "VictimFaction": "Lencali Freedom Party"
+  }
+]

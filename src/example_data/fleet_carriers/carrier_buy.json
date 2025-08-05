@@ -1,0 +1,13 @@
+[
+  {
+    "timestamp": "2025-07-31T15:56:00Z",
+    "event": "CarrierBuy",
+    "CarrierID": 3700005632,
+    "BoughtAtMarket": 128666762,
+    "Location": "Shinrarta Dezhra",
+    "SystemAddress": 3932277478106,
+    "Price": 5000000000,
+    "Variant": "CarrierDockingBay",
+    "Callsign": "L14X1J"
+  }
+]
