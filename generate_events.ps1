@@ -569,7 +569,9 @@ function Generate-NestedStruct {
             $requiredProps = $definition.required
         }
 
-        foreach ($propName in $definition.properties.PSObject.Properties.Name) {
+        # Sort property names for deterministic processing
+        $sortedPropNames = $definition.properties.PSObject.Properties.Name | Sort-Object
+        foreach ($propName in $sortedPropNames) {
             $prop = $definition.properties.$propName
             $isOptional = -not $requiredProps.Contains($propName)
 
@@ -714,7 +716,9 @@ function Generate-RustStruct {
             $requiredProps = $schema.required
         }
 
-        foreach ($propName in $schema.properties.PSObject.Properties.Name) {
+        # Sort property names for deterministic processing
+        $sortedPropNames = $schema.properties.PSObject.Properties.Name | Sort-Object
+        foreach ($propName in $sortedPropNames) {
             # Skip the timestamp and event properties as they're handled separately
             if ($propName -eq "timestamp" -or $propName -eq "event") {
                 continue
@@ -790,7 +794,9 @@ function Generate-RustStruct {
 
     # Process definitions from the schema
     if ($schema.definitions) {
-        foreach ($defName in $schema.definitions.PSObject.Properties.Name) {
+        # Sort property names for deterministic processing
+        $sortedDefNames = $schema.definitions.PSObject.Properties.Name | Sort-Object
+        foreach ($defName in $sortedDefNames) {
             $definition = $schema.definitions.$defName
             $nestedStructName = Get-NestedStructName -parentName $structName -propertyName $defName
 
@@ -811,7 +817,8 @@ function Generate-RustStruct {
 
     # Process other nested structs
     # Create a copy of the keys to avoid modifying the collection during iteration
-    $nestedStructKeys = @($nestedStructs.Keys)
+    # Sort the keys for deterministic processing
+    $nestedStructKeys = @($nestedStructs.Keys) | Sort-Object
     foreach ($key in $nestedStructKeys) {
         $nestedStruct = $nestedStructs[$key]
 
@@ -1070,7 +1077,8 @@ $mergedStructs = @{}
 $mergedStructNames = @()
 $originalToMergedMap = @{}
 
-foreach ($groupKey in $structGroups.Keys) {
+# Sort group keys for deterministic processing
+foreach ($groupKey in ($structGroups.Keys | Sort-Object)) {
     $group = $structGroups[$groupKey]
     
     # If there's only one struct in the group, no merging needed
@@ -1135,7 +1143,7 @@ foreach ($groupKey in $structGroups.Keys) {
 
 # Update field types in all structs to use the merged struct names
 Write-Host "Updating field type references to use merged struct names..."
-foreach ($key in $mergedStructs.Keys) {
+foreach ($key in ($mergedStructs.Keys | Sort-Object)) {
     $struct = $mergedStructs[$key]
     
     # Update field types to use merged struct names
@@ -1175,8 +1183,8 @@ foreach ($key in $mergedStructs.Keys) {
     }
 }
 
-# Add all structs to the file
-foreach ($key in $mergedStructs.Keys) {
+# Add all structs to the file in alphabetical order
+foreach ($key in ($mergedStructs.Keys | Sort-Object)) {
     $struct = $mergedStructs[$key]
     $fileContent += $struct.ToString()
     $fileContent += "`n`n"
@@ -1188,8 +1196,8 @@ $fileContent += "`n#[serde(tag = ""event"")]"
 $fileContent += "`npub enum JournalEvent {"
 $fileContent += "`n"
 
-# Add enum variants for top-level structs
-foreach ($structName in $allStructNames) {
+# Add enum variants for top-level structs in alphabetical order
+foreach ($structName in ($allStructNames | Sort-Object)) {
     $mergedName = $originalToMergedMap[$structName]
     
     $fileContent += "    #[serde(rename = ""$structName"")]"
