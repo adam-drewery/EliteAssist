@@ -4,19 +4,20 @@ use crate::theme::{GRAY, ORANGE};
 use iced::widget::{column, container, row, text, Column, Row};
 use iced::{Fill, Right};
 use crate::font::eurocaps::FONT;
+use crate::gui::Message;
 
-pub fn header(title: &str) -> Row<JournalEvent> {
+pub fn header(title: &str) -> Row<Message> {
     row![
         container(text(title).font(FONT).size(24).width(Fill)).style(styles::header).padding([0, 8])
     ]
     .padding([12, 0])
 }
 
-pub fn sub_header(title: &str) -> Row<JournalEvent> {
+pub fn sub_header(title: &str) -> Row<Message> {
     row![text(title).font(FONT).size(20).color(ORANGE)]
 }
 
-pub fn details(label: &str, value: impl Into<String>) -> Row<JournalEvent> {
+pub fn details(label: &str, value: impl Into<String>) -> Row<Message> {
 
     let value = value.into();
     if value == "" { return row![] }
@@ -32,7 +33,7 @@ pub fn details(label: &str, value: impl Into<String>) -> Row<JournalEvent> {
     ]
 }
 
-pub fn details_extra(label: &str, value: impl Into<String>, value2: impl Into<String>) -> Row<JournalEvent> {
+pub fn details_extra(label: &str, value: impl Into<String>, value2: impl Into<String>) -> Row<Message> {
 
     let value = value.into();
     let value2 = value2.into();
@@ -52,7 +53,7 @@ pub fn details_extra(label: &str, value: impl Into<String>, value2: impl Into<St
     ]
 }
 
-pub fn empty_text(label: &str) -> Column<JournalEvent> {
+pub fn empty_text(label: &str) -> Column<Message> {
     column![
         row![].height(Fill),
         row![

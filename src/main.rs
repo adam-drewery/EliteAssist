@@ -15,6 +15,7 @@ mod image;
 mod text;
 mod fdev_ids;
 mod font;
+mod message;
 
 #[tokio::main]
 async fn main() {

@@ -5,8 +5,9 @@ use crate::theme::{GRAY, ORANGE, WHITE, YELLOW};
 use iced::widget::{column, row, text, Row};
 use iced::widget::scrollable;
 use iced::{Bottom, Element, Fill, Left};
+use crate::gui::Message;
 
-pub fn market(state: &State) -> Row<JournalEvent> {
+pub fn market(state: &State) -> Row<Message> {
     row![
         column![
             row![
@@ -53,11 +54,11 @@ pub fn market(state: &State) -> Row<JournalEvent> {
     ]
 }
 
-fn cell<'a>(value: impl text::IntoFragment<'a>) -> Element<'a, JournalEvent> {
+fn cell<'a>(value: impl text::IntoFragment<'a>) -> Element<'a, Message> {
     text(value).size(16).color(WHITE).width(Fill).into()
 }
 
-fn name_cell(item: &MarketItem) -> Element<JournalEvent> {
+fn name_cell(item: &MarketItem) -> Element<Message> {
     text(&item.name)
         .size(16)
         .color(if item.rare { YELLOW } else { ORANGE })

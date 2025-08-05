@@ -5,13 +5,14 @@ use iced::Subscription;
 use std::path::PathBuf;
 use tokio::sync::mpsc;
 use tokio_stream::wrappers::ReceiverStream;
+use crate::gui::Message;
 
-pub fn subscription(_state: &State) -> Subscription<JournalEvent> {
+pub fn subscription(_state: &State) -> Subscription<Message> {
     Subscription::run(stream_events)
 }
 
 #[cfg(not(feature = "mock_events"))]
-fn stream_events() -> impl Stream<Item = JournalEvent> {
+fn stream_events() -> impl Stream<Item=Message> {
     use crate::journal::JournalWatcher;
 
     let (sender, receiver) = mpsc::channel(16);
@@ -20,7 +21,7 @@ fn stream_events() -> impl Stream<Item = JournalEvent> {
         let mut watcher = JournalWatcher::new();
         loop {
             let input = watcher.next().await;
-            sender.send(input).await.unwrap();
+            sender.send(Message::JournalEvent(input)).await.unwrap();
         }
     });
 
@@ -28,7 +29,7 @@ fn stream_events() -> impl Stream<Item = JournalEvent> {
 }
 
 #[cfg(feature = "mock_events")]
-fn stream_events() -> impl Stream<Item = JournalEvent> {
+fn stream_events() -> impl Stream<Item = Message> {
     use tokio::fs;
 
     let (sender, receiver) = mpsc::channel(16);
@@ -54,9 +55,9 @@ fn stream_events() -> impl Stream<Item = JournalEvent> {
             let content = fs::read_to_string(file).await.unwrap();
             let mut events: Vec<JournalEvent> = serde_json::from_str(&content).unwrap();
             use rand::seq::SliceRandom;
-            events.shuffle(&mut rand::thread_rng());
+            events.shuffle(&mut rand::rng());
             for event in events {
-                sender.send(event).await.unwrap();
+                sender.send(Message::JournalEvent(event)).await.unwrap();
             }
         }
     });

@@ -36,11 +36,21 @@ impl Into<state::ShipLoadout> for event::Loadout {
             ship_id: self.ship_id,
             ship_name: self.ship_name,
             ship_ident: self.ship_ident,
+            hull_value: self.hull_value.unwrap(),
+            modules_value: self.modules_value.unwrap(),
+            hull_health: self.hull_health,
+            unladen_mass: self.unladen_mass,
+            cargo_capacity: self.cargo_capacity,
+            max_jump_range: self.max_jump_range,
+            fuel_capacity: state::FuelCapacity {
+                main: self.fuel_capacity.main,
+                reserve: self.fuel_capacity.reserve,
+            },
             ship: self.ship,
             modules: self.modules.into_iter().map(|m| {
-                // something's wrong. this struct represents a suit loadout not a ship loadout.
-                
+                m.into()
             }).collect(),
+            rebuy: self.rebuy,
         }
     }
 } 

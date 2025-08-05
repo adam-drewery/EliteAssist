@@ -3,9 +3,10 @@ use crate::event::JournalEvent;
 use crate::gui::components::*;
 use crate::state::State;
 use iced::widget::{column, row, scrollable, text, Column};
+use crate::gui::Message;
 use crate::theme::{GRAY, ORANGE, WHITE};
 
-pub fn personal(state: &State) -> Column<JournalEvent> {
+pub fn personal(state: &State) -> Column<Message> {
 
     column![
         header("Personal"),
@@ -18,7 +19,7 @@ pub fn personal(state: &State) -> Column<JournalEvent> {
     .padding(8)
 }
 
-pub fn messages(state: &State) -> Column<JournalEvent> {
+pub fn messages(state: &State) -> Column<Message> {
     column![
         header("Messages"),
         scrollable(column(
@@ -45,7 +46,7 @@ pub fn messages(state: &State) -> Column<JournalEvent> {
 }
 
 
-pub fn claims(state: &State) -> Column<JournalEvent> {
+pub fn claims(state: &State) -> Column<Message> {
 
     if (state.bounties.len() == 0) && (state.combat_bonds.len() == 0) {
         return column![
@@ -68,7 +69,7 @@ pub fn claims(state: &State) -> Column<JournalEvent> {
     ].height(Fill)
 }
 
-pub fn missions(state: &State) -> Column<JournalEvent> {
+pub fn missions(state: &State) -> Column<Message> {
 
     if state.missions.len() == 0 {
         return column![

@@ -24,7 +24,6 @@ $structNameReplacements = @{
     "SellSuit" = "Suit"
     "MissionFailed" = "Mission"
     "RenameSuitLoadout" = "SuitLoadout"
-    "Loadout" = "ShipLoadout"
     "SellWeapon" = "Weapon"
     "ShipLocker" = "Inventory"
     "BookTaxi" = "Booking"

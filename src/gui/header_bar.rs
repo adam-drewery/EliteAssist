@@ -4,8 +4,9 @@ use crate::theme::ORANGE;
 use iced::widget::{column, row, text, Row};
 use iced::{Fill, Left, Right};
 use crate::font::eurocaps::FONT;
+use crate::gui::Message;
 
-pub fn header_bar(state: &State) -> Row<JournalEvent> {
+pub fn header_bar(state: &State) -> Row<Message> {
     row![
         column![
             text(&state.commander_name).font(FONT).size(30).color(ORANGE),

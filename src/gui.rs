@@ -20,10 +20,15 @@ use navigation_bar::navigation_bar;
 use ship_locker::ship_locker;
 use crate::image::LOADING_PNG;
 
+pub enum Message {
+    NavigateTo(ActiveScreen),
+    JournalEvent(JournalEvent)
+}
+
 pub struct Gui;
 
 impl Gui {
-    pub fn view(state: &State) -> Element<JournalEvent> {
+    pub fn view(state: &State) -> Element<Message> {
         if state.commander_name.is_empty() {
             column![
                 row![].height(Fill),
@@ -58,7 +63,7 @@ impl Gui {
         }
     }
 
-    pub fn update(state: &mut State, message: JournalEvent) {
+    pub fn update(state: &mut State, message: Message) {
         state.update_from(message);
     }
 }
