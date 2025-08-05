@@ -104,12 +104,12 @@ impl State {
 
             JournalEvent::Disembark(e) => {
                 self.current_body = e.body.clone();
-                self.journal.push(e.into("Disembarked"));
+                self.journal.push(e.into());
             }
 
             JournalEvent::Embark(e) => {
                 self.current_body = e.body.clone();
-                self.journal.push(e.into("Embarked"));
+                self.journal.push(e.into());
             }
 
             JournalEvent::NavigateTo(e) => {
@@ -157,7 +157,7 @@ impl State {
 
             JournalEvent::Loadout(e) => self.ship_loadout = e.into(),
 
-            JournalEvent::BuyAmmo(e) => self.journal.push(e.into()),
+            JournalEvent::BuyAmmo(e) => self.journal.push(e.into("ammo")),
 
             JournalEvent::RestockVehicle(e) => self.journal.push(e.into()),
 
@@ -222,7 +222,7 @@ impl State {
             }
 
             JournalEvent::Bounty(e) => {
-                for reward in e.rewards {
+                for reward in e.rewards.unwrap_or_default() {
                     self.bounties
                         .entry(reward.faction.clone())
                         .and_modify(|v| *v += i64::from(reward.reward))
@@ -363,13 +363,13 @@ impl State {
             JournalEvent::ShipyardNew(_) => {}
             JournalEvent::CommunityGoalReward(_) => {}
 
-            JournalEvent::CrewMemberJoins(e) => self.journal.push(e.into()),
+            JournalEvent::CrewMemberJoins(e) => self.journal.push(e.into("joined")),
 
             JournalEvent::Interdicted(_) => {}
             JournalEvent::SellOrganicData(_) => {}
             JournalEvent::DockSRV(_) => {}
 
-            JournalEvent::FighterDestroyed(e) => self.journal.push(e.into()),
+            JournalEvent::FighterDestroyed(e) => self.journal.push(e.into("Fighter", "destroyed")),
 
             JournalEvent::ModuleSwap(_) => {}
             JournalEvent::MaterialDiscovered(_) => {}
@@ -410,7 +410,7 @@ impl State {
             JournalEvent::UpgradeSuit(_) => {}
             JournalEvent::AppliedToSquadron(_) => {}
 
-            JournalEvent::CrewMemberQuits(e) => self.journal.push(e.into()),
+            JournalEvent::CrewMemberQuits(e) => self.journal.push(e.into("quit")),
 
             JournalEvent::ChangeCrewRole(e) => self.journal.push(e.into()),
 
@@ -425,7 +425,7 @@ impl State {
             JournalEvent::SellSuit(_) => {}
             JournalEvent::DeleteSuitLoadout(_) => {}
 
-            JournalEvent::FileHeader(_) => {}
+            JournalEvent::Fileheader(_) => {}
             JournalEvent::LoadGame(_) => {
                 self.nav_route.clear();
             }

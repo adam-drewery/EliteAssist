@@ -1,6 +1,5 @@
 use chrono::{DateTime, TimeZone, Utc};
 use serde::{self, Deserialize, Deserializer, Serializer};
-use crate::event::Materials;
 
 pub mod date {
     use super::*;
@@ -56,4 +55,8 @@ pub mod optional_date {
             None => Ok(None),
         }
     }
+}
+
+pub fn prettify_date(date: &DateTime<Utc>) -> String {
+    date.to_rfc2822().trim_end_matches("+0000").to_string()
 }

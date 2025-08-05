@@ -22,23 +22,21 @@ pub fn location(state: &State) -> Column<JournalEvent> {
 
 fn factions(state: &State) -> Column<JournalEvent> {
 
-    if state.location.factions.is_none() { return column![] }
+    if state.location.factions.is_empty() { return column![] }
 
     let mut result = column![sub_header("Factions")];
 
     // todo: why do i have to clone this, i don't wanna
-    for faction in state.location.factions.clone().unwrap() {
-        let states = if let Some(active_states) = &faction.active_states {
-            let state_names: Vec<String> = active_states.iter().map(|s| s.state.clone()).collect();
+    for faction in &state.location.factions {
+        let states =  {
+            let state_names: Vec<String> = faction.active_states.iter().map(|s| s.state.clone()).collect();
             format!("{} | {} | {}", faction.allegiance, faction.government, state_names.join(" | "))
-        } else {
-            format!("{} | {}", faction.allegiance, faction.government)
         };
 
         result = result.push(
             column![
                 row![
-                    column![text(faction.name)],
+                    column![text(&faction.name)],
                     column![].width(Fill),
                     column![text(states).color(GRAY)],
                 ]

@@ -4,9 +4,9 @@ use chrono::{DateTime, Utc};
 pub struct SuitModule {
 
     pub slot_name: String,
-    pub suit_module_id: i64,
+    pub suit_module_id: u64,
     pub module_name: String,
-    pub class: i64,
+    pub class: u64,
     pub weapon_mods: Vec<String>,
 }
 

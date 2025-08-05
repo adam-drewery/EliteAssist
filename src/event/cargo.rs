@@ -1,5 +1,7 @@
 use std::collections::HashMap;
+use thousands::Separable;
 use crate::event;
+use crate::event::format::prettify_date;
 use crate::fdev_ids::all_materials;
 use crate::state;
 use crate::text::title_case;
@@ -59,7 +61,7 @@ impl Into<state::ShipLocker> for event::Inventory {
         state::ShipLocker {
 
             items: map_vec(self.items),
-            consumables: map_vec(self.consumables),
+            consumables: self.consumables.unwrap_or_default().into_iter().map(|c| c.into()).collect(),
             data: map_vec(self.data),
             components: map_vec(self.components),
         }
@@ -100,4 +102,36 @@ fn map_vec(vec: Option<Vec<event::Item>>) -> Vec<state::ShipLockerItem> {
         .into_iter()
         .map(|f| f.into())
         .collect()
+}
+
+impl event::ShipEquipmentPurchase {
+    pub fn into(self, item: &str) -> state::GameActivity {
+        state::GameActivity {
+            time: self.timestamp,
+            time_display: prettify_date(&self.timestamp),
+            verb: format!("Bought {} for", item).into(),
+            noun: format!("{}CR", &self.cost.to_string().separate_with_commas())
+        }
+    }
+}
+
+impl Into<state::GameActivity> for event::RestockVehicle {
+    fn into(self) -> state::GameActivity {
+        state::GameActivity {
+            time: self.timestamp,
+            time_display: prettify_date(&self.timestamp),
+            verb: "Restocked vehicles for".into(),
+            noun: format!("{}CR", self.cost.to_string().separate_with_commas()),
+        }
+    }
+}
+
+impl Into<state::ShipLockerItem> for event::Consumable {
+    fn into(self) -> state::ShipLockerItem {
+        state::ShipLockerItem {
+            name: self.name_localised.unwrap_or(title_case(&self.name)),
+            count: self.count,
+            for_mission: false,
+        }
+    }
 }
