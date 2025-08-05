@@ -778,6 +778,165 @@ function Generate-RustStruct {
     }
 }
 
+# Helper function to compare two structs for structural equality
+function Compare-StructStructure {
+    param (
+        [RustStruct]$struct1,
+        [RustStruct]$struct2
+    )
+
+    # If the number of fields is different, they're not equal
+    if ($struct1.Fields.Count -ne $struct2.Fields.Count) {
+        return $false
+    }
+
+    # Create a hashtable of field types for struct1
+    $struct1Fields = @{}
+    foreach ($field in $struct1.Fields) {
+        $struct1Fields[$field.Name] = $field.Type
+    }
+
+    # Compare field types with struct2
+    foreach ($field in $struct2.Fields) {
+        if (-not $struct1Fields.ContainsKey($field.Name) -or $struct1Fields[$field.Name] -ne $field.Type) {
+            return $false
+        }
+    }
+
+    # If we got here, the structures are identical
+    return $true
+}
+
+# Helper function to find the common prefix or common word in a list of struct names
+function Find-CommonPrefix {
+    param (
+        [string[]]$names
+    )
+
+    if ($names.Count -eq 0) {
+        return ""
+    }
+    
+    if ($names.Count -eq 1) {
+        return $names[0]
+    }
+
+    # First try to find a common prefix at the beginning
+    $shortestLength = ($names | ForEach-Object { $_.Length } | Measure-Object -Minimum).Minimum
+    $prefix = $names[0]
+    
+    # Check each name and reduce the prefix as needed
+    foreach ($name in $names) {
+        # Find the common part at the beginning
+        $commonLength = 0
+        for ($i = 0; $i -lt [Math]::Min($prefix.Length, $name.Length); $i++) {
+            if ($prefix[$i] -eq $name[$i]) {
+                $commonLength++
+            } else {
+                break
+            }
+        }
+        
+        # Update the prefix to the common part
+        $prefix = $prefix.Substring(0, $commonLength)
+        
+        # If we've eliminated the entire prefix, stop
+        if ($prefix.Length -eq 0) {
+            break
+        }
+    }
+    
+    # If we found a meaningful prefix, return it
+    if ($prefix.Length -ge 3) {
+        return $prefix
+    }
+    
+    # If no common prefix was found, look for common words within the names
+    # Split each name into potential words (using camel case)
+    $allWords = @{}
+    
+    foreach ($name in $names) {
+        # Extract words from camel case
+        $words = @()
+        $currentWord = ""
+        
+        for ($i = 0; $i -lt $name.Length; $i++) {
+            if ($i -gt 0 -and [char]::IsUpper($name[$i]) -and -not [char]::IsUpper($name[$i-1])) {
+                if ($currentWord -ne "") {
+                    $words += $currentWord
+                    $currentWord = ""
+                }
+            }
+            $currentWord += $name[$i]
+        }
+        
+        if ($currentWord -ne "") {
+            $words += $currentWord
+        }
+        
+        # Count occurrences of each word
+        foreach ($word in $words) {
+            if (-not $allWords.ContainsKey($word)) {
+                $allWords[$word] = 0
+            }
+            $allWords[$word]++
+        }
+    }
+    
+    # Find words that appear in all names
+    $commonWords = @()
+    foreach ($word in $allWords.Keys) {
+        if ($allWords[$word] -eq $names.Count) {
+            $commonWords += $word
+        }
+    }
+    
+    # If we found common words, use the longest one
+    if ($commonWords.Count -gt 0) {
+        $longestWord = ($commonWords | Sort-Object -Property Length -Descending)[0]
+        return $longestWord
+    }
+    
+    # If no common words were found, try to find words that appear in most names
+    $mostCommonWord = ""
+    $highestCount = 0
+    
+    foreach ($word in $allWords.Keys) {
+        if ($allWords[$word] -gt $highestCount -and $word.Length -ge 3) {
+            $mostCommonWord = $word
+            $highestCount = $allWords[$word]
+        }
+    }
+    
+    if ($mostCommonWord -ne "" -and $highestCount -ge ($names.Count / 2)) {
+        return $mostCommonWord
+    }
+    
+    # If all else fails, return the first name
+    return $names[0]
+}
+
+# Helper function to merge documentation from multiple structs
+function Merge-Documentation {
+    param (
+        [string[]]$descriptions
+    )
+    
+    # Filter out empty descriptions
+    $validDescriptions = $descriptions | Where-Object { $_ -ne $null -and $_ -ne "" }
+    
+    if ($validDescriptions.Count -eq 0) {
+        return ""
+    }
+    
+    if ($validDescriptions.Count -eq 1) {
+        return $validDescriptions[0]
+    }
+    
+    # Join all descriptions with a separator
+    return ($validDescriptions -join " | ")
+}
+
 # Main script
 
 # Get the base schema
@@ -895,9 +1054,117 @@ use serde::Deserialize;
 
 '@
 
-# Add all structs to the file
+# Group structs with identical structures
+Write-Host "Grouping structs with identical structures..."
+$structGroups = @{}
+$structMapping = @{}
+
+# First, create a list of all top-level structs
+$topLevelStructs = @()
+foreach ($structName in $allStructNames) {
+    $topLevelStructs += @{
+        Name = $structName
+        Struct = $allStructs[$structName]
+    }
+}
+
+# Group structs with identical structures
+foreach ($struct in $topLevelStructs) {
+    $found = $false
+    
+    # Check if this struct matches any existing group
+    foreach ($groupKey in $structGroups.Keys) {
+        $groupStruct = $structGroups[$groupKey][0].Struct
+        
+        # Compare the structures
+        if (Compare-StructStructure -struct1 $groupStruct -struct2 $struct.Struct) {
+            # Add this struct to the group
+            $structGroups[$groupKey] += $struct
+            $found = $true
+            break
+        }
+    }
+    
+    # If no matching group was found, create a new one
+    if (-not $found) {
+        $groupKey = "Group_" + $structGroups.Count
+        $structGroups[$groupKey] = @($struct)
+    }
+}
+
+# Process each group to create merged structs
+$mergedStructs = @{}
+$mergedStructNames = @()
+$originalToMergedMap = @{}
+
+foreach ($groupKey in $structGroups.Keys) {
+    $group = $structGroups[$groupKey]
+    
+    # If there's only one struct in the group, no merging needed
+    if ($group.Count -eq 1) {
+        $struct = $group[0]
+        $mergedStructs[$struct.Name] = $struct.Struct
+        $mergedStructNames += $struct.Name
+        $originalToMergedMap[$struct.Name] = $struct.Name
+        continue
+    }
+
+    # Get the names of all structs in this group
+    $structNames = $group | ForEach-Object { $_.Name }
+    
+    # Find the common prefix to use as the merged struct name
+    $commonPrefix = Find-CommonPrefix -names $structNames
+    
+    # If the common prefix is empty or too short, use the first struct name
+    if ($commonPrefix.Length -lt 2) {
+        $commonPrefix = $structNames[0]
+    }
+
+    # Multiple structs with identical structure - merge them
+    Write-Host "Merging $($group.Count) structs with identical structure: $($group | ForEach-Object { $_.Name } | Join-String -Separator ', ') into $commonPrefix"
+    
+    # Create a new struct with the common prefix as the name
+    $mergedStruct = [RustStruct]::new($commonPrefix)
+    
+    # Merge documentation from all structs in the group
+    $descriptions = $group | ForEach-Object { $_.Struct.Description }
+    $mergedDescription = Merge-Documentation -descriptions $descriptions
+    $mergedStruct.Description = $mergedDescription
+    
+    # Add attributes
+    $mergedStruct.AddAttribute("#[derive(Clone, Debug, Deserialize)]")
+    
+    # Copy fields from the first struct (they all have identical structures)
+    foreach ($field in $group[0].Struct.Fields) {
+        $mergedStruct.AddFieldWithSerdeAttrs(
+            $field.Name,
+            $field.Type,
+            $field.Rename,
+            $field.Description,
+            $field.SerdeAttributes
+        )
+    }
+    
+    # Add the merged struct to our collection
+    $mergedStructs[$commonPrefix] = $mergedStruct
+    $mergedStructNames += $commonPrefix
+    
+    # Map original struct names to the merged name
+    foreach ($structName in $structNames) {
+        $originalToMergedMap[$structName] = $commonPrefix
+    }
+}
+
+# Add all non-top-level structs to the merged structs collection
 foreach ($key in $allStructs.Keys) {
-    $struct = $allStructs[$key]
+    if (-not $allStructNames.Contains($key)) {
+        $mergedStructs[$key] = $allStructs[$key]
+    }
+}
+
+# Add all structs to the file
+foreach ($key in $mergedStructs.Keys) {
+    $struct = $mergedStructs[$key]
     $fileContent += $struct.ToString()
     $fileContent += "`n`n"
 }
@@ -910,8 +1177,10 @@ $fileContent += "`n"
 
 # Add enum variants for top-level structs
 foreach ($structName in $allStructNames) {
+    $mergedName = $originalToMergedMap[$structName]
+    
     $fileContent += "    #[serde(rename = ""$structName"")]"
-    $fileContent += "`n    $structName($structName),"
+    $fileContent += "`n    $structName($mergedName),"
     $fileContent += "`n`n"
 }
 
@@ -920,6 +1189,8 @@ $fileContent += "`n"
 
 # Write the file
 Set-Content -Path $eventFilePath -Value $fileContent
+
+Write-Host "Generated $eventFilePath with $($mergedStructNames.Count) structs (merged from $($allStructNames.Count) original structs) and JournalEvent enum"
 
 Write-Host "Generated $eventFilePath with $($allStructNames.Count) structs and JournalEvent enum"
 

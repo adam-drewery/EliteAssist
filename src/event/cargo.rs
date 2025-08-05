@@ -43,7 +43,7 @@ impl Into<state::Materials> for event::Materials {
     }
 }
 
-impl event::ShipLocker {
+impl event::Backpack {
     pub fn is_empty(&self) -> bool {
         self.items.is_none()
             && self.components.is_none()
@@ -52,7 +52,7 @@ impl event::ShipLocker {
     }
 }
 
-impl Into<state::ShipLocker> for event::ShipLocker {
+impl Into<state::ShipLocker> for event::Backpack {
 
     fn into(self) -> state::ShipLocker {
 
@@ -66,11 +66,11 @@ impl Into<state::ShipLocker> for event::ShipLocker {
     }
 }
 
-impl Into<crate::state::ShipLockerItem> for event::Item {
+impl Into<state::ShipLockerItem> for event::Item {
 
     fn into(self) -> state::ShipLockerItem {
 
-        crate::state::ShipLockerItem {
+        state::ShipLockerItem {
             name: self.name_localised.unwrap_or(title_case(&self.name)),
             for_mission: self.mission_id.is_some(),
             count: self.count,

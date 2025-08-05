@@ -67,28 +67,18 @@ impl Into<state::CurrentLocation> for event::Location {
                         .recovering_states
                         .unwrap_or_default()
                         .into_iter()
-                        .map(|states| {
-                            states
-                                .into_iter()
-                                .map(|state| state::FactionState {
+                        .map(|state| state::FactionState {
                                     state: state.state,
-                                    trend: state.trend,
-                                })
-                                .collect()
+                                    trend: state.trend
                         })
                         .collect(),
                     active_states: faction
                         .active_states
                         .unwrap_or_default()
                         .into_iter()
-                        .map(|states| {
-                            states
-                                .into_iter()
-                                .map(|state| state::FactionState {
+                        .map(|state| state::FactionState {
                                     state: state.state,
-                                    trend: 0,
-                                })
-                                .collect()
+                                    trend: 0
                         })
                         .collect(),
                 })
