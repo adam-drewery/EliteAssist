@@ -701,6 +701,9 @@ function Generate-RustStruct {
     # Add description if available
     if ($schema.description) {
         $rustStruct.Description = $schema.description
+            
+        # Store the original description for this event
+        $eventDescriptions[$structName] = $schema.description
     }
 
     # Add attributes
@@ -908,8 +911,11 @@ function Merge-Documentation {
         return $validDescriptions[0]
     }
     
-    # Join all descriptions with a separator
-    return ($validDescriptions -join " | ")
+    # Sort descriptions alphabetically
+    $sortedDescriptions = $validDescriptions | Sort-Object
+    
+    # Join all descriptions with line breaks for multi-line documentation
+    return ($sortedDescriptions -join "`n/// ")
 }
 
 # Main script
@@ -925,6 +931,10 @@ $schemaDirs = Get-ChildItem -Path $schemaDir -Directory
 # Create a model to store all structs
 $allStructs = @{}
 $allStructNames = @()
+
+# Create a hashtable to store the original description for each event
+# This will be used for the JournalEvent enum variants
+$eventDescriptions = @{}
 
 # Create a hashtable to track which types have already been processed
 # This will help us avoid generating duplicate structs
@@ -1186,6 +1196,7 @@ foreach ($key in ($mergedStructs.Keys | Sort-Object)) {
 # Add all structs to the file in alphabetical order
 foreach ($key in ($mergedStructs.Keys | Sort-Object)) {
     $struct = $mergedStructs[$key]
+    $fileContent += "`n"
     $fileContent += $struct.ToString()
     $fileContent += "`n`n"
 }
@@ -1199,6 +1210,15 @@ $fileContent += "`n"
 # Add enum variants for top-level structs in alphabetical order
 foreach ($structName in ($allStructNames | Sort-Object)) {
     $mergedName = $originalToMergedMap[$structName]
+    
+    # Get the event-specific description from our hashtable
+    $description = $eventDescriptions[$structName]
+    
+    # Add documentation if available
+    if ($description) {
+        $fileContent += "    /// $description"
+        $fileContent += "`n"
+    }
     
     $fileContent += "    #[serde(rename = ""$structName"")]"
     $fileContent += "`n    $structName($mergedName),"

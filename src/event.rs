@@ -17,6 +17,7 @@ pub mod ship;
 
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
+
 /// When written: when repairing modules using the Auto Field Maintenance Unit (AFMU)
 #[derive(Clone, Debug, Deserialize)]
 pub struct AfmuRepairs {
@@ -38,6 +39,7 @@ pub struct AfmuRepairs {
     pub module_localised: Option<String>,
 
 }
+
 
 /// When written: when approaching a planetary settlement
 #[derive(Clone, Debug, Deserialize)]
@@ -97,6 +99,7 @@ pub struct ApproachSettlement {
 
 }
 
+
 /// When written: when the player has broken up a ‘Motherlode’ asteroid for mining
 #[derive(Clone, Debug, Deserialize)]
 pub struct AsteroidCracked {
@@ -109,6 +112,7 @@ pub struct AsteroidCracked {
     pub body: String,
 
 }
+
 
 /// This is written when there is any change to the contents of the suit backpack – note this can be written at the same time as other events like UseConsumable
 #[derive(Clone, Debug, Deserialize)]
@@ -125,6 +129,7 @@ pub struct BackpackChange {
     pub removed: Option<Vec<BackpackChangeEntry>>,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct BackpackChangeEntry {
@@ -149,7 +154,9 @@ pub struct BackpackChangeEntry {
 
 }
 
-/// When written: when flying away from a planet, and distance increases above the 'Orbital Cruise' altitude | When written: when in Supercruise, and distance from planet drops to within the 'Orbital Cruise' zone
+
+/// When written: when flying away from a planet, and distance increases above the 'Orbital Cruise' altitude
+/// When written: when in Supercruise, and distance from planet drops to within the 'Orbital Cruise' zone
 #[derive(Clone, Debug, Deserialize)]
 pub struct Body {
 
@@ -171,7 +178,9 @@ pub struct Body {
 
 }
 
-/// This event is logged when signing up to fight at a recruitment desk | This event is logged when booking a taxi transport
+
+/// This event is logged when booking a taxi transport
+/// This event is logged when signing up to fight at a recruitment desk
 #[derive(Clone, Debug, Deserialize)]
 pub struct Booking {
 
@@ -192,6 +201,7 @@ pub struct Booking {
     pub retreat: Option<bool>,
 
 }
+
 
 /// When written: player is awarded a bounty for a kill
 #[derive(Clone, Debug, Deserialize)]
@@ -243,6 +253,7 @@ pub struct Bounty {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct BountyReward {
 
@@ -254,7 +265,9 @@ pub struct BountyReward {
 
 }
 
-/// When Written: when buying system data via the galaxy map | When Written: when buying trade data in the galaxy map
+
+/// When Written: when buying system data via the galaxy map
+/// When Written: when buying trade data in the galaxy map
 #[derive(Clone, Debug, Deserialize)]
 pub struct BuyData {
 
@@ -269,6 +282,7 @@ pub struct BuyData {
     pub system: String,
 
 }
+
 
 /// When Written: when purchasing drones
 #[derive(Clone, Debug, Deserialize)]
@@ -291,6 +305,7 @@ pub struct BuyDrones {
     pub r#type: String,
 
 }
+
 
 /// This event is logged when buying microresources
 #[derive(Clone, Debug, Deserialize)]
@@ -331,7 +346,9 @@ pub struct BuyMicroResources {
 
 }
 
-/// This event is logged if the player cancels a booked taxi trip | This event is logged if the player cancels their journey to a combat zone
+
+/// This event is logged if the player cancels a booked taxi trip
+/// This event is logged if the player cancels their journey to a combat zone
 #[derive(Clone, Debug, Deserialize)]
 pub struct Cancel {
 
@@ -343,6 +360,7 @@ pub struct Cancel {
     pub refund: u64,
 
 }
+
 
 /// When written: The player has been rewarded for a capital ship combat
 #[derive(Clone, Debug, Deserialize)]
@@ -363,6 +381,7 @@ pub struct CapShipBond {
 
 }
 
+
 /// When written: at startup, note this is now written slightly later in startup, after we have initialised missions, so we can detect if any cargo came from an abandoned delivery mission. The first Cargo event in the file will contain the full inventory, others just indicate a separate file has been written. The full data is now written to a separate file Cargo.json. A simple event (with no parameters) is written to the main journal file when the cargo file is updated.
 #[derive(Clone, Debug, Deserialize)]
 pub struct Cargo {
@@ -381,6 +400,7 @@ pub struct Cargo {
     pub vessel: String,
 
 }
+
 
 /// When written: when collecting or delivering cargo for a wing mission, or if a wing member updates progress. The CargoType and Count are included when you collect or deliver goods, they are not included for a wing update. The Progress value actually represents pending progress for goods in transit: (ItemsCollected-ItemsDelivered)/TotalItemsToDeliver
 #[derive(Clone, Debug, Deserialize)]
@@ -427,6 +447,7 @@ pub struct CargoDepot {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct CargoInventory {
 
@@ -447,6 +468,7 @@ pub struct CargoInventory {
 
 }
 
+
 /// When transferring cargo between ship and fleet carrier, or between ship and SRV
 #[derive(Clone, Debug, Deserialize)]
 pub struct CargoTransfer {
@@ -459,6 +481,7 @@ pub struct CargoTransfer {
     pub transfers: Vec<CargoTransferTransfer>,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct CargoTransferTransfer {
@@ -480,7 +503,9 @@ pub struct CargoTransferTransfer {
 
 }
 
-/// At the time the player cancels decommission | This is logged when a jump is cancelled
+
+/// At the time the player cancels decommission
+/// This is logged when a jump is cancelled
 #[derive(Clone, Debug, Deserialize)]
 pub struct Carrier {
 
@@ -492,6 +517,7 @@ pub struct Carrier {
     pub carrier_id: u64,
 
 }
+
 
 /// Player transfers credits to/from carrier
 #[derive(Clone, Debug, Deserialize)]
@@ -519,6 +545,7 @@ pub struct CarrierBankTransfer {
     pub withdraw: Option<u64>,
 
 }
+
 
 /// Player has bought a fleet carrier
 #[derive(Clone, Debug, Deserialize)]
@@ -551,6 +578,7 @@ pub struct CarrierBuy {
 
 }
 
+
 /// Changes to crew
 #[derive(Clone, Debug, Deserialize)]
 pub struct CarrierCrewServices {
@@ -573,6 +601,7 @@ pub struct CarrierCrewServices {
 
 }
 
+
 /// At the time the player requests decommission
 #[derive(Clone, Debug, Deserialize)]
 pub struct CarrierDecommission {
@@ -591,6 +620,7 @@ pub struct CarrierDecommission {
     pub scrap_time: u64,
 
 }
+
 
 /// Any player giving fuel to the carrier
 #[derive(Clone, Debug, Deserialize)]
@@ -612,6 +642,7 @@ pub struct CarrierDepositFuel {
 
 }
 
+
 /// The carrier owner has changed the docking permission criteria
 #[derive(Clone, Debug, Deserialize)]
 pub struct CarrierDockingPermission {
@@ -630,6 +661,7 @@ pub struct CarrierDockingPermission {
     pub docking_access: String,
 
 }
+
 
 /// Change to tax rate or reserve
 #[derive(Clone, Debug, Deserialize)]
@@ -676,6 +708,7 @@ pub struct CarrierFinance {
     pub tax_rate_shipyard: Option<u64>,
 
 }
+
 
 /// This is similar to FSDJump and Location, but it is written if the player is online and docked at a fleet carrier when the carrier jumps. Note it does not include the distance jumped, or fuel used.
 #[derive(Clone, Debug, Deserialize)]
@@ -823,6 +856,7 @@ pub struct CarrierJump {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct CarrierJumpConflict {
 
@@ -839,6 +873,7 @@ pub struct CarrierJumpConflict {
     pub war_type: String,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct CarrierJumpFaction {
@@ -888,6 +923,7 @@ pub struct CarrierJumpFaction {
 
 }
 
+
 /// At the time the player requests the jump, not the jump itself
 #[derive(Clone, Debug, Deserialize)]
 pub struct CarrierJumpRequest {
@@ -916,6 +952,7 @@ pub struct CarrierJumpRequest {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct CarrierJumpStationFaction {
 
@@ -923,6 +960,7 @@ pub struct CarrierJumpStationFaction {
     pub name: String,
 
 }
+
 
 /// Carrier Location. Written on startup and after a carrier jump.
 #[derive(Clone, Debug, Deserialize)]
@@ -946,6 +984,7 @@ pub struct CarrierLocation {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct CarrierNameChange {
 
@@ -963,6 +1002,7 @@ pub struct CarrierNameChange {
     pub name: String,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct CarrierPack {
@@ -991,6 +1031,7 @@ pub struct CarrierPack {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct CarrierStats {
 
@@ -1001,6 +1042,7 @@ pub struct CarrierStats {
     pub pack_tier: u64,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct CarrierStatsCrew {
@@ -1018,6 +1060,7 @@ pub struct CarrierStatsCrew {
     pub enabled: Option<bool>,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct CarrierStatsFinance {
@@ -1057,6 +1100,7 @@ pub struct CarrierStatsFinance {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct CarrierStatsSpaceUsage {
 
@@ -1082,6 +1126,7 @@ pub struct CarrierStatsSpaceUsage {
     pub total_capacity: u64,
 
 }
+
 
 /// The carrier owner has requested the carrier buys or sells goods (or cancels such an order)
 #[derive(Clone, Debug, Deserialize)]
@@ -1120,6 +1165,7 @@ pub struct CarrierTradeOrder {
 
 }
 
+
 /// When written: when in a crew on someone else's ship, player switched crew role
 #[derive(Clone, Debug, Deserialize)]
 pub struct ChangeCrewRole {
@@ -1136,6 +1182,7 @@ pub struct ChangeCrewRole {
     pub telepresence: Option<bool>,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct ClearImpound {
@@ -1163,6 +1210,7 @@ pub struct ClearImpound {
     pub system: Option<String>,
 
 }
+
 
 /// When written: when a new discovery is added to the Codex
 #[derive(Clone, Debug, Deserialize)]
@@ -1238,6 +1286,7 @@ pub struct CodexEntry {
 
 }
 
+
 /// When Written: when scooping cargo from space or planet surface
 #[derive(Clone, Debug, Deserialize)]
 pub struct CollectCargo {
@@ -1260,6 +1309,7 @@ pub struct CollectCargo {
     pub type_localised: Option<String>,
 
 }
+
 
 /// When picking up items from the ground
 #[derive(Clone, Debug, Deserialize)]
@@ -1290,6 +1340,7 @@ pub struct CollectItems {
 
 }
 
+
 /// When Written: Every 15 seconds while docked at a construction depot
 #[derive(Clone, Debug, Deserialize)]
 pub struct ColonisationConstructionDepot {
@@ -1315,6 +1366,7 @@ pub struct ColonisationConstructionDepot {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct ColonisationConstructionDepotResourcesRequired {
 
@@ -1335,6 +1387,7 @@ pub struct ColonisationConstructionDepotResourcesRequired {
 
 }
 
+
 /// When Written: when contributing materials to a colonisation effort
 #[derive(Clone, Debug, Deserialize)]
 pub struct ColonisationContribution {
@@ -1351,6 +1404,7 @@ pub struct ColonisationContribution {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct ColonisationContributionContribution {
 
@@ -1365,7 +1419,9 @@ pub struct ColonisationContributionContribution {
 
 }
 
-/// When written: at the start of the LoadGame process. This is written before the inventory, loadout, etc | When written: If you should ever reset your game
+
+/// When written: at the start of the LoadGame process. This is written before the inventory, loadout, etc
+/// When written: If you should ever reset your game
 #[derive(Clone, Debug, Deserialize)]
 pub struct Commander {
 
@@ -1380,6 +1436,7 @@ pub struct Commander {
     pub name: String,
 
 }
+
 
 /// When written: when a crime is recorded against the player
 #[derive(Clone, Debug, Deserialize)]
@@ -1409,6 +1466,7 @@ pub struct CommitCrime {
 
 }
 
+
 /// When written: when the game retrieves info on community goals from the server, and the data has changed since last time. This event contains the current status of all community goals the player is currently subscribed to.
 #[derive(Clone, Debug, Deserialize)]
 pub struct CommunityGoal {
@@ -1421,6 +1479,7 @@ pub struct CommunityGoal {
     pub current_goals: Vec<CommunityGoalCurrentGoal>,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct CommunityGoalCurrentGoal {
@@ -1478,6 +1537,7 @@ pub struct CommunityGoalCurrentGoal {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct CommunityGoalCurrentGoalTopTier {
 
@@ -1488,6 +1548,7 @@ pub struct CommunityGoalCurrentGoalTopTier {
     pub name: String,
 
 }
+
 
 /// When Written: when receiving a reward for a community goal
 #[derive(Clone, Debug, Deserialize)]
@@ -1511,6 +1572,7 @@ pub struct CommunityGoalReward {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct ConflictFaction1 {
 
@@ -1528,6 +1590,7 @@ pub struct ConflictFaction1 {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct ConflictFaction2 {
 
@@ -1542,6 +1605,7 @@ pub struct ConflictFaction2 {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct ConflictProgress {
 
@@ -1553,6 +1617,7 @@ pub struct ConflictProgress {
     pub power: String,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Consumable {
@@ -1571,6 +1636,7 @@ pub struct Consumable {
 
 }
 
+
 /// When written: if the journal file grows to 500k lines, we write this event, close the file, and start a new one. The new journalname will increase the partnumber, ex: {datetime}.02.log. The new journal will start with a Fileheader and continue.
 #[derive(Clone, Debug, Deserialize)]
 pub struct Continued {
@@ -1583,6 +1649,7 @@ pub struct Continued {
     pub part: u64,
 
 }
+
 
 /// This event is logged when the player creates a new suit loadout
 #[derive(Clone, Debug, Deserialize)]
@@ -1615,6 +1682,7 @@ pub struct CreateSuitLoadout {
 
 }
 
+
 /// W
 #[derive(Clone, Debug, Deserialize)]
 pub struct Crew {
@@ -1632,6 +1700,7 @@ pub struct Crew {
     pub telepresence: Option<bool>,
 
 }
+
 
 /// When written: when changing the task assignment of a member of crew
 #[derive(Clone, Debug, Deserialize)]
@@ -1652,6 +1721,7 @@ pub struct CrewAssign {
 
 }
 
+
 /// When written: when dismissing a member of crew
 #[derive(Clone, Debug, Deserialize)]
 pub struct CrewFire {
@@ -1667,6 +1737,7 @@ pub struct CrewFire {
     pub name: String,
 
 }
+
 
 /// When written: when engaging a new member of crew
 #[derive(Clone, Debug, Deserialize)]
@@ -1693,6 +1764,7 @@ pub struct CrewHire {
 
 }
 
+
 /// When written: when in multicrew, in Helm player's log, when a crew member launches a fighter
 #[derive(Clone, Debug, Deserialize)]
 pub struct CrewLaunchFighter {
@@ -1711,7 +1783,9 @@ pub struct CrewLaunchFighter {
 
 }
 
-/// When written: When another player joins your ship's crew | When written: When another player leaves your ship's crew
+
+/// When written: When another player joins your ship's crew
+/// When written: When another player leaves your ship's crew
 #[derive(Clone, Debug, Deserialize)]
 pub struct CrewMember {
 
@@ -1728,6 +1802,7 @@ pub struct CrewMember {
     pub telepresence: Option<bool>,
 
 }
+
 
 /// When written: in Multicrew, Helm's log, when another crew player changes role
 #[derive(Clone, Debug, Deserialize)]
@@ -1749,6 +1824,7 @@ pub struct CrewMemberRoleChange {
     pub telepresence: Option<bool>,
 
 }
+
 
 /// When written: when another player commits a crime against the current player
 #[derive(Clone, Debug, Deserialize)]
@@ -1774,7 +1850,9 @@ pub struct CrimeVictim {
 
 }
 
-/// When written: when taking damage due to overheating | When written: when a ship-launched fighter is destroyed
+
+/// When written: when a ship-launched fighter is destroyed
+/// When written: when taking damage due to overheating
 #[derive(Clone, Debug, Deserialize)]
 pub struct Damage {
 
@@ -1786,6 +1864,7 @@ pub struct Damage {
     pub id: Option<u64>,
 
 }
+
 
 /// When written: when scanning a data link
 #[derive(Clone, Debug, Deserialize)]
@@ -1805,6 +1884,7 @@ pub struct DatalinkScan {
 
 }
 
+
 /// When written: when scanning a datalink generates a reward
 #[derive(Clone, Debug, Deserialize)]
 pub struct DatalinkVoucher {
@@ -1823,6 +1903,7 @@ pub struct DatalinkVoucher {
     pub victim_faction: String,
 
 }
+
 
 /// When Written: when delivering power micro-resources.
 #[derive(Clone, Debug, Deserialize)]
@@ -1845,6 +1926,7 @@ pub struct DeliverPowerMicroResources {
     pub total_count: u64,
 
 }
+
 
 /// When written: player was killed
 #[derive(Clone, Debug, Deserialize)]
@@ -1876,6 +1958,7 @@ pub struct Died {
 
 }
 
+
 /// When written: when using the discovery scanner, and new body discoveries are displayed in the cockpit info window. Note you can get two or three of these in a row, where some bodies are discovered by the automatic passive scan, before the active scan is complete.
 #[derive(Clone, Debug, Deserialize)]
 pub struct DiscoveryScan {
@@ -1892,6 +1975,7 @@ pub struct DiscoveryScan {
     pub system_address: u64,
 
 }
+
 
 /// This event is logged when the player steps out of a ship or SRV
 #[derive(Clone, Debug, Deserialize)]
@@ -1947,6 +2031,7 @@ pub struct Disembark {
     pub taxi: bool,
 
 }
+
 
 /// When written: when landing at landing pad in a space station, outpost, or surface settlement
 #[derive(Clone, Debug, Deserialize)]
@@ -2031,6 +2116,7 @@ pub struct Docked {
 
 }
 
+
 /// When written: when docking a fighter back with the mothership
 #[derive(Clone, Debug, Deserialize)]
 pub struct DockFighter {
@@ -2043,6 +2129,7 @@ pub struct DockFighter {
     pub id: u64,
 
 }
+
 
 /// When written: when the player cancels a docking request
 #[derive(Clone, Debug, Deserialize)]
@@ -2065,6 +2152,7 @@ pub struct DockingCancelled {
     pub station_type: String,
 
 }
+
 
 /// When written: when the station denies a docking request
 #[derive(Clone, Debug, Deserialize)]
@@ -2091,6 +2179,7 @@ pub struct DockingDenied {
 
 }
 
+
 /// When written: when a docking request is granted
 #[derive(Clone, Debug, Deserialize)]
 pub struct DockingGranted {
@@ -2115,6 +2204,7 @@ pub struct DockingGranted {
     pub station_type: String,
 
 }
+
 
 /// When written: when the player requests docking at a station
 #[derive(Clone, Debug, Deserialize)]
@@ -2141,6 +2231,7 @@ pub struct DockingRequested {
 
 }
 
+
 /// When written: when a docking request has timed out
 #[derive(Clone, Debug, Deserialize)]
 pub struct DockingTimeout {
@@ -2162,6 +2253,7 @@ pub struct DockingTimeout {
     pub station_type: Option<String>,
 
 }
+
 
 /// When discarding on-foot items from the player's inventory
 #[derive(Clone, Debug, Deserialize)]
@@ -2191,6 +2283,7 @@ pub struct DropItems {
 
 }
 
+
 /// When exiting a shuttle dropship at a conflict zone
 #[derive(Clone, Debug, Deserialize)]
 pub struct DropshipDeploy {
@@ -2218,6 +2311,7 @@ pub struct DropshipDeploy {
     pub system_address: u64,
 
 }
+
 
 /// When cargo is ejected
 #[derive(Clone, Debug, Deserialize)]
@@ -2248,6 +2342,7 @@ pub struct EjectCargo {
     pub type_localised: Option<String>,
 
 }
+
 
 /// This event is logged when a player (on foot) gets into a ship or SRV
 #[derive(Clone, Debug, Deserialize)]
@@ -2307,6 +2402,7 @@ pub struct Embark {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct EmbarkCrew {
 
@@ -2318,7 +2414,13 @@ pub struct EmbarkCrew {
 
 }
 
-/// When written: when the player's ship systems shut down (eg in a Thargoid encounter) | When written: this player has left a wing | When written: when the self destruct function is used | When Written: when a colonisation beacon is deployed | When written: when heat exceeds 100% | When written: on a clean shutdown of the game
+
+/// When written: on a clean shutdown of the game
+/// When written: this player has left a wing
+/// When Written: when a colonisation beacon is deployed
+/// When written: when heat exceeds 100%
+/// When written: when the player's ship systems shut down (eg in a Thargoid encounter)
+/// When written: when the self destruct function is used
 #[derive(Clone, Debug, Deserialize)]
 pub struct Empty {
 
@@ -2327,6 +2429,7 @@ pub struct Empty {
     pub timestamp: DateTime<Utc>,
 
 }
+
 
 /// When written: when the captain in multicrew disbands the crew
 #[derive(Clone, Debug, Deserialize)]
@@ -2345,6 +2448,7 @@ pub struct EndCrewSession {
     pub telepresence: Option<bool>,
 
 }
+
 
 /// When written: when offering items cash or bounties to an Engineer to gain access
 #[derive(Clone, Debug, Deserialize)]
@@ -2384,6 +2488,7 @@ pub struct EngineerContribution {
     pub r#type: String,
 
 }
+
 
 /// When Written: when requesting an engineer upgrade
 #[derive(Clone, Debug, Deserialize)]
@@ -2435,6 +2540,7 @@ pub struct EngineerCraft {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct EngineerCraftModifier {
 
@@ -2460,6 +2566,7 @@ pub struct EngineerCraftModifier {
     pub value_str_localised: Option<String>,
 
 }
+
 
 /// When written: when converting a pre-2.4 engineered module. This is generated when converting, or previewing a conversion of a legacy module to the new system.
 #[derive(Clone, Debug, Deserialize)]
@@ -2502,6 +2609,7 @@ pub struct EngineerLegacyConvert {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct EngineerLegacyConvertModifier {
 
@@ -2518,6 +2626,7 @@ pub struct EngineerLegacyConvertModifier {
     pub value: f64,
 
 }
+
 
 /// When Written: when a player increases their access to an engineer
 #[derive(Clone, Debug, Deserialize)]
@@ -2553,6 +2662,7 @@ pub struct EngineerProgress {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct EngineerProgressEngineer {
 
@@ -2572,6 +2682,7 @@ pub struct EngineerProgressEngineer {
     pub rank_progress: Option<u64>,
 
 }
+
 
 /// When written: Player has escaped interdiction
 #[derive(Clone, Debug, Deserialize)]
@@ -2597,6 +2708,7 @@ pub struct EscapeInterdiction {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct FactionActiveState {
 
@@ -2604,6 +2716,7 @@ pub struct FactionActiveState {
     pub state: String,
 
 }
+
 
 /// When written: Player rewarded for taking part in a combat zone
 #[derive(Clone, Debug, Deserialize)]
@@ -2630,6 +2743,7 @@ pub struct FactionKillBond {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct FactionRecoveringState {
 
@@ -2640,6 +2754,7 @@ pub struct FactionRecoveringState {
     pub trend: u64,
 
 }
+
 
 /// When trading with a Fleet Carrier Bartender for materials, a file is written with the pricelist to FCMaterials.json
 #[derive(Clone, Debug, Deserialize)]
@@ -2664,6 +2779,7 @@ pub struct FCMaterials {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct FCMaterialsItem {
 
@@ -2686,6 +2802,7 @@ pub struct FCMaterialsItem {
     pub stock: u64,
 
 }
+
 
 /// When written: when requesting a module is transferred from storage at another station
 #[derive(Clone, Debug, Deserialize)]
@@ -2722,6 +2839,7 @@ pub struct FetchRemoteModule {
 
 }
 
+
 /// When written: when a ship's fighter is rebuilt in the hangar
 #[derive(Clone, Debug, Deserialize)]
 pub struct FighterRebuilt {
@@ -2737,6 +2855,7 @@ pub struct FighterRebuilt {
     pub loadout: String,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Fileheader {
@@ -2767,6 +2886,7 @@ pub struct Fileheader {
 
 }
 
+
 /// When written: when receiving information about a change in a friend's status. Also written at startup for friends who are already online.
 #[derive(Clone, Debug, Deserialize)]
 pub struct Friends {
@@ -2784,6 +2904,7 @@ pub struct Friends {
     pub status: String,
 
 }
+
 
 /// When written: when jumping from one star system to another
 #[derive(Clone, Debug, Deserialize)]
@@ -2912,6 +3033,7 @@ pub struct FSDJump {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct FSDJumpConflict {
 
@@ -2928,6 +3050,7 @@ pub struct FSDJumpConflict {
     pub war_type: String,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct FSDJumpFaction {
@@ -2983,6 +3106,7 @@ pub struct FSDJumpFaction {
 
 }
 
+
 /// When written: when selecting a star system to jump to. When following a multi-jump route, this will typically appear for the next star, during a jump, ie after StartJump but before the FSDJump
 #[derive(Clone, Debug, Deserialize)]
 pub struct FSDTarget {
@@ -3005,6 +3129,7 @@ pub struct FSDTarget {
 
 }
 
+
 /// When written: after having identified all bodies in the system
 #[derive(Clone, Debug, Deserialize)]
 pub struct FSSAllBodiesFound {
@@ -3023,6 +3148,7 @@ pub struct FSSAllBodiesFound {
     pub system_name: String,
 
 }
+
 
 /// This event is written when completing a Full Spectrum Scan of a starsystem, to list the number of SAA signals found in the system (as shown in-game in the top-right panel)
 #[derive(Clone, Debug, Deserialize)]
@@ -3045,6 +3171,7 @@ pub struct FSSBodySignals {
     pub system_address: u64,
 
 }
+
 
 /// When written: when performing a full system scan (Honk)
 #[derive(Clone, Debug, Deserialize)]
@@ -3070,6 +3197,7 @@ pub struct FSSDiscoveryScan {
     pub system_name: String,
 
 }
+
 
 /// When written: when zooming in on a signal using the FSS scanner
 #[derive(Clone, Debug, Deserialize)]
@@ -3135,6 +3263,7 @@ pub struct FSSSignalDiscovered {
 
 }
 
+
 /// When written: when scooping fuel from a star
 #[derive(Clone, Debug, Deserialize)]
 pub struct FuelScoop {
@@ -3153,6 +3282,7 @@ pub struct FuelScoop {
 
 }
 
+
 /// When a holoscreen is hacked
 #[derive(Clone, Debug, Deserialize)]
 pub struct HoloscreenHacked {
@@ -3170,6 +3300,7 @@ pub struct HoloscreenHacked {
     pub power_before: String,
 
 }
+
 
 /// When written: when hull health drops below a threshold (20% steps)
 #[derive(Clone, Debug, Deserialize)]
@@ -3191,6 +3322,7 @@ pub struct HullDamage {
     pub player_pilot: bool,
 
 }
+
 
 /// When written: player was interdicted by player or npc
 #[derive(Clone, Debug, Deserialize)]
@@ -3231,6 +3363,7 @@ pub struct Interdicted {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct Interdiction {
 
@@ -3270,7 +3403,9 @@ pub struct Interdiction {
 
 }
 
-/// Lists the contents of the backpack, in a separate backpack.json file | Lists the contents of the ship locker, eg at startup. The full contents are written to a separate file, ShipLocker.json. The full list is also written into the journal at startup (if in a ship) and when boarding a ship. The shiplocker.json file is updated when the locker contents are changed.
+
+/// Lists the contents of the backpack, in a separate backpack.json file
+/// Lists the contents of the ship locker, eg at startup. The full contents are written to a separate file, ShipLocker.json. The full list is also written into the journal at startup (if in a ship) and when boarding a ship. The shiplocker.json file is updated when the locker contents are changed.
 #[derive(Clone, Debug, Deserialize)]
 pub struct Inventory {
 
@@ -3292,6 +3427,7 @@ pub struct Inventory {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct Item {
 
@@ -3312,6 +3448,7 @@ pub struct Item {
 
 }
 
+
 /// When written: when enough material has been collected from a solar jet code (at a white dwarf or neutron star) for a jump boost
 #[derive(Clone, Debug, Deserialize)]
 pub struct JetConeBoost {
@@ -3324,6 +3461,7 @@ pub struct JetConeBoost {
     pub boost_value: f64,
 
 }
+
 
 /// When written: when passing through the jet code from a white dwarf or neutron star has caused damage to a ship module
 #[derive(Clone, Debug, Deserialize)]
@@ -3340,6 +3478,7 @@ pub struct JetConeDamage {
     pub module_localised: Option<String>,
 
 }
+
 
 /// When written: When you force another player to leave your ship's crew
 #[derive(Clone, Debug, Deserialize)]
@@ -3362,6 +3501,7 @@ pub struct KickCrewMember {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct LandingPads {
 
@@ -3376,6 +3516,7 @@ pub struct LandingPads {
 
 }
 
+
 /// When written: when using any type of drone/limpet
 #[derive(Clone, Debug, Deserialize)]
 pub struct LaunchDrone {
@@ -3388,6 +3529,7 @@ pub struct LaunchDrone {
     pub r#type: String,
 
 }
+
 
 /// When written: when launching a fighter
 #[derive(Clone, Debug, Deserialize)]
@@ -3408,6 +3550,7 @@ pub struct LaunchFighter {
     pub player_controlled: bool,
 
 }
+
 
 /// When written: deploying the SRV from a ship onto planet surface
 #[derive(Clone, Debug, Deserialize)]
@@ -3433,6 +3576,7 @@ pub struct LaunchSRV {
     pub srv_type_localised: Option<String>,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct LoadGame {
@@ -3515,6 +3659,7 @@ pub struct LoadGame {
 
 }
 
+
 /// When written: at startup, when loading from main menu, or when switching ships, or after changing the ship in Outfitting, or when docking SRV back in mothership
 #[derive(Clone, Debug, Deserialize)]
 pub struct Loadout {
@@ -3573,7 +3718,9 @@ pub struct Loadout {
 
 }
 
-/// This event is logged when a player adds a weapon to a suit loadout | This event is logged when a player removes a weapon from a suit loadout
+
+/// This event is logged when a player adds a weapon to a suit loadout
+/// This event is logged when a player removes a weapon from a suit loadout
 #[derive(Clone, Debug, Deserialize)]
 pub struct LoadoutEquipModule {
 
@@ -3617,6 +3764,7 @@ pub struct LoadoutEquipModule {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct LoadoutFuelCapacity {
 
@@ -3627,6 +3775,7 @@ pub struct LoadoutFuelCapacity {
     pub reserve: f64,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct LoadoutModule {
@@ -3665,6 +3814,7 @@ pub struct LoadoutModule {
 
 }
 
+
 /// If engineered
 #[derive(Clone, Debug, Deserialize)]
 pub struct LoadoutModuleEngineering {
@@ -3698,6 +3848,7 @@ pub struct LoadoutModuleEngineering {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct LoadoutModuleEngineeringModifier {
 
@@ -3723,6 +3874,7 @@ pub struct LoadoutModuleEngineeringModifier {
     pub value_str_localised: Option<String>,
 
 }
+
 
 /// When written: at startup, or when being resurrected at a station
 #[derive(Clone, Debug, Deserialize)]
@@ -3900,6 +4052,7 @@ pub struct Location {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct LocationConflict {
 
@@ -3916,6 +4069,7 @@ pub struct LocationConflict {
     pub war_type: String,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct LocationFaction {
@@ -3971,6 +4125,7 @@ pub struct LocationFaction {
 
 }
 
+
 /// When written: when accessing the commodity market in a station. A separate file Market.json is written to the same folder as the journal, containing full market price info.
 #[derive(Clone, Debug, Deserialize)]
 pub struct Market {
@@ -4003,6 +4158,7 @@ pub struct Market {
 
 }
 
+
 /// When Written: when purchasing goods in the market
 #[derive(Clone, Debug, Deserialize)]
 pub struct MarketBuy {
@@ -4031,6 +4187,7 @@ pub struct MarketBuy {
     pub type_localised: Option<String>,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct MarketItem {
@@ -4082,6 +4239,7 @@ pub struct MarketItem {
 
 }
 
+
 /// When Written: when selling goods in the market
 #[derive(Clone, Debug, Deserialize)]
 pub struct MarketSell {
@@ -4129,6 +4287,7 @@ pub struct MarketSell {
 
 }
 
+
 /// When written: when putting multiple modules into storage
 #[derive(Clone, Debug, Deserialize)]
 pub struct MassModuleStore {
@@ -4150,6 +4309,7 @@ pub struct MassModuleStore {
     pub ship_id: u64,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct MassModuleStoreItem {
@@ -4179,9 +4339,20 @@ pub struct MassModuleStoreItem {
 
 }
 
+
+/// When Written: if materials are discarded
+/// When Written: whenever materials are collected
 #[derive(Clone, Debug, Deserialize)]
 pub struct Material {
 
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "Category")]
+    pub category: String,
+
+    /// Number of units discarded
     #[serde(rename = "Count")]
     pub count: u64,
 
@@ -4193,6 +4364,7 @@ pub struct Material {
     pub name_localised: Option<String>,
 
 }
+
 
 /// When Written: when a new material is discovered
 #[derive(Clone, Debug, Deserialize)]
@@ -4217,6 +4389,7 @@ pub struct MaterialDiscovered {
 
 }
 
+
 /// When written: at startup, when loading from main menu into game
 #[derive(Clone, Debug, Deserialize)]
 pub struct Materials {
@@ -4235,6 +4408,7 @@ pub struct Materials {
     pub raw: Vec<Material>,
 
 }
+
 
 /// When written: when exchanging materials at the Material trader contact
 #[derive(Clone, Debug, Deserialize)]
@@ -4258,6 +4432,7 @@ pub struct MaterialTrade {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct MaterialTraded {
 
@@ -4276,24 +4451,31 @@ pub struct MaterialTraded {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct MicroResources {
 
+    /// The category of the micro-resource.
     #[serde(rename = "Category")]
     pub category: String,
 
+    /// The count of this type of micro-resource.
     #[serde(rename = "Count")]
     pub count: u64,
 
+    /// The internal name of the micro-resource.
     #[serde(rename = "Name")]
     pub name: String,
 
+    /// The localized name of the micro-resource.
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
 
 }
 
-/// When Written: when a mission has failed | When Written: when a mission has been abandoned
+
+/// When Written: when a mission has been abandoned
+/// When Written: when a mission has failed
 #[derive(Clone, Debug, Deserialize)]
 pub struct Mission {
 
@@ -4314,6 +4496,7 @@ pub struct Mission {
     pub name: String,
 
 }
+
 
 /// When Written: when starting a mission
 #[derive(Clone, Debug, Deserialize)]
@@ -4415,6 +4598,7 @@ pub struct MissionAccepted {
 
 }
 
+
 /// When Written: when a mission is completed
 #[derive(Clone, Debug, Deserialize)]
 pub struct MissionCompleted {
@@ -4503,6 +4687,7 @@ pub struct MissionCompleted {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct MissionCompletedFactionEffect {
 
@@ -4523,6 +4708,7 @@ pub struct MissionCompletedFactionEffect {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct MissionCompletedFactionEffectEffect {
 
@@ -4537,6 +4723,7 @@ pub struct MissionCompletedFactionEffectEffect {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct MissionCompletedFactionEffectInfluence {
 
@@ -4550,6 +4737,7 @@ pub struct MissionCompletedFactionEffectInfluence {
     pub trend: String,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct MissionCompletedMaterialsReward {
@@ -4571,6 +4759,7 @@ pub struct MissionCompletedMaterialsReward {
     pub name_localised: Option<String>,
 
 }
+
 
 /// When written: when a mission is updated with a new destination
 #[derive(Clone, Debug, Deserialize)]
@@ -4606,6 +4795,7 @@ pub struct MissionRedirected {
 
 }
 
+
 /// When written: at startup
 #[derive(Clone, Debug, Deserialize)]
 pub struct Missions {
@@ -4624,6 +4814,7 @@ pub struct Missions {
     pub failed: Vec<MissionsFailed>,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct MissionsFailed {
@@ -4645,6 +4836,7 @@ pub struct MissionsFailed {
     pub passenger_mission: bool,
 
 }
+
 
 /// When Written: when buying a module in outfitting
 #[derive(Clone, Debug, Deserialize)]
@@ -4702,6 +4894,7 @@ pub struct ModuleBuy {
 
 }
 
+
 /// When Written: when buying a module and directly storing it in outfitting
 #[derive(Clone, Debug, Deserialize)]
 pub struct ModuleBuyAndStore {
@@ -4734,6 +4927,7 @@ pub struct ModuleBuyAndStore {
 
 }
 
+
 /// When written: when looking at the cockpit Right Hand Side modules info panel, if data has changed. This also writes a ModulesInfo.json file alongside the journal, listing the modules in the same order as displayed.
 #[derive(Clone, Debug, Deserialize)]
 pub struct ModuleInfo {
@@ -4747,6 +4941,7 @@ pub struct ModuleInfo {
     pub modules: Option<Vec<ModuleInfoModule>>,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct ModuleInfoModule {
@@ -4764,6 +4959,7 @@ pub struct ModuleInfoModule {
     pub slot: String,
 
 }
+
 
 /// When written: when fetching a previously stored module
 #[derive(Clone, Debug, Deserialize)]
@@ -4813,6 +5009,7 @@ pub struct ModuleRetrieve {
 
 }
 
+
 /// When Written: when selling a module in outfitting
 #[derive(Clone, Debug, Deserialize)]
 pub struct ModuleSell {
@@ -4844,6 +5041,7 @@ pub struct ModuleSell {
 
 }
 
+
 /// When written: when selling a module in storage at another station
 #[derive(Clone, Debug, Deserialize)]
 pub struct ModuleSellRemote {
@@ -4874,6 +5072,7 @@ pub struct ModuleSellRemote {
     pub storage_slot: u64,
 
 }
+
 
 /// When written: when storing a module in Outfitting
 #[derive(Clone, Debug, Deserialize)]
@@ -4923,6 +5122,7 @@ pub struct ModuleStore {
 
 }
 
+
 /// When Written: when moving a module to a different slot on the ship
 #[derive(Clone, Debug, Deserialize)]
 pub struct ModuleSwap {
@@ -4960,6 +5160,7 @@ pub struct ModuleSwap {
 
 }
 
+
 /// When written: when selling exploration data in Cartographics, a page at a time
 #[derive(Clone, Debug, Deserialize)]
 pub struct MultiSellExplorationData {
@@ -4982,6 +5183,7 @@ pub struct MultiSellExplorationData {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct MultiSellExplorationDataDiscovered {
 
@@ -4997,6 +5199,7 @@ pub struct MultiSellExplorationDataDiscovered {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct Music {
 
@@ -5008,6 +5211,7 @@ pub struct Music {
     pub music_track: String,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct NameAndProportion {
@@ -5022,6 +5226,7 @@ pub struct NameAndProportion {
     pub proportion: f64,
 
 }
+
 
 /// When written: when scanning a navigation beacon, before the scan data for all the bodies in the system is written into the journal
 #[derive(Clone, Debug, Deserialize)]
@@ -5039,6 +5244,7 @@ pub struct NavBeaconScan {
 
 }
 
+
 /// When plotting a multi-star route, the file NavRoute.json is written in the same directory as the journal, with a list of stars along that route
 #[derive(Clone, Debug, Deserialize)]
 pub struct NavRoute {
@@ -5051,6 +5257,7 @@ pub struct NavRoute {
     pub route: Option<Vec<NavRouteRoute>>,
 
 }
+
 
 /// When written: When the current plotted nav route is cleared. Can be written to NavRoute.json with an empty Route array.
 #[derive(Clone, Debug, Deserialize)]
@@ -5065,10 +5272,12 @@ pub struct NavRouteClear {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct NavRouteClearRoute {
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct NavRouteRoute {
@@ -5087,6 +5296,7 @@ pub struct NavRouteRoute {
     pub system_address: u64,
 
 }
+
 
 /// When written: Creating a new commander
 #[derive(Clone, Debug, Deserialize)]
@@ -5108,6 +5318,7 @@ pub struct NewCommander {
 
 }
 
+
 /// This is written when crew receive wages
 #[derive(Clone, Debug, Deserialize)]
 pub struct NpcCrewPaidWage {
@@ -5127,6 +5338,7 @@ pub struct NpcCrewPaidWage {
 
 }
 
+
 /// This is written when a crew member's combat rank increases
 #[derive(Clone, Debug, Deserialize)]
 pub struct NpcCrewRank {
@@ -5145,6 +5357,7 @@ pub struct NpcCrewRank {
     pub rank_combat: u64,
 
 }
+
 
 /// Written when accessing the outfitting menu. The full parts pricelist is written to a separate file Outfitting.json.
 #[derive(Clone, Debug, Deserialize)]
@@ -5173,6 +5386,7 @@ pub struct Outfitting {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct OutfittingItem {
 
@@ -5187,6 +5401,7 @@ pub struct OutfittingItem {
 
 }
 
+
 /// When written: at startup, when loading the saved game file
 #[derive(Clone, Debug, Deserialize)]
 pub struct Passengers {
@@ -5200,6 +5415,7 @@ pub struct Passengers {
     pub manifest: Vec<PassengersManifest>,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct PassengersManifest {
@@ -5221,7 +5437,9 @@ pub struct PassengersManifest {
 
 }
 
-/// When written: when paying off bounties | When written: when paying fines
+
+/// When written: when paying fines
+/// When written: when paying off bounties
 #[derive(Clone, Debug, Deserialize)]
 pub struct Payment {
 
@@ -5253,6 +5471,7 @@ pub struct Payment {
 
 }
 
+
 /// When written: at startup, if player has pledged to a power
 #[derive(Clone, Debug, Deserialize)]
 pub struct Powerplay {
@@ -5279,6 +5498,7 @@ pub struct Powerplay {
 
 }
 
+
 /// When written: when a player defects from one power to another
 #[derive(Clone, Debug, Deserialize)]
 pub struct PowerplayDefect {
@@ -5295,7 +5515,9 @@ pub struct PowerplayDefect {
 
 }
 
-/// When written: when collecting powerplay commodities for delivery | When written: when delivering powerplay commodities
+
+/// When written: when collecting powerplay commodities for delivery
+/// When written: when delivering powerplay commodities
 #[derive(Clone, Debug, Deserialize)]
 pub struct PowerplayDelivery {
 
@@ -5317,6 +5539,7 @@ pub struct PowerplayDelivery {
 
 }
 
+
 /// When written: when paying to fast-track allocation of commodities
 #[derive(Clone, Debug, Deserialize)]
 pub struct PowerplayFastTrack {
@@ -5333,7 +5556,9 @@ pub struct PowerplayFastTrack {
 
 }
 
-/// When written: when leaving a power | When written: when joining up with a power
+
+/// When written: when joining up with a power
+/// When written: when leaving a power
 #[derive(Clone, Debug, Deserialize)]
 pub struct PowerplayJoin {
 
@@ -5345,6 +5570,7 @@ pub struct PowerplayJoin {
     pub power: String,
 
 }
+
 
 /// When written: when receiving salary payment from a power
 #[derive(Clone, Debug, Deserialize)]
@@ -5365,6 +5591,7 @@ pub struct PowerplayMerits {
 
 }
 
+
 /// When written: when receiving salary payment from a power
 #[derive(Clone, Debug, Deserialize)]
 pub struct PowerplayRank {
@@ -5381,6 +5608,7 @@ pub struct PowerplayRank {
 
 }
 
+
 /// When written: when receiving salary payment from a power
 #[derive(Clone, Debug, Deserialize)]
 pub struct PowerplaySalary {
@@ -5396,6 +5624,7 @@ pub struct PowerplaySalary {
     pub power: String,
 
 }
+
 
 /// When written: when voting for a system expansion
 #[derive(Clone, Debug, Deserialize)]
@@ -5420,6 +5649,7 @@ pub struct PowerplayVote {
 
 }
 
+
 /// When written: when receiving payment for powerplay combat
 #[derive(Clone, Debug, Deserialize)]
 pub struct PowerplayVoucher {
@@ -5435,6 +5665,7 @@ pub struct PowerplayVoucher {
     pub systems: Vec<String>,
 
 }
+
 
 /// When written: when the player’s rank increases. Only the relevant ranks are included.
 #[derive(Clone, Debug, Deserialize)]
@@ -5467,6 +5698,7 @@ pub struct Promotion {
 
 }
 
+
 /// When using a prospecting drone
 #[derive(Clone, Debug, Deserialize)]
 pub struct ProspectedAsteroid {
@@ -5498,6 +5730,7 @@ pub struct ProspectedAsteroid {
 
 }
 
+
 /// When written: when this player has killed another player
 #[derive(Clone, Debug, Deserialize)]
 pub struct PVPKill {
@@ -5516,7 +5749,9 @@ pub struct PVPKill {
 
 }
 
-/// When written: at startup | When written: at startup
+
+/// When written: at startup
+/// When written: at startup
 #[derive(Clone, Debug, Deserialize)]
 pub struct Rank {
 
@@ -5524,39 +5759,32 @@ pub struct Rank {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    /// Percentage progress to next rank
     #[serde(rename = "Combat")]
     pub combat: u64,
 
-    /// Percentage progress to next rank
     #[serde(rename = "CQC")]
     pub cqc: u64,
 
-    /// Percentage progress to next rank
     #[serde(rename = "Empire")]
     pub empire: u64,
 
-    /// Percentage progress to next rank
     #[serde(rename = "Exobiologist")]
     pub exobiologist: Option<u64>,
 
-    /// Percentage progress to next rank
     #[serde(rename = "Explore")]
     pub explore: u64,
 
-    /// Percentage progress to next rank
     #[serde(rename = "Federation")]
     pub federation: u64,
 
-    /// Percentage progress to next rank
     #[serde(rename = "Soldier")]
     pub soldier: Option<u64>,
 
-    /// Percentage progress to next rank
     #[serde(rename = "Trade")]
     pub trade: u64,
 
 }
+
 
 /// When written: when the reboot repair function is used
 #[derive(Clone, Debug, Deserialize)]
@@ -5571,6 +5799,7 @@ pub struct RebootRepair {
     pub modules: Vec<String>,
 
 }
+
 
 /// When written: when a text message is received from another player or npc
 #[derive(Clone, Debug, Deserialize)]
@@ -5596,6 +5825,7 @@ pub struct ReceiveText {
     pub message_localised: Option<String>,
 
 }
+
 
 /// When Written: when claiming payment for combat bounties and bonds
 #[derive(Clone, Debug, Deserialize)]
@@ -5624,6 +5854,7 @@ pub struct RedeemVoucher {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct RedeemVoucherFaction {
 
@@ -5635,7 +5866,9 @@ pub struct RedeemVoucherFaction {
 
 }
 
-/// When Written: when refuelling (10%) | When Written: when refuelling (full tank)
+
+/// When Written: when refuelling (10%)
+/// When Written: when refuelling (full tank)
 #[derive(Clone, Debug, Deserialize)]
 pub struct Refuel {
 
@@ -5652,6 +5885,7 @@ pub struct Refuel {
     pub cost: u64,
 
 }
+
 
 /// When Written: when repairing the ship. When repairing on a FleetCarrier, you can get a list of the modules repaired
 #[derive(Clone, Debug, Deserialize)]
@@ -5674,6 +5908,7 @@ pub struct Repair {
 
 }
 
+
 /// When written: when the player's ship has been repaired by a repair drone. Each of the values indicate the amount of damage that has been repaired
 #[derive(Clone, Debug, Deserialize)]
 pub struct RepairDrone {
@@ -5692,6 +5927,7 @@ pub struct RepairDrone {
     pub hull_repaired: Option<f64>,
 
 }
+
 
 /// When written: at startup (after Rank and Progress). This gives the player's reputation (on a scale of -100..+100) with the superpowers
 #[derive(Clone, Debug, Deserialize)]
@@ -5715,6 +5951,7 @@ pub struct Reputation {
 
 }
 
+
 /// When Written: when requesting power micro-resources.
 #[derive(Clone, Debug, Deserialize)]
 pub struct RequestPowerMicroResources {
@@ -5737,6 +5974,7 @@ pub struct RequestPowerMicroResources {
 
 }
 
+
 /// When fuel is moved from one fuel tank to another
 #[derive(Clone, Debug, Deserialize)]
 pub struct ReservoirReplenished {
@@ -5752,6 +5990,7 @@ pub struct ReservoirReplenished {
     pub fuel_reservoir: f64,
 
 }
+
 
 /// When Written: when purchasing an SRV or Fighter
 #[derive(Clone, Debug, Deserialize)]
@@ -5782,6 +6021,7 @@ pub struct RestockVehicle {
 
 }
 
+
 /// When written: when the player restarts after death
 #[derive(Clone, Debug, Deserialize)]
 pub struct Resurrect {
@@ -5803,6 +6043,7 @@ pub struct Resurrect {
     pub option: String,
 
 }
+
 
 /// When written: after using the Surface Area Analysis Scanner
 #[derive(Clone, Debug, Deserialize)]
@@ -5829,6 +6070,7 @@ pub struct SAAScanComplete {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct SAASignals {
 
@@ -5842,6 +6084,7 @@ pub struct SAASignals {
     pub type_localised: Option<String>,
 
 }
+
 
 /// When written: when using Surface Area Analysis Scanner on a planet or rings
 #[derive(Clone, Debug, Deserialize)]
@@ -5868,6 +6111,7 @@ pub struct SAASignalsFound {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct SAASignalsFoundGenus {
 
@@ -5878,6 +6122,7 @@ pub struct SAASignalsFoundGenus {
     pub genus_localised: Option<String>,
 
 }
+
 
 /// When Written: basic or detailed discovery scan of a star, planet or moon. This is also generated when scanning a navigation beacon in a populated system, to record info about all the bodies in the system.
 #[derive(Clone, Debug, Deserialize)]
@@ -6053,6 +6298,7 @@ pub struct Scan {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct ScanAtmosphereComposition {
 
@@ -6063,6 +6309,7 @@ pub struct ScanAtmosphereComposition {
     pub percent: f64,
 
 }
+
 
 /// When scanning one body of a binary pair, you will get an event detailing the orbital parameters of their BaryCentre
 #[derive(Clone, Debug, Deserialize)]
@@ -6104,6 +6351,7 @@ pub struct ScanBaryCentre {
 
 }
 
+
 /// Written for Planet/Moon
 #[derive(Clone, Debug, Deserialize)]
 pub struct ScanComposition {
@@ -6119,6 +6367,7 @@ pub struct ScanComposition {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct ScanMaterial {
 
@@ -6133,6 +6382,7 @@ pub struct ScanMaterial {
 
 }
 
+
 /// When written: when the player's ship has been scanned (The Scan Detected indication is at the start of the scan, this is written at the end of a successful scan)
 #[derive(Clone, Debug, Deserialize)]
 pub struct Scanned {
@@ -6145,6 +6395,7 @@ pub struct Scanned {
     pub scan_type: String,
 
 }
+
 
 /// This event is logged when the player uses the Organic Sampling Tool to scan, log or analyse organic discoveries. The first scan is Log, subsequent scans are Sample until fully scanned, final scan is Analyse
 #[derive(Clone, Debug, Deserialize)]
@@ -6183,6 +6434,7 @@ pub struct ScanOrganic {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct ScanParent {
 
@@ -6199,6 +6451,7 @@ pub struct ScanParent {
     pub star: Option<u64>,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct ScanRing {
@@ -6220,6 +6473,7 @@ pub struct ScanRing {
     pub ring_class: String,
 
 }
+
 
 /// When written: when contributing materials to a research community goal
 #[derive(Clone, Debug, Deserialize)]
@@ -6246,6 +6500,7 @@ pub struct ScientificResearch {
     pub name_localised: Option<String>,
 
 }
+
 
 /// When Written: when a screen snapshot is saved. The latitude, longitude, altitude and heading will be included if on a planet or in low-altitude flight.
 #[derive(Clone, Debug, Deserialize)]
@@ -6285,6 +6540,7 @@ pub struct Screenshot {
 
 }
 
+
 /// When written: when delivering items to a Search and Rescue contact
 #[derive(Clone, Debug, Deserialize)]
 pub struct SearchAndRescue {
@@ -6310,6 +6566,7 @@ pub struct SearchAndRescue {
 
 }
 
+
 /// When Written: when selling unwanted drones back to the market
 #[derive(Clone, Debug, Deserialize)]
 pub struct SellDrones {
@@ -6331,6 +6588,7 @@ pub struct SellDrones {
     pub r#type: String,
 
 }
+
 
 /// When Written: when selling exploration data in Cartographics
 #[derive(Clone, Debug, Deserialize)]
@@ -6359,6 +6617,7 @@ pub struct SellExplorationData {
 
 }
 
+
 /// This event is logged when a player sells Microresources for cash
 #[derive(Clone, Debug, Deserialize)]
 pub struct SellMicroResources {
@@ -6381,6 +6640,7 @@ pub struct SellMicroResources {
 
 }
 
+
 /// This event records that a player has sold organic data (see ScanOrganic)
 #[derive(Clone, Debug, Deserialize)]
 pub struct SellOrganicData {
@@ -6396,6 +6656,7 @@ pub struct SellOrganicData {
     pub market_id: u64,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct SellOrganicDataBioData {
@@ -6426,6 +6687,7 @@ pub struct SellOrganicDataBioData {
 
 }
 
+
 /// When written: When selling a stored ship to raise funds when on insurance/rebuy screen
 #[derive(Clone, Debug, Deserialize)]
 pub struct SellShipOnRebuy {
@@ -6448,6 +6710,7 @@ pub struct SellShipOnRebuy {
 
 }
 
+
 /// When written: when a text message is sent to another player
 #[derive(Clone, Debug, Deserialize)]
 pub struct SendText {
@@ -6466,6 +6729,7 @@ pub struct SendText {
     pub to: String,
 
 }
+
 
 /// When written: when assigning a name to the ship in Starport Services
 #[derive(Clone, Debug, Deserialize)]
@@ -6489,6 +6753,7 @@ pub struct SetUserShipName {
 
 }
 
+
 /// When written: when shields are disabled in combat, or recharged
 #[derive(Clone, Debug, Deserialize)]
 pub struct ShieldState {
@@ -6503,7 +6768,9 @@ pub struct ShieldState {
 
 }
 
-/// When written: after a new ship has been redeemed | When written: after a new ship has been purchased
+
+/// When written: after a new ship has been purchased
+/// When written: after a new ship has been redeemed
 #[derive(Clone, Debug, Deserialize)]
 pub struct Ship {
 
@@ -6522,7 +6789,9 @@ pub struct Ship {
 
 }
 
-/// When Written: when purchasing ammunition | When written: when repairing everything
+
+/// When Written: when purchasing ammunition
+/// When written: when repairing everything
 #[derive(Clone, Debug, Deserialize)]
 pub struct ShipEquipmentPurchase {
 
@@ -6534,6 +6803,7 @@ pub struct ShipEquipmentPurchase {
     pub cost: u64,
 
 }
+
 
 /// Same as ShipLocker, but discontinued.
 #[derive(Clone, Debug, Deserialize)]
@@ -6556,6 +6826,7 @@ pub struct ShipLockerMaterials {
     pub items: Vec<Item>,
 
 }
+
 
 /// When written: when the current player selects a new target
 #[derive(Clone, Debug, Deserialize)]
@@ -6632,6 +6903,7 @@ pub struct ShipTargeted {
 
 }
 
+
 /// When written: when accessing shipyard in a station. The full price list is written to a separate file, in the same folder as the journal, Shipyard.json
 #[derive(Clone, Debug, Deserialize)]
 pub struct Shipyard {
@@ -6662,6 +6934,7 @@ pub struct Shipyard {
     pub station_name: String,
 
 }
+
 
 /// When Written: when buying a new ship in the shipyard
 #[derive(Clone, Debug, Deserialize)]
@@ -6705,6 +6978,7 @@ pub struct ShipyardBuy {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct ShipyardPriceList {
 
@@ -6721,6 +6995,7 @@ pub struct ShipyardPriceList {
     pub ship_type_localised: Option<String>,
 
 }
+
 
 /// When written: after a new ship has been unlocked in the Shipyard
 #[derive(Clone, Debug, Deserialize)]
@@ -6743,6 +7018,7 @@ pub struct ShipyardRedeem {
     pub ship_type_localised: Option<String>,
 
 }
+
 
 /// When Written: when selling a ship stored in the shipyard
 #[derive(Clone, Debug, Deserialize)]
@@ -6776,6 +7052,7 @@ pub struct ShipyardSell {
 
 }
 
+
 /// When Written: when switching to another ship already stored at this station
 #[derive(Clone, Debug, Deserialize)]
 pub struct ShipyardSwap {
@@ -6803,6 +7080,7 @@ pub struct ShipyardSwap {
     pub store_ship_id: u64,
 
 }
+
 
 /// When Written: when requesting a ship at another station be transported to this station
 #[derive(Clone, Debug, Deserialize)]
@@ -6843,6 +7121,7 @@ pub struct ShipyardTransfer {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct Squadron {
 
@@ -6854,6 +7133,7 @@ pub struct Squadron {
     pub squadron_name: String,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct SquadronPromotion {
@@ -6873,6 +7153,7 @@ pub struct SquadronPromotion {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct SquadronStartup {
 
@@ -6888,7 +7169,9 @@ pub struct SquadronStartup {
 
 }
 
-/// When written: when docking an SRV with the ship | When written: when the player's SRV is destroyed
+
+/// When written: when docking an SRV with the ship
+/// When written: when the player's SRV is destroyed
 #[derive(Clone, Debug, Deserialize)]
 pub struct SRV {
 
@@ -6906,6 +7189,7 @@ pub struct SRV {
     pub srv_type_localised: Option<String>,
 
 }
+
 
 /// When written: at the start of a Hyperspace or Supercruise jump (start of countdown)
 #[derive(Clone, Debug, Deserialize)]
@@ -6932,6 +7216,7 @@ pub struct StartJump {
     pub taxi: Option<bool>,
 
 }
+
 
 /// When written: at startup. This line contains the information displayed in the statistics panel on the right side of the cockpit
 #[derive(Clone, Debug, Deserialize)]
@@ -6994,6 +7279,7 @@ pub struct Statistics {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsBankAccount {
 
@@ -7046,6 +7332,7 @@ pub struct StatisticsBankAccount {
     pub weapons_owned: Option<u64>,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsCombat {
@@ -7133,6 +7420,7 @@ pub struct StatisticsCombat {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsCQC {
 
@@ -7152,6 +7440,7 @@ pub struct StatisticsCQC {
     pub cqc_wl: f64,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsCrafting {
@@ -7227,6 +7516,7 @@ pub struct StatisticsCrafting {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsCrew {
 
@@ -7243,6 +7533,7 @@ pub struct StatisticsCrew {
     pub npc_crew_total_wages: Option<u64>,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsCrime {
@@ -7318,6 +7609,7 @@ pub struct StatisticsCrime {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsExobiology {
 
@@ -7355,6 +7647,7 @@ pub struct StatisticsExobiology {
     pub organic_variant_encountered: u64,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsExploration {
@@ -7418,6 +7711,7 @@ pub struct StatisticsExploration {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsFLEETCARRIER {
 
@@ -7477,6 +7771,7 @@ pub struct StatisticsFLEETCARRIER {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsMaterialTraderStats {
 
@@ -7515,6 +7810,7 @@ pub struct StatisticsMaterialTraderStats {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsMining {
 
@@ -7528,6 +7824,7 @@ pub struct StatisticsMining {
     pub quantity_mined: u64,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsMulticrew {
@@ -7548,6 +7845,7 @@ pub struct StatisticsMulticrew {
     pub multicrew_time_total: u64,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsPassengers {
@@ -7571,6 +7869,7 @@ pub struct StatisticsPassengers {
     pub passengers_missions_vip: u64,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsSearchAndRescue {
@@ -7610,6 +7909,7 @@ pub struct StatisticsSearchAndRescue {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsSmuggling {
 
@@ -7629,6 +7929,7 @@ pub struct StatisticsSmuggling {
     pub resources_smuggled: u64,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsTgEncounters {
@@ -7659,6 +7960,7 @@ pub struct StatisticsTgEncounters {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatisticsTrading {
 
@@ -7687,6 +7989,7 @@ pub struct StatisticsTrading {
     pub resources_traded: u64,
 
 }
+
 
 /// This event is written to Status.json which is updated every few seconds
 #[derive(Clone, Debug, Deserialize)]
@@ -7764,6 +8067,7 @@ pub struct Status {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatusDestination {
 
@@ -7781,6 +8085,7 @@ pub struct StatusDestination {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct StatusFuel {
 
@@ -7791,6 +8096,7 @@ pub struct StatusFuel {
     pub fuel_reservoir: f64,
 
 }
+
 
 /// When written: when first visiting Outfitting, and when the set of stored modules has changed
 #[derive(Clone, Debug, Deserialize)]
@@ -7813,6 +8119,7 @@ pub struct StoredModules {
     pub station_name: String,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct StoredModulesItem {
@@ -7862,6 +8169,7 @@ pub struct StoredModulesItem {
 
 }
 
+
 /// When written: when visiting shipyard
 #[derive(Clone, Debug, Deserialize)]
 pub struct StoredShips {
@@ -7887,6 +8195,7 @@ pub struct StoredShips {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct StoredShipsShipsHere {
 
@@ -7909,6 +8218,7 @@ pub struct StoredShipsShipsHere {
     pub value: u64,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct StoredShipsShipsRemote {
@@ -7953,7 +8263,9 @@ pub struct StoredShipsShipsRemote {
 
 }
 
-/// This event is logged when a player sells a flight suit | This event is logged when buying a new suit
+
+/// This event is logged when a player sells a flight suit
+/// This event is logged when buying a new suit
 #[derive(Clone, Debug, Deserialize)]
 pub struct Suit {
 
@@ -7978,7 +8290,8 @@ pub struct Suit {
 
 }
 
-/// T
+
+/// This event is logged when starting on-foot or when disembarking
 #[derive(Clone, Debug, Deserialize)]
 pub struct SuitLoadout {
 
@@ -7992,8 +8305,14 @@ pub struct SuitLoadout {
     #[serde(rename = "LoadoutName")]
     pub loadout_name: String,
 
+    #[serde(rename = "Modules")]
+    pub modules: Vec<SuitLoadoutModule>,
+
     #[serde(rename = "SuitID")]
     pub suit_id: u64,
+
+    #[serde(rename = "SuitMods")]
+    pub suit_mods: Vec<String>,
 
     #[serde(rename = "SuitName")]
     pub suit_name: String,
@@ -8002,6 +8321,7 @@ pub struct SuitLoadout {
     pub suit_name_localised: Option<String>,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct SuitLoadoutModule {
@@ -8026,6 +8346,7 @@ pub struct SuitLoadoutModule {
 
 }
 
+
 /// When dropping out of supercruise at a targeted destination
 #[derive(Clone, Debug, Deserialize)]
 pub struct SupercruiseDestinationDrop {
@@ -8047,6 +8368,7 @@ pub struct SupercruiseDestinationDrop {
     pub type_localised: Option<String>,
 
 }
+
 
 /// When written: entering supercruise from normal space
 #[derive(Clone, Debug, Deserialize)]
@@ -8072,6 +8394,7 @@ pub struct SupercruiseEntry {
     pub wanted: Option<bool>,
 
 }
+
 
 /// When written: leaving supercruise for normal space
 #[derive(Clone, Debug, Deserialize)]
@@ -8104,6 +8427,7 @@ pub struct SupercruiseExit {
 
 }
 
+
 /// This event is logged when a player selects a different flight suit from the ship’s locker
 #[derive(Clone, Debug, Deserialize)]
 pub struct SwitchSuitLoadout {
@@ -8135,6 +8459,7 @@ pub struct SwitchSuitLoadout {
 
 }
 
+
 /// When written: when synthesis is used to repair or rearm
 #[derive(Clone, Debug, Deserialize)]
 pub struct Synthesis {
@@ -8153,7 +8478,9 @@ pub struct Synthesis {
 
 }
 
-/// When Written: When a system is claimed for colonisation by paying for the claim. | When Written: when a colonisation claim is released
+
+/// When Written: when a colonisation claim is released
+/// When Written: When a system is claimed for colonisation by paying for the claim.
 #[derive(Clone, Debug, Deserialize)]
 pub struct SystemClaim {
 
@@ -8169,7 +8496,10 @@ pub struct SystemClaim {
 
 }
 
-/// System controlling faction | System controlling faction | If starting docked in a station
+
+/// If starting docked in a station
+/// System controlling faction
+/// System controlling faction
 #[derive(Clone, Debug, Deserialize)]
 pub struct SystemFaction {
 
@@ -8180,6 +8510,7 @@ pub struct SystemFaction {
     pub name: String,
 
 }
+
 
 /// When written: when using the Technology Broker to unlock new purchasable technology
 #[derive(Clone, Debug, Deserialize)]
@@ -8206,6 +8537,7 @@ pub struct TechnologyBroker {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct TechnologyBrokerItemsUnlocked {
 
@@ -8217,7 +8549,10 @@ pub struct TechnologyBrokerItemsUnlocked {
 
 }
 
-/// Thargoid war information | Thargoid war information | Thargoid war information
+
+/// Thargoid war information
+/// Thargoid war information
+/// Thargoid war information
 #[derive(Clone, Debug, Deserialize)]
 pub struct ThargoidWar {
 
@@ -8244,7 +8579,9 @@ pub struct ThargoidWar {
 
 }
 
-/// When written: landing on a planet surface | When written: when taking off from planet surface
+
+/// When written: landing on a planet surface
+/// When written: when taking off from planet surface
 #[derive(Clone, Debug, Deserialize)]
 pub struct Touchdown {
 
@@ -8296,6 +8633,7 @@ pub struct Touchdown {
 
 }
 
+
 /// This event is logged when the player exchanges owned microresources to receive some other type of microresource
 #[derive(Clone, Debug, Deserialize)]
 pub struct TradeMicroResources {
@@ -8327,6 +8665,7 @@ pub struct TradeMicroResources {
 
 }
 
+
 /// Written when transferring items between backpack and ship locker
 #[derive(Clone, Debug, Deserialize)]
 pub struct TransferMicroResources {
@@ -8339,6 +8678,7 @@ pub struct TransferMicroResources {
     pub transfers: Vec<TransferMicroResourcesTransfer>,
 
 }
+
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct TransferMicroResourcesTransfer {
@@ -8363,7 +8703,9 @@ pub struct TransferMicroResourcesTransfer {
 
 }
 
-/// When written: when scanning some types of data links | When Written: when mining fragments are converted unto a unit of cargo by refinery
+
+/// When Written: when mining fragments are converted unto a unit of cargo by refinery
+/// When written: when scanning some types of data links
 #[derive(Clone, Debug, Deserialize)]
 pub struct TypeDetails {
 
@@ -8379,6 +8721,7 @@ pub struct TypeDetails {
 
 }
 
+
 /// When written: when under fire (same time as the Under Attack voice message)
 #[derive(Clone, Debug, Deserialize)]
 pub struct UnderAttack {
@@ -8391,6 +8734,7 @@ pub struct UnderAttack {
     pub target: Option<String>,
 
 }
+
 
 /// When written: liftoff from a landing pad in a station, outpost or settlement
 #[derive(Clone, Debug, Deserialize)]
@@ -8420,6 +8764,7 @@ pub struct Undocked {
 
 }
 
+
 /// This event is logged when the player upgrades their flight suit
 #[derive(Clone, Debug, Deserialize)]
 pub struct UpgradeSuit {
@@ -8448,6 +8793,7 @@ pub struct UpgradeSuit {
 
 }
 
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct UpgradeWeapon {
 
@@ -8475,6 +8821,7 @@ pub struct UpgradeWeapon {
 
 }
 
+
 /// When using an item from the player’s inventory (backpack)
 #[derive(Clone, Debug, Deserialize)]
 pub struct UseConsumable {
@@ -8493,6 +8840,7 @@ pub struct UseConsumable {
     pub r#type: String,
 
 }
+
 
 /// When written: when dropping from Supercruise at a Unidentified Signal Source
 #[derive(Clone, Debug, Deserialize)]
@@ -8513,6 +8861,7 @@ pub struct USSDrop {
 
 }
 
+
 /// When written: when switching control between the main ship and a fighter
 #[derive(Clone, Debug, Deserialize)]
 pub struct VehicleSwitch {
@@ -8526,7 +8875,9 @@ pub struct VehicleSwitch {
 
 }
 
-/// This event is logged when a player sells a hand weapon | This event is logged when purchasing a new hand weapon
+
+/// This event is logged when a player sells a hand weapon
+/// This event is logged when purchasing a new hand weapon
 #[derive(Clone, Debug, Deserialize)]
 pub struct Weapon {
 
@@ -8554,7 +8905,9 @@ pub struct Weapon {
 
 }
 
-/// When written: when the player is invited to a wing | When written: another player has joined the wing
+
+/// When written: another player has joined the wing
+/// When written: when the player is invited to a wing
 #[derive(Clone, Debug, Deserialize)]
 pub struct WingInvite {
 
@@ -8566,6 +8919,7 @@ pub struct WingInvite {
     pub name: String,
 
 }
+
 
 /// When written: this player has joined a wing
 #[derive(Clone, Debug, Deserialize)]
@@ -8584,108 +8938,142 @@ pub struct WingJoin {
 #[derive(Clone, Debug, Deserialize)]
 #[serde(tag = "event")]
 pub enum JournalEvent {
+    /// When written: when repairing modules using the Auto Field Maintenance Unit (AFMU)
     #[serde(rename = "AfmuRepairs")]
     AfmuRepairs(AfmuRepairs),
 
     #[serde(rename = "AppliedToSquadron")]
     AppliedToSquadron(Squadron),
 
+    /// When written: when in Supercruise, and distance from planet drops to within the 'Orbital Cruise' zone
     #[serde(rename = "ApproachBody")]
     ApproachBody(Body),
 
+    /// When written: when approaching a planetary settlement
     #[serde(rename = "ApproachSettlement")]
     ApproachSettlement(ApproachSettlement),
 
+    /// When written: when the player has broken up a ‘Motherlode’ asteroid for mining
     #[serde(rename = "AsteroidCracked")]
     AsteroidCracked(AsteroidCracked),
 
+    /// Lists the contents of the backpack, in a separate backpack.json file
     #[serde(rename = "Backpack")]
     Backpack(Inventory),
 
+    /// This is written when there is any change to the contents of the suit backpack – note this can be written at the same time as other events like UseConsumable
     #[serde(rename = "BackpackChange")]
     BackpackChange(BackpackChange),
 
+    /// This event is logged when signing up to fight at a recruitment desk
     #[serde(rename = "BookDropship")]
     BookDropship(Booking),
 
+    /// This event is logged when booking a taxi transport
     #[serde(rename = "BookTaxi")]
     BookTaxi(Booking),
 
+    /// When written: player is awarded a bounty for a kill
     #[serde(rename = "Bounty")]
     Bounty(Bounty),
 
+    /// When Written: when purchasing ammunition
     #[serde(rename = "BuyAmmo")]
     BuyAmmo(ShipEquipmentPurchase),
 
+    /// When Written: when purchasing drones
     #[serde(rename = "BuyDrones")]
     BuyDrones(BuyDrones),
 
+    /// When Written: when buying system data via the galaxy map
     #[serde(rename = "BuyExplorationData")]
     BuyExplorationData(BuyData),
 
+    /// This event is logged when buying microresources
     #[serde(rename = "BuyMicroResources")]
     BuyMicroResources(BuyMicroResources),
 
+    /// This event is logged when buying a new suit
     #[serde(rename = "BuySuit")]
     BuySuit(Suit),
 
+    /// When Written: when buying trade data in the galaxy map
     #[serde(rename = "BuyTradeData")]
     BuyTradeData(BuyData),
 
+    /// This event is logged when purchasing a new hand weapon
     #[serde(rename = "BuyWeapon")]
     BuyWeapon(Weapon),
 
+    /// This event is logged if the player cancels their journey to a combat zone
     #[serde(rename = "CancelDropship")]
     CancelDropship(Cancel),
 
+    /// This event is logged if the player cancels a booked taxi trip
     #[serde(rename = "CancelTaxi")]
     CancelTaxi(Cancel),
 
+    /// When written: The player has been rewarded for a capital ship combat
     #[serde(rename = "CapShipBond")]
     CapShipBond(CapShipBond),
 
+    /// When written: at startup, note this is now written slightly later in startup, after we have initialised missions, so we can detect if any cargo came from an abandoned delivery mission. The first Cargo event in the file will contain the full inventory, others just indicate a separate file has been written. The full data is now written to a separate file Cargo.json. A simple event (with no parameters) is written to the main journal file when the cargo file is updated.
     #[serde(rename = "Cargo")]
     Cargo(Cargo),
 
+    /// When written: when collecting or delivering cargo for a wing mission, or if a wing member updates progress. The CargoType and Count are included when you collect or deliver goods, they are not included for a wing update. The Progress value actually represents pending progress for goods in transit: (ItemsCollected-ItemsDelivered)/TotalItemsToDeliver
     #[serde(rename = "CargoDepot")]
     CargoDepot(CargoDepot),
 
+    /// When transferring cargo between ship and fleet carrier, or between ship and SRV
     #[serde(rename = "CargoTransfer")]
     CargoTransfer(CargoTransfer),
 
+    /// Player transfers credits to/from carrier
     #[serde(rename = "CarrierBankTransfer")]
     CarrierBankTransfer(CarrierBankTransfer),
 
+    /// Player has bought a fleet carrier
     #[serde(rename = "CarrierBuy")]
     CarrierBuy(CarrierBuy),
 
+    /// At the time the player cancels decommission
     #[serde(rename = "CarrierCancelDecommission")]
     CarrierCancelDecommission(Carrier),
 
+    /// Changes to crew
     #[serde(rename = "CarrierCrewServices")]
     CarrierCrewServices(CarrierCrewServices),
 
+    /// At the time the player requests decommission
     #[serde(rename = "CarrierDecommission")]
     CarrierDecommission(CarrierDecommission),
 
+    /// Any player giving fuel to the carrier
     #[serde(rename = "CarrierDepositFuel")]
     CarrierDepositFuel(CarrierDepositFuel),
 
+    /// The carrier owner has changed the docking permission criteria
     #[serde(rename = "CarrierDockingPermission")]
     CarrierDockingPermission(CarrierDockingPermission),
 
+    /// Change to tax rate or reserve
     #[serde(rename = "CarrierFinance")]
     CarrierFinance(CarrierFinance),
 
+    /// This is similar to FSDJump and Location, but it is written if the player is online and docked at a fleet carrier when the carrier jumps. Note it does not include the distance jumped, or fuel used.
     #[serde(rename = "CarrierJump")]
     CarrierJump(CarrierJump),
 
+    /// This is logged when a jump is cancelled
     #[serde(rename = "CarrierJumpCancelled")]
     CarrierJumpCancelled(Carrier),
 
+    /// At the time the player requests the jump, not the jump itself
     #[serde(rename = "CarrierJumpRequest")]
     CarrierJumpRequest(CarrierJumpRequest),
 
+    /// Carrier Location. Written on startup and after a carrier jump.
     #[serde(rename = "CarrierLocation")]
     CarrierLocation(CarrierLocation),
 
@@ -8698,231 +9086,303 @@ pub enum JournalEvent {
     #[serde(rename = "CarrierShipPack")]
     CarrierShipPack(CarrierPack),
 
+    /// When owner opens carrier management
     #[serde(rename = "CarrierStats")]
     CarrierStats(CarrierStats),
 
+    /// The carrier owner has requested the carrier buys or sells goods (or cancels such an order)
     #[serde(rename = "CarrierTradeOrder")]
     CarrierTradeOrder(CarrierTradeOrder),
 
+    /// When written: when in a crew on someone else's ship, player switched crew role
     #[serde(rename = "ChangeCrewRole")]
     ChangeCrewRole(ChangeCrewRole),
 
     #[serde(rename = "ClearImpound")]
     ClearImpound(ClearImpound),
 
+    /// When written: If you should ever reset your game
     #[serde(rename = "ClearSavedGame")]
     ClearSavedGame(Commander),
 
     #[serde(rename = "CockpitBreached")]
     CockpitBreached(Empty),
 
+    /// When written: when a new discovery is added to the Codex
     #[serde(rename = "CodexEntry")]
     CodexEntry(CodexEntry),
 
+    /// When Written: when scooping cargo from space or planet surface
     #[serde(rename = "CollectCargo")]
     CollectCargo(CollectCargo),
 
+    /// When picking up items from the ground
     #[serde(rename = "CollectItems")]
     CollectItems(CollectItems),
 
+    /// When Written: when a colonisation beacon is deployed
     #[serde(rename = "ColonisationBeaconDeployed")]
     ColonisationBeaconDeployed(Empty),
 
+    /// When Written: Every 15 seconds while docked at a construction depot
     #[serde(rename = "ColonisationConstructionDepot")]
     ColonisationConstructionDepot(ColonisationConstructionDepot),
 
+    /// When Written: when contributing materials to a colonisation effort
     #[serde(rename = "ColonisationContribution")]
     ColonisationContribution(ColonisationContribution),
 
+    /// When Written: When a system is claimed for colonisation by paying for the claim.
     #[serde(rename = "ColonisationSystemClaim")]
     ColonisationSystemClaim(SystemClaim),
 
+    /// When Written: when a colonisation claim is released
     #[serde(rename = "ColonisationSystemClaimRelease")]
     ColonisationSystemClaimRelease(SystemClaim),
 
+    /// When written: at the start of the LoadGame process. This is written before the inventory, loadout, etc
     #[serde(rename = "Commander")]
     Commander(Commander),
 
+    /// When written: when a crime is recorded against the player
     #[serde(rename = "CommitCrime")]
     CommitCrime(CommitCrime),
 
+    /// When written: when the game retrieves info on community goals from the server, and the data has changed since last time. This event contains the current status of all community goals the player is currently subscribed to.
     #[serde(rename = "CommunityGoal")]
     CommunityGoal(CommunityGoal),
 
+    /// When written: when opting out of a community goal
     #[serde(rename = "CommunityGoalDiscard")]
     CommunityGoalDiscard(CommunityGoal),
 
+    /// When Written: when signing up to a community goal
     #[serde(rename = "CommunityGoalJoin")]
     CommunityGoalJoin(CommunityGoal),
 
+    /// When Written: when receiving a reward for a community goal
     #[serde(rename = "CommunityGoalReward")]
     CommunityGoalReward(CommunityGoalReward),
 
+    /// When written: if the journal file grows to 500k lines, we write this event, close the file, and start a new one. The new journalname will increase the partnumber, ex: {datetime}.02.log. The new journal will start with a Fileheader and continue.
     #[serde(rename = "Continued")]
     Continued(Continued),
 
+    /// This event is logged when the player creates a new suit loadout
     #[serde(rename = "CreateSuitLoadout")]
     CreateSuitLoadout(CreateSuitLoadout),
 
+    /// When written: when changing the task assignment of a member of crew
     #[serde(rename = "CrewAssign")]
     CrewAssign(CrewAssign),
 
+    /// When written: when dismissing a member of crew
     #[serde(rename = "CrewFire")]
     CrewFire(CrewFire),
 
+    /// When written: when engaging a new member of crew
     #[serde(rename = "CrewHire")]
     CrewHire(CrewHire),
 
+    /// When written: when in multicrew, in Helm player's log, when a crew member launches a fighter
     #[serde(rename = "CrewLaunchFighter")]
     CrewLaunchFighter(CrewLaunchFighter),
 
+    /// When written: When another player joins your ship's crew
     #[serde(rename = "CrewMemberJoins")]
     CrewMemberJoins(CrewMember),
 
+    /// When written: When another player leaves your ship's crew
     #[serde(rename = "CrewMemberQuits")]
     CrewMemberQuits(CrewMember),
 
+    /// When written: in Multicrew, Helm's log, when another crew player changes role
     #[serde(rename = "CrewMemberRoleChange")]
     CrewMemberRoleChange(CrewMemberRoleChange),
 
+    /// When written: when another player commits a crime against the current player
     #[serde(rename = "CrimeVictim")]
     CrimeVictim(CrimeVictim),
 
+    /// When written: when scanning a data link
     #[serde(rename = "DatalinkScan")]
     DatalinkScan(DatalinkScan),
 
+    /// When written: when scanning a datalink generates a reward
     #[serde(rename = "DatalinkVoucher")]
     DatalinkVoucher(DatalinkVoucher),
 
+    /// When written: when scanning some types of data links
     #[serde(rename = "DataScanned")]
     DataScanned(TypeDetails),
 
+    /// This event is logged when the player deletes a suit loadout
     #[serde(rename = "DeleteSuitLoadout")]
     DeleteSuitLoadout(SuitLoadout),
 
+    /// When Written: when delivering power micro-resources.
     #[serde(rename = "DeliverPowerMicroResources")]
     DeliverPowerMicroResources(DeliverPowerMicroResources),
 
+    /// When written: player was killed
     #[serde(rename = "Died")]
     Died(Died),
 
     #[serde(rename = "DisbandedSquadron")]
     DisbandedSquadron(Squadron),
 
+    /// When written: when using the discovery scanner, and new body discoveries are displayed in the cockpit info window. Note you can get two or three of these in a row, where some bodies are discovered by the automatic passive scan, before the active scan is complete.
     #[serde(rename = "DiscoveryScan")]
     DiscoveryScan(DiscoveryScan),
 
+    /// This event is logged when the player steps out of a ship or SRV
     #[serde(rename = "Disembark")]
     Disembark(Disembark),
 
+    /// When written: when landing at landing pad in a space station, outpost, or surface settlement
     #[serde(rename = "Docked")]
     Docked(Docked),
 
+    /// When written: when docking a fighter back with the mothership
     #[serde(rename = "DockFighter")]
     DockFighter(DockFighter),
 
+    /// When written: when the player cancels a docking request
     #[serde(rename = "DockingCancelled")]
     DockingCancelled(DockingCancelled),
 
+    /// When written: when the station denies a docking request
     #[serde(rename = "DockingDenied")]
     DockingDenied(DockingDenied),
 
+    /// When written: when a docking request is granted
     #[serde(rename = "DockingGranted")]
     DockingGranted(DockingGranted),
 
+    /// When written: when the player requests docking at a station
     #[serde(rename = "DockingRequested")]
     DockingRequested(DockingRequested),
 
+    /// When written: when a docking request has timed out
     #[serde(rename = "DockingTimeout")]
     DockingTimeout(DockingTimeout),
 
+    /// When written: when docking an SRV with the ship
     #[serde(rename = "DockSRV")]
     DockSRV(SRV),
 
+    /// When discarding on-foot items from the player's inventory
     #[serde(rename = "DropItems")]
     DropItems(DropItems),
 
+    /// When exiting a shuttle dropship at a conflict zone
     #[serde(rename = "DropshipDeploy")]
     DropshipDeploy(DropshipDeploy),
 
+    /// When cargo is ejected
     #[serde(rename = "EjectCargo")]
     EjectCargo(EjectCargo),
 
+    /// This event is logged when a player (on foot) gets into a ship or SRV
     #[serde(rename = "Embark")]
     Embark(Embark),
 
+    /// When written: when the captain in multicrew disbands the crew
     #[serde(rename = "EndCrewSession")]
     EndCrewSession(EndCrewSession),
 
+    /// When written: when offering items cash or bounties to an Engineer to gain access
     #[serde(rename = "EngineerContribution")]
     EngineerContribution(EngineerContribution),
 
+    /// When Written: when requesting an engineer upgrade
     #[serde(rename = "EngineerCraft")]
     EngineerCraft(EngineerCraft),
 
+    /// When written: when converting a pre-2.4 engineered module. This is generated when converting, or previewing a conversion of a legacy module to the new system.
     #[serde(rename = "EngineerLegacyConvert")]
     EngineerLegacyConvert(EngineerLegacyConvert),
 
+    /// When Written: when a player increases their access to an engineer
     #[serde(rename = "EngineerProgress")]
     EngineerProgress(EngineerProgress),
 
+    /// When written: Player has escaped interdiction
     #[serde(rename = "EscapeInterdiction")]
     EscapeInterdiction(EscapeInterdiction),
 
+    /// When written: Player rewarded for taking part in a combat zone
     #[serde(rename = "FactionKillBond")]
     FactionKillBond(FactionKillBond),
 
+    /// When trading with a Fleet Carrier Bartender for materials, a file is written with the pricelist to FCMaterials.json
     #[serde(rename = "FCMaterials")]
     FCMaterials(FCMaterials),
 
+    /// When written: when requesting a module is transferred from storage at another station
     #[serde(rename = "FetchRemoteModule")]
     FetchRemoteModule(FetchRemoteModule),
 
+    /// When written: when a ship-launched fighter is destroyed
     #[serde(rename = "FighterDestroyed")]
     FighterDestroyed(Damage),
 
+    /// When written: when a ship's fighter is rebuilt in the hangar
     #[serde(rename = "FighterRebuilt")]
     FighterRebuilt(FighterRebuilt),
 
     #[serde(rename = "Fileheader")]
     Fileheader(Fileheader),
 
+    /// When written: when receiving information about a change in a friend's status. Also written at startup for friends who are already online.
     #[serde(rename = "Friends")]
     Friends(Friends),
 
+    /// When written: when jumping from one star system to another
     #[serde(rename = "FSDJump")]
     FSDJump(FSDJump),
 
+    /// When written: when selecting a star system to jump to. When following a multi-jump route, this will typically appear for the next star, during a jump, ie after StartJump but before the FSDJump
     #[serde(rename = "FSDTarget")]
     FSDTarget(FSDTarget),
 
+    /// When written: after having identified all bodies in the system
     #[serde(rename = "FSSAllBodiesFound")]
     FSSAllBodiesFound(FSSAllBodiesFound),
 
+    /// This event is written when completing a Full Spectrum Scan of a starsystem, to list the number of SAA signals found in the system (as shown in-game in the top-right panel)
     #[serde(rename = "FSSBodySignals")]
     FSSBodySignals(FSSBodySignals),
 
+    /// When written: when performing a full system scan (Honk)
     #[serde(rename = "FSSDiscoveryScan")]
     FSSDiscoveryScan(FSSDiscoveryScan),
 
+    /// When written: when zooming in on a signal using the FSS scanner
     #[serde(rename = "FSSSignalDiscovered")]
     FSSSignalDiscovered(FSSSignalDiscovered),
 
+    /// When written: when scooping fuel from a star
     #[serde(rename = "FuelScoop")]
     FuelScoop(FuelScoop),
 
+    /// When written: when taking damage due to overheating
     #[serde(rename = "HeatDamage")]
     HeatDamage(Damage),
 
+    /// When written: when heat exceeds 100%
     #[serde(rename = "HeatWarning")]
     HeatWarning(Empty),
 
+    /// When a holoscreen is hacked
     #[serde(rename = "HoloscreenHacked")]
     HoloscreenHacked(HoloscreenHacked),
 
+    /// When written: when hull health drops below a threshold (20% steps)
     #[serde(rename = "HullDamage")]
     HullDamage(HullDamage),
 
+    /// When written: player was interdicted by player or npc
     #[serde(rename = "Interdicted")]
     Interdicted(Interdicted),
 
@@ -8932,360 +9392,470 @@ pub enum JournalEvent {
     #[serde(rename = "InvitedToSquadron")]
     InvitedToSquadron(Squadron),
 
+    /// When written: when enough material has been collected from a solar jet code (at a white dwarf or neutron star) for a jump boost
     #[serde(rename = "JetConeBoost")]
     JetConeBoost(JetConeBoost),
 
+    /// When written: when passing through the jet code from a white dwarf or neutron star has caused damage to a ship module
     #[serde(rename = "JetConeDamage")]
     JetConeDamage(JetConeDamage),
 
+    /// When written: When you join another player ship's crew
     #[serde(rename = "JoinACrew")]
     JoinACrew(Crew),
 
     #[serde(rename = "JoinedSquadron")]
     JoinedSquadron(Squadron),
 
+    /// When written: When you force another player to leave your ship's crew
     #[serde(rename = "KickCrewMember")]
     KickCrewMember(KickCrewMember),
 
     #[serde(rename = "KickedFromSquadron")]
     KickedFromSquadron(Squadron),
 
+    /// When written: when using any type of drone/limpet
     #[serde(rename = "LaunchDrone")]
     LaunchDrone(LaunchDrone),
 
+    /// When written: when launching a fighter
     #[serde(rename = "LaunchFighter")]
     LaunchFighter(LaunchFighter),
 
+    /// When written: deploying the SRV from a ship onto planet surface
     #[serde(rename = "LaunchSRV")]
     LaunchSRV(LaunchSRV),
 
+    /// When written: when flying away from a planet, and distance increases above the 'Orbital Cruise' altitude
     #[serde(rename = "LeaveBody")]
     LeaveBody(Body),
 
     #[serde(rename = "LeftSquadron")]
     LeftSquadron(Squadron),
 
+    /// When written: when taking off from planet surface
     #[serde(rename = "Liftoff")]
     Liftoff(Touchdown),
 
     #[serde(rename = "LoadGame")]
     LoadGame(LoadGame),
 
+    /// When written: at startup, when loading from main menu, or when switching ships, or after changing the ship in Outfitting, or when docking SRV back in mothership
     #[serde(rename = "Loadout")]
     Loadout(Loadout),
 
+    /// This event is logged when a player adds a weapon to a suit loadout
     #[serde(rename = "LoadoutEquipModule")]
     LoadoutEquipModule(LoadoutEquipModule),
 
+    /// This event is logged when a player removes a weapon from a suit loadout
     #[serde(rename = "LoadoutRemoveModule")]
     LoadoutRemoveModule(LoadoutEquipModule),
 
+    /// When written: at startup, or when being resurrected at a station
     #[serde(rename = "Location")]
     Location(Location),
 
+    /// When written: when accessing the commodity market in a station. A separate file Market.json is written to the same folder as the journal, containing full market price info.
     #[serde(rename = "Market")]
     Market(Market),
 
+    /// When Written: when purchasing goods in the market
     #[serde(rename = "MarketBuy")]
     MarketBuy(MarketBuy),
 
+    /// When Written: when selling goods in the market
     #[serde(rename = "MarketSell")]
     MarketSell(MarketSell),
 
+    /// When written: when putting multiple modules into storage
     #[serde(rename = "MassModuleStore")]
     MassModuleStore(MassModuleStore),
 
+    /// When Written: whenever materials are collected
     #[serde(rename = "MaterialCollected")]
     MaterialCollected(Material),
 
+    /// When Written: if materials are discarded
     #[serde(rename = "MaterialDiscarded")]
     MaterialDiscarded(Material),
 
+    /// When Written: when a new material is discovered
     #[serde(rename = "MaterialDiscovered")]
     MaterialDiscovered(MaterialDiscovered),
 
+    /// When written: at startup, when loading from main menu into game
     #[serde(rename = "Materials")]
     Materials(Materials),
 
+    /// When written: when exchanging materials at the Material trader contact
     #[serde(rename = "MaterialTrade")]
     MaterialTrade(MaterialTrade),
 
+    /// When Written: when mining fragments are converted unto a unit of cargo by refinery
     #[serde(rename = "MiningRefined")]
     MiningRefined(TypeDetails),
 
+    /// When Written: when a mission has been abandoned
     #[serde(rename = "MissionAbandoned")]
     MissionAbandoned(Mission),
 
+    /// When Written: when starting a mission
     #[serde(rename = "MissionAccepted")]
     MissionAccepted(MissionAccepted),
 
+    /// When Written: when a mission is completed
     #[serde(rename = "MissionCompleted")]
     MissionCompleted(MissionCompleted),
 
+    /// When Written: when a mission has failed
     #[serde(rename = "MissionFailed")]
     MissionFailed(Mission),
 
+    /// When written: when a mission is updated with a new destination
     #[serde(rename = "MissionRedirected")]
     MissionRedirected(MissionRedirected),
 
+    /// When written: at startup
     #[serde(rename = "Missions")]
     Missions(Missions),
 
+    /// When Written: when buying a module in outfitting
     #[serde(rename = "ModuleBuy")]
     ModuleBuy(ModuleBuy),
 
+    /// When Written: when buying a module and directly storing it in outfitting
     #[serde(rename = "ModuleBuyAndStore")]
     ModuleBuyAndStore(ModuleBuyAndStore),
 
+    /// When written: when looking at the cockpit Right Hand Side modules info panel, if data has changed. This also writes a ModulesInfo.json file alongside the journal, listing the modules in the same order as displayed.
     #[serde(rename = "ModuleInfo")]
     ModuleInfo(ModuleInfo),
 
+    /// When written: when fetching a previously stored module
     #[serde(rename = "ModuleRetrieve")]
     ModuleRetrieve(ModuleRetrieve),
 
+    /// When Written: when selling a module in outfitting
     #[serde(rename = "ModuleSell")]
     ModuleSell(ModuleSell),
 
+    /// When written: when selling a module in storage at another station
     #[serde(rename = "ModuleSellRemote")]
     ModuleSellRemote(ModuleSellRemote),
 
+    /// When written: when storing a module in Outfitting
     #[serde(rename = "ModuleStore")]
     ModuleStore(ModuleStore),
 
+    /// When Written: when moving a module to a different slot on the ship
     #[serde(rename = "ModuleSwap")]
     ModuleSwap(ModuleSwap),
 
+    /// When written: when selling exploration data in Cartographics, a page at a time
     #[serde(rename = "MultiSellExplorationData")]
     MultiSellExplorationData(MultiSellExplorationData),
 
     #[serde(rename = "Music")]
     Music(Music),
 
+    /// When written: when scanning a navigation beacon, before the scan data for all the bodies in the system is written into the journal
     #[serde(rename = "NavBeaconScan")]
     NavBeaconScan(NavBeaconScan),
 
+    /// When plotting a multi-star route, the file NavRoute.json is written in the same directory as the journal, with a list of stars along that route
     #[serde(rename = "NavRoute")]
     NavRoute(NavRoute),
 
+    /// When written: When the current plotted nav route is cleared. Can be written to NavRoute.json with an empty Route array.
     #[serde(rename = "NavRouteClear")]
     NavRouteClear(NavRouteClear),
 
+    /// When written: Creating a new commander
     #[serde(rename = "NewCommander")]
     NewCommander(NewCommander),
 
+    /// This is written when crew receive wages
     #[serde(rename = "NpcCrewPaidWage")]
     NpcCrewPaidWage(NpcCrewPaidWage),
 
+    /// This is written when a crew member's combat rank increases
     #[serde(rename = "NpcCrewRank")]
     NpcCrewRank(NpcCrewRank),
 
+    /// Written when accessing the outfitting menu. The full parts pricelist is written to a separate file Outfitting.json.
     #[serde(rename = "Outfitting")]
     Outfitting(Outfitting),
 
+    /// When written: at startup, when loading the saved game file
     #[serde(rename = "Passengers")]
     Passengers(Passengers),
 
+    /// When written: when paying off bounties
     #[serde(rename = "PayBounties")]
     PayBounties(Payment),
 
+    /// When written: when paying fines
     #[serde(rename = "PayFines")]
     PayFines(Payment),
 
+    /// When written: at startup, if player has pledged to a power
     #[serde(rename = "Powerplay")]
     Powerplay(Powerplay),
 
+    /// When written: when collecting powerplay commodities for delivery
     #[serde(rename = "PowerplayCollect")]
     PowerplayCollect(PowerplayDelivery),
 
+    /// When written: when a player defects from one power to another
     #[serde(rename = "PowerplayDefect")]
     PowerplayDefect(PowerplayDefect),
 
+    /// When written: when delivering powerplay commodities
     #[serde(rename = "PowerplayDeliver")]
     PowerplayDeliver(PowerplayDelivery),
 
+    /// When written: when paying to fast-track allocation of commodities
     #[serde(rename = "PowerplayFastTrack")]
     PowerplayFastTrack(PowerplayFastTrack),
 
+    /// When written: when joining up with a power
     #[serde(rename = "PowerplayJoin")]
     PowerplayJoin(PowerplayJoin),
 
+    /// When written: when leaving a power
     #[serde(rename = "PowerplayLeave")]
     PowerplayLeave(PowerplayJoin),
 
+    /// When written: when receiving salary payment from a power
     #[serde(rename = "PowerplayMerits")]
     PowerplayMerits(PowerplayMerits),
 
+    /// When written: when receiving salary payment from a power
     #[serde(rename = "PowerplayRank")]
     PowerplayRank(PowerplayRank),
 
+    /// When written: when receiving salary payment from a power
     #[serde(rename = "PowerplaySalary")]
     PowerplaySalary(PowerplaySalary),
 
+    /// When written: when voting for a system expansion
     #[serde(rename = "PowerplayVote")]
     PowerplayVote(PowerplayVote),
 
+    /// When written: when receiving payment for powerplay combat
     #[serde(rename = "PowerplayVoucher")]
     PowerplayVoucher(PowerplayVoucher),
 
+    /// When written: at startup
     #[serde(rename = "Progress")]
     Progress(Rank),
 
+    /// When written: when the player’s rank increases. Only the relevant ranks are included.
     #[serde(rename = "Promotion")]
     Promotion(Promotion),
 
+    /// When using a prospecting drone
     #[serde(rename = "ProspectedAsteroid")]
     ProspectedAsteroid(ProspectedAsteroid),
 
+    /// When written: when this player has killed another player
     #[serde(rename = "PVPKill")]
     PVPKill(PVPKill),
 
     #[serde(rename = "QuitACrew")]
     QuitACrew(Crew),
 
+    /// When written: at startup
     #[serde(rename = "Rank")]
     Rank(Rank),
 
+    /// When written: when the reboot repair function is used
     #[serde(rename = "RebootRepair")]
     RebootRepair(RebootRepair),
 
+    /// When written: when a text message is received from another player or npc
     #[serde(rename = "ReceiveText")]
     ReceiveText(ReceiveText),
 
+    /// When Written: when claiming payment for combat bounties and bonds
     #[serde(rename = "RedeemVoucher")]
     RedeemVoucher(RedeemVoucher),
 
+    /// When Written: when refuelling (full tank)
     #[serde(rename = "RefuelAll")]
     RefuelAll(Refuel),
 
+    /// When Written: when refuelling (10%)
     #[serde(rename = "RefuelPartial")]
     RefuelPartial(Refuel),
 
     #[serde(rename = "RenameSuitLoadout")]
     RenameSuitLoadout(SuitLoadout),
 
+    /// When Written: when repairing the ship. When repairing on a FleetCarrier, you can get a list of the modules repaired
     #[serde(rename = "Repair")]
     Repair(Repair),
 
+    /// When written: when repairing everything
     #[serde(rename = "RepairAll")]
     RepairAll(ShipEquipmentPurchase),
 
+    /// When written: when the player's ship has been repaired by a repair drone. Each of the values indicate the amount of damage that has been repaired
     #[serde(rename = "RepairDrone")]
     RepairDrone(RepairDrone),
 
+    /// When written: at startup (after Rank and Progress). This gives the player's reputation (on a scale of -100..+100) with the superpowers
     #[serde(rename = "Reputation")]
     Reputation(Reputation),
 
+    /// When Written: when requesting power micro-resources.
     #[serde(rename = "RequestPowerMicroResources")]
     RequestPowerMicroResources(RequestPowerMicroResources),
 
+    /// When fuel is moved from one fuel tank to another
     #[serde(rename = "ReservoirReplenished")]
     ReservoirReplenished(ReservoirReplenished),
 
+    /// When Written: when purchasing an SRV or Fighter
     #[serde(rename = "RestockVehicle")]
     RestockVehicle(RestockVehicle),
 
     #[serde(rename = "Resupply")]
     Resupply(Empty),
 
+    /// When written: when the player restarts after death
     #[serde(rename = "Resurrect")]
     Resurrect(Resurrect),
 
+    /// When written: after using the Surface Area Analysis Scanner
     #[serde(rename = "SAAScanComplete")]
     SAAScanComplete(SAAScanComplete),
 
+    /// When written: when using Surface Area Analysis Scanner on a planet or rings
     #[serde(rename = "SAASignalsFound")]
     SAASignalsFound(SAASignalsFound),
 
+    /// When Written: basic or detailed discovery scan of a star, planet or moon. This is also generated when scanning a navigation beacon in a populated system, to record info about all the bodies in the system.
     #[serde(rename = "Scan")]
     Scan(Scan),
 
+    /// When scanning one body of a binary pair, you will get an event detailing the orbital parameters of their BaryCentre
     #[serde(rename = "ScanBaryCentre")]
     ScanBaryCentre(ScanBaryCentre),
 
+    /// When written: when the player's ship has been scanned (The Scan Detected indication is at the start of the scan, this is written at the end of a successful scan)
     #[serde(rename = "Scanned")]
     Scanned(Scanned),
 
+    /// This event is logged when the player uses the Organic Sampling Tool to scan, log or analyse organic discoveries. The first scan is Log, subsequent scans are Sample until fully scanned, final scan is Analyse
     #[serde(rename = "ScanOrganic")]
     ScanOrganic(ScanOrganic),
 
+    /// When written: when contributing materials to a research community goal
     #[serde(rename = "ScientificResearch")]
     ScientificResearch(ScientificResearch),
 
+    /// When Written: when a screen snapshot is saved. The latitude, longitude, altitude and heading will be included if on a planet or in low-altitude flight.
     #[serde(rename = "Screenshot")]
     Screenshot(Screenshot),
 
+    /// When written: when delivering items to a Search and Rescue contact
     #[serde(rename = "SearchAndRescue")]
     SearchAndRescue(SearchAndRescue),
 
+    /// When written: when the self destruct function is used
     #[serde(rename = "SelfDestruct")]
     SelfDestruct(Empty),
 
+    /// When Written: when selling unwanted drones back to the market
     #[serde(rename = "SellDrones")]
     SellDrones(SellDrones),
 
+    /// When Written: when selling exploration data in Cartographics
     #[serde(rename = "SellExplorationData")]
     SellExplorationData(SellExplorationData),
 
+    /// This event is logged when a player sells Microresources for cash
     #[serde(rename = "SellMicroResources")]
     SellMicroResources(SellMicroResources),
 
+    /// This event records that a player has sold organic data (see ScanOrganic)
     #[serde(rename = "SellOrganicData")]
     SellOrganicData(SellOrganicData),
 
+    /// When written: When selling a stored ship to raise funds when on insurance/rebuy screen
     #[serde(rename = "SellShipOnRebuy")]
     SellShipOnRebuy(SellShipOnRebuy),
 
+    /// This event is logged when a player sells a flight suit
     #[serde(rename = "SellSuit")]
     SellSuit(Suit),
 
+    /// This event is logged when a player sells a hand weapon
     #[serde(rename = "SellWeapon")]
     SellWeapon(Weapon),
 
+    /// When written: when a text message is sent to another player
     #[serde(rename = "SendText")]
     SendText(SendText),
 
+    /// When written: when assigning a name to the ship in Starport Services
     #[serde(rename = "SetUserShipName")]
     SetUserShipName(SetUserShipName),
 
     #[serde(rename = "SharedBookmarkToSquadron")]
     SharedBookmarkToSquadron(Squadron),
 
+    /// When written: when shields are disabled in combat, or recharged
     #[serde(rename = "ShieldState")]
     ShieldState(ShieldState),
 
+    /// Lists the contents of the ship locker, eg at startup. The full contents are written to a separate file, ShipLocker.json. The full list is also written into the journal at startup (if in a ship) and when boarding a ship. The shiplocker.json file is updated when the locker contents are changed.
     #[serde(rename = "ShipLocker")]
     ShipLocker(Inventory),
 
+    /// Same as ShipLocker, but discontinued.
     #[serde(rename = "ShipLockerMaterials")]
     ShipLockerMaterials(ShipLockerMaterials),
 
+    /// When written: after a new ship has been redeemed
     #[serde(rename = "ShipRedeemed")]
     ShipRedeemed(Ship),
 
+    /// When written: when the current player selects a new target
     #[serde(rename = "ShipTargeted")]
     ShipTargeted(ShipTargeted),
 
+    /// When written: when accessing shipyard in a station. The full price list is written to a separate file, in the same folder as the journal, Shipyard.json
     #[serde(rename = "Shipyard")]
     Shipyard(Shipyard),
 
+    /// When Written: when buying a new ship in the shipyard
     #[serde(rename = "ShipyardBuy")]
     ShipyardBuy(ShipyardBuy),
 
+    /// When written: after a new ship has been purchased
     #[serde(rename = "ShipyardNew")]
     ShipyardNew(Ship),
 
+    /// When written: after a new ship has been unlocked in the Shipyard
     #[serde(rename = "ShipyardRedeem")]
     ShipyardRedeem(ShipyardRedeem),
 
+    /// When Written: when selling a ship stored in the shipyard
     #[serde(rename = "ShipyardSell")]
     ShipyardSell(ShipyardSell),
 
+    /// When Written: when switching to another ship already stored at this station
     #[serde(rename = "ShipyardSwap")]
     ShipyardSwap(ShipyardSwap),
 
+    /// When Written: when requesting a ship at another station be transported to this station
     #[serde(rename = "ShipyardTransfer")]
     ShipyardTransfer(ShipyardTransfer),
 
+    /// When written: on a clean shutdown of the game
     #[serde(rename = "Shutdown")]
     Shutdown(Empty),
 
@@ -9301,87 +9871,114 @@ pub enum JournalEvent {
     #[serde(rename = "SquadronStartup")]
     SquadronStartup(SquadronStartup),
 
+    /// When written: when the player's SRV is destroyed
     #[serde(rename = "SRVDestroyed")]
     SRVDestroyed(SRV),
 
+    /// When written: at the start of a Hyperspace or Supercruise jump (start of countdown)
     #[serde(rename = "StartJump")]
     StartJump(StartJump),
 
+    /// When written: at startup. This line contains the information displayed in the statistics panel on the right side of the cockpit
     #[serde(rename = "Statistics")]
     Statistics(Statistics),
 
+    /// This event is written to Status.json which is updated every few seconds
     #[serde(rename = "Status")]
     Status(Status),
 
+    /// When written: when first visiting Outfitting, and when the set of stored modules has changed
     #[serde(rename = "StoredModules")]
     StoredModules(StoredModules),
 
+    /// When written: when visiting shipyard
     #[serde(rename = "StoredShips")]
     StoredShips(StoredShips),
 
+    /// This event is logged when starting on-foot or when disembarking
     #[serde(rename = "SuitLoadout")]
     SuitLoadout(SuitLoadout),
 
+    /// When dropping out of supercruise at a targeted destination
     #[serde(rename = "SupercruiseDestinationDrop")]
     SupercruiseDestinationDrop(SupercruiseDestinationDrop),
 
+    /// When written: entering supercruise from normal space
     #[serde(rename = "SupercruiseEntry")]
     SupercruiseEntry(SupercruiseEntry),
 
+    /// When written: leaving supercruise for normal space
     #[serde(rename = "SupercruiseExit")]
     SupercruiseExit(SupercruiseExit),
 
+    /// This event is logged when a player selects a different flight suit from the ship’s locker
     #[serde(rename = "SwitchSuitLoadout")]
     SwitchSuitLoadout(SwitchSuitLoadout),
 
+    /// When written: when synthesis is used to repair or rearm
     #[serde(rename = "Synthesis")]
     Synthesis(Synthesis),
 
+    /// When written: when the player's ship systems shut down (eg in a Thargoid encounter)
     #[serde(rename = "SystemsShutdown")]
     SystemsShutdown(Empty),
 
+    /// When written: when using the Technology Broker to unlock new purchasable technology
     #[serde(rename = "TechnologyBroker")]
     TechnologyBroker(TechnologyBroker),
 
+    /// When written: landing on a planet surface
     #[serde(rename = "Touchdown")]
     Touchdown(Touchdown),
 
+    /// This event is logged when the player exchanges owned microresources to receive some other type of microresource
     #[serde(rename = "TradeMicroResources")]
     TradeMicroResources(TradeMicroResources),
 
+    /// Written when transferring items between backpack and ship locker
     #[serde(rename = "TransferMicroResources")]
     TransferMicroResources(TransferMicroResources),
 
+    /// When written: when under fire (same time as the Under Attack voice message)
     #[serde(rename = "UnderAttack")]
     UnderAttack(UnderAttack),
 
+    /// When written: liftoff from a landing pad in a station, outpost or settlement
     #[serde(rename = "Undocked")]
     Undocked(Undocked),
 
+    /// This event is logged when the player upgrades their flight suit
     #[serde(rename = "UpgradeSuit")]
     UpgradeSuit(UpgradeSuit),
 
     #[serde(rename = "UpgradeWeapon")]
     UpgradeWeapon(UpgradeWeapon),
 
+    /// When using an item from the player’s inventory (backpack)
     #[serde(rename = "UseConsumable")]
     UseConsumable(UseConsumable),
 
+    /// When written: when dropping from Supercruise at a Unidentified Signal Source
     #[serde(rename = "USSDrop")]
     USSDrop(USSDrop),
 
+    /// When written: when switching control between the main ship and a fighter
     #[serde(rename = "VehicleSwitch")]
     VehicleSwitch(VehicleSwitch),
 
+    /// When written: another player has joined the wing
     #[serde(rename = "WingAdd")]
     WingAdd(WingInvite),
 
+    /// When written: when the player is invited to a wing
     #[serde(rename = "WingInvite")]
     WingInvite(WingInvite),
 
+    /// When written: this player has joined a wing
     #[serde(rename = "WingJoin")]
     WingJoin(WingJoin),
 
+    /// When written: this player has left a wing
     #[serde(rename = "WingLeave")]
     WingLeave(Empty),
 
