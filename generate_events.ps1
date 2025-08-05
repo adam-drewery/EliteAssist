@@ -16,14 +16,14 @@ $structNameReplacements = @{
     
     "LeaveBody" = "Body"
     "CommunityGoalJoin" = "CommunityGoal"
-    "MaterialDiscarded" = "Material"
+    "MaterialDiscarded" = "MaterialCollected"
     "SquadronCreated" = "Squadron"
     "HeatDamage" = "Damage"
     "PayFines" = "Payment"
     "CarrierShipPack" = "CarrierPack"
     "SellSuit" = "Suit"
     "MissionFailed" = "Mission"
-    "RenameSuitLoadout" = "SuitLoadout"
+    "RenameSuitLoadout" = "SuitLoadoutLite"
     "SellWeapon" = "Weapon"
     "ShipLocker" = "Inventory"
     "BookTaxi" = "Booking"
@@ -55,7 +55,6 @@ $structNameReplacements = @{
     "PowerplayLeave" = "PowerplayJoin"
     "MaterialTradeReceived" = "MaterialTraded"
     "ColonisationSystemClaimRelease" = "SystemClaim"
-    "CarrierStatsShipPack" = "CarrierStats"
 }
 
 # Define a class to represent a Rust struct
@@ -858,6 +857,29 @@ function Compare-StructStructure {
         return $false
     }
 
+    # Check if one struct has a timestamp field and the other doesn't
+    $struct1HasTimestamp = $false
+    $struct2HasTimestamp = $false
+    
+    foreach ($field in $struct1.Fields) {
+        if ($field.Name -eq "timestamp") {
+            $struct1HasTimestamp = $true
+            break
+        }
+    }
+    
+    foreach ($field in $struct2.Fields) {
+        if ($field.Name -eq "timestamp") {
+            $struct2HasTimestamp = $true
+            break
+        }
+    }
+    
+    # If one struct has a timestamp field and the other doesn't, they're not equal
+    if ($struct1HasTimestamp -ne $struct2HasTimestamp) {
+        return $false
+    }
+
     # Create a hashtable of field types for struct1
     $struct1Fields = @{}
     foreach ($field in $struct1.Fields) {
@@ -965,10 +987,22 @@ if (Test-Path $commonDir) {
 
                 # Add the struct to our model if it's not null
                 if ($result.Struct -ne $null) {
+                    # Check if a struct with this name already exists
+                    if ($allStructs.ContainsKey($defName)) {
+                        Write-Error "Error: Duplicate struct name found: $defName"
+                        exit 1
+                    }
+                    
                     $allStructs[$defName] = $result.Struct
                     
                     # Add nested structs to our model
                     foreach ($nestedKey in $result.NestedStructs.Keys) {
+                        # Check if a struct with this name already exists
+                        if ($allStructs.ContainsKey($nestedKey)) {
+                            Write-Error "Error: Duplicate struct name found: $nestedKey"
+                            exit 1
+                        }
+                        
                         $allStructs[$nestedKey] = $result.NestedStructs[$nestedKey]
                     }
                 }

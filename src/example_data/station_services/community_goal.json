@@ -2,10 +2,13 @@
   {
     "timestamp": "2025-07-29T22:34:45Z",
     "event": "CommunityGoal",
+    "CGID": 829,
+    "Name": "Brewer corporation calls for Trailblazer resupply",
+    "System": "Minerva",
     "CurrentGoals": [
       {
-        "CGID": 829,
         "Title": "Brewer corporation calls for Trailblazer resupply",
+        "CGID": 829,
         "SystemName": "Minerva",
         "MarketName": "Starlace Station",
         "Expiry": "2025-08-21T10:00:00Z",

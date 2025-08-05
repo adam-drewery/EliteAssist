@@ -1032,14 +1032,55 @@ pub struct CarrierPack {
 }
 
 
+/// When owner opens carrier management
 #[derive(Clone, Debug, Deserialize)]
 pub struct CarrierStats {
 
-    #[serde(rename = "PackTheme")]
-    pub pack_theme: String,
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
 
-    #[serde(rename = "PackTier")]
-    pub pack_tier: u64,
+    #[serde(rename = "AllowNotorious")]
+    pub allow_notorious: bool,
+
+    #[serde(rename = "Callsign")]
+    pub callsign: String,
+
+    #[serde(rename = "CarrierID")]
+    pub carrier_id: u64,
+
+    #[serde(rename = "Crew")]
+    pub crew: Vec<CarrierStatsCrew>,
+
+    #[serde(rename = "DockingAccess")]
+    pub docking_access: String,
+
+    #[serde(rename = "Finance")]
+    pub finance: CarrierStatsFinance,
+
+    #[serde(rename = "FuelLevel")]
+    pub fuel_level: u64,
+
+    #[serde(rename = "JumpRangeCurr")]
+    pub jump_range_curr: f64,
+
+    #[serde(rename = "JumpRangeMax")]
+    pub jump_range_max: f64,
+
+    #[serde(rename = "ModulePacks")]
+    pub module_packs: Vec<CarrierStatsShipPack>,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "PendingDecommission")]
+    pub pending_decommission: bool,
+
+    #[serde(rename = "ShipPacks")]
+    pub ship_packs: Vec<CarrierStatsShipPack>,
+
+    #[serde(rename = "SpaceUsage")]
+    pub space_usage: CarrierStatsSpaceUsage,
 
 }
 
@@ -1097,6 +1138,18 @@ pub struct CarrierStatsFinance {
 
     #[serde(rename = "TaxRate_shipyard")]
     pub tax_rate_shipyard: Option<u64>,
+
+}
+
+
+#[derive(Clone, Debug, Deserialize)]
+pub struct CarrierStatsShipPack {
+
+    #[serde(rename = "PackTheme")]
+    pub pack_theme: String,
+
+    #[serde(rename = "PackTier")]
+    pub pack_tier: u64,
 
 }
 
@@ -1691,11 +1744,9 @@ pub struct Crew {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    /// Helm player's commander name
     #[serde(rename = "Captain")]
     pub captain: String,
 
-    /// only from Odyssey build
     #[serde(rename = "Telepresence")]
     pub telepresence: Option<bool>,
 
@@ -4340,10 +4391,25 @@ pub struct MassModuleStoreItem {
 }
 
 
+#[derive(Clone, Debug, Deserialize)]
+pub struct Material {
+
+    #[serde(rename = "Count")]
+    pub count: u64,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "Name_Localised")]
+    pub name_localised: Option<String>,
+
+}
+
+
 /// When Written: if materials are discarded
 /// When Written: whenever materials are collected
 #[derive(Clone, Debug, Deserialize)]
-pub struct Material {
+pub struct MaterialCollected {
 
     /// Event timestamp
     #[serde(with = "crate::event::format::date")]
@@ -4352,7 +4418,7 @@ pub struct Material {
     #[serde(rename = "Category")]
     pub category: String,
 
-    /// Number of units discarded
+    /// Number of units collected
     #[serde(rename = "Count")]
     pub count: u64,
 
@@ -5759,27 +5825,35 @@ pub struct Rank {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
+    /// Percentage progress to next rank
     #[serde(rename = "Combat")]
     pub combat: u64,
 
+    /// Percentage progress to next rank
     #[serde(rename = "CQC")]
     pub cqc: u64,
 
+    /// Percentage progress to next rank
     #[serde(rename = "Empire")]
     pub empire: u64,
 
+    /// Percentage progress to next rank
     #[serde(rename = "Exobiologist")]
     pub exobiologist: Option<u64>,
 
+    /// Percentage progress to next rank
     #[serde(rename = "Explore")]
     pub explore: u64,
 
+    /// Percentage progress to next rank
     #[serde(rename = "Federation")]
     pub federation: u64,
 
+    /// Percentage progress to next rank
     #[serde(rename = "Soldier")]
     pub soldier: Option<u64>,
 
+    /// Percentage progress to next rank
     #[serde(rename = "Trade")]
     pub trade: u64,
 
@@ -8323,6 +8397,32 @@ pub struct SuitLoadout {
 }
 
 
+/// T
+#[derive(Clone, Debug, Deserialize)]
+pub struct SuitLoadoutLite {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "LoadoutID")]
+    pub loadout_id: u64,
+
+    #[serde(rename = "LoadoutName")]
+    pub loadout_name: String,
+
+    #[serde(rename = "SuitID")]
+    pub suit_id: u64,
+
+    #[serde(rename = "SuitName")]
+    pub suit_name: String,
+
+    #[serde(rename = "SuitName_Localised")]
+    pub suit_name_localised: Option<String>,
+
+}
+
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct SuitLoadoutModule {
 
@@ -9218,7 +9318,7 @@ pub enum JournalEvent {
 
     /// This event is logged when the player deletes a suit loadout
     #[serde(rename = "DeleteSuitLoadout")]
-    DeleteSuitLoadout(SuitLoadout),
+    DeleteSuitLoadout(SuitLoadoutLite),
 
     /// When Written: when delivering power micro-resources.
     #[serde(rename = "DeliverPowerMicroResources")]
@@ -9474,11 +9574,11 @@ pub enum JournalEvent {
 
     /// When Written: whenever materials are collected
     #[serde(rename = "MaterialCollected")]
-    MaterialCollected(Material),
+    MaterialCollected(MaterialCollected),
 
     /// When Written: if materials are discarded
     #[serde(rename = "MaterialDiscarded")]
-    MaterialDiscarded(Material),
+    MaterialDiscarded(MaterialCollected),
 
     /// When Written: when a new material is discovered
     #[serde(rename = "MaterialDiscovered")]
@@ -9691,7 +9791,7 @@ pub enum JournalEvent {
     RefuelPartial(Refuel),
 
     #[serde(rename = "RenameSuitLoadout")]
-    RenameSuitLoadout(SuitLoadout),
+    RenameSuitLoadout(SuitLoadoutLite),
 
     /// When Written: when repairing the ship. When repairing on a FleetCarrier, you can get a list of the modules repaired
     #[serde(rename = "Repair")]
