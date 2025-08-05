@@ -1,8 +1,6 @@
-use crate::event::JournalEvent;
 use crate::state::State;
 use iced::futures::Stream;
 use iced::Subscription;
-use std::path::PathBuf;
 use tokio::sync::mpsc;
 use tokio_stream::wrappers::ReceiverStream;
 use crate::gui::Message;
@@ -31,6 +29,8 @@ fn stream_events() -> impl Stream<Item=Message> {
 #[cfg(feature = "mock_events")]
 fn stream_events() -> impl Stream<Item = Message> {
     use tokio::fs;
+    use std::path::PathBuf;
+    use crate::event::JournalEvent;
 
     let (sender, receiver) = mpsc::channel(16);
 
@@ -67,7 +67,8 @@ fn stream_events() -> impl Stream<Item = Message> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use std::path::PathBuf;
+    use crate::event::JournalEvent;
     use regex::Regex;
     use std::fs;
     use ureq;

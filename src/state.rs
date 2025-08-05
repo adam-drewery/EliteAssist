@@ -21,11 +21,11 @@ pub use ship::*;
 pub use suit::*;
 
 use crate::event::JournalEvent;
+use crate::gui::Message;
 use log::warn;
 use serde::Deserialize;
 use std::collections::HashMap;
 use thousands::Separable;
-use crate::gui::Message;
 
 #[derive(Default)]
 pub struct State {
@@ -65,9 +65,7 @@ pub enum ActiveScreen {
 
 impl State {
     pub fn update_from(&mut self, message: Message) {
-
         match message {
-            
             Message::NavigateTo(screen) => {
                 self.active_screen = screen;
             }
@@ -79,7 +77,9 @@ impl State {
                     }
 
                     JournalEvent::Materials(e) => {
-                        if e.is_empty() { return; }
+                        if e.is_empty() {
+                            return;
+                        }
                         self.materials = e.into();
                     }
 
@@ -94,7 +94,9 @@ impl State {
                     }
 
                     JournalEvent::ShipLocker(e) => {
-                        if e.is_empty() { return; }
+                        if e.is_empty() {
+                            return;
+                        }
                         self.ship_locker = e.into();
                     }
 
@@ -131,12 +133,16 @@ impl State {
                     }
 
                     JournalEvent::ReceiveText(e) => {
-                        if e.channel == "npc" || e.channel == "starsystem" { return; }
+                        if e.channel == "npc" || e.channel == "starsystem" {
+                            return;
+                        }
                         self.messages.push(e.into());
                     }
 
                     JournalEvent::Market(e) => {
-                        if e.items.is_none() { return; }
+                        if e.items.is_none() {
+                            return;
+                        }
                         self.market = e.into();
                     }
 
@@ -374,7 +380,9 @@ impl State {
                     JournalEvent::SellOrganicData(_) => {}
                     JournalEvent::DockSRV(_) => {}
 
-                    JournalEvent::FighterDestroyed(e) => self.journal.push(e.into("Fighter", "destroyed")),
+                    JournalEvent::FighterDestroyed(e) => {
+                        self.journal.push(e.into("Fighter", "destroyed"))
+                    }
 
                     JournalEvent::ModuleSwap(_) => {}
                     JournalEvent::MaterialDiscovered(_) => {}
@@ -505,10 +513,26 @@ impl State {
                     JournalEvent::WingInvite(_) => {}
                     JournalEvent::WingJoin(_) => {}
                     JournalEvent::WingLeave(_) => {}
+                    JournalEvent::CargoTransfer(_) => {}
+                    JournalEvent::CarrierLocation(_) => {}
+                    JournalEvent::ColonisationBeaconDeployed(_) => {}
+                    JournalEvent::ColonisationConstructionDepot(_) => {}
+                    JournalEvent::ColonisationContribution(_) => {}
+                    JournalEvent::ColonisationSystemClaim(_) => {}
+                    JournalEvent::ColonisationSystemClaimRelease(_) => {}
+                    JournalEvent::EngineerLegacyConvert(_) => {}
+                    JournalEvent::HoloscreenHacked(_) => {}
+                    JournalEvent::LoadoutRemoveModule(_) => {}
+                    JournalEvent::ModuleBuyAndStore(_) => {}
+                    JournalEvent::PowerplayMerits(_) => {}
+                    JournalEvent::PowerplayRank(_) => {}
+                    JournalEvent::RequestPowerMicroResources(_) => {}
+                    JournalEvent::ShipLockerMaterials(_) => {}
+                    JournalEvent::ShipRedeemed(_) => {}
+                    JournalEvent::ShipyardRedeem(_) => {}
+                    JournalEvent::TransferMicroResources(_) => {}
                 }
             }
-            }
         }
-
-
+    }
 }

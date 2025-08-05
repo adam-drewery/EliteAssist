@@ -1,12 +1,11 @@
-use crate::event::JournalEvent;
 use crate::gui::components::sub_header;
+use crate::gui::Message;
 use crate::image::*;
 use crate::state::{MaterialGroup, State};
 use crate::theme::*;
 use iced::widget::svg::Handle;
 use iced::widget::{column, row, scrollable, svg, text, Column, Row};
 use iced::{Element, Fill, Top};
-use crate::gui::Message;
 
 pub fn materials(state: &State) -> Row<Message> {
     row![

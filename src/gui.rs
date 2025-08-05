@@ -20,6 +20,7 @@ use navigation_bar::navigation_bar;
 use ship_locker::ship_locker;
 use crate::image::LOADING_PNG;
 
+#[derive(Clone, Debug)]
 pub enum Message {
     NavigateTo(ActiveScreen),
     JournalEvent(JournalEvent)

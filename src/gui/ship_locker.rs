@@ -1,10 +1,9 @@
-use crate::event::JournalEvent;
+use crate::font::eurocaps::FONT;
+use crate::gui::Message;
 use crate::state::{ShipLockerItem, State};
 use crate::theme::{BLUE, ORANGE, YELLOW};
 use iced::widget::{column, row, scrollable, text, Column, Row};
 use iced::{Color, Element, Fill, Left, Top};
-use crate::font::eurocaps::FONT;
-use crate::gui::Message;
 
 pub fn ship_locker(state: &State) -> Row<Message> {
 

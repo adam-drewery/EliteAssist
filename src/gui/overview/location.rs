@@ -1,5 +1,5 @@
-use crate::event::JournalEvent;
 use crate::gui::components::*;
+use crate::gui::Message;
 use crate::image::FUEL_STAR_PNG;
 use crate::state::State;
 use crate::theme::{styles, GRAY, RED};
@@ -7,7 +7,6 @@ use iced::widget::image::Handle;
 use iced::widget::{column, container, image, row, scrollable, text, Column};
 use iced::Fill;
 use thousands::Separable;
-use crate::gui::Message;
 
 pub fn location(state: &State) -> Column<Message> {
     column![

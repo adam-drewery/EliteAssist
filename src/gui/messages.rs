@@ -1,10 +1,9 @@
-use crate::event::JournalEvent;
+use crate::gui::Message;
 use crate::state::{Channel, State};
 use crate::theme::{GRAY, ORANGE, WHITE, YELLOW};
 use iced::widget::text::Wrapping;
 use iced::widget::{column, row, scrollable, text, Column, Row};
 use iced::{Color, Element, Fill, Left, Right};
-use crate::gui::Message;
 
 pub fn messages(state: &State) -> Row<Message> {
     row![

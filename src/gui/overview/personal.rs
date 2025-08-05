@@ -1,10 +1,9 @@
-use iced::{Element, Fill};
-use crate::event::JournalEvent;
 use crate::gui::components::*;
-use crate::state::State;
-use iced::widget::{column, row, scrollable, text, Column};
 use crate::gui::Message;
+use crate::state::State;
 use crate::theme::{GRAY, ORANGE, WHITE};
+use iced::widget::{column, row, scrollable, text, Column};
+use iced::{Element, Fill};
 
 pub fn personal(state: &State) -> Column<Message> {
 
