@@ -2,7 +2,7 @@
   {
     "timestamp": "2025-07-31T15:56:00Z",
     "event": "FCMaterials",
-    "CarrierID": 3700005632,
+    "CarrierID": "3700005632",
     "CarrierName": "Stellar Voyager",
     "CallSign": "L14X1J",
     "MarketID": 3700005633,

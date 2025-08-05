@@ -11,6 +11,8 @@
     "JumpRangeCurr": 500.0,
     "JumpRangeMax": 500.0,
     "PendingDecommission": false,
+    "PackTheme": "Explorer",
+    "PackTier": 1,
     "ShipPacks": [
       {
         "PackTheme": "Zorgon Peterson - Cargo",

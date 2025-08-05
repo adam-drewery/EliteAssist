@@ -4,6 +4,6 @@
     "event": "ReceiveText",
     "From": "John Smith",
     "Message": "Hello, Commander!",
-    "Channel": "player"
+    "Channel": "squadron"
   }
 ]
