@@ -1,11 +1,10 @@
 use crate::gui::components::header;
-use crate::event::JournalEvent;
+use crate::gui::Message;
 use crate::state::{MarketItem, State};
 use crate::theme::{GRAY, ORANGE, WHITE, YELLOW};
-use iced::widget::{column, row, text, Row};
 use iced::widget::scrollable;
+use iced::widget::{column, row, text, Row};
 use iced::{Bottom, Element, Fill, Left};
-use crate::gui::Message;
 
 pub fn market(state: &State) -> Row<Message> {
     row![

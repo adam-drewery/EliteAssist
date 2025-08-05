@@ -19,7 +19,7 @@ impl event::CrewMember {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: format!("Crew {}", verb).into(),
-            noun: format!("{} {}", self.crew, if self.telepresence.is_some_and(|x| { true }) { "remotely" } else { "to crew" }),
+            noun: format!("{} {}", self.crew, if self.telepresence.is_some_and(|x| { x }) { "remotely" } else { "to crew" }),
         }
     }
 }
@@ -41,7 +41,7 @@ impl Into<state::GameActivity> for event::EndCrewSession {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Ended".into(),
-            noun: if self.telepresence.is_some_and(|x| { true }) { "remote session".into() } else { "crew session".into() },
+            noun: if self.telepresence.is_some_and(|x| { x }) { "remote session".into() } else { "crew session".into() },
         }
     }
 }

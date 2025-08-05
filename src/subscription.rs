@@ -71,7 +71,6 @@ mod tests {
     use crate::event::JournalEvent;
     use regex::Regex;
     use std::fs;
-    use ureq;
     use serde_json::Value;
 
     fn test_deserialize_file(path: &PathBuf) -> Result<(), String> {
@@ -129,25 +128,18 @@ mod tests {
         );
     }
     
-    /// Fetches a JSON schema from the specified URL
+    /// Fetches a JSON schema from the specified file path
     ///
-    /// This function makes an HTTP request to the given URL and parses the response as JSON.
-    /// It returns the parsed JSON schema or an error message if the request fails.
-    fn fetch_schema(url: &str) -> Result<Value, String> {
-        // Fetch the schema from the URL
-        let response = ureq::get(url)
-            .call()
-            .map_err(|e| {
-                if let ureq::Error::Status(code, _) = e {
-                    format!("Failed to fetch schema: HTTP status {}", code)
-                } else {
-                    format!("Failed to fetch schema: {}", e)
-                }
-            })?;
+    /// This function reads a JSON schema from a local file path and parses it as JSON.
+    /// It returns the parsed JSON schema or an error message if the file read fails.
+    fn fetch_schema(file_path: &str) -> Result<Value, String> {
+        // Read the schema from the local file
+        let content = fs::read_to_string(file_path)
+            .map_err(|e| format!("Failed to read schema file {}: {}", file_path, e))?;
         
-        response
-            .into_json()
-            .map_err(|e| format!("Failed to parse schema: {}", e))
+        // Parse the JSON content
+        serde_json::from_str(&content)
+            .map_err(|e| format!("Failed to parse schema from {}: {}", file_path, e))
     }
 
     /// Validates an event against its JSON schema
@@ -156,19 +148,19 @@ mod tests {
     /// then checks if the event has all the required properties defined in both schemas.
     /// It returns Ok(()) if the event is valid, or an error message listing the missing properties.
     fn validate_event_with_schema(event: &Value, event_name: &str) -> Result<(), String> {
-        // Base URL for schemas
-        let base_url = "https://raw.githubusercontent.com/jixxed/ed-journal-schemas/main/schemas";
+        // Base path for schemas
+        let base_path = "ed-journal-schemas/schemas";
         
-        // URLs for the schemas
-        let event_schema_url = format!("{}/{}/{}.json", base_url, event_name, event_name);
-        let base_schema_url = format!("{}/{}", base_url, "_Event.json");
+        // File paths for the schemas
+        let event_schema_path = format!("{}/{}/{}.json", base_path, event_name, event_name);
+        let base_schema_path = format!("{}/{}", base_path, "_Event.json");
         
         // Fetch the event-specific schema
-        let event_schema = fetch_schema(&event_schema_url)
+        let event_schema = fetch_schema(&event_schema_path)
             .map_err(|e| format!("Failed to fetch schema for {}: {}", event_name, e))?;
             
         // Fetch the base _Event.json schema
-        let base_schema = fetch_schema(&base_schema_url)
+        let base_schema = fetch_schema(&base_schema_path)
             .map_err(|e| format!("Failed to fetch base schema: {}", e))?;
         
         // Simplified validation: check if the event has all required properties

@@ -1,4 +1,5 @@
-use chrono::{DateTime, TimeZone, Utc};
+use chrono::DateTime;
+use chrono::Utc;
 use serde::{self, Deserialize, Deserializer, Serializer};
 
 pub mod date {

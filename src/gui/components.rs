@@ -1,10 +1,9 @@
-use crate::event::JournalEvent;
+use crate::font::eurocaps::FONT;
+use crate::gui::Message;
 use crate::theme::styles;
 use crate::theme::{GRAY, ORANGE};
 use iced::widget::{column, container, row, text, Column, Row};
 use iced::{Fill, Right};
-use crate::font::eurocaps::FONT;
-use crate::gui::Message;
 
 pub fn header(title: &str) -> Row<Message> {
     row![
