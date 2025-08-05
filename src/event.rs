@@ -197,6 +197,7 @@ pub struct Booking {
     #[serde(rename = "DestinationSystem")]
     pub destination_system: String,
 
+    /// indicates if requested for exit from combat zone
     #[serde(rename = "Retreat")]
     pub retreat: Option<bool>,
 
@@ -1603,6 +1604,27 @@ pub struct CommunityGoalCurrentGoalTopTier {
 }
 
 
+/// When written: when opting out of a community goal
+/// When Written: when signing up to a community goal
+#[derive(Clone, Debug, Deserialize)]
+pub struct CommunityGoalJoin {
+
+    /// Event timestamp
+    #[serde(with = "crate::event::format::date")]
+    pub timestamp: DateTime<Utc>,
+
+    #[serde(rename = "CGID")]
+    pub cgid: u64,
+
+    #[serde(rename = "Name")]
+    pub name: String,
+
+    #[serde(rename = "System")]
+    pub system: String,
+
+}
+
+
 /// When Written: when receiving a reward for a community goal
 #[derive(Clone, Debug, Deserialize)]
 pub struct CommunityGoalReward {
@@ -1744,9 +1766,11 @@ pub struct Crew {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
+    /// Helm player's commander name
     #[serde(rename = "Captain")]
     pub captain: String,
 
+    /// only from Odyssey build
     #[serde(rename = "Telepresence")]
     pub telepresence: Option<bool>,
 
@@ -3788,7 +3812,7 @@ pub struct LoadoutEquipModule {
     #[serde(rename = "LoadoutName")]
     pub loadout_name: String,
 
-    /// New weapon or other item added to loadout
+    /// Weapon or other item removed from loadout
     #[serde(rename = "ModuleName")]
     pub module_name: String,
 
@@ -4400,6 +4424,7 @@ pub struct Material {
     #[serde(rename = "Name")]
     pub name: String,
 
+    /// The localised value will be omitted if it is exactly the same as Name
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
 
@@ -4521,19 +4546,15 @@ pub struct MaterialTraded {
 #[derive(Clone, Debug, Deserialize)]
 pub struct MicroResources {
 
-    /// The category of the micro-resource.
     #[serde(rename = "Category")]
     pub category: String,
 
-    /// The count of this type of micro-resource.
     #[serde(rename = "Count")]
     pub count: u64,
 
-    /// The internal name of the micro-resource.
     #[serde(rename = "Name")]
     pub name: String,
 
-    /// The localized name of the micro-resource.
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
 
@@ -5825,35 +5846,27 @@ pub struct Rank {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    /// Percentage progress to next rank
     #[serde(rename = "Combat")]
     pub combat: u64,
 
-    /// Percentage progress to next rank
     #[serde(rename = "CQC")]
     pub cqc: u64,
 
-    /// Percentage progress to next rank
     #[serde(rename = "Empire")]
     pub empire: u64,
 
-    /// Percentage progress to next rank
     #[serde(rename = "Exobiologist")]
     pub exobiologist: Option<u64>,
 
-    /// Percentage progress to next rank
     #[serde(rename = "Explore")]
     pub explore: u64,
 
-    /// Percentage progress to next rank
     #[serde(rename = "Federation")]
     pub federation: u64,
 
-    /// Percentage progress to next rank
     #[serde(rename = "Soldier")]
     pub soldier: Option<u64>,
 
-    /// Percentage progress to next rank
     #[serde(rename = "Trade")]
     pub trade: u64,
 
@@ -9254,11 +9267,11 @@ pub enum JournalEvent {
 
     /// When written: when opting out of a community goal
     #[serde(rename = "CommunityGoalDiscard")]
-    CommunityGoalDiscard(CommunityGoal),
+    CommunityGoalDiscard(CommunityGoalJoin),
 
     /// When Written: when signing up to a community goal
     #[serde(rename = "CommunityGoalJoin")]
-    CommunityGoalJoin(CommunityGoal),
+    CommunityGoalJoin(CommunityGoalJoin),
 
     /// When Written: when receiving a reward for a community goal
     #[serde(rename = "CommunityGoalReward")]

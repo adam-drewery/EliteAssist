@@ -15,7 +15,6 @@ $structNameReplacements = @{
     "ProspectedAsteroidMaterial" = "NameAndProportion"
     
     "LeaveBody" = "Body"
-    "CommunityGoalJoin" = "CommunityGoal"
     "MaterialDiscarded" = "MaterialCollected"
     "SquadronCreated" = "Squadron"
     "HeatDamage" = "Damage"
