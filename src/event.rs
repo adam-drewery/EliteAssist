@@ -149,7 +149,7 @@ pub struct BackpackChangeEntry {
 
 }
 
-/// When written: when in Supercruise, and distance from planet drops to within the 'Orbital Cruise' zone | When written: when flying away from a planet, and distance increases above the 'Orbital Cruise' altitude
+/// When written: when flying away from a planet, and distance increases above the 'Orbital Cruise' altitude | When written: when in Supercruise, and distance from planet drops to within the 'Orbital Cruise' zone
 #[derive(Clone, Debug, Deserialize)]
 pub struct Body {
 
@@ -171,7 +171,7 @@ pub struct Body {
 
 }
 
-/// This event is logged when booking a taxi transport | This event is logged when signing up to fight at a recruitment desk
+/// This event is logged when signing up to fight at a recruitment desk | This event is logged when booking a taxi transport
 #[derive(Clone, Debug, Deserialize)]
 pub struct Booking {
 
@@ -188,7 +188,6 @@ pub struct Booking {
     #[serde(rename = "DestinationSystem")]
     pub destination_system: String,
 
-    /// indicates if requested for exit from combat zone
     #[serde(rename = "Retreat")]
     pub retreat: Option<bool>,
 
@@ -255,7 +254,7 @@ pub struct BountyReward {
 
 }
 
-/// When Written: when buying trade data in the galaxy map | When Written: when buying system data via the galaxy map
+/// When Written: when buying system data via the galaxy map | When Written: when buying trade data in the galaxy map
 #[derive(Clone, Debug, Deserialize)]
 pub struct BuyData {
 
@@ -332,7 +331,7 @@ pub struct BuyMicroResources {
 
 }
 
-/// This event is logged if the player cancels their journey to a combat zone | This event is logged if the player cancels a booked taxi trip
+/// This event is logged if the player cancels a booked taxi trip | This event is logged if the player cancels their journey to a combat zone
 #[derive(Clone, Debug, Deserialize)]
 pub struct Cancel {
 
@@ -1366,7 +1365,7 @@ pub struct ColonisationContributionContribution {
 
 }
 
-/// When written: If you should ever reset your game | When written: at the start of the LoadGame process. This is written before the inventory, loadout, etc
+/// When written: at the start of the LoadGame process. This is written before the inventory, loadout, etc | When written: If you should ever reset your game
 #[derive(Clone, Debug, Deserialize)]
 pub struct Commander {
 
@@ -2319,7 +2318,7 @@ pub struct EmbarkCrew {
 
 }
 
-/// When Written: when a colonisation beacon is deployed | When written: on a clean shutdown of the game | When written: when heat exceeds 100% | When written: when the player's ship systems shut down (eg in a Thargoid encounter) | When written: this player has left a wing | When written: when the self destruct function is used
+/// When written: when the player's ship systems shut down (eg in a Thargoid encounter) | When written: this player has left a wing | When written: when the self destruct function is used | When Written: when a colonisation beacon is deployed | When written: when heat exceeds 100% | When written: on a clean shutdown of the game
 #[derive(Clone, Debug, Deserialize)]
 pub struct Empty {
 
@@ -3574,7 +3573,7 @@ pub struct Loadout {
 
 }
 
-/// This event is logged when a player removes a weapon from a suit loadout | This event is logged when a player adds a weapon to a suit loadout
+/// This event is logged when a player adds a weapon to a suit loadout | This event is logged when a player removes a weapon from a suit loadout
 #[derive(Clone, Debug, Deserialize)]
 pub struct LoadoutEquipModule {
 
@@ -3591,7 +3590,7 @@ pub struct LoadoutEquipModule {
     #[serde(rename = "LoadoutName")]
     pub loadout_name: String,
 
-    /// Weapon or other item removed from loadout
+    /// New weapon or other item added to loadout
     #[serde(rename = "ModuleName")]
     pub module_name: String,
 
@@ -4280,19 +4279,15 @@ pub struct MaterialTraded {
 #[derive(Clone, Debug, Deserialize)]
 pub struct MicroResources {
 
-    /// The category of the micro-resource.
     #[serde(rename = "Category")]
     pub category: String,
 
-    /// The count of this type of micro-resource.
     #[serde(rename = "Count")]
     pub count: u64,
 
-    /// The internal name of the micro-resource.
     #[serde(rename = "Name")]
     pub name: String,
 
-    /// The localized name of the micro-resource.
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
 
@@ -5226,7 +5221,7 @@ pub struct PassengersManifest {
 
 }
 
-/// When written: when paying fines | When written: when paying off bounties
+/// When written: when paying off bounties | When written: when paying fines
 #[derive(Clone, Debug, Deserialize)]
 pub struct Payment {
 
@@ -5300,7 +5295,7 @@ pub struct PowerplayDefect {
 
 }
 
-/// When written: when delivering powerplay commodities | When written: when collecting powerplay commodities for delivery
+/// When written: when collecting powerplay commodities for delivery | When written: when delivering powerplay commodities
 #[derive(Clone, Debug, Deserialize)]
 pub struct PowerplayDelivery {
 
@@ -5338,7 +5333,7 @@ pub struct PowerplayFastTrack {
 
 }
 
-/// When written: when joining up with a power | When written: when leaving a power
+/// When written: when leaving a power | When written: when joining up with a power
 #[derive(Clone, Debug, Deserialize)]
 pub struct PowerplayJoin {
 
@@ -6508,7 +6503,7 @@ pub struct ShieldState {
 
 }
 
-/// When written: after a new ship has been purchased | When written: after a new ship has been redeemed
+/// When written: after a new ship has been redeemed | When written: after a new ship has been purchased
 #[derive(Clone, Debug, Deserialize)]
 pub struct Ship {
 
@@ -6893,7 +6888,7 @@ pub struct SquadronStartup {
 
 }
 
-/// When written: when the player's SRV is destroyed | When written: when docking an SRV with the ship
+/// When written: when docking an SRV with the ship | When written: when the player's SRV is destroyed
 #[derive(Clone, Debug, Deserialize)]
 pub struct SRV {
 
@@ -7958,7 +7953,7 @@ pub struct StoredShipsShipsRemote {
 
 }
 
-/// This event is logged when buying a new suit | This event is logged when a player sells a flight suit
+/// This event is logged when a player sells a flight suit | This event is logged when buying a new suit
 #[derive(Clone, Debug, Deserialize)]
 pub struct Suit {
 
@@ -8174,7 +8169,7 @@ pub struct SystemClaim {
 
 }
 
-/// System controlling faction | If starting docked in a station | System controlling faction
+/// System controlling faction | System controlling faction | If starting docked in a station
 #[derive(Clone, Debug, Deserialize)]
 pub struct SystemFaction {
 
@@ -8531,7 +8526,7 @@ pub struct VehicleSwitch {
 
 }
 
-/// This event is logged when purchasing a new hand weapon | This event is logged when a player sells a hand weapon
+/// This event is logged when a player sells a hand weapon | This event is logged when purchasing a new hand weapon
 #[derive(Clone, Debug, Deserialize)]
 pub struct Weapon {
 

@@ -212,27 +212,33 @@
       },
       {
         "Slot": "Slot04_Size6",
-        "Item": "int_guardianshieldreinforcement_size5_class2"
+        "Item": "int_guardianshieldreinforcement_size5_class2",
+        "Power": 0.000000
       },
       {
         "Slot": "Slot05_Size6",
-        "Item": "int_guardianshieldreinforcement_size5_class2"
+        "Item": "int_guardianshieldreinforcement_size5_class2",
+        "Power": 0.000000
       },
       {
         "Slot": "Slot08_Size4",
-        "Item": "int_guardianshieldreinforcement_size4_class2"
+        "Item": "int_guardianshieldreinforcement_size4_class2",
+        "Power": 0.000000
       },
       {
         "Slot": "Slot09_Size4",
-        "Item": "int_guardianshieldreinforcement_size4_class2"
+        "Item": "int_guardianshieldreinforcement_size4_class2",
+        "Power": 0.000000
       },
       {
         "Slot": "Military01",
-        "Item": "int_guardianshieldreinforcement_size5_class2"
+        "Item": "int_guardianshieldreinforcement_size5_class2",
+        "Power": 0.000000
       },
       {
         "Slot": "Military02",
-        "Item": "int_guardianshieldreinforcement_size5_class2"
+        "Item": "int_guardianshieldreinforcement_size5_class2",
+        "Power": 0.000000
       }
     ]
   }

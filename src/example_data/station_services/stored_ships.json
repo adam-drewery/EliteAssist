@@ -9,12 +9,14 @@
       {
         "ShipID": 64,
         "ShipType": "sidewinder",
-        "Value": 567962
+        "Value": 567962,
+        "Hot": true
       },
       {
         "ShipID": 20,
         "ShipType": "empire_eagle",
-        "Value": 6373956
+        "Value": 6373956,
+        "Hot": false
       }
     ],
     "ShipsRemote": [
@@ -24,7 +26,8 @@
         "StarSystem": "Beta-1 Tucanae",
         "TransferPrice": 3777,
         "TransferTime": 1590,
-        "Value": 9464239
+        "Value": 9464239,
+        "Hot": true
       }
     ]
   }
