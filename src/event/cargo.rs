@@ -43,7 +43,7 @@ impl Into<state::Materials> for event::Materials {
     }
 }
 
-impl event::Backpack {
+impl event::Inventory {
     pub fn is_empty(&self) -> bool {
         self.items.is_none()
             && self.components.is_none()
@@ -52,7 +52,7 @@ impl event::Backpack {
     }
 }
 
-impl Into<state::ShipLocker> for event::Backpack {
+impl Into<state::ShipLocker> for event::Inventory {
 
     fn into(self) -> state::ShipLocker {
 

@@ -2,6 +2,62 @@
 
 # Script to generate Rust structs from JSON schemas in ed-journal-schemas/schemas
 
+# Dictionary of merged struct name replacements
+# Maps from the automatically determined name (highest alphabetically) to a more sensible name
+$structNameReplacements = @{
+
+    # Keep as is (from issue description)
+    "SquadronPromotion" = "SquadronPromotion"
+
+    # Generic ones
+    "WingLeave" = "Empty"
+    "MiningRefined" = "TypeDetails"
+    "ProspectedAsteroidMaterial" = "NameAndProportion"
+    
+    "LeaveBody" = "Body"
+    "CommunityGoalJoin" = "CommunityGoal"
+    "MaterialDiscarded" = "Material"
+    "SquadronCreated" = "Squadron"
+    "HeatDamage" = "Damage"
+    "PayFines" = "Payment"
+    "CarrierShipPack" = "CarrierPack"
+    "SellSuit" = "Suit"
+    "MissionFailed" = "Mission"
+    "RenameSuitLoadout" = "SuitLoadout"
+    "SellWeapon" = "Weapon"
+    "ShipLocker" = "Inventory"
+    "BookTaxi" = "Booking"
+    "ShipyardNew" = "Ship"
+    "RepairAll" = "Repairs"
+    "CarrierJumpCancelled" = "Carrier"
+    "RefuelPartial" = "Refuel"
+    "SRVDestroyed" = "SRV"
+    "QuitACrew" = "Crew"
+    "PowerplayDeliver" = "PowerplayDelivery"
+    "LoadoutRemoveModule" = "LoadoutModule"
+    "BuyTradeData" = "BuyData"
+    "CrewMemberQuits" = "CrewMember"
+    "DockingRequestedLandingPads" = "LandingPads"
+    "CancelTaxi" = "Cancel"
+    "UpgradeWeaponResource" = "Material"
+    "SAASignalsFoundSignal" = "SAASignals"
+    "ShipLockerMaterialsItem" = "Item"
+    "TradeMicroResourcesOffered" = "MicroResources"
+    "LocationPowerplayConflictProgress" = "ConflictProgress"
+    "LocationFactionActiveState" = "FactionActiveState"
+    "LocationFactionRecoveringState" = "FactionRecoveringState"
+    "LocationSystemFaction" = "SystemFaction"
+    "LocationThargoidWar" = "ThargoidWar"
+    "ShipLockerMaterialsConsumable" = "Consumable"
+    "LocationConflictFaction1" = "ConflictFaction1"
+    "LocationConflictFaction2" = "ConflictFaction2"
+    "SwitchSuitLoadoutModule" = "SuitLoadoutModule"
+    "PowerplayLeave" = "PowerplayJoin"
+    "MaterialTradeReceived" = "MaterialTrade"
+    "ColonisationSystemClaimRelease" = "SystemClaim"
+    "CarrierStatsShipPack" = "CarrierStats"
+}
+
 # Define a class to represent a Rust struct
 class RustStruct {
     [string]$Name
@@ -807,8 +863,8 @@ function Compare-StructStructure {
     return $true
 }
 
-# Helper function to find the common prefix or common word in a list of struct names
-function Find-CommonPrefix {
+# Helper function to get the name that is highest alphabetically in a list of struct names
+function Get-HighestAlphabeticalName {
     param (
         [string[]]$names
     )
@@ -821,99 +877,9 @@ function Find-CommonPrefix {
         return $names[0]
     }
 
-    # First try to find a common prefix at the beginning
-    $shortestLength = ($names | ForEach-Object { $_.Length } | Measure-Object -Minimum).Minimum
-    $prefix = $names[0]
-    
-    # Check each name and reduce the prefix as needed
-    foreach ($name in $names) {
-        # Find the common part at the beginning
-        $commonLength = 0
-        for ($i = 0; $i -lt [Math]::Min($prefix.Length, $name.Length); $i++) {
-            if ($prefix[$i] -eq $name[$i]) {
-                $commonLength++
-            } else {
-                break
-            }
-        }
-        
-        # Update the prefix to the common part
-        $prefix = $prefix.Substring(0, $commonLength)
-        
-        # If we've eliminated the entire prefix, stop
-        if ($prefix.Length -eq 0) {
-            break
-        }
-    }
-    
-    # If we found a meaningful prefix, return it
-    if ($prefix.Length -ge 3) {
-        return $prefix
-    }
-    
-    # If no common prefix was found, look for common words within the names
-    # Split each name into potential words (using camel case)
-    $allWords = @{}
-    
-    foreach ($name in $names) {
-        # Extract words from camel case
-        $words = @()
-        $currentWord = ""
-        
-        for ($i = 0; $i -lt $name.Length; $i++) {
-            if ($i -gt 0 -and [char]::IsUpper($name[$i]) -and -not [char]::IsUpper($name[$i-1])) {
-                if ($currentWord -ne "") {
-                    $words += $currentWord
-                    $currentWord = ""
-                }
-            }
-            $currentWord += $name[$i]
-        }
-        
-        if ($currentWord -ne "") {
-            $words += $currentWord
-        }
-        
-        # Count occurrences of each word
-        foreach ($word in $words) {
-            if (-not $allWords.ContainsKey($word)) {
-                $allWords[$word] = 0
-            }
-            $allWords[$word]++
-        }
-    }
-    
-    # Find words that appear in all names
-    $commonWords = @()
-    foreach ($word in $allWords.Keys) {
-        if ($allWords[$word] -eq $names.Count) {
-            $commonWords += $word
-        }
-    }
-    
-    # If we found common words, use the longest one
-    if ($commonWords.Count -gt 0) {
-        $longestWord = ($commonWords | Sort-Object -Property Length -Descending)[0]
-        return $longestWord
-    }
-    
-    # If no common words were found, try to find words that appear in most names
-    $mostCommonWord = ""
-    $highestCount = 0
-    
-    foreach ($word in $allWords.Keys) {
-        if ($allWords[$word] -gt $highestCount -and $word.Length -ge 3) {
-            $mostCommonWord = $word
-            $highestCount = $allWords[$word]
-        }
-    }
-    
-    if ($mostCommonWord -ne "" -and $highestCount -ge ($names.Count / 2)) {
-        return $mostCommonWord
-    }
-    
-    # If all else fails, return the first name
-    return $names[0]
+    # Sort the names alphabetically and return the highest one
+    $sortedNames = $names | Sort-Object
+    return $sortedNames[-1]
 }
 
 # Helper function to merge documentation from multiple structs
@@ -1059,9 +1025,9 @@ Write-Host "Grouping structs with identical structures..."
 $structGroups = @{}
 $structMapping = @{}
 
-# First, create a list of all top-level structs
+# Create a list of all structs (both top-level and nested)
 $topLevelStructs = @()
-foreach ($structName in $allStructNames) {
+foreach ($structName in $allStructs.Keys) {
     $topLevelStructs += @{
         Name = $structName
         Struct = $allStructs[$structName]
@@ -1112,12 +1078,14 @@ foreach ($groupKey in $structGroups.Keys) {
     # Get the names of all structs in this group
     $structNames = $group | ForEach-Object { $_.Name }
     
-    # Find the common prefix to use as the merged struct name
-    $commonPrefix = Find-CommonPrefix -names $structNames
+    # Get the name that is highest alphabetically to use as the merged struct name
+    $highestName = Get-HighestAlphabeticalName -names $structNames
     
-    # If the common prefix is empty or too short, use the first struct name
-    if ($commonPrefix.Length -lt 2) {
-        $commonPrefix = $structNames[0]
+    # Check if there's a more sensible replacement name in the dictionary
+    if ($structNameReplacements.ContainsKey($highestName)) {
+        $commonPrefix = $structNameReplacements[$highestName]
+    } else {
+        $commonPrefix = $highestName
     }
 
     # Multiple structs with identical structure - merge them
@@ -1155,10 +1123,48 @@ foreach ($groupKey in $structGroups.Keys) {
     }
 }
 
-# Add all non-top-level structs to the merged structs collection
-foreach ($key in $allStructs.Keys) {
-    if (-not $allStructNames.Contains($key)) {
-        $mergedStructs[$key] = $allStructs[$key]
+# Note: We no longer need to add non-top-level structs separately
+# as they are now included in the de-duplication process above
+
+# Update field types in all structs to use the merged struct names
+Write-Host "Updating field type references to use merged struct names..."
+foreach ($key in $mergedStructs.Keys) {
+    $struct = $mergedStructs[$key]
+    
+    # Update field types to use merged struct names
+    foreach ($field in $struct.Fields) {
+        $fieldType = $field.Type
+        
+        # Check if the field type references a struct that was merged
+        # Handle different type patterns: direct references, Vec<Type>, Option<Type>, Option<Vec<Type>>
+        if ($fieldType -match '^([A-Za-z0-9_]+)$') {
+            # Direct reference to a type
+            $typeName = $matches[1]
+            if ($originalToMergedMap.ContainsKey($typeName) -and $originalToMergedMap[$typeName] -ne $typeName) {
+                $field.Type = $originalToMergedMap[$typeName]
+            }
+        }
+        elseif ($fieldType -match '^Vec<([A-Za-z0-9_]+)>$') {
+            # Vec<Type>
+            $typeName = $matches[1]
+            if ($originalToMergedMap.ContainsKey($typeName) -and $originalToMergedMap[$typeName] -ne $typeName) {
+                $field.Type = "Vec<$($originalToMergedMap[$typeName])>"
+            }
+        }
+        elseif ($fieldType -match '^Option<([A-Za-z0-9_]+)>$') {
+            # Option<Type>
+            $typeName = $matches[1]
+            if ($originalToMergedMap.ContainsKey($typeName) -and $originalToMergedMap[$typeName] -ne $typeName) {
+                $field.Type = "Option<$($originalToMergedMap[$typeName])>"
+            }
+        }
+        elseif ($fieldType -match '^Option<Vec<([A-Za-z0-9_]+)>>$') {
+            # Option<Vec<Type>>
+            $typeName = $matches[1]
+            if ($originalToMergedMap.ContainsKey($typeName) -and $originalToMergedMap[$typeName] -ne $typeName) {
+                $field.Type = "Option<Vec<$($originalToMergedMap[$typeName])>>"
+            }
+        }
     }
 }
 
@@ -1190,8 +1196,6 @@ $fileContent += "`n"
 # Write the file
 Set-Content -Path $eventFilePath -Value $fileContent
 
-Write-Host "Generated $eventFilePath with $($mergedStructNames.Count) structs (merged from $($allStructNames.Count) original structs) and JournalEvent enum"
-
-Write-Host "Generated $eventFilePath with $($allStructNames.Count) structs and JournalEvent enum"
+Write-Host "Generated $eventFilePath with $($mergedStructNames.Count) structs (merged from $($allStructs.Count) original structs, including nested types) and JournalEvent enum"
 
 Write-Host "Done!"
