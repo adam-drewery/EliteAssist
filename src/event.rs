@@ -179,8 +179,8 @@ pub struct Body {
 }
 
 
-/// This event is logged when signing up to fight at a recruitment desk
 /// This event is logged when booking a taxi transport
+/// This event is logged when signing up to fight at a recruitment desk
 #[derive(Clone, Debug, Deserialize)]
 pub struct Booking {
 
@@ -348,8 +348,8 @@ pub struct BuyMicroResources {
 }
 
 
-/// This event is logged if the player cancels their journey to a combat zone
 /// This event is logged if the player cancels a booked taxi trip
+/// This event is logged if the player cancels their journey to a combat zone
 #[derive(Clone, Debug, Deserialize)]
 pub struct Cancel {
 
@@ -1859,8 +1859,8 @@ pub struct CrewLaunchFighter {
 }
 
 
-/// When written: When another player leaves your ship's crew
 /// When written: When another player joins your ship's crew
+/// When written: When another player leaves your ship's crew
 #[derive(Clone, Debug, Deserialize)]
 pub struct CrewMember {
 
@@ -2490,12 +2490,12 @@ pub struct EmbarkCrew {
 }
 
 
-/// When written: when the player's ship systems shut down (eg in a Thargoid encounter)
-/// When written: when the self destruct function is used
-/// When Written: when a colonisation beacon is deployed
 /// When written: on a clean shutdown of the game
 /// When written: this player has left a wing
+/// When Written: when a colonisation beacon is deployed
 /// When written: when heat exceeds 100%
+/// When written: when the player's ship systems shut down (eg in a Thargoid encounter)
+/// When written: when the self destruct function is used
 #[derive(Clone, Debug, Deserialize)]
 pub struct Empty {
 
@@ -3479,8 +3479,8 @@ pub struct Interdiction {
 }
 
 
-/// Lists the contents of the ship locker, eg at startup. The full contents are written to a separate file, ShipLocker.json. The full list is also written into the journal at startup (if in a ship) and when boarding a ship. The shiplocker.json file is updated when the locker contents are changed.
 /// Lists the contents of the backpack, in a separate backpack.json file
+/// Lists the contents of the ship locker, eg at startup. The full contents are written to a separate file, ShipLocker.json. The full list is also written into the journal at startup (if in a ship) and when boarding a ship. The shiplocker.json file is updated when the locker contents are changed.
 #[derive(Clone, Debug, Deserialize)]
 pub struct Inventory {
 
@@ -3794,8 +3794,8 @@ pub struct Loadout {
 }
 
 
-/// This event is logged when a player removes a weapon from a suit loadout
 /// This event is logged when a player adds a weapon to a suit loadout
+/// This event is logged when a player removes a weapon from a suit loadout
 #[derive(Clone, Debug, Deserialize)]
 pub struct LoadoutEquipModule {
 
@@ -4432,8 +4432,8 @@ pub struct Material {
 }
 
 
-/// When Written: whenever materials are collected
 /// When Written: if materials are discarded
+/// When Written: whenever materials are collected
 #[derive(Clone, Debug, Deserialize)]
 pub struct MaterialCollected {
 
@@ -4444,8 +4444,8 @@ pub struct MaterialCollected {
     #[serde(rename = "Category")]
     pub category: String,
 
-    /// Number of units discarded
     /// Number of units collected
+    /// Number of units discarded
     #[serde(rename = "Count")]
     pub count: u64,
 
@@ -5531,8 +5531,8 @@ pub struct PassengersManifest {
 }
 
 
-/// When written: when paying off bounties
 /// When written: when paying fines
+/// When written: when paying off bounties
 #[derive(Clone, Debug, Deserialize)]
 pub struct Payment {
 
@@ -5967,8 +5967,8 @@ pub struct RedeemVoucherFaction {
 }
 
 
-/// When Written: when refuelling (full tank)
 /// When Written: when refuelling (10%)
+/// When Written: when refuelling (full tank)
 #[derive(Clone, Debug, Deserialize)]
 pub struct Refuel {
 
@@ -7270,8 +7270,8 @@ pub struct SquadronStartup {
 }
 
 
-/// When written: when the player's SRV is destroyed
 /// When written: when docking an SRV with the ship
+/// When written: when the player's SRV is destroyed
 #[derive(Clone, Debug, Deserialize)]
 pub struct SRV {
 
@@ -8605,8 +8605,8 @@ pub struct Synthesis {
 }
 
 
-/// When Written: When a system is claimed for colonisation by paying for the claim.
 /// When Written: when a colonisation claim is released
+/// When Written: When a system is claimed for colonisation by paying for the claim.
 #[derive(Clone, Debug, Deserialize)]
 pub struct SystemClaim {
 
@@ -8703,8 +8703,8 @@ pub struct ThargoidWar {
 }
 
 
-/// When written: when taking off from planet surface
 /// When written: landing on a planet surface
+/// When written: when taking off from planet surface
 #[derive(Clone, Debug, Deserialize)]
 pub struct Touchdown {
 
@@ -9002,8 +9002,8 @@ pub struct VehicleSwitch {
 }
 
 
-/// This event is logged when purchasing a new hand weapon
 /// This event is logged when a player sells a hand weapon
+/// This event is logged when purchasing a new hand weapon
 #[derive(Clone, Debug, Deserialize)]
 pub struct Weapon {
 
@@ -9032,8 +9032,8 @@ pub struct Weapon {
 }
 
 
-/// When written: when the player is invited to a wing
 /// When written: another player has joined the wing
+/// When written: when the player is invited to a wing
 #[derive(Clone, Debug, Deserialize)]
 pub struct WingInvite {
 

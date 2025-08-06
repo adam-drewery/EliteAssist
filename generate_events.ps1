@@ -930,58 +930,46 @@ function Merge-Documentation {
     )
     
     # Debug output
-    Write-Host "Merge-Documentation called with descriptions: $($descriptions -join ' | ')"
-    
+
     # Create a new array with explicit string conversions to avoid any reference issues
     $explicitDescriptions = @()
     foreach ($desc in $descriptions) {
         if ($desc -ne $null -and $desc -ne "") {
             # Create a new string explicitly
             $newDesc = [string]::new($desc)
-            Write-Host "Processing description: '$newDesc' (Length: $($newDesc.Length))"
             $explicitDescriptions += $newDesc
         }
     }
     
     # Filter out empty descriptions
     $validDescriptions = $explicitDescriptions | Where-Object { $_ -ne $null -and $_ -ne "" }
-    Write-Host "Valid descriptions: $($validDescriptions -join ' | ')"
-    
+
     if ($validDescriptions.Count -eq 0) {
-        Write-Host "No valid descriptions, returning empty string"
         return ""
     }
     
     if ($validDescriptions.Count -eq 1) {
         # Debug the string character by character to understand what's happening
         $desc = $validDescriptions[0]
-        Write-Host "Only one valid description, returning it: '$desc'"
-        Write-Host "Description length: $($desc.Length)"
-        
+
         # Simpler debug approach
         $charDebug = ""
         for ($i = 0; $i -lt $desc.Length; $i++) {
             $charDebug += "$($desc[$i]) (ASCII: $([int][char]$desc[$i])), "
         }
-        Write-Host "Description characters: $charDebug"
-        
+
         # Return the full string
         return $desc
     }
-    
+    # Remove duplicate descriptions
+    $validDescriptions = $validDescriptions | Where-Object { $_ -ne $null -and $_ -ne "" } | Sort-Object
+
     # Remove duplicate descriptions
     $uniqueDescriptions = $validDescriptions | Select-Object -Unique
-    Write-Host "Unique descriptions: $($uniqueDescriptions -join ' | ')"
-    
-    # Sort descriptions by length (longest first) to ensure we keep the most detailed descriptions
-    # This ensures that if one schema has a full description and another has a truncated one, we keep the full one
-    $sortedDescriptions = $uniqueDescriptions | Sort-Object -Property {$_.Length} -Descending
-    Write-Host "Sorted descriptions (by length): $($sortedDescriptions -join ' | ')"
-    
+
     # Join all descriptions with line breaks for multi-line documentation
     # Don't include the indentation or doc comment prefix here - it will be added by the ToString method
-    $result = ($sortedDescriptions -join "`n")
-    Write-Host "Final merged result: '$result'"
+    $result = ($uniqueDescriptions -join "`n")
     return $result
 }
 
@@ -1217,15 +1205,10 @@ foreach ($groupKey in ($structGroups.Keys | Sort-Object)) {
             if ($matchingField -and $matchingField.Description) {
                 # Debug output for retreat property
                 if ($field.Name -eq "retreat") {
-                    Write-Host "Found description for retreat property: '$($matchingField.Description)' from struct $($structObj.Name)"
-                    Write-Host "Description type: $($matchingField.Description.GetType().FullName)"
-                    Write-Host "Description length: $($matchingField.Description.Length)"
-                    
+
                     # Explicitly create a new string to avoid any reference issues
                     $fullDesc = [string]::new($matchingField.Description)
-                    Write-Host "Full description (explicit string): '$fullDesc'"
-                    Write-Host "Full description length: $($fullDesc.Length)"
-                    
+
                     # Add the explicit string to the descriptions
                     $fieldDescriptions += $fullDesc
                 } else {
@@ -1233,20 +1216,20 @@ foreach ($groupKey in ($structGroups.Keys | Sort-Object)) {
                 }
             }
         }
-        
+
         # Merge the field documentation
         $mergedFieldDescription = Merge-Documentation -descriptions $fieldDescriptions
-        
+
         # Debug output for retreat property
         if ($field.Name -eq "retreat") {
             Write-Host "Field descriptions for retreat: $($fieldDescriptions -join ', ')"
             Write-Host "Merged description for retreat: '$mergedFieldDescription'"
-            
+
             # Special handling for retreat property - hardcode the correct description
             $mergedFieldDescription = "indicates if requested for exit from combat zone"
             Write-Host "Overriding with hardcoded description: '$mergedFieldDescription'"
         }
-        
+
         $mergedStruct.AddFieldWithSerdeAttrs(
             $field.Name,
             $field.Type,
