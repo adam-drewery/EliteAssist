@@ -179,8 +179,8 @@ pub struct Body {
 }
 
 
-/// This event is logged when booking a taxi transport
 /// This event is logged when signing up to fight at a recruitment desk
+/// This event is logged when booking a taxi transport
 #[derive(Clone, Debug, Deserialize)]
 pub struct Booking {
 
@@ -348,8 +348,8 @@ pub struct BuyMicroResources {
 }
 
 
-/// This event is logged if the player cancels a booked taxi trip
 /// This event is logged if the player cancels their journey to a combat zone
+/// This event is logged if the player cancels a booked taxi trip
 #[derive(Clone, Debug, Deserialize)]
 pub struct Cancel {
 
@@ -1766,11 +1766,11 @@ pub struct Crew {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
-    /// Helm player's commander name
+    /// H
     #[serde(rename = "Captain")]
     pub captain: String,
 
-    /// only from Odyssey build
+    /// o
     #[serde(rename = "Telepresence")]
     pub telepresence: Option<bool>,
 
@@ -1859,8 +1859,8 @@ pub struct CrewLaunchFighter {
 }
 
 
-/// When written: When another player joins your ship's crew
 /// When written: When another player leaves your ship's crew
+/// When written: When another player joins your ship's crew
 #[derive(Clone, Debug, Deserialize)]
 pub struct CrewMember {
 
@@ -2490,12 +2490,12 @@ pub struct EmbarkCrew {
 }
 
 
-/// When written: on a clean shutdown of the game
-/// When written: this player has left a wing
-/// When Written: when a colonisation beacon is deployed
-/// When written: when heat exceeds 100%
 /// When written: when the player's ship systems shut down (eg in a Thargoid encounter)
 /// When written: when the self destruct function is used
+/// When Written: when a colonisation beacon is deployed
+/// When written: on a clean shutdown of the game
+/// When written: this player has left a wing
+/// When written: when heat exceeds 100%
 #[derive(Clone, Debug, Deserialize)]
 pub struct Empty {
 
@@ -3479,8 +3479,8 @@ pub struct Interdiction {
 }
 
 
-/// Lists the contents of the backpack, in a separate backpack.json file
 /// Lists the contents of the ship locker, eg at startup. The full contents are written to a separate file, ShipLocker.json. The full list is also written into the journal at startup (if in a ship) and when boarding a ship. The shiplocker.json file is updated when the locker contents are changed.
+/// Lists the contents of the backpack, in a separate backpack.json file
 #[derive(Clone, Debug, Deserialize)]
 pub struct Inventory {
 
@@ -3794,8 +3794,8 @@ pub struct Loadout {
 }
 
 
-/// This event is logged when a player adds a weapon to a suit loadout
 /// This event is logged when a player removes a weapon from a suit loadout
+/// This event is logged when a player adds a weapon to a suit loadout
 #[derive(Clone, Debug, Deserialize)]
 pub struct LoadoutEquipModule {
 
@@ -3812,6 +3812,7 @@ pub struct LoadoutEquipModule {
     #[serde(rename = "LoadoutName")]
     pub loadout_name: String,
 
+    /// New weapon or other item added to loadout
     /// Weapon or other item removed from loadout
     #[serde(rename = "ModuleName")]
     pub module_name: String,
@@ -4431,8 +4432,8 @@ pub struct Material {
 }
 
 
-/// When Written: if materials are discarded
 /// When Written: whenever materials are collected
+/// When Written: if materials are discarded
 #[derive(Clone, Debug, Deserialize)]
 pub struct MaterialCollected {
 
@@ -4443,6 +4444,7 @@ pub struct MaterialCollected {
     #[serde(rename = "Category")]
     pub category: String,
 
+    /// Number of units discarded
     /// Number of units collected
     #[serde(rename = "Count")]
     pub count: u64,
@@ -4546,15 +4548,19 @@ pub struct MaterialTraded {
 #[derive(Clone, Debug, Deserialize)]
 pub struct MicroResources {
 
+    /// The category of the micro-resource.
     #[serde(rename = "Category")]
     pub category: String,
 
+    /// The count of this type of micro-resource.
     #[serde(rename = "Count")]
     pub count: u64,
 
+    /// The internal name of the micro-resource.
     #[serde(rename = "Name")]
     pub name: String,
 
+    /// The localized name of the micro-resource.
     #[serde(rename = "Name_Localised")]
     pub name_localised: Option<String>,
 
@@ -5525,8 +5531,8 @@ pub struct PassengersManifest {
 }
 
 
-/// When written: when paying fines
 /// When written: when paying off bounties
+/// When written: when paying fines
 #[derive(Clone, Debug, Deserialize)]
 pub struct Payment {
 
@@ -5838,7 +5844,6 @@ pub struct PVPKill {
 
 
 /// When written: at startup
-/// When written: at startup
 #[derive(Clone, Debug, Deserialize)]
 pub struct Rank {
 
@@ -5846,27 +5851,35 @@ pub struct Rank {
     #[serde(with = "crate::event::format::date")]
     pub timestamp: DateTime<Utc>,
 
+    /// P
     #[serde(rename = "Combat")]
     pub combat: u64,
 
+    /// P
     #[serde(rename = "CQC")]
     pub cqc: u64,
 
+    /// P
     #[serde(rename = "Empire")]
     pub empire: u64,
 
+    /// P
     #[serde(rename = "Exobiologist")]
     pub exobiologist: Option<u64>,
 
+    /// P
     #[serde(rename = "Explore")]
     pub explore: u64,
 
+    /// P
     #[serde(rename = "Federation")]
     pub federation: u64,
 
+    /// P
     #[serde(rename = "Soldier")]
     pub soldier: Option<u64>,
 
+    /// P
     #[serde(rename = "Trade")]
     pub trade: u64,
 
@@ -5954,8 +5967,8 @@ pub struct RedeemVoucherFaction {
 }
 
 
-/// When Written: when refuelling (10%)
 /// When Written: when refuelling (full tank)
+/// When Written: when refuelling (10%)
 #[derive(Clone, Debug, Deserialize)]
 pub struct Refuel {
 
@@ -7257,8 +7270,8 @@ pub struct SquadronStartup {
 }
 
 
-/// When written: when docking an SRV with the ship
 /// When written: when the player's SRV is destroyed
+/// When written: when docking an SRV with the ship
 #[derive(Clone, Debug, Deserialize)]
 pub struct SRV {
 
@@ -8592,8 +8605,8 @@ pub struct Synthesis {
 }
 
 
-/// When Written: when a colonisation claim is released
 /// When Written: When a system is claimed for colonisation by paying for the claim.
+/// When Written: when a colonisation claim is released
 #[derive(Clone, Debug, Deserialize)]
 pub struct SystemClaim {
 
@@ -8611,7 +8624,6 @@ pub struct SystemClaim {
 
 
 /// If starting docked in a station
-/// System controlling faction
 /// System controlling faction
 #[derive(Clone, Debug, Deserialize)]
 pub struct SystemFaction {
@@ -8664,8 +8676,6 @@ pub struct TechnologyBrokerItemsUnlocked {
 
 
 /// Thargoid war information
-/// Thargoid war information
-/// Thargoid war information
 #[derive(Clone, Debug, Deserialize)]
 pub struct ThargoidWar {
 
@@ -8693,8 +8703,8 @@ pub struct ThargoidWar {
 }
 
 
-/// When written: landing on a planet surface
 /// When written: when taking off from planet surface
+/// When written: landing on a planet surface
 #[derive(Clone, Debug, Deserialize)]
 pub struct Touchdown {
 
@@ -8708,10 +8718,12 @@ pub struct Touchdown {
     #[serde(rename = "BodyID")]
     pub body_id: Option<u64>,
 
+    /// only if player flying in ship)
     /// only if player is landing
     #[serde(rename = "Latitude")]
     pub latitude: Option<f64>,
 
+    /// only if player flying in ship)
     /// only if player is landing
     #[serde(rename = "Longitude")]
     pub longitude: Option<f64>,
@@ -8731,6 +8743,7 @@ pub struct Touchdown {
     #[serde(rename = "OnStation")]
     pub on_station: Option<bool>,
 
+    /// false if ship dismissed when player is in SRV, true if player is taking off
     /// false if ship was recalled from SRV, true if player is landing
     #[serde(rename = "PlayerControlled")]
     pub player_controlled: bool,
@@ -8989,8 +9002,8 @@ pub struct VehicleSwitch {
 }
 
 
-/// This event is logged when a player sells a hand weapon
 /// This event is logged when purchasing a new hand weapon
+/// This event is logged when a player sells a hand weapon
 #[derive(Clone, Debug, Deserialize)]
 pub struct Weapon {
 
@@ -9019,8 +9032,8 @@ pub struct Weapon {
 }
 
 
-/// When written: another player has joined the wing
 /// When written: when the player is invited to a wing
+/// When written: another player has joined the wing
 #[derive(Clone, Debug, Deserialize)]
 pub struct WingInvite {
 
