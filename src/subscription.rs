@@ -149,7 +149,7 @@ mod tests {
     /// It returns Ok(()) if the event is valid, or an error message listing the missing properties.
     fn validate_event_with_schema(event: &Value, event_name: &str) -> Result<(), String> {
         // Base path for schemas
-        let base_path = "ed-journal-schemas/schemas";
+        let base_path = "journal-schemas/schemas";
         
         // File paths for the schemas
         let event_schema_path = format!("{}/{}/{}.json", base_path, event_name, event_name);

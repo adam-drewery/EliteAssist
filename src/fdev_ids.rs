@@ -59,24 +59,24 @@ pub struct Material {
 
 impl Outfitting {
     pub fn metadata(name: &String) -> Option<&Self> {
-        static_hashmap!("../FDevIDs/outfitting.csv", Outfitting).get(&name.to_lowercase())
+        static_hashmap!("../fdev-ids/outfitting.csv", Outfitting).get(&name.to_lowercase())
     }
 }
 
 impl Shipyard {
     pub fn metadata(name: &String) -> Option<&Self> {
-        static_hashmap!("../FDevIDs/shipyard.csv", Shipyard).get(&name.to_lowercase())
+        static_hashmap!("../fdev-ids/shipyard.csv", Shipyard).get(&name.to_lowercase())
     }
 }
 
 impl Material {
     pub fn metadata(name: &String) -> Option<&Self> {
-        static_hashmap!("../FDevIDs/material.csv", Material).get(&name.to_lowercase())
+        static_hashmap!("../fdev-ids/material.csv", Material).get(&name.to_lowercase())
     }
 }
 
 pub fn all_materials() -> state::Materials {
-    let materials = static_hashmap!("../FDevIDs/material.csv", Material);
+    let materials = static_hashmap!("../fdev-ids/material.csv", Material);
     let mut raw = HashMap::new();
     let mut encoded = HashMap::new();
     let mut manufactured = HashMap::new();

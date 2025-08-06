@@ -1,6 +1,6 @@
 #!/usr/bin/env pwsh
 
-# Script to generate Rust structs from JSON schemas in ed-journal-schemas/schemas
+# Script to generate Rust structs from JSON schemas in journal-schemas/schemas
 
 # Dictionary of merged struct name replacements
 # Maps from the automatically determined name (highest alphabetically) to a more sensible name
@@ -432,7 +432,7 @@ function Get-RustType {
                 $defName = $matches[2]
 
                 # Construct the full path to the schema file
-                $fullSchemaPath = Join-Path (Get-Location) "ed-journal-schemas/schemas/$schemaFilePath"
+                $fullSchemaPath = Join-Path (Get-Location) "journal-schemas/schemas/$schemaFilePath"
 
                 if (Test-Path $fullSchemaPath) {
                     # Load the referenced schema file
@@ -976,11 +976,11 @@ function Merge-Documentation {
 # Main script
 
 # Get the base schema
-$baseSchemaPath = Join-Path (Get-Location) "ed-journal-schemas/schemas/_Event.json"
+$baseSchemaPath = Join-Path (Get-Location) "journal-schemas/schemas/_Event.json"
 $baseSchema = Get-Content $baseSchemaPath -Raw | ConvertFrom-Json
 
 # Get all schema directories
-$schemaDir = Join-Path (Get-Location) "ed-journal-schemas/schemas"
+$schemaDir = Join-Path (Get-Location) "journal-schemas/schemas"
 $schemaDirs = Get-ChildItem -Path $schemaDir -Directory
 
 # Create a model to store all structs
