@@ -1,6 +1,6 @@
-[submodule "FDevIDs"]
-	path = FDevIDs
+[submodule "fdev-ids"]
+	path = fdev-ids
 	url = https://github.com/EDCD/FDevIDs.git
-[submodule "ed-journal-schemas"]
-	path = ed-journal-schemas
+[submodule "journal-schemas"]
+	path = journal-schemas
 	url = https://github.com/jixxed/ed-journal-schemas.git
