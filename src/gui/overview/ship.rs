@@ -110,7 +110,7 @@ fn ship_title(ship_loadout: &ShipLoadout) -> Row<Message> {
                     .color(ORANGE)
                     .size(30)
                     .align_x(Left),
-                text(&ship_loadout.ship)
+                text(&ship_loadout.ship_type)
                     .font(FONT)
                     .color(ORANGE)
                     .size(16)

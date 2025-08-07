@@ -6,7 +6,7 @@ use regex::Regex;
 pub struct ShipLoadout {
 
     pub timestamp: DateTime<Utc>,
-    pub ship: String,
+    pub ship_type: String,
     pub ship_id: u64,
     pub ship_name: String,
     pub ship_ident: String,
