@@ -1,5 +1,4 @@
-use crate::event;
-use crate::state;
+use crate::{event, state};
 use crate::text::title_case;
 
 impl Into<state::Market> for event::Market {

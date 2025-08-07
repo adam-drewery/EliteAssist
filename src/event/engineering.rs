@@ -1,12 +1,12 @@
-use crate::event;
+use crate::{event, state};
 
-impl Into<crate::state::Engineering> for event::LoadoutModuleEngineering {
-    fn into(self) -> crate::state::Engineering {
-        crate::state::Engineering {
+impl Into<state::Engineering> for event::LoadoutModuleEngineering {
+    fn into(self) -> state::Engineering {
+        state::Engineering {
             engineer: self.engineer.unwrap_or_default(),
             engineer_id: self.engineer_id,
             blueprint_id: self.blueprint_id,
-            blueprint_name: self.blueprint_name.split('_').skip(1).next().unwrap().to_string(),
+            blueprint_name: self.blueprint_name.split('_').skip(1).next().unwrap_or_default().to_string(),
             level: self.level,
             quality: self.quality,
             experimental_effect: self.experimental_effect_localised.or(self.experimental_effect),
@@ -15,9 +15,9 @@ impl Into<crate::state::Engineering> for event::LoadoutModuleEngineering {
     }
 }
 
-impl Into<crate::state::Modifier> for event::LoadoutModuleEngineeringModifier {
-    fn into(self) -> crate::state::Modifier {
-        crate::state::Modifier {
+impl Into<state::Modifier> for event::LoadoutModuleEngineeringModifier {
+    fn into(self) -> state::Modifier {
+        state::Modifier {
             label: self.label,
             value: self.value.unwrap_or_default(),
             original_value: self.original_value.unwrap_or_default(),
@@ -26,9 +26,9 @@ impl Into<crate::state::Modifier> for event::LoadoutModuleEngineeringModifier {
     }
 }
 
-impl Into<crate::state::EngineerProgress> for event::EngineerProgress {
-    fn into(self) -> crate::state::EngineerProgress {
-        crate::state::EngineerProgress {
+impl Into<state::EngineerProgress> for event::EngineerProgress {
+    fn into(self) -> state::EngineerProgress {
+        state::EngineerProgress {
             timestamp: self.timestamp,
             engineers: self.engineers
                 .unwrap_or_default()
@@ -39,9 +39,9 @@ impl Into<crate::state::EngineerProgress> for event::EngineerProgress {
     }
 }
 
-impl Into<crate::state::Engineer> for event::EngineerProgressEngineer {
-    fn into(self) -> crate::state::Engineer {
-        crate::state::Engineer {
+impl Into<state::Engineer> for event::EngineerProgressEngineer {
+    fn into(self) -> state::Engineer {
+        state::Engineer {
             engineer: self.engineer,
             engineer_id: self.engineer_id,
             progress: self.progress,

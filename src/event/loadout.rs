@@ -1,6 +1,4 @@
-use crate::event;
-use crate::state;
-
+use crate::{event, state};
 
 impl Into<state::SuitLoadout> for event::SuitLoadout {
 
@@ -9,7 +7,7 @@ impl Into<state::SuitLoadout> for event::SuitLoadout {
             timestamp: self.timestamp,
             suit_id: self.suit_id,
             suit_name: self.suit_name_localised.unwrap_or(self.suit_name),
-            suit_mods: vec![],
+            suit_mods: self.modules.into_iter().map(|m| m.module_name).collect(),
             loadout_id: self.loadout_id,
             loadout_name: self.loadout_name,
             modules: vec![],
@@ -36,8 +34,8 @@ impl Into<state::ShipLoadout> for event::Loadout {
             ship_id: self.ship_id,
             ship_name: self.ship_name,
             ship_ident: self.ship_ident,
-            hull_value: self.hull_value.unwrap(),
-            modules_value: self.modules_value.unwrap(),
+            hull_value: self.hull_value.unwrap_or_default(),
+            modules_value: self.modules_value.unwrap_or_default(),
             hull_health: self.hull_health,
             unladen_mass: self.unladen_mass,
             cargo_capacity: self.cargo_capacity,

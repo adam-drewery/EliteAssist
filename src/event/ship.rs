@@ -1,6 +1,5 @@
-use serde::Deserialize;
-use crate::{event, state};
 use crate::fdev_ids::Outfitting;
+use crate::{event, state};
 
 impl Into<state::ShipModule> for event::LoadoutModule {
     fn into(self) -> state::ShipModule {
@@ -31,17 +30,7 @@ impl Into<state::ShipModule> for event::LoadoutModule {
     }
 }
 
-#[derive(Clone, Debug, Deserialize)]
-pub struct FuelCapacity {
-    
-    #[serde(rename = "Main")]
-    pub main: f64,
-
-    #[serde(rename = "Reserve")]
-    pub reserve: f64,
-}
-
-impl Into<state::FuelCapacity> for FuelCapacity {
+impl Into<state::FuelCapacity> for event::LoadoutFuelCapacity {
     fn into(self) -> state::FuelCapacity {
         state::FuelCapacity {
             main: self.main,

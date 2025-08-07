@@ -1,9 +1,8 @@
 use std::collections::HashMap;
 use thousands::Separable;
-use crate::event;
+use crate::{event, state};
 use crate::event::format::prettify_date;
 use crate::fdev_ids::all_materials;
-use crate::state;
 use crate::text::title_case;
 
 impl event::Materials {

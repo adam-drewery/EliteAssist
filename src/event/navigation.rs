@@ -1,6 +1,5 @@
-use crate::event;
+use crate::{event, state};
 use crate::event::format::prettify_date;
-use crate::state;
 
 impl Into<state::GameActivity> for event::Embark {
     fn into(self) -> state::GameActivity {
@@ -113,7 +112,7 @@ impl Into<state::GameActivity> for event::StartJump {
                 time: self.timestamp,
                 time_display: prettify_date(&self.timestamp),
                 verb: "Jumped to".into(),
-                noun: format!["{} ({})", self.star_system.unwrap(), self.star_class.unwrap()]
+                noun: format!["{} ({})", self.star_system.unwrap_or_default(), self.star_class.unwrap_or_default()]
             },
             _ => panic!("Unknown jump type")
         }
