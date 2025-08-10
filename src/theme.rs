@@ -33,11 +33,11 @@ pub fn theme(_state: &State) -> Theme {
 }
 
 pub mod style {
-    use crate::theme::{DARK_GRAY, ORANGE, WHITE};
-    use iced::widget::{container};
+    use crate::theme::{BACKGROUND, DARK_GRAY, ORANGE, WHITE};
+    use iced::border::radius;
+    use iced::widget::container;
     use iced::Background::Color;
     use iced::{Border, Theme};
-    use iced::border::radius;
 
     pub fn header(_theme: &Theme) -> container::Style {
         container::Style {
@@ -65,6 +65,19 @@ pub mod style {
         container::Style {
             background: None,
             text_color: Some(WHITE),
+            border: Border {
+                width: 1.0,
+                color: ORANGE,
+                radius: radius(0),
+            },
+            shadow: Default::default(),
+        }
+    }
+
+    pub fn tooltip(_theme: &Theme) -> container::Style {
+        container::Style {
+            background: Some(Color(BACKGROUND)),
+            text_color: Some(ORANGE),
             border: Border {
                 width: 1.0,
                 color: ORANGE,

@@ -4,8 +4,9 @@ use crate::image::*;
 use crate::state::{MaterialGroup, State};
 use crate::theme::*;
 use iced::widget::svg::Handle;
-use iced::widget::{column, row, scrollable, svg, text, Column, Row};
+use iced::widget::{column, row, scrollable, svg, text, tooltip, Column, Row};
 use iced::{Element, Fill, Top};
+use iced::widget::tooltip::Position;
 
 pub fn materials(state: &State) -> Row<Message> {
     row![
@@ -13,8 +14,8 @@ pub fn materials(state: &State) -> Row<Message> {
         materials_list("Manufactured", &state.materials.manufactured),
         materials_list("Encoded", &state.materials.encoded),
     ]
-    .align_y(Top)
-    .height(Fill)
+        .align_y(Top)
+        .height(Fill)
 }
 
 fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a, Message> {
@@ -40,14 +41,21 @@ fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a,
                         };
 
                         row![
-                            column![svg(svg_handle).height(16).width(16)].padding([0, 5]),
-                            text(item.count.to_string())
-                                .size(16)
-                                .color(YELLOW)
-                                .width(36),
-                            text(item.name).size(16),
+                            tooltip(
+                                row![
+                                    column![svg(svg_handle).height(16).width(16)].padding([0, 5]),
+                                    text(item.count.to_string())
+                                        .size(16)
+                                        .color(YELLOW)
+                                        .width(36),
+                                    text(item.name).size(16),
+                                ]
+                                .padding(2),
+                                column(item.locations.into_iter().map(|loc| row![text(loc).size(16)].into()).collect::<Vec<Element<Message>>>()),
+                            Position::FollowCursor
+                            )
+                        .style(style::tooltip)
                         ]
-                        .padding(2)
                     }));
 
                     rows

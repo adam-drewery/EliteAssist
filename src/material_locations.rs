@@ -1,6 +1,6 @@
 // This file is AUTO-GENERATED. Do not edit manually.
 // Source: https://inara.cz/elite/components/#tab_items and https://inara.cz/elite/components/#tab_components
-// Generated: 2025-08-10 22:39:54+02:00
+// Generated: 2025-08-10 23:10:54+02:00
 
 use std::collections::HashMap;
 use std::sync::OnceLock;

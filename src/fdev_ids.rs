@@ -1,4 +1,4 @@
-use crate::state;
+use crate::{state, material_locations};
 use once_cell::sync::Lazy;
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -57,7 +57,6 @@ pub struct Rank {
     pub name: String
 }
 
-// helper to insert a Rank into a map, avoiding duplication of construction logic
 fn insert_rank(map: &mut HashMap<String, Rank>, number: &str, name: &str) {
     map.insert(
         number.to_string(),
@@ -197,7 +196,11 @@ impl Into<state::Material> for &Material {
             name: self.name.clone(),
             rarity: self.rarity.parse().unwrap(),
             count: 0,
-            locations: Vec::new(),
+            locations: material_locations::component_locations(&*self.name)
+                .unwrap_or_default()
+                .iter()
+                .map(|&s| s.to_string())
+                .collect(),
         }
     }
 }
