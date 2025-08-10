@@ -1,9 +1,9 @@
 use crate::{event, state};
 use crate::event::format::prettify_date;
 
-impl Into<state::GameActivity> for event::Embark {
-    fn into(self) -> state::GameActivity {
-        state::GameActivity {
+impl Into<state::GameEventLog> for event::Embark {
+    fn into(self) -> state::GameEventLog {
+        state::GameEventLog {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Embarked".to_owned(),
@@ -12,9 +12,9 @@ impl Into<state::GameActivity> for event::Embark {
     }
 }
 
-impl Into<state::GameActivity> for event::Disembark {
-    fn into(self) -> state::GameActivity {
-        state::GameActivity {
+impl Into<state::GameEventLog> for event::Disembark {
+    fn into(self) -> state::GameEventLog {
+        state::GameEventLog {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Disembarked".to_owned(),
@@ -98,17 +98,17 @@ impl Into<state::CurrentLocation> for event::FSDJump {
     }
 }
 
-impl Into<state::GameActivity> for event::StartJump {
-    fn into(self) -> state::GameActivity {
+impl Into<state::GameEventLog> for event::StartJump {
+    fn into(self) -> state::GameEventLog {
 
         match self.jump_type.as_str() {
-            "Supercruise" => state::GameActivity {
+            "Supercruise" => state::GameEventLog {
                 time: self.timestamp,
                 time_display: prettify_date(&self.timestamp),
                 verb: "".into(),
                 noun: "Entered supercruise".into()
             },
-            "Hyperspace" => state::GameActivity {
+            "Hyperspace" => state::GameEventLog {
                 time: self.timestamp,
                 time_display: prettify_date(&self.timestamp),
                 verb: "Jumped to".into(),

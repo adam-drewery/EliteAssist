@@ -40,7 +40,7 @@ pub struct State {
     pub active_screen: ActiveScreen,
     pub materials: Materials,
     pub messages: Vec<ChatMessage>,
-    pub journal: Vec<GameActivity>,
+    pub journal: Vec<GameEventLog>,
     pub crime: CrimeStats,
     pub market: Market,
     pub rank: Rank,

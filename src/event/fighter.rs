@@ -1,9 +1,9 @@
 use crate::event::format::prettify_date;
 use crate::{event, state};
 
-impl Into<state::GameActivity> for event::FighterRebuilt {
-    fn into(self) -> state::GameActivity {
-        state::GameActivity {
+impl Into<state::GameEventLog> for event::FighterRebuilt {
+    fn into(self) -> state::GameEventLog {
+        state::GameEventLog {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Rebuilt".into(),
@@ -12,9 +12,9 @@ impl Into<state::GameActivity> for event::FighterRebuilt {
     }
 }
 
-impl Into<state::GameActivity> for event::DockFighter {
-    fn into(self) -> state::GameActivity {
-        state::GameActivity {
+impl Into<state::GameEventLog> for event::DockFighter {
+    fn into(self) -> state::GameEventLog {
+        state::GameEventLog {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Docked".into(),
@@ -23,9 +23,9 @@ impl Into<state::GameActivity> for event::DockFighter {
     }
 }
 
-impl Into<state::GameActivity> for event::CrewLaunchFighter {
-    fn into(self) -> state::GameActivity {
-        state::GameActivity {
+impl Into<state::GameEventLog> for event::CrewLaunchFighter {
+    fn into(self) -> state::GameEventLog {
+        state::GameEventLog {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Launched".into(),
@@ -34,9 +34,9 @@ impl Into<state::GameActivity> for event::CrewLaunchFighter {
     }
 }
 
-impl Into<state::GameActivity> for event::LaunchFighter {
-    fn into(self) -> state::GameActivity {
-        state::GameActivity {
+impl Into<state::GameEventLog> for event::LaunchFighter {
+    fn into(self) -> state::GameEventLog {
+        state::GameEventLog {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Launched".into(),
@@ -46,8 +46,8 @@ impl Into<state::GameActivity> for event::LaunchFighter {
 }
 
 impl event::Damage {
-    pub fn into(self, verb: &str, noun: &str) -> state::GameActivity {
-        state::GameActivity {
+    pub fn into(self, verb: &str, noun: &str) -> state::GameEventLog {
+        state::GameEventLog {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: verb.into(),
@@ -56,9 +56,9 @@ impl event::Damage {
     }
 }
 
-impl Into<state::GameActivity> for event::VehicleSwitch {
-    fn into(self) -> state::GameActivity {
-        state::GameActivity {
+impl Into<state::GameEventLog> for event::VehicleSwitch {
+    fn into(self) -> state::GameEventLog {
+        state::GameEventLog {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Switched to".into(),

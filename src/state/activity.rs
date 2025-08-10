@@ -1,6 +1,6 @@
 use chrono::{DateTime, Utc};
 
-pub struct GameActivity {
+pub struct GameEventLog {
     pub time: DateTime<Utc>,
     pub time_display: String,
     pub verb: String,

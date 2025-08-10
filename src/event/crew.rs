@@ -2,9 +2,9 @@ use thousands::Separable;
 use crate::{event, state};
 use crate::event::format::prettify_date;
 
-impl Into<state::GameActivity> for event::CrewAssign {
-    fn into(self) -> state::GameActivity {
-        state::GameActivity {
+impl Into<state::GameEventLog> for event::CrewAssign {
+    fn into(self) -> state::GameEventLog {
+        state::GameEventLog {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Assigned".into(),
@@ -14,8 +14,8 @@ impl Into<state::GameActivity> for event::CrewAssign {
 }
 
 impl event::CrewMember {
-    pub fn into(self, verb: &str) -> state::GameActivity {
-        state::GameActivity {
+    pub fn into(self, verb: &str) -> state::GameEventLog {
+        state::GameEventLog {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: format!("Crew {}", verb).into(),
@@ -24,9 +24,9 @@ impl event::CrewMember {
     }
 }
 
-impl Into<state::GameActivity> for event::CrewMemberRoleChange {
-    fn into(self) -> state::GameActivity {
-        state::GameActivity {
+impl Into<state::GameEventLog> for event::CrewMemberRoleChange {
+    fn into(self) -> state::GameEventLog {
+        state::GameEventLog {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Assigned role".into(),
@@ -35,9 +35,9 @@ impl Into<state::GameActivity> for event::CrewMemberRoleChange {
     }
 }
 
-impl Into<state::GameActivity> for event::EndCrewSession {
-    fn into(self) -> state::GameActivity {
-        state::GameActivity {
+impl Into<state::GameEventLog> for event::EndCrewSession {
+    fn into(self) -> state::GameEventLog {
+        state::GameEventLog {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Ended".into(),
@@ -46,9 +46,9 @@ impl Into<state::GameActivity> for event::EndCrewSession {
     }
 }
 
-impl Into<state::GameActivity> for event::NpcCrewRank {
-    fn into(self) -> state::GameActivity {
-        state::GameActivity {
+impl Into<state::GameEventLog> for event::NpcCrewRank {
+    fn into(self) -> state::GameEventLog {
+        state::GameEventLog {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Promoted crew member".into(),
@@ -57,9 +57,9 @@ impl Into<state::GameActivity> for event::NpcCrewRank {
     }
 }
 
-impl Into<state::GameActivity> for event::ChangeCrewRole {
-    fn into(self) -> state::GameActivity {
-        state::GameActivity {
+impl Into<state::GameEventLog> for event::ChangeCrewRole {
+    fn into(self) -> state::GameEventLog {
+        state::GameEventLog {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Changed role to".into(),
@@ -68,9 +68,9 @@ impl Into<state::GameActivity> for event::ChangeCrewRole {
     }
 }
 
-impl Into<state::GameActivity> for event::NpcCrewPaidWage {
-    fn into(self) -> state::GameActivity {
-        state::GameActivity {
+impl Into<state::GameEventLog> for event::NpcCrewPaidWage {
+    fn into(self) -> state::GameEventLog {
+        state::GameEventLog {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Paid".into(),
