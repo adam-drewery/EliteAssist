@@ -1,13 +1,13 @@
 use crate::font::eurocaps::FONT;
 use crate::gui::Message;
-use crate::theme::styles;
+use crate::theme::style;
 use crate::theme::{GRAY, ORANGE};
 use iced::widget::{column, container, row, text, Column, Row};
 use iced::{Fill, Right};
 
 pub fn header(title: &str) -> Row<Message> {
     row![
-        container(text(title).font(FONT).size(24).width(Fill)).style(styles::header).padding([0, 8])
+        container(text(title).font(FONT).size(24).width(Fill)).style(style::header).padding([0, 8])
     ]
     .padding([12, 0])
 }
@@ -62,4 +62,26 @@ pub fn empty_text(label: &str) -> Column<Message> {
         ],
         row![].height(Fill),
     ]
+}
+
+#[macro_export]
+macro_rules! centered_column {
+    ($($x:expr),*) => {
+        column![
+            row![].height(Fill),
+            row![$($x),*],
+            row![].height(Fill),
+        ]
+    }
+}
+
+#[macro_export]
+macro_rules! centered_row {
+    ($($x:expr),*) => {
+        row![
+            column![].width(Fill),
+            column![$($x),*],
+            column![].width(Fill),
+        ]
+    }
 }

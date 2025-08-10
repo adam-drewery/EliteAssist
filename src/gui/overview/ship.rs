@@ -3,11 +3,13 @@ use crate::gui::components::{details, header};
 use crate::gui::Message;
 use crate::image::{CORE_INTERNAL_PNG, ENGINEER_ICON_PNG, FIXED_PNG, GIMBALLED_PNG, HARDPOINTS_PNG, OPTIONAL_INTERNAL_PNG, TURRET_PNG, UTILITIES_PNG};
 use crate::state::{ShipLoadout, ShipModule, SlotType, State};
-use crate::theme::{GRAY, ORANGE, WHITE, YELLOW};
-use iced::border::radius;
+use crate::theme::style;
+use crate::theme::GRAY;
+use crate::theme::ORANGE;
+use crate::theme::YELLOW;
 use iced::widget::image::Handle;
 use iced::widget::{column, container, image, row, scrollable, text, Column, Row};
-use iced::{Border, Center, Element, Fill, Left, Right, Theme, Top};
+use iced::{Center, Element, Fill, Left, Right, Top};
 use thousands::Separable;
 
 pub fn ship_modules(state: &State) -> Column<Message> {
@@ -152,7 +154,7 @@ fn module_details(module: &ShipModule, size: u8) -> Row<Message> {
             .width(Fill),
             mount_type_icon(module, size)
         ])
-        .style(module_style)
+        .style(style::bordered)
         .height(48)
         .padding(0.5)
         .width(Fill),
@@ -211,18 +213,5 @@ fn engineering_details(module: &ShipModule) -> Column<Message> {
         ]
     } else {
         column![]
-    }
-}
-
-fn module_style(_theme: &Theme) -> container::Style {
-    container::Style {
-        background: None,
-        text_color: Some(WHITE),
-        border: Border {
-            width: 1.0,
-            color: ORANGE,
-            radius: radius(0),
-        },
-        shadow: Default::default(),
     }
 }

@@ -51,6 +51,7 @@ pub struct State {
     pub combat_bonds: HashMap<String, i64>,
     pub bounties: HashMap<String, i64>,
     pub discoveries: HashMap<String, i64>,
+    pub progress: Rank
 }
 
 #[derive(Debug, Default, Deserialize, Clone)]
@@ -148,7 +149,7 @@ impl State {
 
                     JournalEvent::Rank(e) => self.rank = e.into(),
 
-                    JournalEvent::Progress(e) => self.rank = e.into(),
+                    JournalEvent::Progress(e) => self.progress = e.into(),
 
                     JournalEvent::Reputation(e) => self.reputation = e.into(),
 

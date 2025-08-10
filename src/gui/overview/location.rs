@@ -2,7 +2,7 @@ use crate::gui::components::*;
 use crate::gui::Message;
 use crate::image::FUEL_STAR_PNG;
 use crate::state::State;
-use crate::theme::{styles, GRAY, RED};
+use crate::theme::{style, GRAY, RED};
 use iced::widget::image::Handle;
 use iced::widget::{column, container, image, row, scrollable, text, Column};
 use iced::Fill;
@@ -113,7 +113,7 @@ pub fn route(state: &State) -> Column<Message> {
                         column![].width(16),
                         column![text(format!("{:.2} ly", distance))]
                     ])
-                    .style(styles::list_item)
+                    .style(style::list_item)
                     .padding(8)
                 ]
                 .padding(8)

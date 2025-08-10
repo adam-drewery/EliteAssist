@@ -4,14 +4,14 @@ use serde::Deserialize;
 use std::collections::HashMap;
 
 macro_rules! static_hashmap {
-    ($file_path:expr, $type:ty) => {{
+    ($file_path:expr, $type:ty, $field:ident) => {{
         static MAP: Lazy<HashMap<String, $type>> = Lazy::new(|| {
             let csv_bytes: &[u8] = include_bytes!($file_path);
             let mut rdr = csv::Reader::from_reader(csv_bytes);
             let mut map = HashMap::new();
             for result in rdr.deserialize() {
                 let record: $type = result.unwrap();
-                map.insert(record.symbol.to_lowercase(), record);
+                map.insert(record.$field.to_lowercase(), record);
             }
             map
         });
@@ -33,12 +33,6 @@ pub struct Outfitting {
     pub entitlement: String,
 }
 
-impl Outfitting {
-    pub(crate) fn new() -> Outfitting {
-        todo!()
-    }
-}
-
 #[derive(Debug, Deserialize)]
 pub struct Shipyard {
     pub id: String,
@@ -47,7 +41,7 @@ pub struct Shipyard {
     pub entitlement: String,
 }
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize)]
 pub struct Material {
     pub id: String,
     pub symbol: String,
@@ -57,26 +51,107 @@ pub struct Material {
     pub name: String,
 }
 
+#[derive(Debug, Deserialize)]
+pub struct Rank {
+    pub number: String,
+    pub name: String
+}
+
+// helper to insert a Rank into a map, avoiding duplication of construction logic
+fn insert_rank(map: &mut HashMap<String, Rank>, number: &str, name: &str) {
+    map.insert(
+        number.to_string(),
+        Rank {
+            number: number.to_string(),
+            name: name.to_string(),
+        },
+    );
+}
+
+// Hard-coded rank maps for Exobiologist and Mercenary (Odyssey). No idea why they're not included in fdev-ids.
+static EXOBIOLOGIST_RANKS: Lazy<HashMap<String, Rank>> = Lazy::new(|| {
+    let mut m = HashMap::new();
+    insert_rank(&mut m, "0", "Directionless");
+    insert_rank(&mut m, "1", "Mostly Directionless");
+    insert_rank(&mut m, "2", "Compiler");
+    insert_rank(&mut m, "3", "Collector");
+    insert_rank(&mut m, "4", "Cataloguer");
+    insert_rank(&mut m, "5", "Taxonomist");
+    insert_rank(&mut m, "6", "Ecologist");
+    insert_rank(&mut m, "7", "Geneticist");
+    insert_rank(&mut m, "8", "Elite");
+    m
+});
+
+static MERCENARY_RANKS: Lazy<HashMap<String, Rank>> = Lazy::new(|| {
+    let mut m = HashMap::new();
+    insert_rank(&mut m, "0", "Defenceless");
+    insert_rank(&mut m, "1", "Mostly Defenceless");
+    insert_rank(&mut m, "2", "Rookie");
+    insert_rank(&mut m, "3", "Soldier");
+    insert_rank(&mut m, "4", "Gunslinger");
+    insert_rank(&mut m, "5", "Warrior");
+    insert_rank(&mut m, "6", "Gladiator");
+    insert_rank(&mut m, "7", "Deadeye");
+    insert_rank(&mut m, "8", "Elite");
+    m
+});
+
 impl Outfitting {
     pub fn metadata(name: &String) -> Option<&Self> {
-        static_hashmap!("../fdev-ids/outfitting.csv", Outfitting).get(&name.to_lowercase())
+        static_hashmap!("../fdev-ids/outfitting.csv", Outfitting, symbol).get(&name.to_lowercase())
     }
 }
 
 impl Shipyard {
     pub fn metadata(name: &String) -> Option<&Self> {
-        static_hashmap!("../fdev-ids/shipyard.csv", Shipyard).get(&name.to_lowercase())
+        static_hashmap!("../fdev-ids/shipyard.csv", Shipyard, symbol).get(&name.to_lowercase())
     }
 }
 
 impl Material {
     pub fn metadata(name: &String) -> Option<&Self> {
-        static_hashmap!("../fdev-ids/material.csv", Material).get(&name.to_lowercase())
+        static_hashmap!("../fdev-ids/material.csv", Material, symbol).get(&name.to_lowercase())
+    }
+}
+
+impl Rank {
+    pub fn cqc(name: &String) -> Option<&Self> {
+        static_hashmap!("../fdev-ids/CQCRank.csv", Rank, number).get(&name.to_lowercase())
+    }
+
+    pub fn combat(name: &String) -> Option<&Self> {
+        static_hashmap!("../fdev-ids/combatrank.csv", Rank, number).get(&name.to_lowercase())
+    }
+
+    pub fn exploration(name: &String) -> Option<&Self> {
+        static_hashmap!("../fdev-ids/ExplorationRank.csv", Rank, number).get(&name.to_lowercase())
+    }
+
+    pub fn trading(name: &String) -> Option<&Self> {
+        static_hashmap!("../fdev-ids/TradeRank.csv", Rank, number).get(&name.to_lowercase())
+    }
+
+    // New hard-coded lookups for Odyssey ranks
+    pub fn exobiologist(id: &String) -> Option<&Self> {
+        EXOBIOLOGIST_RANKS.get(&id.to_lowercase())
+    }
+
+    pub fn mercenary(id: &String) -> Option<&Self> {
+        MERCENARY_RANKS.get(&id.to_lowercase())
+    }
+    
+    pub fn federation(id: &String) -> Option<&Self> {
+        static_hashmap!("../fdev-ids/FederationRank.csv", Rank, number).get(&id.to_lowercase())
+    }
+    
+    pub fn empire(id: &String) -> Option<&Self> {
+        static_hashmap!("../fdev-ids/EmpireRank.csv", Rank, number).get(&id.to_lowercase())
     }
 }
 
 pub fn all_materials() -> state::Materials {
-    let materials = static_hashmap!("../fdev-ids/material.csv", Material);
+    let materials = static_hashmap!("../fdev-ids/material.csv", Material, symbol);
     let mut raw = HashMap::new();
     let mut encoded = HashMap::new();
     let mut manufactured = HashMap::new();

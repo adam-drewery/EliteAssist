@@ -12,9 +12,9 @@ use crate::gui::Message;
 pub fn overview(state: &State) -> Row<Message> {
     row![
         column![
-            personal(state),
-            claims(state),
-            missions(state),
+            loadout(state),
+            //claims(state),
+            //missions(state),
             messages(state)
         ],
         column![

@@ -32,9 +32,9 @@ pub fn theme(_state: &State) -> Theme {
     Theme::custom("Elite".into(), PALETTE)
 }
 
-pub mod styles {
+pub mod style {
     use crate::theme::{DARK_GRAY, ORANGE, WHITE};
-    use iced::widget::container;
+    use iced::widget::{container};
     use iced::Background::Color;
     use iced::{Border, Theme};
     use iced::border::radius;
@@ -58,6 +58,31 @@ pub mod styles {
                 radius: radius(0),
             },
             shadow: Default::default(),
+        }
+    }
+
+    pub fn bordered(_theme: &Theme) -> container::Style {
+        container::Style {
+            background: None,
+            text_color: Some(WHITE),
+            border: Border {
+                width: 1.0,
+                color: ORANGE,
+                radius: radius(0),
+            },
+            shadow: Default::default(),
+        }
+    }
+
+    pub fn progress_bar(_theme: &Theme) -> iced::widget::progress_bar::Style {
+        iced::widget::progress_bar::Style {
+            background: DARK_GRAY.into(),
+            bar: ORANGE.into(),
+            border: Border {
+                width: 0.5,
+                color: ORANGE,
+                radius: radius(0),
+            },
         }
     }
 }
