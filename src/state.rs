@@ -243,7 +243,7 @@ impl State {
                     JournalEvent::DatalinkVoucher(_) => {}
 
                     // FIGHTER
-                    JournalEvent::VehicleSwitch(_) => {}
+                    JournalEvent::VehicleSwitch(e) => self.journal.push(e.into()),
 
                     JournalEvent::LaunchFighter(e) => self.journal.push(e.into()),
 

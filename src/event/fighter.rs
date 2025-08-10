@@ -55,3 +55,14 @@ impl event::Damage {
         }
     }
 }
+
+impl Into<state::GameActivity> for event::VehicleSwitch {
+    fn into(self) -> state::GameActivity {
+        state::GameActivity {
+            time: self.timestamp,
+            time_display: prettify_date(&self.timestamp),
+            verb: "Switched to".into(),
+            noun: self.to,
+        }
+    }
+}
