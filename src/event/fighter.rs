@@ -51,7 +51,10 @@ impl event::Damage {
             time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: verb.into(),
-            noun: noun.into(),
+            noun: match self.id {
+                None => noun.into(),
+                Some(id) => format!["{} {}", noun, id],
+            },
         }
     }
 }

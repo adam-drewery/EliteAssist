@@ -8,7 +8,7 @@ use iced::widget::tooltip::Position;
 use iced::widget::{column, row, scrollable, text, tooltip, Column, Row};
 use iced::{Color, Element, Fill, Left, Top};
 
-pub fn ship_locker(state: &State) -> Row<Message> {
+pub fn ship_locker(state: &State) -> Row<'_, Message> {
 
     row![
         locker_item_list("Items", &state.ship_locker.items),

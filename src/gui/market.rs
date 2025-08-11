@@ -6,7 +6,7 @@ use iced::widget::scrollable;
 use iced::widget::{column, row, text, Row};
 use iced::{Bottom, Element, Fill, Left};
 
-pub fn market(state: &State) -> Row<Message> {
+pub fn market(state: &State) -> Row<'_, Message> {
     row![
         column![
             row![
@@ -57,7 +57,7 @@ fn cell<'a>(value: impl text::IntoFragment<'a>) -> Element<'a, Message> {
     text(value).size(16).color(WHITE).width(Fill).into()
 }
 
-fn name_cell(item: &MarketItem) -> Element<Message> {
+fn name_cell(item: &MarketItem) -> Element<'_, Message> {
     text(&item.name)
         .size(16)
         .color(if item.rare { YELLOW } else { ORANGE })

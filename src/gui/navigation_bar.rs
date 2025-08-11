@@ -6,7 +6,7 @@ use iced::widget::{button, row, Column, Row};
 use iced::Theme;
 use std::mem::discriminant;
 
-pub fn navigation_bar(state: &State) -> Row<Message> {
+pub fn navigation_bar(state: &State) -> Row<'_, Message> {
     row![
         navigation_button(state, "CMDR", ActiveScreen::Commander),
         navigation_button(state, "MATERIALS", ActiveScreen::Materials),

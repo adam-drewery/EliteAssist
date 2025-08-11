@@ -8,7 +8,7 @@ use iced::widget::{column, row, scrollable, svg, text, tooltip, Column, Row};
 use iced::{Element, Fill, Top};
 use iced::widget::tooltip::Position;
 
-pub fn materials(state: &State) -> Row<Message> {
+pub fn materials(state: &State) -> Row<'_, Message> {
     row![
         materials_list("Raw", &state.materials.raw),
         materials_list("Manufactured", &state.materials.manufactured),

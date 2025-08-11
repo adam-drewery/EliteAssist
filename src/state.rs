@@ -54,7 +54,7 @@ pub struct State {
     pub progress: Rank
 }
 
-#[derive(Debug, Default, Deserialize, Clone)]
+#[derive(Clone, Debug, Default, Deserialize)]
 pub enum ActiveScreen {
     #[default]
     Commander,
@@ -67,11 +67,11 @@ pub enum ActiveScreen {
 impl State {
     pub fn update_from(&mut self, message: Message) {
         match message {
-            Message::NavigateTo(screen) => {
-                self.active_screen = screen;
-            }
+            
+            Message::NavigateTo(screen) => self.active_screen = screen,
 
             Message::JournalEvent(event) => {
+
                 match event {
 
                     // BACKPACK
@@ -252,7 +252,25 @@ impl State {
                     JournalEvent::DockFighter(e) => self.journal.push(e.into()),
 
                     JournalEvent::FighterDestroyed(e) => {
-                        self.journal.push(e.into("Fighter", "destroyed"))
+                        self.journal.push(e.into("Destroyed", "Fighter"))
+                    }
+
+                    // FSD
+                    JournalEvent::Interdiction(_) => {}
+                    JournalEvent::Interdicted(_) => {}
+                    JournalEvent::EscapeInterdiction(_) => {}
+                    JournalEvent::SupercruiseEntry(_) => {}
+                    JournalEvent::SupercruiseExit(_) => {}
+                    JournalEvent::SupercruiseDestinationDrop(_) => {}
+
+                    JournalEvent::FSDTarget(_) => {}
+
+                    JournalEvent::StartJump(e) => self.journal.push(e.into()),
+
+                    JournalEvent::FSDJump(e) => {
+                        self.current_system = e.star_system.to_string();
+                        self.current_body = "".to_string();
+                        self.location = e.into();
                     }
 
                     // FUEL
@@ -319,13 +337,9 @@ impl State {
                     }
 
                     // NAVIGATION
-                    JournalEvent::FSDTarget(_) => {}
                     JournalEvent::ApproachBody(_) => {}
                     JournalEvent::LeaveBody(_) => {}
                     JournalEvent::ApproachSettlement(_) => {}
-                    JournalEvent::SupercruiseEntry(_) => {}
-                    JournalEvent::SupercruiseExit(_) => {}
-                    JournalEvent::SupercruiseDestinationDrop(_) => {}
                     JournalEvent::DockingRequested(_) => {}
                     JournalEvent::DockingGranted(_) => {}
                     JournalEvent::DockingTimeout(_) => {}
@@ -336,18 +350,6 @@ impl State {
                     JournalEvent::Liftoff(_) => {}
                     JournalEvent::Undocked(_) => {}
                     JournalEvent::JetConeBoost(_) => {}
-                    JournalEvent::Interdiction(_) => {}
-                    JournalEvent::Interdicted(_) => {}
-                    JournalEvent::EscapeInterdiction(_) => {}
-
-
-                    JournalEvent::StartJump(e) => self.journal.push(e.into()),
-
-                    JournalEvent::FSDJump(e) => {
-                        self.current_system = e.star_system.to_string();
-                        self.current_body = "".to_string();
-                        self.location = e.into();
-                    }
 
                     JournalEvent::NavRoute(e) => {
                         let route = e.into();
@@ -394,7 +396,6 @@ impl State {
                     // OUTFITTING
                     JournalEvent::Outfitting(_) => {}
                     JournalEvent::ModuleInfo(_) => {}
-                    JournalEvent::LoadoutRemoveModule(_) => {}
                     JournalEvent::ModuleBuyAndStore(_) => {}
                     JournalEvent::ModuleSell(_) => {}
                     JournalEvent::ModuleStore(_) => {}
@@ -402,7 +403,6 @@ impl State {
                     JournalEvent::MassModuleStore(_) => {}
                     JournalEvent::ModuleSwap(_) => {}
                     JournalEvent::ModuleBuy(_) => {}
-                    JournalEvent::LoadoutEquipModule(_) => {}
                     JournalEvent::ModuleSellRemote(_) => {}
                     JournalEvent::FetchRemoteModule(_) => {}
                     JournalEvent::StoredModules(_) => {}
@@ -575,6 +575,8 @@ impl State {
                     JournalEvent::BuyWeapon(_) => {}
                     JournalEvent::SellWeapon(_) => {}
                     JournalEvent::UpgradeWeapon(_) => {}
+                    JournalEvent::LoadoutRemoveModule(_) => {}
+                    JournalEvent::LoadoutEquipModule(_) => {}
 
                     JournalEvent::BuyAmmo(e) => self.journal.push(e.into("ammo")),
 

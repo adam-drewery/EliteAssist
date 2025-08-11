@@ -9,7 +9,7 @@ use crate::state::State;
 use iced::widget::{column, row, Row};
 use crate::gui::Message;
 
-pub fn overview(state: &State) -> Row<Message> {
+pub fn overview(state: &State) -> Row<'_, Message> {
     row![
         column![
             loadout(state),

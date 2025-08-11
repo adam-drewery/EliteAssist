@@ -5,7 +5,7 @@ use crate::theme::ORANGE;
 use iced::widget::{column, row, text, Row};
 use iced::{Fill, Left, Right};
 
-pub fn header_bar(state: &State) -> Row<Message> {
+pub fn header_bar(state: &State) -> Row<'_, Message> {
     row![
         column![
             text(&state.commander_name).font(FONT).size(30).color(ORANGE),

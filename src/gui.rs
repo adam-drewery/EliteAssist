@@ -29,7 +29,7 @@ pub enum Message {
 pub struct Gui;
 
 impl Gui {
-    pub fn view(state: &State) -> Element<Message> {
+    pub fn view(state: &State) -> Element<'_, Message> {
         if state.commander_name.is_empty() {
             column![
                 row![].height(Fill),

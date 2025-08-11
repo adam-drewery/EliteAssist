@@ -8,7 +8,7 @@ use crate::centered_row;
 use crate::fdev_ids::Rank;
 use crate::font::eurocaps::FONT;
 
-pub fn loadout(state: &State) -> Column<Message> {
+pub fn loadout(state: &State) -> Column<'_, Message> {
     column![
         column![
                 header("Loadout"),
@@ -54,7 +54,7 @@ pub fn loadout(state: &State) -> Column<Message> {
     ]
 }
 
-fn rank(title: &str, rank: u64, progress: u64, lookup: fn(&String) -> Option<&Rank>) -> Column<Message> {
+fn rank(title: &str, rank: u64, progress: u64, lookup: fn(&String) -> Option<&Rank>) -> Column<'_, Message> {
     let rank_name = match lookup(&rank.to_string()) {
         None => String::from("Unknown"),
         Some(title) => title.name.clone()
@@ -77,7 +77,7 @@ fn rank(title: &str, rank: u64, progress: u64, lookup: fn(&String) -> Option<&Ra
         .padding(4)
 }
 
-fn superpower_rank(title: &str, rank: Option<u64>, progress: Option<u64>, reputation: f64, lookup: Option<fn(&String) -> Option<&Rank>>) -> Column<Message> {
+fn superpower_rank(title: &str, rank: Option<u64>, progress: Option<u64>, reputation: f64, lookup: Option<fn(&String) -> Option<&Rank>>) -> Column<'_, Message> {
     let rank_name = match lookup {
         None => "".to_string(),
         Some(func) => {
@@ -140,7 +140,7 @@ fn superpower_rank(title: &str, rank: Option<u64>, progress: Option<u64>, reputa
         .padding(4)
 }
 
-pub fn messages(state: &State) -> Column<Message> {
+pub fn messages(state: &State) -> Column<'_, Message> {
     column![
         header("Messages"),
         scrollable(column(
@@ -167,7 +167,7 @@ pub fn messages(state: &State) -> Column<Message> {
 }
 
 
-pub fn claims(state: &State) -> Column<Message> {
+pub fn claims(state: &State) -> Column<'_, Message> {
 
     if (state.bounties.len() == 0) && (state.combat_bonds.len() == 0) {
         return column![
@@ -190,7 +190,7 @@ pub fn claims(state: &State) -> Column<Message> {
     ].height(Fill)
 }
 
-pub fn missions(state: &State) -> Column<Message> {
+pub fn missions(state: &State) -> Column<'_, Message> {
 
     if state.missions.len() == 0 {
         return column![

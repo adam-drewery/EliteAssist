@@ -8,7 +8,7 @@ use iced::widget::{column, container, image, row, scrollable, text, Column};
 use iced::Fill;
 use thousands::Separable;
 
-pub fn location(state: &State) -> Column<Message> {
+pub fn location(state: &State) -> Column<'_, Message> {
     column![
         header("Location"),
         row![
@@ -20,7 +20,7 @@ pub fn location(state: &State) -> Column<Message> {
     .padding(8)
 }
 
-fn factions(state: &State) -> Column<Message> {
+fn factions(state: &State) -> Column<'_, Message> {
 
     if state.location.factions.is_empty() { return column![] }
 
@@ -47,7 +47,7 @@ fn factions(state: &State) -> Column<Message> {
     result
 }
 
-fn powerplay(state: &State) -> Column<Message> {
+fn powerplay(state: &State) -> Column<'_, Message> {
 
     if state.location.powerplay_state.is_none() { return column![] }
 
@@ -61,7 +61,7 @@ fn powerplay(state: &State) -> Column<Message> {
     ]
 }
 
-fn system(state: &State) -> Column<Message> {
+fn system(state: &State) -> Column<'_, Message> {
     column![
         sub_header("System"),
         details("Government", &state.location.system_government),
@@ -72,7 +72,7 @@ fn system(state: &State) -> Column<Message> {
     ]
 }
 
-pub fn route(state: &State) -> Column<Message> {
+pub fn route(state: &State) -> Column<'_, Message> {
     let title_column = column![header("Route")].padding(8);
 
     if state.nav_route.len() == 0 {

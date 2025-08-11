@@ -12,7 +12,7 @@ use iced::widget::{column, container, image, row, scrollable, text, Column, Row}
 use iced::{Center, Element, Fill, Left, Right, Top};
 use thousands::Separable;
 
-pub fn ship_modules(state: &State) -> Column<Message> {
+pub fn ship_modules(state: &State) -> Column<'_, Message> {
     let mut hardpoints: Vec<Element<Message>> = vec![];
     let mut utilities: Vec<Element<Message>> = vec![];
     let mut core_internals: Vec<Element<Message>> = vec![];
@@ -81,7 +81,7 @@ pub fn ship_modules(state: &State) -> Column<Message> {
     .height(Fill)
 }
 
-pub fn ship_details(state: &State) -> Column<Message> {
+pub fn ship_details(state: &State) -> Column<'_, Message> {
     column![
         header("Ship"),
         ship_title(&state.ship_loadout),
@@ -96,7 +96,7 @@ pub fn ship_details(state: &State) -> Column<Message> {
     .padding(8)
 }
 
-fn module_group_title(title: &str, icon: Handle) -> Column<Message> {
+fn module_group_title(title: &str, icon: Handle) -> Column<'_, Message> {
     column![row![
         column![image(icon).width(40).height(40)],
         column![].width(12),
@@ -104,7 +104,7 @@ fn module_group_title(title: &str, icon: Handle) -> Column<Message> {
     ]]
 }
 
-fn ship_title(ship_loadout: &ShipLoadout) -> Row<Message> {
+fn ship_title(ship_loadout: &ShipLoadout) -> Row<'_, Message> {
     row![
             column![
                 text(&ship_loadout.ship_name)
@@ -132,7 +132,7 @@ fn ship_title(ship_loadout: &ShipLoadout) -> Row<Message> {
         .align_y(Top)
 }
 
-fn module_details(module: &ShipModule, size: u8) -> Row<Message> {
+fn module_details(module: &ShipModule, size: u8) -> Row<'_, Message> {
     
     let mut size_column = column![];
     if size != 0 { size_column = size_column.push(text(size).size(24).color(GRAY)); }
@@ -163,7 +163,7 @@ fn module_details(module: &ShipModule, size: u8) -> Row<Message> {
     .align_y(Center)
 }
 
-fn mount_type_icon(module: &ShipModule, size: u8) -> Column<Message> {
+fn mount_type_icon(module: &ShipModule, size: u8) -> Column<'_, Message> {
     column![
         row![].height(Fill),
         if size == 0 {
@@ -185,7 +185,7 @@ fn mount_type_icon(module: &ShipModule, size: u8) -> Column<Message> {
     .align_x(Right)
 }
 
-fn engineering_levels(module: &ShipModule) -> Column<Message> {
+fn engineering_levels(module: &ShipModule) -> Column<'_, Message> {
     if let Some(engineering) = &module.engineering {
         column![
             row((0..engineering.level).map(|_| image(Handle::from_bytes(ENGINEER_ICON_PNG)).into()))
@@ -198,7 +198,7 @@ fn engineering_levels(module: &ShipModule) -> Column<Message> {
     .height(30)
 }
 
-fn engineering_details(module: &ShipModule) -> Column<Message> {
+fn engineering_details(module: &ShipModule) -> Column<'_, Message> {
     if let Some(engineering) = &module.engineering {
         column![
             row![
