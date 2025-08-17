@@ -28,7 +28,6 @@ mod bodies;
 mod deaths;
 mod traffic;
 mod system;
-mod sphere_systems;
 mod server_status;
 
 pub use stations::*;
@@ -37,7 +36,6 @@ pub use bodies::*;
 pub use traffic::*;
 pub use deaths::*;
 pub use system::*;
-pub use sphere_systems::*;
 pub use server_status::*;
 
 use std::time::Duration;
@@ -102,24 +100,6 @@ impl EdsmClient {
         Ok(data)
     }
 
-    /// Build system query parameters for endpoints that accept either systemId64 or systemName.
-    /// If both are provided, id64 takes precedence; if neither provided, returns an error.
-    fn build_system_query(
-        &self,
-        system_name: Option<&str>,
-        system_id64: Option<u64>,
-    ) -> Result<Vec<(&'static str, String)>, EdsmError> {
-        if let Some(id) = system_id64 {
-            Ok(vec![("systemId64", id.to_string())])
-        } else if let Some(name) = system_name {
-            Ok(vec![("systemName", name.to_string())])
-        } else {
-            Err(EdsmError::Message(
-                "either system_name or system_id64 must be provided".into(),
-            ))
-        }
-    }
-
     // ========================= api-status-v1 =========================
 
     /// GET https://www.edsm.net/api-status-v1/elite-server
@@ -133,10 +113,9 @@ impl EdsmClient {
     /// If both name and id64 are provided, id64 takes precedence.
     pub async fn get_system(
         &self,
-        system_name: Option<&str>,
-        system_id64: Option<u64>,
+        system_name: &str
     ) -> Result<System, EdsmError> {
-        let mut q = self.build_system_query(system_name, system_id64)?;
+        let mut q = vec![("systemName", system_name.to_string())];
         q.push(("showId", "1".to_string()));
         q.push(("showCoordinates", "1".to_string()));
         q.push(("showPermit", "1".to_string()));
@@ -148,20 +127,18 @@ impl EdsmClient {
     /// GET https://www.edsm.net/api-system-v1/bodies?systemName=... or systemId64=...
     pub async fn get_bodies(
         &self,
-        system_name: Option<&str>,
-        system_id64: Option<u64>,
+        system_name: &str
     ) -> Result<Bodies, EdsmError> {
-        let q = self.build_system_query(system_name, system_id64)?;
+        let q = [("systemName", system_name.to_string())];
         self.get_json("api-system-v1/bodies", &q).await
     }
 
     /// GET https://www.edsm.net/api-system-v1/stations?systemName=... or systemId64=...
     pub async fn get_stations(
         &self,
-        system_name: Option<&str>,
-        system_id64: Option<u64>,
+        system_name: &str
     ) -> Result<Stations, EdsmError> {
-        let q = self.build_system_query(system_name, system_id64)?;
+        let q = [("systemName", system_name.to_string())];
         self.get_json("api-system-v1/stations", &q).await
     }
 
@@ -172,15 +149,17 @@ impl EdsmClient {
     pub async fn get_sphere_systems(
         &self,
         system_name: &str,
-        radius_ly: u32,
-        show_id: bool,
-    ) -> Result<Vec<SphereSystem>, EdsmError> {
+        radius_ly: f32,
+    ) -> Result<Vec<System>, EdsmError> {
         let mut q: Vec<(&str, String)> = Vec::new();
         q.push(("systemName", system_name.to_string()));
         q.push(("radius", radius_ly.to_string()));
-        if show_id {
-            q.push(("showId", "1".to_string()));
-        }
+        q.push(("showId", "1".to_string()));
+        q.push(("showCoordinates", "1".to_string()));
+        q.push(("showPermit", "1".to_string()));
+        q.push(("showInformation", "1".to_string()));
+        q.push(("showPrimaryStar", "1".to_string()));
+
         self.get_json("api-v1/sphere-systems", &q).await
     }
 }
@@ -202,30 +181,27 @@ impl EdsmClient {
     /// GET https://www.edsm.net/api-system-v1/factions?systemName=... or systemId64=...
     pub async fn get_factions(
         &self,
-        system_name: Option<&str>,
-        system_id64: Option<u64>,
+        system_name: &str
     ) -> Result<Factions, EdsmError> {
-        let q = self.build_system_query(system_name, system_id64)?;
+        let q = [("systemName", system_name.to_string())];
         self.get_json("api-system-v1/factions", &q).await
     }
 
     /// GET https://www.edsm.net/api-system-v1/traffic?systemName=... or systemId64=...
     pub async fn get_traffic(
         &self,
-        system_name: Option<&str>,
-        system_id64: Option<u64>,
+        system_name: &str
     ) -> Result<Traffic, EdsmError> {
-        let q = self.build_system_query(system_name, system_id64)?;
+        let q = [("systemName", system_name.to_string())];
         self.get_json("api-system-v1/traffic", &q).await
     }
 
     /// GET https://www.edsm.net/api-system-v1/deaths?systemName=... or systemId64=...
     pub async fn get_deaths(
         &self,
-        system_name: Option<&str>,
-        system_id64: Option<u64>,
+        system_name: &str
     ) -> Result<Deaths, EdsmError> {
-        let q = self.build_system_query(system_name, system_id64)?;
+        let q = [("systemName", system_name.to_string())];
         self.get_json("api-system-v1/deaths", &q).await
     }
 }

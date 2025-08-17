@@ -29,7 +29,7 @@ pub enum Message {
     JournalEvent(JournalEvent),
     
     StationsQueried(edsm::Stations),
-    SystemQueried(edsm::System),
+    NearbySystemsQueried(Vec<edsm::System>),
     BodiesQueried(edsm::Bodies),
     FactionsQueried(edsm::Factions),
     TrafficQueried(edsm::Traffic),

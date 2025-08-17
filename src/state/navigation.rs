@@ -44,9 +44,9 @@ pub struct CurrentLocation {
 
     // EDSM enrichment
     pub stations: Vec<Station>,
-    pub edsm_system: Option<SystemMeta>,
-    pub edsm_bodies: Vec<BodyInfo>,
-    pub edsm_factions: Option<FactionsMeta>,
+    pub nearby_systems: Vec<System>,
+    pub edsm_bodies: Vec<Body>,
+    pub edsm_factions: Option<Factions>,
     pub edsm_traffic: Option<Counts>,
     pub edsm_deaths: Option<Counts>,
 }
@@ -127,7 +127,7 @@ pub struct StationUpdateTime {
 }
 
 #[derive(Default, Clone, Debug)]
-pub struct SystemMeta {
+pub struct System {
     pub coords: Vec<f64>,
     pub permit_required: bool,
     pub primary_star: PrimaryStarMeta,
@@ -141,7 +141,7 @@ pub struct PrimaryStarMeta {
 }
 
 #[derive(Default, Clone, Debug)]
-pub struct BodyInfo {
+pub struct Body {
     pub name: String,
     pub type_field: String,
     pub sub_type: String,
@@ -158,7 +158,7 @@ pub struct Counts {
 }
 
 #[derive(Default, Clone, Debug)]
-pub struct FactionsMeta {
+pub struct Factions {
     pub controlling_faction: FactionRef,
     pub factions: Vec<FactionExtra>,
 }
@@ -202,4 +202,14 @@ impl NavRouteStep {
             let dz = self.star_pos[2] - other.star_pos[2];
             f64::sqrt(dx * dx + dy * dy + dz * dz)
     }
+}
+
+// ------------------------------ Nearby Systems ------------------------------
+#[derive(Default, Clone, Debug)]
+pub struct NearbySystem {
+    pub name: String,
+    pub id: u64,
+    pub id64: u64,
+    pub coords: Vec<f64>,
+    pub distance: f64,
 }

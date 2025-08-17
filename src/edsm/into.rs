@@ -59,9 +59,9 @@ impl Into<state::StationUpdateTime> for edsm::UpdateTime {
 }
 
 // ------------------------------ System ------------------------------
-impl Into<state::SystemMeta> for edsm::System {
-    fn into(self) -> state::SystemMeta {
-        state::SystemMeta {
+impl Into<state::System> for edsm::System {
+    fn into(self) -> state::System {
+        state::System {
             coords: vec![self.coords.x, self.coords.y, self.coords.z],
             permit_required: self.require_permit,
             primary_star: self.primary_star.into(),
@@ -80,15 +80,15 @@ impl Into<state::PrimaryStarMeta> for edsm::PrimaryStar {
 }
 
 // ------------------------------ Bodies ------------------------------
-impl Into<Vec<state::BodyInfo>> for edsm::Bodies {
-    fn into(self) -> Vec<state::BodyInfo> {
+impl Into<Vec<state::Body>> for edsm::Bodies {
+    fn into(self) -> Vec<state::Body> {
         self.bodies.into_iter().map(Into::into).collect()
     }
 }
 
-impl Into<state::BodyInfo> for edsm::bodies::Body {
-    fn into(self) -> state::BodyInfo {
-        state::BodyInfo {
+impl Into<state::Body> for edsm::bodies::Body {
+    fn into(self) -> state::Body {
+        state::Body {
             name: self.name,
             type_field: self.body_type,
             sub_type: self.sub_type,
@@ -100,9 +100,9 @@ impl Into<state::BodyInfo> for edsm::bodies::Body {
 }
 
 // ------------------------------ Factions ------------------------------
-impl Into<state::FactionsMeta> for edsm::Factions {
-    fn into(self) -> state::FactionsMeta {
-        state::FactionsMeta {
+impl Into<state::Factions> for edsm::Factions {
+    fn into(self) -> state::Factions {
+        state::Factions {
             controlling_faction: state::FactionRef { id: self.controlling_faction.id as i64, name: self.controlling_faction.name.clone() },
             factions: self.factions.into_iter().map(Into::into).collect(),
         }

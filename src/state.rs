@@ -85,8 +85,8 @@ impl State {
                 self.location.stations = response.into();
             }
 
-            Message::SystemQueried(system) => {
-                self.location.edsm_system = Some(system.into());
+            Message::NearbySystemsQueried(systems) => {
+                self.location.nearby_systems = systems.into_iter().map(|s| s.into()).collect();
             }
 
             Message::BodiesQueried(bodies) => {
@@ -638,7 +638,7 @@ impl State {
         Task::none()
     }
 
-    fn query_system(&mut self, star_system: String) -> Task<Message> {
+    fn query_system(&self, star_system: String) -> Task<Message> {
         if !self.journal_loaded { return Task::none(); }
 
         info!("Querying system: {}", star_system);
@@ -648,7 +648,17 @@ impl State {
                 let name = star_system.clone();
                 Task::perform(async move {
                     let client = EdsmClient::default();
-                    match client.$method(Some(name.as_str()), None).await {
+                    match client.$method(name.as_str()).await {
+                        Ok(v) => Message::$Msg(v),
+                        Err(error) => { warn!("Failed to fetch {}: {}", $label, error); Message::Empty }
+                    }
+                }, |m| m)
+            }};
+            ($method:ident, $arg:expr, $Msg:ident, $label:literal) => {{
+                let name = star_system.clone();
+                Task::perform(async move {
+                    let client = EdsmClient::default();
+                    match client.$method(name.as_str(), $arg).await {
                         Ok(v) => Message::$Msg(v),
                         Err(error) => { warn!("Failed to fetch {}: {}", $label, error); Message::Empty }
                     }
@@ -656,8 +666,9 @@ impl State {
             }};
         }
 
+        let jump_range = self.ship_loadout.max_jump_range as f32;
         Task::batch(vec![
-            fetch!(get_system, SystemQueried, "system"),
+            fetch!(get_sphere_systems, jump_range, NearbySystemsQueried, "system"),
             fetch!(get_bodies, BodiesQueried, "bodies"),
             fetch!(get_stations, StationsQueried, "stations"),
             fetch!(get_factions, FactionsQueried, "factions"),
