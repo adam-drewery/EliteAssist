@@ -36,7 +36,6 @@ fn messages_column(state: &State) -> Column<'_, Message> {
                             text(&item.from)
                                 .size(16)
                                 .color(name_color(&item.channel))
-                                .width(192)
                                 .height(16)
                                 .align_x(Right)
                                 .wrapping(Wrapping::None),
@@ -69,7 +68,7 @@ fn journal_column(state: &State) -> Column<'_, Message> {
             text("Journal").size(20).color(ORANGE),
             scrollable(column(
                 state
-                    .journal
+                    .logs
                     .iter()
                     .map(|item| {
                         row![

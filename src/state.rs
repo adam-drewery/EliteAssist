@@ -43,7 +43,7 @@ pub struct State {
     pub active_screen: ActiveScreen,
     pub materials: Materials,
     pub messages: Vec<ChatMessage>,
-    pub journal: Vec<GameEventLog>,
+    pub logs: Vec<GameEventLog>,
     pub crime: CrimeStats,
     pub market: Market,
     pub rank: Rank,
@@ -81,10 +81,28 @@ impl State {
 
             Message::NavigateTo(screen) => self.active_screen = screen,
 
+            Message::StationsQueried(response) => {
+                //self.location.stations = response.into();
+            }
+
             Message::SystemQueried(system) => {
-                if self.location.star_system == system.name.unwrap_or_default() {
-                    // todo
-                }
+                //self.location.edsm_system = Some(system.into());
+            }
+
+            Message::BodiesQueried(bodies) => {
+                //self.location.edsm_bodies = bodies.into();
+            }
+
+            Message::FactionsQueried(factions) => {
+                //self.location.edsm_factions = Some(factions.into());
+            }
+
+            Message::TrafficQueried(traffic) => {
+                //self.location.edsm_traffic = Some(traffic.into());
+            }
+
+            Message::DeathsQueried(deaths) => {
+                //self.location.edsm_deaths = Some(deaths.into());
             }
 
             Message::JournalLoaded => {
@@ -173,25 +191,25 @@ impl State {
                     JournalEvent::CrewHire(_) => {}
                     JournalEvent::KickCrewMember(_) => {}
 
-                    JournalEvent::CrewAssign(e) => self.journal.push(e.into()),
+                    JournalEvent::CrewAssign(e) => self.logs.push(e.into()),
 
-                    JournalEvent::CrewMemberRoleChange(e) => self.journal.push(e.into()),
+                    JournalEvent::CrewMemberRoleChange(e) => self.logs.push(e.into()),
 
-                    JournalEvent::CrewLaunchFighter(e) => self.journal.push(e.into()),
+                    JournalEvent::CrewLaunchFighter(e) => self.logs.push(e.into()),
 
-                    JournalEvent::ChangeCrewRole(e) => self.journal.push(e.into()),
+                    JournalEvent::ChangeCrewRole(e) => self.logs.push(e.into()),
 
-                    JournalEvent::EndCrewSession(e) => self.journal.push(e.into()),
+                    JournalEvent::EndCrewSession(e) => self.logs.push(e.into()),
 
-                    JournalEvent::NpcCrewRank(e) => self.journal.push(e.into()),
+                    JournalEvent::NpcCrewRank(e) => self.logs.push(e.into()),
 
-                    JournalEvent::CrewMemberJoins(e) => self.journal.push(e.into("joined")),
+                    JournalEvent::CrewMemberJoins(e) => self.logs.push(e.into("joined")),
 
-                    JournalEvent::CrewMemberQuits(e) => self.journal.push(e.into("quit")),
+                    JournalEvent::CrewMemberQuits(e) => self.logs.push(e.into("quit")),
 
                     JournalEvent::NpcCrewPaidWage(e) => {
                         if e.amount != 0 {
-                            self.journal.push(e.into())
+                            self.logs.push(e.into())
                         }
                     }
 
@@ -264,16 +282,16 @@ impl State {
                     JournalEvent::DatalinkVoucher(_) => {}
 
                     // FIGHTER
-                    JournalEvent::VehicleSwitch(e) => self.journal.push(e.into()),
+                    JournalEvent::VehicleSwitch(e) => self.logs.push(e.into()),
 
-                    JournalEvent::LaunchFighter(e) => self.journal.push(e.into()),
+                    JournalEvent::LaunchFighter(e) => self.logs.push(e.into()),
 
-                    JournalEvent::FighterRebuilt(e) => self.journal.push(e.into()),
+                    JournalEvent::FighterRebuilt(e) => self.logs.push(e.into()),
 
-                    JournalEvent::DockFighter(e) => self.journal.push(e.into()),
+                    JournalEvent::DockFighter(e) => self.logs.push(e.into()),
 
                     JournalEvent::FighterDestroyed(e) => {
-                        self.journal.push(e.into("Destroyed", "Fighter"))
+                        self.logs.push(e.into("Destroyed", "Fighter"))
                     }
 
                     // FSD
@@ -286,7 +304,7 @@ impl State {
 
                     JournalEvent::FSDTarget(_) => {}
 
-                    JournalEvent::StartJump(e) => self.journal.push(e.into()),
+                    JournalEvent::StartJump(e) => self.logs.push(e.into()),
 
                     JournalEvent::FSDJump(e) => {
                         self.current_system = e.star_system.to_string();
@@ -387,12 +405,12 @@ impl State {
 
                     JournalEvent::Disembark(e) => {
                         self.current_body = e.body.clone();
-                        self.journal.push(e.into());
+                        self.logs.push(e.into());
                     }
 
                     JournalEvent::Embark(e) => {
                         self.current_body = e.body.clone();
-                        self.journal.push(e.into());
+                        self.logs.push(e.into());
                     }
 
                     JournalEvent::Docked(e) => {
@@ -548,7 +566,7 @@ impl State {
                     JournalEvent::RebootRepair(_) => {}
                     JournalEvent::AfmuRepairs(_) => {}
 
-                    JournalEvent::RestockVehicle(e) => self.journal.push(e.into()),
+                    JournalEvent::RestockVehicle(e) => self.logs.push(e.into()),
 
                     // SHIPYARD
                     JournalEvent::Shipyard(_) => {}
@@ -606,7 +624,7 @@ impl State {
                     JournalEvent::LoadoutRemoveModule(_) => {}
                     JournalEvent::LoadoutEquipModule(_) => {}
 
-                    JournalEvent::BuyAmmo(e) => self.journal.push(e.into("ammo")),
+                    JournalEvent::BuyAmmo(e) => self.logs.push(e.into("ammo")),
 
                     // WING
                     JournalEvent::WingAdd(_) => {}
@@ -621,24 +639,28 @@ impl State {
     }
 
     fn query_system(&mut self, star_system: String) -> Task<Message> {
+        if !self.journal_loaded { return Task::none(); }
 
-        if self.journal_loaded {
-            Task::perform(async move {
-                let fetched = EdsmClient::default()
-                    .get_system(Some(&star_system), None)
-                    .await;
-
-                match fetched {
-                    Ok(system) => Message::SystemQueried(system),
-                    Err(error) => {
-                        warn!("Failed to fetch system: {}", error);
-                        Message::Empty
+        macro_rules! fetch {
+            ($method:ident, $Msg:ident, $label:literal) => {{
+                let name = star_system.clone();
+                Task::perform(async move {
+                    let client = EdsmClient::default();
+                    match client.$method(Some(name.as_str()), None).await {
+                        Ok(v) => Message::$Msg(v),
+                        Err(error) => { warn!("Failed to fetch {}: {}", $label, error); Message::Empty }
                     }
-                }
-            }, |m| m)
+                }, |m| m)
+            }};
         }
-        else {
-            Task::none()
-        }
+
+        Task::batch(vec![
+            fetch!(get_system, SystemQueried, "system"),
+            fetch!(get_bodies, BodiesQueried, "bodies"),
+            fetch!(get_stations, StationsQueried, "stations"),
+            fetch!(get_factions, FactionsQueried, "factions"),
+            fetch!(get_traffic, TrafficQueried, "traffic"),
+            fetch!(get_deaths, DeathsQueried, "deaths"),
+        ])
     }
 }

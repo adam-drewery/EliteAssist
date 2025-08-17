@@ -21,10 +21,29 @@
 //! }
 //! ```
 
+mod into;
+mod stations;
+mod factions;
+mod bodies;
+mod deaths;
+mod traffic;
+mod system;
+mod sphere_systems;
+mod server_status;
+
+pub use stations::*;
+pub use factions::*;
+pub use bodies::*;
+pub use traffic::*;
+pub use deaths::*;
+pub use system::*;
+pub use sphere_systems::*;
+pub use server_status::*;
+
 use std::time::Duration;
 use log::info;
 use reqwest::Url;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
 /// Error type for EDSM client operations
 #[derive(thiserror::Error, Debug)]
@@ -81,13 +100,15 @@ impl EdsmClient {
         }
 
         info!("GET {}", url);
-        let resp = self.http.get(url).send().await?;
+        let resp = self.http.get(url.clone()).send().await?;
         let status = resp.status();
         let text = resp.text().await?;
+
         if !status.is_success() {
+            info!("GET {} for {}", status, url);
             return Err(EdsmError::Message(format!(
-                "http status {} body {}",
-                status, text
+                "http status {}",
+                status
             )));
         }
         let data = serde_json::from_str::<T>(&text)?;
@@ -127,7 +148,7 @@ impl EdsmClient {
         &self,
         system_name: Option<&str>,
         system_id64: Option<u64>,
-    ) -> Result<EdsmSystem, EdsmError> {
+    ) -> Result<System, EdsmError> {
         let q = self.build_system_query(system_name, system_id64)?;
         self.get_json("api-v1/system", &q).await
     }
@@ -137,7 +158,7 @@ impl EdsmClient {
         &self,
         system_name: Option<&str>,
         system_id64: Option<u64>,
-    ) -> Result<EdsmBodies, EdsmError> {
+    ) -> Result<Bodies, EdsmError> {
         let q = self.build_system_query(system_name, system_id64)?;
         self.get_json("api-system-v1/bodies", &q).await
     }
@@ -147,7 +168,7 @@ impl EdsmClient {
         &self,
         system_name: Option<&str>,
         system_id64: Option<u64>,
-    ) -> Result<EdsmStations, EdsmError> {
+    ) -> Result<Stations, EdsmError> {
         let q = self.build_system_query(system_name, system_id64)?;
         self.get_json("api-system-v1/stations", &q).await
     }
@@ -161,7 +182,7 @@ impl EdsmClient {
         system_name: &str,
         radius_ly: u32,
         show_id: bool,
-    ) -> Result<Vec<EdsmSphereSystem>, EdsmError> {
+    ) -> Result<Vec<SphereSystem>, EdsmError> {
         let mut q: Vec<(&str, String)> = Vec::new();
         q.push(("systemName", system_name.to_string()));
         q.push(("radius", radius_ly.to_string()));
@@ -187,196 +208,13 @@ mod tests {
     }
 }
 
-// ------------------------------ Data Models ------------------------------
-
-/// Elite server status response (shape kept minimal and tolerant).
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EliteServerStatus {
-    #[serde(default)]
-    pub status: Option<EliteServerStatusInner>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EliteServerStatusInner {
-    #[serde(default)]
-    pub message: Option<String>,
-    #[serde(default)]
-    pub status: Option<String>,
-    #[serde(default)]
-    #[serde(rename = "lastUpdate")]
-    pub last_update: Option<String>,
-}
-
-/// Response of api-system-v1/system
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EdsmSystem {
-    #[serde(default)]
-    pub id: Option<u64>,
-    #[serde(default)]
-    pub id64: Option<u64>,
-    #[serde(default)]
-    pub name: Option<String>,
-    #[serde(default)]
-    pub url: Option<String>,
-    #[serde(default)]
-    pub coords: Option<Coords>,
-    #[serde(default)]
-    pub information: Option<SystemInformation>,
-    #[serde(default)]
-    #[serde(rename = "primaryStar")]
-    pub primary_star: Option<PrimaryStar>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Coords {
-    pub x: f64,
-    pub y: f64,
-    pub z: f64,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SystemInformation {
-    #[serde(default)]
-    pub allegiance: Option<String>,
-    #[serde(default)]
-    pub government: Option<String>,
-    #[serde(default)]
-    pub economy: Option<String>,
-    #[serde(default)]
-    #[serde(rename = "secondEconomy")]
-    pub second_economy: Option<String>,
-    #[serde(default)]
-    pub population: Option<u64>,
-    #[serde(default)]
-    pub security: Option<String>,
-    #[serde(default)]
-    pub faction: Option<String>,
-    #[serde(default)]
-    #[serde(rename = "factionState")]
-    pub faction_state: Option<String>,
-    #[serde(default)]
-    pub permit: Option<bool>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PrimaryStar {
-    #[serde(default)]
-    #[serde(rename = "type")]
-    pub type_field: Option<String>,
-    #[serde(default)]
-    pub name: Option<String>,
-    #[serde(default)]
-    #[serde(rename = "isScoopable")]
-    pub is_scoopable: Option<bool>,
-}
-
-/// Response of api-system-v1/bodies
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EdsmBodies {
-    #[serde(default)]
-    pub id: Option<u64>,
-    #[serde(default)]
-    pub id64: Option<u64>,
-    #[serde(default)]
-    pub name: Option<String>,
-    #[serde(default)]
-    pub url: Option<String>,
-    #[serde(default)]
-    #[serde(rename = "bodyCount")]
-    pub body_count: Option<u32>,
-    #[serde(default)]
-    pub bodies: Option<Vec<EdsmBody>>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EdsmBody {
-    #[serde(default)]
-    pub id: Option<u64>,
-    #[serde(default)]
-    pub id64: Option<u64>,
-    #[serde(default)]
-    pub name: Option<String>,
-    #[serde(default)]
-    #[serde(rename = "type")]
-    pub type_field: Option<String>,
-    #[serde(default)]
-    #[serde(rename = "subType")]
-    pub sub_type: Option<String>,
-    #[serde(default)]
-    #[serde(rename = "distanceToArrival")]
-    pub distance_to_arrival: Option<f64>,
-    #[serde(default)]
-    #[serde(rename = "isMainStar")]
-    pub is_main_star: Option<bool>,
-    #[serde(default)]
-    #[serde(rename = "isScoopable")]
-    pub is_scoopable: Option<bool>,
-}
-
-/// Response of api-system-v1/stations
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EdsmStations {
-    #[serde(default)]
-    pub id: Option<u64>,
-    #[serde(default)]
-    pub id64: Option<u64>,
-    #[serde(default)]
-    pub name: Option<String>,
-    #[serde(default)]
-    pub url: Option<String>,
-    #[serde(default)]
-    pub stations: Option<Vec<EdsmStation>>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EdsmStation {
-    #[serde(default)]
-    pub name: Option<String>,
-    #[serde(default)]
-    #[serde(rename = "type")]
-    pub type_field: Option<String>,
-    #[serde(default)]
-    #[serde(rename = "distanceToStar")]
-    pub distance_to_star: Option<f64>,
-    #[serde(default)]
-    #[serde(rename = "marketId")]
-    pub market_id: Option<u64>,
-    #[serde(default)]
-    #[serde(rename = "haveMarket")]
-    pub have_market: Option<bool>,
-    #[serde(default)]
-    #[serde(rename = "haveOutfitting")]
-    pub have_outfitting: Option<bool>,
-    #[serde(default)]
-    #[serde(rename = "haveShipyard")]
-    pub have_shipyard: Option<bool>,
-    #[serde(default)]
-    pub services: Option<Vec<String>>,
-}
-
-/// Element of api-v1/sphere-systems response
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EdsmSphereSystem {
-    #[serde(default)]
-    pub name: Option<String>,
-    #[serde(default)]
-    pub id: Option<u64>,
-    #[serde(default)]
-    pub id64: Option<u64>,
-    #[serde(default)]
-    pub coords: Option<Coords>,
-    #[serde(default)]
-    pub distance: Option<f64>,
-}
-
-
 impl EdsmClient {
     /// GET https://www.edsm.net/api-system-v1/factions?systemName=... or systemId64=...
     pub async fn get_factions(
         &self,
         system_name: Option<&str>,
         system_id64: Option<u64>,
-    ) -> Result<EdsmFactions, EdsmError> {
+    ) -> Result<Factions, EdsmError> {
         let q = self.build_system_query(system_name, system_id64)?;
         self.get_json("api-system-v1/factions", &q).await
     }
@@ -386,7 +224,7 @@ impl EdsmClient {
         &self,
         system_name: Option<&str>,
         system_id64: Option<u64>,
-    ) -> Result<EdsmTraffic, EdsmError> {
+    ) -> Result<Traffic, EdsmError> {
         let q = self.build_system_query(system_name, system_id64)?;
         self.get_json("api-system-v1/traffic", &q).await
     }
@@ -396,141 +234,23 @@ impl EdsmClient {
         &self,
         system_name: Option<&str>,
         system_id64: Option<u64>,
-    ) -> Result<EdsmDeaths, EdsmError> {
+    ) -> Result<Deaths, EdsmError> {
         let q = self.build_system_query(system_name, system_id64)?;
         self.get_json("api-system-v1/deaths", &q).await
     }
-
-    /// GET https://www.edsm.net/api-system-v1/kills?systemName=... or systemId64=...
-    pub async fn get_kills(
-        &self,
-        system_name: Option<&str>,
-        system_id64: Option<u64>,
-    ) -> Result<EdsmKills, EdsmError> {
-        let q = self.build_system_query(system_name, system_id64)?;
-        self.get_json("api-system-v1/kills", &q).await
-    }
 }
 
-// ------------------------------ Additional Data Models for api-system-v1 ------------------------------
-
-/// Response of api-system-v1/factions
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EdsmFactions {
-    #[serde(default)]
-    pub id: Option<u64>,
-    #[serde(default)]
-    pub id64: Option<u64>,
-    #[serde(default)]
-    pub name: Option<String>,
-    #[serde(default)]
-    pub url: Option<String>,
-    #[serde(default)]
-    #[serde(rename = "controllingFaction")]
-    pub controlling_faction: Option<EdsmFaction>,
-    #[serde(default)]
-    pub factions: Option<Vec<EdsmFaction>>,
+/// Shared counts object for traffic/deaths
+#[derive(Debug, Clone, Deserialize, Default)]
+pub struct Counts {
+    pub day: u64,
+    pub week: u64,
+    pub total: u64,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EdsmFaction {
-    #[serde(default)]
-    pub id: Option<u64>,
-    #[serde(default)]
-    pub name: Option<String>,
-    #[serde(default)]
-    pub allegiance: Option<String>,
-    #[serde(default)]
-    pub government: Option<String>,
-    #[serde(default)]
-    pub influence: Option<f64>,
-    #[serde(default)]
-    pub state: Option<String>,
-    #[serde(default)]
-    pub happiness: Option<String>,
-    #[serde(default)]
-    #[serde(rename = "isPlayer")]
-    pub is_player: Option<bool>,
-    #[serde(default)]
-    #[serde(rename = "activeStates")]
-    pub active_states: Option<Vec<EdsmFactionState>>, 
-    #[serde(default)]
-    #[serde(rename = "pendingStates")]
-    pub pending_states: Option<Vec<EdsmFactionStateTrend>>, 
-    #[serde(default)]
-    #[serde(rename = "recoveringStates")]
-    pub recovering_states: Option<Vec<EdsmFactionStateTrend>>, 
-    #[serde(default)]
-    #[serde(rename = "lastUpdate")]
-    pub last_update: Option<u64>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EdsmFactionState {
-    #[serde(default)]
-    pub state: Option<String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EdsmFactionStateTrend {
-    #[serde(default)]
-    pub state: Option<String>,
-    #[serde(default)]
-    pub trend: Option<i32>,
-}
-
-/// Shared counts object for traffic/deaths/kills
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EdsmCounts {
-    #[serde(default)]
-    pub day: Option<u64>,
-    #[serde(default)]
-    pub week: Option<u64>,
-    #[serde(default)]
-    pub total: Option<u64>,
-}
-
-/// Response of api-system-v1/traffic
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EdsmTraffic {
-    #[serde(default)]
-    pub id: Option<u64>,
-    #[serde(default)]
-    pub id64: Option<u64>,
-    #[serde(default)]
-    pub name: Option<String>,
-    #[serde(default)]
-    pub url: Option<String>,
-    #[serde(default)]
-    pub traffic: Option<EdsmCounts>,
-}
-
-/// Response of api-system-v1/deaths
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EdsmDeaths {
-    #[serde(default)]
-    pub id: Option<u64>,
-    #[serde(default)]
-    pub id64: Option<u64>,
-    #[serde(default)]
-    pub name: Option<String>,
-    #[serde(default)]
-    pub url: Option<String>,
-    #[serde(default)]
-    pub deaths: Option<EdsmCounts>,
-}
-
-/// Response of api-system-v1/kills
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EdsmKills {
-    #[serde(default)]
-    pub id: Option<u64>,
-    #[serde(default)]
-    pub id64: Option<u64>,
-    #[serde(default)]
-    pub name: Option<String>,
-    #[serde(default)]
-    pub url: Option<String>,
-    #[serde(default)]
-    pub kills: Option<EdsmCounts>,
+#[derive(Debug, Clone, Deserialize, Default)]
+pub struct Coords {
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
 }

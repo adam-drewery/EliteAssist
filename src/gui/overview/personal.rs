@@ -156,14 +156,14 @@ pub fn messages(state: &State) -> Column<'_, Message> {
                             column![text(&item.time_display).size(12).color(GRAY)].padding(3),
                         ],
                         row![text(&item.text).color(WHITE).size(16)]
-                    ]
+                    ].width(Fill)
                 })
                 .map(Element::from)
         ))
         .anchor_bottom()
     ]
     .height(256)
-    .padding(4)
+    .padding(8)
 }
 
 

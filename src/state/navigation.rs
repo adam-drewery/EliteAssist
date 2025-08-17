@@ -41,12 +41,16 @@ pub struct CurrentLocation {
     pub powerplay_state_undermining: Option<u64>,
     pub factions: Vec<Faction>,
     pub system_faction: Option<SystemFaction>,
-    // Enriched asynchronously from EDSM after FSDJump
-    pub edsm_id: Option<u64>,
-    pub edsm_id64: Option<u64>,
-    pub edsm_coords: Option<Vec<f64>>, // [x, y, z]
-    pub edsm_permit_required: Option<bool>,
+
+    // EDSM enrichment
+    pub stations: Vec<Station>,
+    pub edsm_system: Option<SystemMeta>,
+    pub edsm_bodies: Vec<BodyInfo>,
+    pub edsm_factions: Option<FactionsMeta>,
+    pub edsm_traffic: Option<Counts>,
+    pub edsm_deaths: Option<Counts>,
 }
+
 
 #[derive(Default, Clone, Debug)]
 pub struct SystemFaction {
@@ -77,6 +81,114 @@ pub struct Faction {
 pub struct FactionState {
     pub state: String,
     pub trend: u64,
+}
+
+// ------------------------------ EDSM enrichment child structs ------------------------------
+#[derive(Default, Clone, Debug)]
+pub struct Station {
+    pub id: i64,
+    pub market_id: i64,
+    pub type_field: String,
+    pub name: String,
+    pub body: Option<StationBody>,
+    pub distance_to_arrival: f32,
+    pub allegiance: String,
+    pub government: String,
+    pub economy: String,
+    pub second_economy: Option<String>,
+    pub have_market: bool,
+    pub have_shipyard: bool,
+    pub have_outfitting: bool,
+    pub other_services: Vec<String>,
+    pub controlling_faction: FactionRef,
+    pub update_time: StationUpdateTime,
+}
+
+#[derive(Default, Clone, Debug)]
+pub struct StationBody {
+    pub id: i64,
+    pub name: String,
+    pub latitude: f64,
+    pub longitude: f64,
+}
+
+#[derive(Default, Clone, Debug)]
+pub struct FactionRef {
+    pub id: i64,
+    pub name: String,
+}
+
+#[derive(Default, Clone, Debug)]
+pub struct StationUpdateTime {
+    pub information: String,
+    pub market: Option<String>,
+    pub shipyard: Option<String>,
+    pub outfitting: Option<String>,
+}
+
+#[derive(Default, Clone, Debug)]
+pub struct SystemMeta {
+    pub url: String,
+    pub coords: Vec<f64>,
+    pub permit_required: bool,
+    pub primary_star: PrimaryStarMeta,
+}
+
+#[derive(Default, Clone, Debug)]
+pub struct PrimaryStarMeta {
+    pub type_field: String,
+    pub name: String,
+    pub is_scoopable: bool,
+}
+
+#[derive(Default, Clone, Debug)]
+pub struct BodyInfo {
+    pub name: String,
+    pub type_field: String,
+    pub sub_type: String,
+    pub distance_to_arrival: f64,
+    pub is_main_star: bool,
+    pub is_scoopable: bool,
+}
+
+#[derive(Default, Clone, Debug)]
+pub struct Counts {
+    pub day: u64,
+    pub week: u64,
+    pub total: u64,
+}
+
+#[derive(Default, Clone, Debug)]
+pub struct FactionsMeta {
+    pub controlling_faction: FactionRef,
+    pub factions: Vec<FactionExtra>,
+}
+
+#[derive(Default, Clone, Debug)]
+pub struct FactionNamedState {
+    pub state: String,
+}
+
+#[derive(Default, Clone, Debug)]
+pub struct FactionTrend {
+    pub state: String,
+    pub trend: i32,
+}
+
+#[derive(Default, Clone, Debug)]
+pub struct FactionExtra {
+    pub id: u64,
+    pub name: String,
+    pub allegiance: String,
+    pub government: String,
+    pub influence: f64,
+    pub state: String,
+    pub happiness: String,
+    pub is_player: bool,
+    pub active_states: Vec<FactionNamedState>,
+    pub pending_states: Vec<FactionTrend>,
+    pub recovering_states: Vec<FactionTrend>,
+    pub last_update: u64,
 }
 
 impl NavRouteStep {

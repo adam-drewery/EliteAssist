@@ -7,12 +7,11 @@ mod messages;
 mod market;
 mod components;
 
-use crate::edsm::EdsmSystem;
 use crate::event::JournalEvent;
 use crate::image::LOADING_PNG;
 use crate::state::{ActiveScreen, State};
 use crate::theme::{style, ORANGE};
-use crate::{centered_column, centered_row};
+use crate::{centered_column, centered_row, edsm};
 use chrono::Utc;
 use header_bar::header_bar;
 use iced::widget::{column, progress_bar, row, svg, text};
@@ -28,7 +27,14 @@ use ship_locker::ship_locker;
 pub enum Message {
     NavigateTo(ActiveScreen),
     JournalEvent(JournalEvent),
-    SystemQueried(EdsmSystem),
+    
+    StationsQueried(edsm::Stations),
+    SystemQueried(edsm::System),
+    BodiesQueried(edsm::Bodies),
+    FactionsQueried(edsm::Factions),
+    TrafficQueried(edsm::Traffic),
+    DeathsQueried(edsm::Deaths),
+    
     JournalLoaded,
     Empty,
 }
@@ -41,7 +47,7 @@ impl Gui {
             waiting_spinner()
         }
         else if !state.journal_loaded {
-            loading_spinner(state)
+            loading_bar(state)
         }
         else {
             column![
@@ -83,7 +89,7 @@ fn waiting_spinner() -> Element<'static, Message> {
         .into()
 }
 
-fn loading_spinner(state: &State) -> Element<'_, Message> {
+fn loading_bar(state: &State) -> Element<'_, Message> {
     centered_column![
         centered_row![
             row![
@@ -97,7 +103,7 @@ fn loading_spinner(state: &State) -> Element<'_, Message> {
                 column![text("Loading...").color(ORANGE).size(32)],
                 column![].width(Fill),
                 column![text(&state.latest_message_timestamp_formatted).color(ORANGE).size(32)]
-                
+
             ]
         ]
     ]
