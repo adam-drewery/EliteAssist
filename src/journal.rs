@@ -1,3 +1,4 @@
+//!
 use crate::event::JournalEvent;
 use crate::gui::Message;
 use crate::state::State;
@@ -11,6 +12,7 @@ use tokio::select;
 use tokio::sync::mpsc;
 use thiserror::Error;
 
+///
 #[derive(Error, Debug)]
 pub enum JournalError {
     #[error("IO error: {0}")]
@@ -36,12 +38,55 @@ pub enum JournalError {
 }
 
 
+/// A structure that represents details about a file, including its path and last modification time.
+///
+/// # Fields
+///
+/// * `path` - A `PathBuf` that holds the file's path. This allows for platform-independent
+///            representation and manipulation of file system paths.
+/// * `last_modified` - A `SystemTime` value representing the last time the file was modified.
+///
+/// # Example
+///
+/// ```
+/// use std::path::PathBuf;
+/// use std::time::{SystemTime, UNIX_EPOCH};
+///
+/// let file_details = FileDetails {
+///     path: PathBuf::from("/example/path/file.txt"),
+///     last_modified: SystemTime::now(),
+/// };
+///
+/// println!("File path: {:?}", file_details.path);
+/// println!("Last modified: {:?}", file_details.last_modified);
+/// ```
 struct FileDetails {
     path: PathBuf,
     last_modified: SystemTime,
 }
 
 impl FileDetails {
+    /// Creates a new instance of the struct with the given file path.
+    ///
+    /// # Arguments
+    ///
+    /// * `path` - A `PathBuf` representing the file path to associate with the instance.
+    ///
+    /// # Returns
+    ///
+    /// Returns a new instance of the struct, initialized with the provided file path.
+    /// The `last_modified` field is set to the UNIX epoch (`SystemTime::UNIX_EPOCH`) by default.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use std::path::PathBuf;
+    /// use std::time::SystemTime;
+    ///
+    /// let file_path = PathBuf::from("./example.txt");
+    /// let instance = YourStruct::new(file_path);
+    /// assert_eq!(instance.last_modified, SystemTime::UNIX_EPOCH);
+    /// ```
     fn new(path: PathBuf) -> Self {
         Self {
             path,
@@ -50,6 +95,19 @@ impl FileDetails {
     }
 }
 
+/// The `JournalWatcher` struct is designed to monitor and handle reading from a series of journal files.
+/// It provides functionality to manage a list of journal files, maintain the state of which file
+/// is currently being read, and enables communication mechanisms for signaling changes or updates.
+///
+/// # Fields
+///
+/// * `reader` - An optional buffered reader (`BufReader<File>`) for reading the current journal file.
+///   It is initialized when a file is being processed and set to `None` when no file is being read.
+///
+/// * `current_journal_path` - The path to the current journal file being processed. This helps track
+///   the specific journal file currently in use.
+///
+/// * `watcher_tx` - A sender channel (`mpsc::Sender<()>`), part
 pub struct JournalWatcher {
     reader: Option<BufReader<File>>,
     current_journal_path: PathBuf,
@@ -59,13 +117,33 @@ pub struct JournalWatcher {
     current_file_index: usize,
 }
 
+/// Returns the path to the Elite Dangerous journal directory as a `PathBuf`.
+///
+/// This function constructs the absolute path to the journal directory for the game
+/// "Elite Dangerous" by appending a pre-defined relative path (specific to the game's
+/// save location in a Steam installation
 pub fn get_journal_directory() -> PathBuf {
+    /// A constant that defines the directory path to the save game files for the game
+    /// "Elite Dangerous" when running under Steam's Proton compatibility layer.
+    ///
+    /// # Path Explanation
+    /// - `.steam/steam/steamapps/compatdata/359320/pfx/`: This is the Proton prefix directory for "Elite Dangerous"
+    ///   (App ID: 359320) when run under Steam on Linux. Proton creates a Windows-like environment here.
+    /// - `drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/`:
+    ///   This mimics the expected Windows directory structure where "Elite Dangerous" save files are stored.
+    ///
+    /// # Usage
+    /// This constant is typically used in applications or scripts that need to locate and interact
+    /// with the save files for "Elite Dangerous" when played via Steam on a Linux-based system.
+    ///
+    /// #
     const JOURNAL_DIRECTORY: &str = ".steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/";
     let home = std::env::var("HOME").expect("Failed to get HOME directory");
     Path::new(&home).join(JOURNAL_DIRECTORY)
 }
 
 impl JournalWatcher {
+    ///
     pub fn new() -> Self {
         let dir_path = get_journal_directory();
 
@@ -113,12 +191,43 @@ impl JournalWatcher {
         watcher
     }
 
+    /// Spawns a directory watcher to monitor a target directory for changes.
+    ///
+    /// This function initializes and launches a directory watcher by cloning the
+    /// existing watcher transmitter (`watcher_tx`) and determining the target
+    /// directory to be monitored using the `get_journal_directory` function.
+    /// The `spawn_dir_watcher` function is then called with the cloned transmitter
+    /// and the directory path to begin monitoring.
+    ///
+    /// # Details
+    /// - `self.watcher_tx`: A transmitter channel used to send notifications about
+    ///   directory changes. The function clones this transmitter to ensure it is
+    ///   shared safely across threads.
+    /// - `get_journal_directory()`: A function that retrieves the path of the target
+    ///   directory that needs to be monitored.
+    /// - `spawn_dir_watcher(tx, target_dir)`: A utility function invoked to start
+    ///   the directory watcher
     fn spawn_watcher(&self) {
         let tx = self.watcher_tx.clone();
         let target_dir = get_journal_directory();
         spawn_dir_watcher(tx, target_dir);
     }
 
+    /// Asynchronously reads and processes journal messages.
+    ///
+    /// This function operates within an event loop, continuously monitoring for updates to journal files.
+    /// - If a journal file is being actively read and contains a new line, the line is parsed as a JSON-encoded `JournalEvent`.
+    /// - If the JSON deserialization succeeds, a `Message::JournalEvent` is returned.
+    /// - If deserialization fails, appropriate error messages are logged. If the deserialization error indicates an unknown variant, a more detailed message is logged.
+    ///
+    /// The function also handles the following cases:
+    /// - End of the currently monitored journal file:
+    ///     - Wait for filesystem notifications to detect changes, such as updates to the existing file or the addition of new files.
+    /// - Errors during reading:
+    ///     - Logs the error and resets the reader state.
+    ///
+    /// When a filesystem notification is received:
+    /// - The directory containing
     pub async fn next(&mut self) -> Message {
         loop {
             // Check if we have a reader
@@ -129,7 +238,7 @@ impl JournalWatcher {
                     Ok(bytes_read) if bytes_read > 0 => {
                         let line = buffer.as_str();
 
-                        debug!("Journal file updated: {}", &line);
+                        info!("Journal file updated: {}", &line);
                         let deserialize_result = serde_json::from_str::<JournalEvent>(line);
 
                         if let Ok(event) = deserialize_result {
@@ -222,8 +331,7 @@ impl JournalWatcher {
     }
 }
 
-/// Return the list of `.log` files in `JOURNAL_DIRECTORY`, sorted by modified time (oldest first).
-/// If the directory doesn't exist, returns an error.
+///
 fn get_journal_paths(dir: &Path) -> Result<Vec<PathBuf>, JournalError> {
     // Check if directory exists; let the caller decide what to do if it doesn't
     if !dir.exists() {
@@ -257,6 +365,23 @@ fn get_journal_paths(dir: &Path) -> Result<Vec<PathBuf>, JournalError> {
     Ok(files)
 }
 
+/// Checks the provided snapshot file for updates and parses its content into a `JournalEvent` if applicable.
+///
+/// # Arguments
+///
+/// * `file_details` - A mutable reference to a `FileDetails` struct that contains metadata about the file,
+///   including its path and the timestamp of its last modification.
+///
+/// # Returns
+///
+/// * `Result<Option<JournalEvent>, JournalError>`:
+///   - `Ok(Some(JournalEvent))`: If the file was updated and a valid `JournalEvent` was created after parsing its content.
+///   - `Ok(None)`: If the file does not exist, is empty, or has not been modified since the last check.
+///   - `Err(JournalError)`: If an error occurred during file operations, parsing, or metadata retrieval.
+///
+/// # Behavior
+///
+/// 1. The function checks whether the file specified in `
 fn check_snapshot_file(file_details: &mut FileDetails) -> Result<Option<JournalEvent>, JournalError> {
     // Check if the file exists
     if !file_details.path.exists() {
@@ -289,6 +414,7 @@ fn check_snapshot_file(file_details: &mut FileDetails) -> Result<Option<JournalE
     Ok(None)
 }
 
+///
 fn spawn_dir_watcher(tx: mpsc::Sender<()>, target_dir: PathBuf) {
     std::thread::spawn(move || {
         // If the target directory doesn't exist yet, watch its parent recursively so we catch its creation
@@ -328,7 +454,7 @@ fn spawn_dir_watcher(tx: mpsc::Sender<()>, target_dir: PathBuf) {
         if let Err(e) = watcher.watch(&watch_path, mode) {
             error!("Failed to watch {}: {}", watch_path.display(), e);
         } else {
-            info!("Watching for changes in: {}", watch_path.display());
+            info!("Watching for changes in: {}", watch_path.file_name().unwrap_or_default().to_str().unwrap_or_default());
         }
 
         // Keep the watcher and thread alive
@@ -336,6 +462,7 @@ fn spawn_dir_watcher(tx: mpsc::Sender<()>, target_dir: PathBuf) {
     });
 }
 
+///
 pub struct SnapshotWatcher {
     file: FileDetails,
     watcher_tx: mpsc::Sender<()>,
@@ -343,10 +470,11 @@ pub struct SnapshotWatcher {
 }
 
 impl SnapshotWatcher {
+    /// Creates a new instance of the containing struct, initializing components necessary
     pub fn new(path: PathBuf) -> Self {
         let (watcher_tx, watcher_rx) = mpsc::channel(32);
-        let watch_dir = path.parent().unwrap_or_else(|| Path::new(".")).to_path_buf();
-        spawn_dir_watcher(watcher_tx.clone(), watch_dir);
+        // Watch the specific file; if it doesn't exist yet, spawn_dir_watcher will watch the parent recursively
+        spawn_dir_watcher(watcher_tx.clone(), path.clone());
         // Seed last_modified to current file's modified time to avoid emitting initial snapshot contents
         let mut file_details = FileDetails::new(path);
         if let Ok(meta) = std::fs::metadata(&file_details.path) {
@@ -361,6 +489,21 @@ impl SnapshotWatcher {
         }
     }
 
+    /// Asynchronously retrieves the next `Message` from the stream by observing changes in a snapshot file.
+    ///
+    /// This method continuously listens for updates from the given `watcher_rx` channel and evaluates the
+    /// snapshot file for events using the `check_snapshot_file` function. When a journal event is successfully
+    /// found, it constructs and returns a `Message::JournalEvent` containing the event data.
+    ///
+    /// # Behavior
+    /// - Listens indefinitely for events from the `watcher_rx` channel.
+    /// - Invokes `check_snapshot_file` to analyze the state of the snapshot file.
+    /// - If an event is found, the method returns `Message::JournalEvent` wrapping the event.
+    /// - If no event is found (`Ok(None)`), the loop continues.
+    /// - Logs an error if `check_snapshot_file` encounters an error.
+    ///
+    /// # Returns
+    ///
     pub async fn next(&mut self) -> Message {
         loop {
             let _ = self.watcher_rx.recv().await;
@@ -373,16 +516,49 @@ impl SnapshotWatcher {
     }
 }
 
-// Loads historical journal and snapshot data
+/// `HistoryLoader` is a struct designed to manage and facilitate
+/// the loading of historical data from a specified directory.
+///
+/// # Fields
+///
+/// * `dir` - A `PathBuf` that specifies the directory from which
+/// historical data will be loaded. This field points to the location
+/// containing relevant files or resources associated with the data.
+///
+/// # Example
+///
+/// ```rust
+/// use std::path::PathBuf;
+/// use your_crate::HistoryLoader;
+///
+/// let loader = HistoryLoader {
+///     dir: PathBuf::from("/path/to/history"),
+/// };
+/// ```
+///
+/// The `HistoryLoader` struct can be extended with additional methods
+/// or functionality to retrieve and process files from the specified directory.
 pub struct HistoryLoader {
     dir: PathBuf,
 }
 
 impl HistoryLoader {
+    ///
     pub fn new() -> Self {
         Self { dir: get_journal_directory() }
     }
 
+    /// Reads all journal events from files located in the directory specified by `self.dir`.
+    ///
+    /// This function iterates through all the files in the journal directory, reads each file line-by-line,
+    /// and attempts to deserialize each non-empty line into a `JournalEvent` object using `serde_json`.
+    /// Successfully deserialized events are collected into a vector, which is returned upon completion.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(Vec<JournalEvent>)` - A vector containing all successfully read and deserialized journal events.
+    /// * `Err(JournalError)` - An error occurred while retrieving journal paths, opening files,
+    ///   reading lines, or deserializing a line into
     fn read_all_journal_events(&self) -> Result<Vec<JournalEvent>, JournalError> {
         let mut events = Vec::new();
         let files = get_journal_paths(&self.dir)?;
@@ -402,6 +578,8 @@ impl HistoryLoader {
         Ok(events)
     }
 
+    ///
+    /// Reads snapshot event files from a specified directory and parses
     fn read_snapshot_events(&self) -> Result<Vec<JournalEvent>, JournalError> {
         let names = [
             "Status.json",
@@ -423,6 +601,25 @@ impl HistoryLoader {
         Ok(events)
     }
 
+    /// Loads all messages by aggregating journal events and snapshot events, ensuring that
+    /// snapshots are applied last to reflect the most up-to-date state.
+    ///
+    /// This function combines events retrieved from the journal and snapshots, processes
+    /// them into `Message` objects, and appends a final `Message::JournalLoaded` to
+    /// indicate the completion of the operation. Any errors encountered during the retrieval
+    /// of journal or snapshot events are logged, and an empty event list is substituted.
+    ///
+    /// # Returns
+    ///
+    /// A `Vec<Message>` containing:
+    /// - Transformed journal events as `Message::JournalEvent`s.
+    /// - Transformed snapshot events as `Message::JournalEvent`s.
+    /// - A final `Message::JournalLoaded` to signify successful loading.
+    ///
+    /// # Error Handling
+    ///
+    /// If an error occurs when fetching journal or snapshot events, it logs the error and
+    ///
     pub fn load_messages(&self) -> Vec<Message> {
         let journal_events = self.read_all_journal_events().unwrap_or_else(|e| {
             error!("Failed to load journal events: {}", e);
@@ -443,6 +640,24 @@ impl HistoryLoader {
         msgs
     }
 
+    /// Loads the application's state by building it from journal and snapshot events.
+    ///
+    /// This function reads all journal and snapshot events and uses them to update the state.
+    /// It avoids triggering any `JournalLoaded` side effects during the initial state construction.
+    ///
+    /// # Returns
+    ///
+    /// A `State` object representing the application's reconstructed state based on the events
+    /// retrieved from the journal and snapshot.
+    ///
+    /// # Behavior
+    ///
+    /// 1. Attempts to read all journal events using `self.read_all_journal_events()`. For each event
+    ///    retrieved, it updates the state by calling `state.update_from()`.
+    ///    - Any errors encountered during the journal event reading process will be logged.
+    /// 2. Attempts to read all snapshot events using `self.read_snapshot_events()`. For each event
+    ///    retrieved, it updates the state in the same manner.
+    ///    - Any errors encountered
     pub fn load_state(&self) -> State {
         let mut state = State::default();
         // Build from events only; do not trigger JournalLoaded side-effects here

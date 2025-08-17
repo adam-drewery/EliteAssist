@@ -11,8 +11,11 @@ use crate::edsm::EdsmSystem;
 use crate::event::JournalEvent;
 use crate::image::LOADING_PNG;
 use crate::state::{ActiveScreen, State};
+use crate::theme::{style, ORANGE};
+use crate::{centered_column, centered_row};
+use chrono::Utc;
 use header_bar::header_bar;
-use iced::widget::{column, row, svg};
+use iced::widget::{column, progress_bar, row, svg, text};
 use iced::{Bottom, Center, Element, Fill, Task};
 use market::market;
 use materials::materials;
@@ -35,19 +38,10 @@ pub struct Gui;
 impl Gui {
     pub fn view(state: &State) -> Element<'_, Message> {
         if state.commander_name.is_empty() {
-            column![
-                row![].height(Fill),
-                row![
-                    column![].width(Fill),
-                    svg(svg::Handle::from_memory(LOADING_PNG))
-                        .width(128)
-                        .height(128),
-                    column![].width(Fill)
-                ],
-                row![].height(Fill)
-            ]
-            .align_x(Center)
-            .into()
+            waiting_spinner()
+        }
+        else if !state.journal_loaded {
+            loading_spinner(state)
         }
         else {
             column![
@@ -71,4 +65,41 @@ impl Gui {
     pub fn update(state: &mut State, message: Message) -> Task<Message> {
         state.update_from(message)
     }
+}
+
+fn waiting_spinner() -> Element<'static, Message> {
+    column![
+                row![].height(Fill),
+                row![
+                    column![].width(Fill),
+                    svg(svg::Handle::from_memory(LOADING_PNG))
+                        .width(128)
+                        .height(128),
+                    column![].width(Fill)
+                ],
+                row![].height(Fill)
+            ]
+        .align_x(Center)
+        .into()
+}
+
+fn loading_spinner(state: &State) -> Element<'_, Message> {
+    centered_column![
+        centered_row![
+            row![
+                progress_bar(
+                    state.first_message_timestamp as f32..=Utc::now().timestamp() as f32,
+                    state.latest_message_timestamp as f32)
+                .width(Fill)
+                .style(style::progress_bar),
+            ],
+            row![
+                column![text("Loading...").color(ORANGE).size(32)],
+                column![].width(Fill),
+                column![text(&state.latest_message_timestamp_formatted).color(ORANGE).size(32)]
+                
+            ]
+        ]
+    ]
+    .into()
 }

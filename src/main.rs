@@ -26,7 +26,7 @@ async fn main() {
     clog.filter(None, log::LevelFilter::Info);
     clog.init();
 
-    iced::application("EliteAssist", Gui::update, Gui::view)
+    let _ = iced::application("EliteAssist", Gui::update, Gui::view)
         .font(font::eurostile::FONT_BYTES)
         .font(font::eurocaps::FONT_BYTES)
         .default_font(font::eurostile::FONT)
@@ -35,6 +35,5 @@ async fn main() {
         .window_size(Size::new(1920.0, 1080.0))
         .centered()
         .antialiasing(true)
-        .run()
-        .unwrap();
+        .run();
 }

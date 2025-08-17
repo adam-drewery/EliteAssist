@@ -28,6 +28,7 @@ use std::collections::HashMap;
 use iced::Task;
 use log::warn;
 use thousands::Separable;
+use crate::event::format::prettify_date;
 
 #[derive(Default)]
 pub struct State {
@@ -54,7 +55,11 @@ pub struct State {
     pub bounties: HashMap<String, i64>,
     pub discoveries: HashMap<String, i64>,
     pub progress: Rank,
+
     pub journal_loaded: bool,
+    pub first_message_timestamp: i64,
+    pub latest_message_timestamp: i64,
+    pub latest_message_timestamp_formatted: String
 }
 
 #[derive(Clone, Debug, Default, Deserialize)]
@@ -504,6 +509,15 @@ impl State {
                     }
 
                     JournalEvent::ReceiveText(e) => {
+
+                        if self.first_message_timestamp == 0 {
+                            self.first_message_timestamp = e.timestamp.timestamp();
+                        }
+                        else {
+                            self.latest_message_timestamp = e.timestamp.timestamp();
+                            self.latest_message_timestamp_formatted = prettify_date(&e.timestamp)
+                        }
+
                         if e.channel != "npc" && e.channel != "starsystem" {
                             self.messages.push(e.into());
                         }
