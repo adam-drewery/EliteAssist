@@ -40,7 +40,12 @@ pub struct CurrentLocation {
     pub powerplay_state_reinforcement: Option<u64>,
     pub powerplay_state_undermining: Option<u64>,
     pub factions: Vec<Faction>,
-    pub system_faction: Option<SystemFaction>
+    pub system_faction: Option<SystemFaction>,
+    // Enriched asynchronously from EDSM after FSDJump
+    pub edsm_id: Option<u64>,
+    pub edsm_id64: Option<u64>,
+    pub edsm_coords: Option<Vec<f64>>, // [x, y, z]
+    pub edsm_permit_required: Option<bool>,
 }
 
 #[derive(Default, Clone, Debug)]

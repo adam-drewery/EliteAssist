@@ -17,6 +17,7 @@ mod fdev_ids;
 mod font;
 
 mod material_locations;
+mod edsm;
 
 #[tokio::main]
 async fn main() {

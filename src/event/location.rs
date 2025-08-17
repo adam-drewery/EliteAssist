@@ -86,6 +86,10 @@ impl Into<state::CurrentLocation> for event::Location {
                 name: sf.name,
                 faction_state: sf.faction_state,
             }),
+            edsm_id: None,
+            edsm_id64: None,
+            edsm_coords: None,
+            edsm_permit_required: None,
         }
     }
 }

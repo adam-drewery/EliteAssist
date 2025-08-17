@@ -94,6 +94,10 @@ impl Into<state::CurrentLocation> for event::FSDJump {
                 name: f.name,
                 faction_state: f.faction_state,
             }),
+            edsm_id: None,
+            edsm_id64: None,
+            edsm_coords: None,
+            edsm_permit_required: None,
         }
     }
 }

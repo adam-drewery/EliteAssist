@@ -20,11 +20,13 @@ pub use personal::*;
 pub use ship::*;
 pub use suit::*;
 
+use crate::edsm::EdsmClient;
 use crate::event::JournalEvent;
 use crate::gui::Message;
-use log::warn;
 use serde::Deserialize;
 use std::collections::HashMap;
+use iced::Task;
+use log::warn;
 use thousands::Separable;
 
 #[derive(Default)]
@@ -51,7 +53,8 @@ pub struct State {
     pub combat_bonds: HashMap<String, i64>,
     pub bounties: HashMap<String, i64>,
     pub discoveries: HashMap<String, i64>,
-    pub progress: Rank
+    pub progress: Rank,
+    pub journal_loaded: bool,
 }
 
 #[derive(Clone, Debug, Default, Deserialize)]
@@ -65,10 +68,25 @@ pub enum ActiveScreen {
 }
 
 impl State {
-    pub fn update_from(&mut self, message: Message) {
+    pub fn update_from(&mut self, message: Message) -> Task<Message> {
+
         match message {
-            
+
+            Message::Empty => {}
+
             Message::NavigateTo(screen) => self.active_screen = screen,
+
+            Message::SystemQueried(system) => {
+                if self.location.star_system == system.name.unwrap_or_default() {
+                    // todo
+                }
+            }
+
+            Message::JournalLoaded => {
+                self.journal_loaded = true;
+
+                return self.query_system(self.current_system.clone());
+            }
 
             Message::JournalEvent(event) => {
 
@@ -128,11 +146,11 @@ impl State {
                     }
 
                     JournalEvent::Bounty(e) => {
-                        for reward in e.rewards.unwrap_or_default() {
+                        for bounty in e.rewards.unwrap_or_default() {
                             self.bounties
-                                .entry(reward.faction.clone())
-                                .and_modify(|v| *v = v.saturating_add(reward.reward as i64))
-                                .or_insert(reward.reward as i64);
+                                .entry(bounty.faction.clone())
+                                .and_modify(|v| *v = v.saturating_add(bounty.reward as i64))
+                                .or_insert(bounty.reward as i64);
                         }
                     }
 
@@ -167,10 +185,9 @@ impl State {
                     JournalEvent::CrewMemberQuits(e) => self.journal.push(e.into("quit")),
 
                     JournalEvent::NpcCrewPaidWage(e) => {
-                        if e.amount == 0 {
-                            return;
+                        if e.amount != 0 {
+                            self.journal.push(e.into())
                         }
-                        self.journal.push(e.into())
                     }
 
                     // CRIME
@@ -194,8 +211,7 @@ impl State {
                             "bounty" => &mut self.bounties,
                             "codex" => &mut self.discoveries,
                             _ => {
-                                warn!("Unknown voucher type: {}", e.r#type);
-                                return;
+                                panic!("Unknown voucher type: {}", e.r#type);
                             }
                         };
 
@@ -271,6 +287,8 @@ impl State {
                         self.current_system = e.star_system.to_string();
                         self.current_body = "".to_string();
                         self.location = e.into();
+
+                        return self.query_system(self.current_system.clone());
                     }
 
                     // FUEL
@@ -283,10 +301,9 @@ impl State {
                     JournalEvent::TechnologyBroker(_) => {}
 
                     JournalEvent::Market(e) => {
-                        if e.items.is_none() {
-                            return;
+                        if !e.items.is_none() {
+                            self.market = e.into();
                         }
-                        self.market = e.into();
                     }
 
                     // MATERIALS
@@ -297,10 +314,9 @@ impl State {
                     JournalEvent::Synthesis(_) => {}
 
                     JournalEvent::Materials(e) => {
-                        if e.is_empty() {
-                            return;
+                        if !e.is_empty() {
+                            self.materials = e.into();
                         }
-                        self.materials = e.into();
                     }
 
                     // MICRO RESOURCES
@@ -488,10 +504,9 @@ impl State {
                     }
 
                     JournalEvent::ReceiveText(e) => {
-                        if e.channel == "npc" || e.channel == "starsystem" {
-                            return;
+                        if e.channel != "npc" && e.channel != "starsystem" {
+                            self.messages.push(e.into());
                         }
-                        self.messages.push(e.into());
                     }
 
                     JournalEvent::Shutdown(_) => {
@@ -502,10 +517,9 @@ impl State {
                     JournalEvent::ShipLockerMaterials(_) => {}
 
                     JournalEvent::ShipLocker(e) => {
-                        if e.is_empty() {
-                            return;
+                        if !e.is_empty() {
+                            self.ship_locker = e.into();
                         }
-                        self.ship_locker = e.into();
                     }
 
                     // SHIP MAINTENANCE
@@ -587,6 +601,30 @@ impl State {
                     JournalEvent::WingLeave(_) => {}
                 }
             }
+        }
+
+        Task::none()
+    }
+
+    fn query_system(&mut self, star_system: String) -> Task<Message> {
+
+        if self.journal_loaded {
+            Task::perform(async move {
+                let fetched = EdsmClient::default()
+                    .get_system(Some(&star_system), None)
+                    .await;
+
+                match fetched {
+                    Ok(system) => Message::SystemQueried(system),
+                    Err(error) => {
+                        warn!("Failed to fetch system: {}", error);
+                        Message::Empty
+                    }
+                }
+            }, |m| m)
+        }
+        else {
+            Task::none()
         }
     }
 }

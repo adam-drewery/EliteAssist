@@ -157,13 +157,13 @@ pub fn messages(state: &State) -> Column<'_, Message> {
                         ],
                         row![text(&item.text).color(WHITE).size(16)]
                     ]
-                    .padding(4)
                 })
                 .map(Element::from)
         ))
         .anchor_bottom()
     ]
     .height(256)
+    .padding(4)
 }
 
 

@@ -7,23 +7,27 @@ mod messages;
 mod market;
 mod components;
 
+use crate::edsm::EdsmSystem;
 use crate::event::JournalEvent;
+use crate::image::LOADING_PNG;
 use crate::state::{ActiveScreen, State};
-use overview::overview;
 use header_bar::header_bar;
 use iced::widget::{column, row, svg};
-use iced::{Bottom, Center, Element, Fill};
+use iced::{Bottom, Center, Element, Fill, Task};
 use market::market;
 use materials::materials;
 use messages::messages;
 use navigation_bar::navigation_bar;
+use overview::overview;
 use ship_locker::ship_locker;
-use crate::image::LOADING_PNG;
 
 #[derive(Clone, Debug)]
 pub enum Message {
     NavigateTo(ActiveScreen),
-    JournalEvent(JournalEvent)
+    JournalEvent(JournalEvent),
+    SystemQueried(EdsmSystem),
+    JournalLoaded,
+    Empty,
 }
 
 pub struct Gui;
@@ -64,7 +68,7 @@ impl Gui {
         }
     }
 
-    pub fn update(state: &mut State, message: Message) {
-        state.update_from(message);
+    pub fn update(state: &mut State, message: Message) -> Task<Message> {
+        state.update_from(message)
     }
 }
