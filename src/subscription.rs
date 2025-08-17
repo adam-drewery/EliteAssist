@@ -7,6 +7,9 @@ use tokio::sync::mpsc;
 use tokio_stream::wrappers::ReceiverStream;
 use crate::gui::Message;
 
+#[cfg(not(feature = "mock_events"))]
+use log::error;
+
 /// Derives the active subscriptions from the current State.
 /// Note: Iced calls this function on every update with the latest State,
 /// so after the JournalLoaded message is received (state.journal_loaded = true),
@@ -32,25 +35,6 @@ pub fn subscription(state: &State) -> Subscription<Message> {
 #[cfg(feature = "mock_events")]
 pub fn subscription(_state: &State) -> Subscription<Message> {
     Subscription::run(stream_events)
-}
-
-#[cfg(not(feature = "mock_events"))]
-fn stream_events() -> impl Stream<Item=Message> {
-    use crate::journal::JournalWatcher;
-
-    let (sender, receiver) = mpsc::channel(16);
-
-    tokio::spawn(async move {
-        let mut watcher = JournalWatcher::new();
-        loop {
-            let ev = watcher.next().await;
-            if sender.send(ev).await.is_err() {
-                break;
-            }
-        }
-    });
-
-    ReceiverStream::new(receiver)
 }
 
 #[cfg(feature = "mock_events")]
@@ -100,10 +84,19 @@ fn stream_history() -> impl Stream<Item=Message> {
 
     tokio::spawn(async move {
         use crate::journal::HistoryLoader;
-        let loader = HistoryLoader::new();
-        // Emit all messages synchronously into the channel
-        for msg in loader.load_messages().into_iter() {
-            if sender.send(msg).await.is_err() { break; }
+        let loader = match HistoryLoader::new() {
+            Ok(l) => l,
+            Err(e) => { error!("Failed to start history loader: {}", e); return; }
+        };
+        match loader.load_messages() {
+            Ok(msgs) => {
+                for msg in msgs.into_iter() {
+                    if sender.send(msg).await.is_err() { break; }
+                }
+            }
+            Err(e) => {
+                error!("Failed to load historical messages: {}", e);
+            }
         }
     });
 
@@ -116,10 +109,15 @@ fn stream_journal() -> impl Stream<Item=Message> {
 
     tokio::spawn(async move {
         use crate::journal::JournalWatcher;
-        let mut watcher = JournalWatcher::new();
+        let mut watcher = match JournalWatcher::new() {
+            Ok(w) => w,
+            Err(e) => { error!("Failed to start journal watcher: {}", e); return; }
+        };
         loop {
-            let ev = watcher.next().await;
-            if sender.send(ev).await.is_err() { break; }
+            match watcher.next().await {
+                Ok(ev) => { if sender.send(ev).await.is_err() { break; } }
+                Err(e) => { error!("Journal watcher error: {}", e); break; }
+            }
         }
     });
 
@@ -132,11 +130,17 @@ fn stream_snapshot(file_name: &'static str) -> impl Stream<Item=Message> {
 
     tokio::spawn(async move {
         use crate::journal::{SnapshotWatcher, get_journal_directory};
-        let path = get_journal_directory().join(file_name);
+        let dir = match get_journal_directory() {
+            Ok(d) => d,
+            Err(e) => { error!("Failed to get journal directory: {}", e); return; }
+        };
+        let path = dir.join(file_name);
         let mut watcher = SnapshotWatcher::new(path);
         loop {
-            let ev = watcher.next().await;
-            if sender.send(ev).await.is_err() { break; }
+            match watcher.next().await {
+                Ok(ev) => { if sender.send(ev).await.is_err() { break; } }
+                Err(e) => { error!("Snapshot watcher error: {}", e); break; }
+            }
         }
     });
 

@@ -2,13 +2,12 @@
 use crate::event::JournalEvent;
 use crate::gui::Message;
 use crate::state::State;
-use log::{debug, error, info};
+use log::{error, info};
 use notify::{Config, RecommendedWatcher, RecursiveMode, Watcher};
 use std::fs::{File, OpenOptions};
 use std::io::{BufRead, BufReader, Read, Seek, SeekFrom};
 use std::path::{Path, PathBuf};
 use std::time::SystemTime;
-use tokio::select;
 use tokio::sync::mpsc;
 use thiserror::Error;
 
@@ -122,7 +121,7 @@ pub struct JournalWatcher {
 /// This function constructs the absolute path to the journal directory for the game
 /// "Elite Dangerous" by appending a pre-defined relative path (specific to the game's
 /// save location in a Steam installation
-pub fn get_journal_directory() -> PathBuf {
+pub fn get_journal_directory() -> Result<PathBuf, JournalError> {
     /// A constant that defines the directory path to the save game files for the game
     /// "Elite Dangerous" when running under Steam's Proton compatibility layer.
     ///
@@ -138,43 +137,30 @@ pub fn get_journal_directory() -> PathBuf {
     ///
     /// #
     const JOURNAL_DIRECTORY: &str = ".steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/";
-    let home = std::env::var("HOME").expect("Failed to get HOME directory");
-    Path::new(&home).join(JOURNAL_DIRECTORY)
+    let home = std::env::var("HOME").map_err(|_| JournalError::HomeDirectoryNotFound)?;
+    Ok(Path::new(&home).join(JOURNAL_DIRECTORY))
 }
 
 impl JournalWatcher {
     ///
-    pub fn new() -> Self {
-        let dir_path = get_journal_directory();
+    pub fn new() -> Result<Self, JournalError> {
+        let dir_path = get_journal_directory()?;
 
-        // Get journal files, handling the case where they don't exist yet
-        let journal_files = get_journal_paths(dir_path.as_path()).unwrap_or_else(|e| {
-            error!("Error getting journal paths: {}", e);
-            Vec::new()
-        });
+        // Get journal files (empty is OK)
+        let journal_files = get_journal_paths(dir_path.as_path())?;
 
         // Initialize reader and current path to tail the newest file
         let (reader, current_journal_path, current_file_index) = if !journal_files.is_empty() {
             let idx = journal_files.len() - 1;
             let path = journal_files[idx].clone();
-            match OpenOptions::new().read(true).open(&path) {
-                Ok(file) => {
-                    let mut reader = BufReader::new(file);
-                    if let Err(e) = reader.seek(SeekFrom::End(0)) {
-                        error!("Failed to seek to end of journal file: {}", e);
-                    }
-                    (Some(reader), path, idx)
-                }
-                Err(e) => {
-                    error!("Failed to open journal file {}: {}", path.display(), e);
-                    (None, path, idx)
-                }
-            }
+            let file = OpenOptions::new().read(true).open(&path)?;
+            let mut reader = BufReader::new(file);
+            reader.seek(SeekFrom::End(0))?;
+            (Some(reader), path, idx)
         } else {
             info!("No journal files found. Waiting for files to be created...");
-            (None, dir_path.to_path_buf(), 0)
+            (None, dir_path.clone(), 0)
         };
-
 
         let (watcher_tx, watcher_rx) = mpsc::channel(32);
 
@@ -187,8 +173,8 @@ impl JournalWatcher {
             current_file_index,
         };
 
-        watcher.spawn_watcher();
-        watcher
+        watcher.spawn_watcher()?;
+        Ok(watcher)
     }
 
     /// Spawns a directory watcher to monitor a target directory for changes.
@@ -207,10 +193,11 @@ impl JournalWatcher {
     ///   directory that needs to be monitored.
     /// - `spawn_dir_watcher(tx, target_dir)`: A utility function invoked to start
     ///   the directory watcher
-    fn spawn_watcher(&self) {
+    fn spawn_watcher(&self) -> Result<(), JournalError> {
         let tx = self.watcher_tx.clone();
-        let target_dir = get_journal_directory();
+        let target_dir = get_journal_directory()?;
         spawn_dir_watcher(tx, target_dir);
+        Ok(())
     }
 
     /// Asynchronously reads and processes journal messages.
@@ -228,103 +215,52 @@ impl JournalWatcher {
     ///
     /// When a filesystem notification is received:
     /// - The directory containing
-    pub async fn next(&mut self) -> Message {
+    pub async fn next(&mut self) -> Result<Message, JournalError> {
         loop {
             // Check if we have a reader
             if let Some(reader) = &mut self.reader {
                 // Try to read next line from current file
                 let mut buffer = String::new();
-                match reader.read_line(&mut buffer) {
-                    Ok(bytes_read) if bytes_read > 0 => {
-                        let line = buffer.as_str();
-
-                        info!("Journal file updated: {}", &line);
-                        let deserialize_result = serde_json::from_str::<JournalEvent>(line);
-
-                        if let Ok(event) = deserialize_result {
-                            return Message::JournalEvent(event);
-                        } else if let Err(e) = deserialize_result {
-                            let error_msg = e.to_string();
-                            if error_msg.starts_with("unknown variant") {
-                                if let Some(first_part) = error_msg.split(',').next() {
-                                    error!(
-                                        "Failed to parse journal entry: {}\n{}",
-                                        first_part, &line
-                                    );
-                                }
-                            } else {
-                                error!("Failed to parse journal entry: {}\n{}", &e, &line);
-                            }
-                        }
-                    }
-                    Ok(_) => {
-                        // Reached end of file on current journal; wait for filesystem notification
-                        // The watcher will trigger when the file is appended or a new file is created.
-                    }
-                    Err(e) => {
-                        error!("Error reading from journal file: {}", e);
-                        self.reader = None;
-                    }
+                let bytes_read = reader.read_line(&mut buffer)?;
+                if bytes_read > 0 {
+                    let line = buffer.as_str();
+                    info!("Journal file updated: {}", &line);
+                    let event: JournalEvent = serde_json::from_str(line)?;
+                    return Ok(Message::JournalEvent(event));
                 }
             }
 
-            // If we don't have a reader or reached the end of all files, wait for changes
-            select! {
-                _ = self.watcher_rx.recv() => {
-                    // Check for new journal files
-                    let journal_dir = get_journal_directory();
-                    let dir_path = journal_dir.as_path();
-                    match get_journal_paths(dir_path) {
-                        Ok(journal_files) => {
-                            if !journal_files.is_empty() {
-                                let increased = journal_files.len() > self.journal_files.len();
-                                let had_none = self.reader.is_none();
-                                if increased {
-                                    info!("New journal file detected, switching to newest file");
-                                    self.journal_files = journal_files;
-                                    self.current_file_index = self.journal_files.len() - 1;
-                                    self.current_journal_path = self.journal_files[self.current_file_index].clone();
-                                    match OpenOptions::new().read(true).open(&self.current_journal_path) {
-                                        Ok(file) => {
-                                            let mut reader = BufReader::new(file);
-                                            if let Err(e) = reader.seek(SeekFrom::Start(0)) {
-                                                error!("Failed to seek in new journal file: {}", e);
-                                            }
-                                            self.reader = Some(reader);
-                                        }
-                                        Err(e) => {
-                                            error!("Failed to open journal file {}: {}", self.current_journal_path.display(), e);
-                                            self.reader = None;
-                                        }
-                                    }
-                                } else if had_none {
-                                    // No new files, but we didn't have a reader: reopen newest and seek to end
-                                    self.journal_files = journal_files;
-                                    self.current_file_index = self.journal_files.len() - 1;
-                                    self.current_journal_path = self.journal_files[self.current_file_index].clone();
-                                    match OpenOptions::new().read(true).open(&self.current_journal_path) {
-                                        Ok(file) => {
-                                            let mut reader = BufReader::new(file);
-                                            if let Err(e) = reader.seek(SeekFrom::End(0)) {
-                                                error!("Failed to seek end of journal file: {}", e);
-                                            }
-                                            self.reader = Some(reader);
-                                        }
-                                        Err(e) => {
-                                            error!("Failed to open journal file {}: {}", self.current_journal_path.display(), e);
-                                            self.reader = None;
-                                        }
-                                    }
-                                } else {
-                                    // Same set of files: the current one may have been appended.
-                                    self.journal_files = journal_files;
-                                }
-                            }
-                        },
-                        Err(e) => {
-                            error!("Failed to get journal paths: {}", e);
-                        }
-                    }
+            // Wait for filesystem notification
+            self.watcher_rx.recv().await.ok_or(JournalError::Channel)?;
+
+            // Check for new or updated journal files
+            let journal_dir = get_journal_directory()?;
+            let dir_path = journal_dir.as_path();
+            let journal_files = get_journal_paths(dir_path)?;
+            if !journal_files.is_empty() {
+                let increased = journal_files.len() > self.journal_files.len();
+                let had_none = self.reader.is_none();
+                if increased {
+                    info!("New journal file detected, switching to newest file");
+                    self.journal_files = journal_files;
+                    self.current_file_index = self.journal_files.len() - 1;
+                    self.current_journal_path = self.journal_files[self.current_file_index].clone();
+                    let file = OpenOptions::new().read(true).open(&self.current_journal_path)?;
+                    let mut reader = BufReader::new(file);
+                    reader.seek(SeekFrom::Start(0))?;
+                    self.reader = Some(reader);
+                } else if had_none {
+                    // No new files, but we didn't have a reader: reopen newest and seek to end
+                    self.journal_files = journal_files;
+                    self.current_file_index = self.journal_files.len() - 1;
+                    self.current_journal_path = self.journal_files[self.current_file_index].clone();
+                    let file = OpenOptions::new().read(true).open(&self.current_journal_path)?;
+                    let mut reader = BufReader::new(file);
+                    reader.seek(SeekFrom::End(0))?;
+                    self.reader = Some(reader);
+                } else {
+                    // Same set of files: the current one may have been appended.
+                    self.journal_files = journal_files;
                 }
             }
         }
@@ -504,13 +440,11 @@ impl SnapshotWatcher {
     ///
     /// # Returns
     ///
-    pub async fn next(&mut self) -> Message {
+    pub async fn next(&mut self) -> Result<Message, JournalError> {
         loop {
-            let _ = self.watcher_rx.recv().await;
-            match check_snapshot_file(&mut self.file) {
-                Ok(Some(event)) => return Message::JournalEvent(event),
-                Ok(None) => {},
-                Err(e) => error!("Snapshot check error: {}", e),
+            self.watcher_rx.recv().await.ok_or(JournalError::Channel)?;
+            if let Some(event) = check_snapshot_file(&mut self.file)? {
+                return Ok(Message::JournalEvent(event));
             }
         }
     }
@@ -544,8 +478,8 @@ pub struct HistoryLoader {
 
 impl HistoryLoader {
     ///
-    pub fn new() -> Self {
-        Self { dir: get_journal_directory() }
+    pub fn new() -> Result<Self, JournalError> {
+        Ok(Self { dir: get_journal_directory()? })
     }
 
     /// Reads all journal events from files located in the directory specified by `self.dir`.
@@ -620,15 +554,9 @@ impl HistoryLoader {
     ///
     /// If an error occurs when fetching journal or snapshot events, it logs the error and
     ///
-    pub fn load_messages(&self) -> Vec<Message> {
-        let journal_events = self.read_all_journal_events().unwrap_or_else(|e| {
-            error!("Failed to load journal events: {}", e);
-            Vec::new()
-        });
-        let snapshot_events = self.read_snapshot_events().unwrap_or_else(|e| {
-            error!("Failed to load snapshot events: {}", e);
-            Vec::new()
-        });
+    pub fn load_messages(&self) -> Result<Vec<Message>, JournalError> {
+        let journal_events = self.read_all_journal_events()?;
+        let snapshot_events = self.read_snapshot_events()?;
 
         let mut msgs: Vec<Message> = journal_events
             .into_iter()
@@ -637,7 +565,7 @@ impl HistoryLoader {
         // Apply snapshots last to reflect current state
         msgs.extend(snapshot_events.into_iter().map(Message::JournalEvent));
         msgs.push(Message::JournalLoaded);
-        msgs
+        Ok(msgs)
     }
 
     /// Loads the application's state by building it from journal and snapshot events.
@@ -658,23 +586,15 @@ impl HistoryLoader {
     /// 2. Attempts to read all snapshot events using `self.read_snapshot_events()`. For each event
     ///    retrieved, it updates the state in the same manner.
     ///    - Any errors encountered
-    pub fn load_state(&self) -> State {
+    pub fn load_state(&self) -> Result<State, JournalError> {
         let mut state = State::default();
         // Build from events only; do not trigger JournalLoaded side-effects here
-        if let Ok(events) = self.read_all_journal_events() {
-            for ev in events.into_iter() {
-                let _ = state.update_from(Message::JournalEvent(ev));
-            }
-        } else {
-            error!("Failed to load journal events for state");
+        for ev in self.read_all_journal_events()? {
+            let _ = state.update_from(Message::JournalEvent(ev));
         }
-        if let Ok(events) = self.read_snapshot_events() {
-            for ev in events.into_iter() {
-                let _ = state.update_from(Message::JournalEvent(ev));
-            }
-        } else {
-            error!("Failed to load snapshot events for state");
+        for ev in self.read_snapshot_events()? {
+            let _ = state.update_from(Message::JournalEvent(ev));
         }
-        state
+        Ok(state)
     }
 }
