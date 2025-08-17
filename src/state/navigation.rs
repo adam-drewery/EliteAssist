@@ -128,7 +128,6 @@ pub struct StationUpdateTime {
 
 #[derive(Default, Clone, Debug)]
 pub struct SystemMeta {
-    pub url: String,
     pub coords: Vec<f64>,
     pub permit_required: bool,
     pub primary_star: PrimaryStarMeta,

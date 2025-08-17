@@ -45,19 +45,6 @@ use log::info;
 use reqwest::Url;
 use serde::Deserialize;
 
-/// Error type for EDSM client operations
-#[derive(thiserror::Error, Debug)]
-pub enum EdsmError {
-    #[error("http error: {0}")]
-    Http(#[from] reqwest::Error),
-    #[error("invalid url: {0}")]
-    Url(#[from] url::ParseError),
-    #[error("serialization error: {0}")]
-    Serde(#[from] serde_json::Error),
-    #[error("edsm error: {0}")]
-    Message(String),
-}
-
 /// A lightweight asynchronous client for EDSM
 #[derive(Clone)]
 pub struct EdsmClient {
@@ -149,7 +136,12 @@ impl EdsmClient {
         system_name: Option<&str>,
         system_id64: Option<u64>,
     ) -> Result<System, EdsmError> {
-        let q = self.build_system_query(system_name, system_id64)?;
+        let mut q = self.build_system_query(system_name, system_id64)?;
+        q.push(("showId", "1".to_string()));
+        q.push(("showCoordinates", "1".to_string()));
+        q.push(("showPermit", "1".to_string()));
+        q.push(("showInformation", "1".to_string()));
+        q.push(("showPrimaryStar", "1".to_string()));
         self.get_json("api-v1/system", &q).await
     }
 
@@ -192,8 +184,6 @@ impl EdsmClient {
         self.get_json("api-v1/sphere-systems", &q).await
     }
 }
-
-// ------------------------------ Data Models ------------------------------
 
 #[cfg(test)]
 mod tests {
@@ -253,4 +243,17 @@ pub struct Coords {
     pub x: f64,
     pub y: f64,
     pub z: f64,
+}
+
+/// Error type for EDSM client operations
+#[derive(thiserror::Error, Debug)]
+pub enum EdsmError {
+    #[error("http error: {0}")]
+    Http(#[from] reqwest::Error),
+    #[error("invalid url: {0}")]
+    Url(#[from] url::ParseError),
+    #[error("serialization error: {0}")]
+    Serde(#[from] serde_json::Error),
+    #[error("edsm error: {0}")]
+    Message(String),
 }

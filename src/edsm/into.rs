@@ -1,4 +1,3 @@
-use crate::edsm::stations::{Body as StationBodySrc, ControllingFaction as StationFactionSrc, UpdateTime as StationUpdateTimeSrc};
 use crate::{edsm, state};
 
 // ------------------------------ Stations ------------------------------
@@ -31,7 +30,7 @@ impl Into<state::Station> for edsm::Station {
     }
 }
 
-impl Into<state::StationBody> for StationBodySrc {
+impl Into<state::StationBody> for edsm::stations::Body {
     fn into(self) -> state::StationBody {
         state::StationBody {
             id: self.id,
@@ -42,13 +41,13 @@ impl Into<state::StationBody> for StationBodySrc {
     }
 }
 
-impl Into<state::FactionRef> for StationFactionSrc {
+impl Into<state::FactionRef> for edsm::stations::ControllingFaction {
     fn into(self) -> state::FactionRef {
         state::FactionRef { id: self.id, name: self.name }
     }
 }
 
-impl Into<state::StationUpdateTime> for StationUpdateTimeSrc {
+impl Into<state::StationUpdateTime> for edsm::UpdateTime {
     fn into(self) -> state::StationUpdateTime {
         state::StationUpdateTime {
             information: self.information,
@@ -63,9 +62,8 @@ impl Into<state::StationUpdateTime> for StationUpdateTimeSrc {
 impl Into<state::SystemMeta> for edsm::System {
     fn into(self) -> state::SystemMeta {
         state::SystemMeta {
-            url: self.url,
             coords: vec![self.coords.x, self.coords.y, self.coords.z],
-            permit_required: self.information.permit,
+            permit_required: self.require_permit,
             primary_star: self.primary_star.into(),
         }
     }
@@ -90,7 +88,14 @@ impl Into<Vec<state::BodyInfo>> for edsm::Bodies {
 
 impl Into<state::BodyInfo> for edsm::bodies::Body {
     fn into(self) -> state::BodyInfo {
-        todo!()
+        state::BodyInfo {
+            name: self.name,
+            type_field: self.body_type,
+            sub_type: self.sub_type,
+            distance_to_arrival: self.distance_to_arrival,
+            is_main_star: self.is_main_star.unwrap_or(false),
+            is_scoopable: self.is_scoopable.unwrap_or(false),
+        }
     }
 }
 

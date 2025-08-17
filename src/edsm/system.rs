@@ -3,12 +3,17 @@ use crate::edsm::Coords;
 
 #[derive(Debug, Clone, Deserialize, Default)]
 pub struct System {
+    pub id: i64,
+    pub id64: i64,
     pub name: String,
-    pub url: String,
     pub coords: Coords,
+    #[serde(rename = "coordsLocked")]
+    pub coords_locked: bool,
     pub information: SystemInformation,
     #[serde(rename = "primaryStar")]
     pub primary_star: PrimaryStar,
+    #[serde(rename = "requirePermit")]
+    pub require_permit: bool,
 }
 
 #[derive(Debug, Clone, Deserialize, Default)]
@@ -22,8 +27,7 @@ pub struct SystemInformation {
     pub security: String,
     pub faction: String,
     #[serde(rename = "factionState")]
-    pub faction_state: String,
-    pub permit: bool,
+    pub faction_state: String
 }
 
 #[derive(Debug, Clone, Deserialize, Default)]

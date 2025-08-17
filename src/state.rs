@@ -26,7 +26,7 @@ use crate::gui::Message;
 use serde::Deserialize;
 use std::collections::HashMap;
 use iced::Task;
-use log::warn;
+use log::{info, warn};
 use thousands::Separable;
 use crate::event::format::prettify_date;
 
@@ -82,27 +82,27 @@ impl State {
             Message::NavigateTo(screen) => self.active_screen = screen,
 
             Message::StationsQueried(response) => {
-                //self.location.stations = response.into();
+                self.location.stations = response.into();
             }
 
             Message::SystemQueried(system) => {
-                //self.location.edsm_system = Some(system.into());
+                self.location.edsm_system = Some(system.into());
             }
 
             Message::BodiesQueried(bodies) => {
-                //self.location.edsm_bodies = bodies.into();
+                self.location.edsm_bodies = bodies.into();
             }
 
             Message::FactionsQueried(factions) => {
-                //self.location.edsm_factions = Some(factions.into());
+                self.location.edsm_factions = Some(factions.into());
             }
 
             Message::TrafficQueried(traffic) => {
-                //self.location.edsm_traffic = Some(traffic.into());
+                self.location.edsm_traffic = Some(traffic.into());
             }
 
             Message::DeathsQueried(deaths) => {
-                //self.location.edsm_deaths = Some(deaths.into());
+                self.location.edsm_deaths = Some(deaths.into());
             }
 
             Message::JournalLoaded => {
@@ -641,6 +641,8 @@ impl State {
     fn query_system(&mut self, star_system: String) -> Task<Message> {
         if !self.journal_loaded { return Task::none(); }
 
+        info!("Querying system: {}", star_system);
+        
         macro_rules! fetch {
             ($method:ident, $Msg:ident, $label:literal) => {{
                 let name = star_system.clone();
