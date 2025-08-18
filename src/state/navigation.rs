@@ -108,13 +108,13 @@ pub struct Station {
 pub struct StationBody {
     pub id: i64,
     pub name: String,
-    pub latitude: f64,
-    pub longitude: f64,
+    pub latitude: Option<f64>,
+    pub longitude: Option<f64>,
 }
 
 #[derive(Default, Clone, Debug)]
 pub struct FactionRef {
-    pub id: i64,
+    pub id: Option<u64>,
     pub name: String,
 }
 

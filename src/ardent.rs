@@ -321,39 +321,39 @@ pub struct StationEconomiesStats {
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct StationTypes {
-    pub null: i64,
+    pub null: u64,
     #[serde(rename = "")]
-    pub field: i64,
+    pub field: u64,
     #[serde(rename = "AsteroidBase")]
-    pub asteroid_base: i64,
+    pub asteroid_base: u64,
     #[serde(rename = "Bernal")]
-    pub bernal: i64,
+    pub bernal: u64,
     #[serde(rename = "Coriolis")]
-    pub coriolis: i64,
+    pub coriolis: u64,
     #[serde(rename = "CraterOutpost")]
-    pub crater_outpost: i64,
+    pub crater_outpost: u64,
     #[serde(rename = "CraterPort")]
-    pub crater_port: i64,
+    pub crater_port: u64,
     #[serde(rename = "FleetCarrier")]
-    pub fleet_carrier: i64,
+    pub fleet_carrier: u64,
     #[serde(rename = "MegaShip")]
-    pub mega_ship: i64,
+    pub mega_ship: u64,
     #[serde(rename = "Ocellus")]
-    pub ocellus: i64,
+    pub ocellus: u64,
     #[serde(rename = "OnFootSettlement")]
-    pub on_foot_settlement: i64,
+    pub on_foot_settlement: u64,
     #[serde(rename = "Orbis")]
-    pub orbis: i64,
+    pub orbis: u64,
     #[serde(rename = "Outpost")]
-    pub outpost: i64,
+    pub outpost: u64,
     #[serde(rename = "PlanetaryConstructionDepot")]
-    pub planetary_construction_depot: i64,
+    pub planetary_construction_depot: u64,
     #[serde(rename = "SpaceConstructionDepot")]
-    pub space_construction_depot: i64,
+    pub space_construction_depot: u64,
     #[serde(rename = "StrongholdCarrier")]
-    pub stronghold_carrier: i64,
+    pub stronghold_carrier: u64,
     #[serde(rename = "SurfaceStation")]
-    pub surface_station: i64,
+    pub surface_station: u64,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -401,49 +401,195 @@ pub struct CommodityInfo {
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct TradeOrder {
-    pub system: String,
-    pub station: String,
-    pub commodity: String,
-    pub price: u64,
-    pub volume: u64,
+    #[serde(rename = "commodityName")]
+    pub commodity_name: String,
+    #[serde(rename = "marketId")]
+    pub market_id: i64,
+    #[serde(rename = "stationName")]
+    pub station_name: String,
+    #[serde(rename = "stationType")]
+    pub station_type: String,
+    #[serde(rename = "distanceToArrival")]
+    pub distance_to_arrival: f64,
+    #[serde(rename = "maxLandingPadSize")]
+    pub max_landing_pad_size: i8,
+    #[serde(rename = "bodyId")]
+    pub body_id: Option<u64>,
+    #[serde(rename = "bodyName")]
+    pub body_name: Option<String>,
+    #[serde(rename = "systemAddress")]
+    pub system_address: i64,
+    #[serde(rename = "systemName")]
+    pub system_name: String,
+    #[serde(rename = "systemX")]
+    pub system_x: f64,
+    #[serde(rename = "systemY")]
+    pub system_y: f64,
+    #[serde(rename = "systemZ")]
+    pub system_z: f64,
+    #[serde(rename = "buyPrice")]
+    pub buy_price: u32,
+    pub demand: u32,
+
+    // todo: this doesn't work because presumably PHP jank is returning empty values as an empty string.
+    // #[serde(rename = "demandBracket")]
+    // pub demand_bracket: u32,
+    #[serde(rename = "meanPrice")]
+    pub mean_price: u32,
+    #[serde(rename = "sellPrice")]
+    pub sell_price: u32,
+    pub stock: u32,
+
+    // todo: this also probably doesn't work.
+    // #[serde(rename = "stockBracket")]
+    // pub stock_bracket: u32,
+
     #[serde(rename = "updatedAt")]
     pub updated_at: String,
-    // Add more fields as needed
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct SystemInfo {
-    pub name: String,
-    pub address: Option<u64>,
-    pub coords: Option<Vec<f64>>,
-    // Add more fields based on actual API response
+    #[serde(rename = "systemAddress")]
+    pub system_address: i64,
+    #[serde(rename = "systemName")]
+    pub system_name: String,
+    #[serde(rename = "systemX")]
+    pub system_x: i64,
+    #[serde(rename = "systemY")]
+    pub system_y: i64,
+    #[serde(rename = "systemZ")]
+    pub system_z: i64,
+    #[serde(rename = "systemSector")]
+    pub system_sector: String,
+    #[serde(rename = "updatedAt")]
+    pub updated_at: String,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct NearbySystem {
+    #[serde(rename = "systemAddress")]
+    pub address: i64,
+    #[serde(rename = "systemName")]
     pub name: String,
+    #[serde(rename = "systemX")]
+    pub x: f64,
+    #[serde(rename = "systemY")]
+    pub y: f64,
+    #[serde(rename = "systemZ")]
+    pub z: f64,
+    #[serde(rename = "systemSector")]
+    pub sector: String,
+    #[serde(rename = "updatedAt")]
+    pub updated_at: String,
     pub distance: f64,
-    pub coords: Option<Vec<f64>>,
-    // Add more fields as needed
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct NearestService {
-    pub system: String,
-    pub station: String,
-    pub distance: f64,
-    pub service: String,
-    // Add more fields as needed
+    #[serde(rename = "marketId")]
+    pub market_id: i64,
+    #[serde(rename = "stationName")]
+    pub station_name: String,
+    #[serde(rename = "distanceToArrival")]
+    pub distance_to_arrival: f64,
+    #[serde(rename = "stationType")]
+    pub station_type: String,
+    pub allegiance: Option<String>,
+    pub government: Option<String>,
+    #[serde(rename = "controllingFaction")]
+    pub controlling_faction: Option<String>,
+    #[serde(rename = "primaryEconomy")]
+    pub primary_economy: Option<String>,
+    #[serde(rename = "secondaryEconomy")]
+    pub secondary_economy: Option<String>,
+    pub shipyard: u8,
+    pub outfitting: u8,
+    #[serde(rename = "blackMarket")]
+    pub black_market: u8,
+    pub contacts: u8,
+    #[serde(rename = "crewLounge")]
+    pub crew_lounge: u8,
+    #[serde(rename = "interstellarFactors")]
+    pub interstellar_factors: u8,
+    #[serde(rename = "materialTrader")]
+    pub material_trader: u8,
+    pub missions: u8,
+    pub refuel: u8,
+    pub repair: u8,
+    pub restock: u8,
+    #[serde(rename = "searchAndRescue")]
+    pub search_and_rescue: u8,
+    #[serde(rename = "technologyBroker")]
+    pub technology_broker: u8,
+    pub tuning: u8,
+    #[serde(rename = "universalCartographics")]
+    pub universal_cartographics: u8,
+    #[serde(rename = "systemAddress")]
+    pub system_address: i64,
+    #[serde(rename = "systemName")]
+    pub system_name: String,
+    #[serde(rename = "systemX")]
+    pub system_x: f64,
+    #[serde(rename = "systemY")]
+    pub system_y: f64,
+    #[serde(rename = "systemZ")]
+    pub system_z: f64,
+    #[serde(rename = "bodyId")]
+    pub body_id: Option<i64>,
+    #[serde(rename = "bodyName")]
+    pub body_name: Option<String>,
+    pub latitude: Option<f64>,
+    pub longitude: Option<f64>,
+    #[serde(rename = "maxLandingPadSize")]
+    pub max_landing_pad_size: i64,
+    #[serde(rename = "updatedAt")]
+    pub updated_at: String,
+    pub distance: i64,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct SystemCommodity {
-    pub commodity: String,
-    pub system: String,
-    pub station: String,
-    pub price: u64,
-    pub volume: u64,
-    // Add more fields as needed
+    #[serde(rename = "commodityName")]
+    pub commodity_name: Option<String>,
+    #[serde(rename = "marketId")]
+    pub market_id: Option<u64>,
+    #[serde(rename = "stationName")]
+    pub station_name: String,
+    #[serde(rename = "stationType")]
+    pub station_type: String,
+    #[serde(rename = "distanceToArrival")]
+    pub distance_to_arrival: f64,
+    #[serde(rename = "maxLandingPadSize")]
+    pub max_landing_pad_size: i64,
+    #[serde(rename = "bodyId")]
+    pub body_id: i64,
+    #[serde(rename = "bodyName")]
+    pub body_name: String,
+    #[serde(rename = "systemAddress")]
+    pub system_address: i64,
+    #[serde(rename = "systemName")]
+    pub system_name: String,
+    #[serde(rename = "systemX")]
+    pub system_x: i64,
+    #[serde(rename = "systemY")]
+    pub system_y: i64,
+    #[serde(rename = "systemZ")]
+    pub system_z: i64,
+    #[serde(rename = "buyPrice")]
+    pub buy_price: Option<u32>,
+    pub demand: Option<u32>,
+    #[serde(rename = "demandBracket")]
+    pub demand_bracket: Option<u32>,
+    #[serde(rename = "meanPrice")]
+    pub mean_price: Option<u32>,
+    #[serde(rename = "sellPrice")]
+    pub sell_price: Option<u32>,
+    pub stock: Option<u32>,
+    #[serde(rename = "stockBracket")]
+    pub stock_bracket: Option<u32>,
+    #[serde(rename = "updatedAt")]
+    pub updated_at: Option<String>,
 }
 
 #[derive(Debug, Clone, Deserialize)]

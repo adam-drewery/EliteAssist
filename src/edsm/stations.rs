@@ -49,7 +49,9 @@ pub struct UpdateTime {
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct ControllingFaction {
-    pub id: i64,
+
+    // is null when it's actually an engineer controlling the place.
+    pub id: Option<u64>,
     pub name: String,
 }
 
@@ -57,6 +59,6 @@ pub struct ControllingFaction {
 pub struct Body {
     pub id: i64,
     pub name: String,
-    pub latitude: f64,
-    pub longitude: f64,
+    pub latitude: Option<f64>,
+    pub longitude: Option<f64>,
 }

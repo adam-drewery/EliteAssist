@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use crate::edsm::Counts;
 
-#[derive(Debug, Clone, Deserialize, Default)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Traffic {
     pub id: u64,
     pub id64: u64,

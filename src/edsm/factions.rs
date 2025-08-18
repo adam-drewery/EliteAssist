@@ -1,17 +1,17 @@
 use serde::Deserialize;
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct TrendingState {
     pub state: String,
     pub trend: i64,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct FactionState {
     pub state: String,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Faction {
     pub id: u64,
     pub name: String,
@@ -32,15 +32,15 @@ pub struct Faction {
     pub last_update: u64,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct ControllingFaction {
-    pub id: u64,
+    pub id: Option<u64>,
     pub name: String,
     pub allegiance: String,
     pub government: String,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Factions {
     pub id: u64,
     pub id64: u64,

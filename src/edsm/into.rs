@@ -103,7 +103,7 @@ impl Into<state::Body> for edsm::bodies::Body {
 impl Into<state::Factions> for edsm::Factions {
     fn into(self) -> state::Factions {
         state::Factions {
-            controlling_faction: state::FactionRef { id: self.controlling_faction.id as i64, name: self.controlling_faction.name.clone() },
+            controlling_faction: state::FactionRef { id: self.controlling_faction.id, name: self.controlling_faction.name.clone() },
             factions: self.factions.into_iter().map(Into::into).collect(),
         }
     }

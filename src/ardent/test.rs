@@ -73,115 +73,89 @@ async fn test_get_commodities_report() {
 #[tokio::test]
 async fn test_get_commodity_info() {
     let client = ArdentClient::default();
-    let result = client.get_commodity_info("Gold").await;
-    match result {
-        Ok(info) => {
-            println!("Gold commodity info: {:?}", info);
-            assert_eq!(info.commodity_name, "gold");
-        }
-        Err(e) => println!("Expected error for commodity info (may not be implemented): {}", e),
-    }
+    let info = client.get_commodity_info("Gold").await.unwrap();
+
+    println!("Gold commodity info: {:?}", info);
+    assert_eq!(info.commodity_name, "gold");
 }
 
 #[tokio::test]
 async fn test_get_commodity_imports() {
     let client = ArdentClient::default();
-    let imports = client.get_commodity_imports("Gold", None).await;
-    match imports {
-        Ok(orders) => {
-            println!("Gold imports count: {}", orders.len());
-            if !orders.is_empty() {
-                let first_order = &orders[0];
-                assert!(!first_order.system.is_empty());
-                assert!(!first_order.station.is_empty());
-                assert!(first_order.price > 0);
-            }
-        }
-        Err(e) => println!("Error getting commodity imports: {}", e),
+    let orders = client.get_commodity_imports("Gold", None).await.unwrap();
+    println!("Gold imports count: {}", orders.len());
+    if !orders.is_empty() {
+        let first_order = &orders[0];
+        assert!(!first_order.commodity_name.is_empty());
+        assert!(!first_order.station_name.is_empty());
+        assert!(first_order.sell_price > 0);
     }
 }
 
 #[tokio::test]
 async fn test_get_commodity_exports() {
     let client = ArdentClient::default();
-    let exports = client.get_commodity_exports("Gold", None).await;
-    match exports {
-        Ok(orders) => {
-            println!("Gold exports count: {}", orders.len());
-            if !orders.is_empty() {
-                let first_order = &orders[0];
-                assert!(!first_order.system.is_empty());
-                assert!(!first_order.station.is_empty());
-                assert!(first_order.price > 0);
-            }
-        }
-        Err(e) => println!("Error getting commodity exports: {}", e),
+    let orders = client.get_commodity_exports("Gold", None).await.unwrap();
+
+    println!("Gold exports count: {}", orders.len());
+    if !orders.is_empty() {
+        let first_order = &orders[0];
+        assert!(!first_order.commodity_name.is_empty());
+        assert!(!first_order.station_name.is_empty());
+        assert!(first_order.buy_price > 0);
     }
+
 }
 
 #[tokio::test]
 async fn test_get_system_info() {
     let client = ArdentClient::default();
-    let system_info = client.get_system_info("Sol").await;
-    match system_info {
-        Ok(info) => {
-            println!("Sol system info: {:?}", info);
-            assert_eq!(info.name, "Sol");
-        }
-        Err(e) => println!("Error getting system info: {}", e),
-    }
+    let info = client.get_system_info("Sol").await.unwrap();
+
+    println!("Sol system info: {:?}", info.system_address);
+    assert_eq!(info.system_name, "Sol");
+    assert_ne!(info.system_address, 0);
+
 }
 
 #[tokio::test]
 async fn test_get_nearby_systems() {
     let client = ArdentClient::default();
-    let nearby = client.get_nearby_systems("Sol", Some(20)).await;
-    match nearby {
-        Ok(systems) => {
-            println!("Nearby systems count: {}", systems.len());
-            if !systems.is_empty() {
-                let first_system = &systems[0];
-                assert!(!first_system.name.is_empty());
-                assert!(first_system.distance >= 0.0);
-            }
+    let systems = client.get_nearby_systems("Sol", Some(20)).await.unwrap();
+        println!("Nearby systems count: {}", systems.len());
+        if !systems.is_empty() {
+            let first_system = &systems[0];
+            assert!(!first_system.name.is_empty());
+            assert!(first_system.distance >= 0.0);
         }
-        Err(e) => println!("Error getting nearby systems: {}", e),
-    }
 }
 
 #[tokio::test]
 async fn test_get_nearest_service() {
     let client = ArdentClient::default();
-    let nearest = client.get_nearest_service("Sol", "Shipyard", None).await;
-    match nearest {
-        Ok(services) => {
-            println!("Nearest shipyard services count: {}", services.len());
-            if !services.is_empty() {
-                let first_service = &services[0];
-                assert!(!first_service.system.is_empty());
-                assert!(!first_service.station.is_empty());
-                assert_eq!(first_service.service, "Shipyard");
-            }
-        }
-        Err(e) => println!("Error getting nearest service: {}", e),
+    let services = client.get_nearest_service("Sol", "shipyard", None).await.unwrap();
+
+    println!("Nearest shipyard services count: {}", services.len());
+    if !services.is_empty() {
+        let first_service = &services[0];
+        assert!(!first_service.system_name.is_empty());
+        assert!(!first_service.station_name.is_empty());
     }
+
 }
 
 #[tokio::test]
 async fn test_get_system_commodities() {
     let client = ArdentClient::default();
-    let commodities = client.get_system_commodities("Sol").await;
-    match commodities {
-        Ok(commodities) => {
-            println!("Sol commodities count: {}", commodities.len());
-            if !commodities.is_empty() {
-                let first_commodity = &commodities[0];
-                assert!(!first_commodity.commodity.is_empty());
-                assert_eq!(first_commodity.system, "Sol");
-            }
-        }
-        Err(e) => println!("Error getting system commodities: {}", e),
+    let commodities = client.get_system_commodities("Sol").await.unwrap();
+
+    println!("Sol commodities count: {}", commodities.len());
+    if !commodities.is_empty() {
+        let first_commodity = &commodities[0];
+        assert_ne!(!first_commodity.system_address, 0);
+        assert_eq!(first_commodity.system_name, "Sol");
     }
+
 }
 
 #[tokio::test]

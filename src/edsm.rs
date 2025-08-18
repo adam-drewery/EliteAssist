@@ -165,17 +165,7 @@ impl EdsmClient {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[tokio::test]
-    #[ignore]
-    async fn live_status_call() {
-        let client = EdsmClient::default();
-        let status = client.get_elite_server_status().await.unwrap();
-        println!("status: {:?}", status);
-    }
-}
+pub mod test;
 
 impl EdsmClient {
     /// GET https://www.edsm.net/api-system-v1/factions?systemName=... or systemId64=...

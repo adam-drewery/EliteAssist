@@ -1,7 +1,7 @@
 use serde::Deserialize;
 use crate::edsm::Coords;
 
-#[derive(Debug, Clone, Deserialize, Default)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct System {
     pub id: i64,
     pub id64: i64,
@@ -16,21 +16,21 @@ pub struct System {
     pub require_permit: bool,
 }
 
-#[derive(Debug, Clone, Deserialize, Default)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct SystemInformation {
-    pub allegiance: String,
-    pub government: String,
-    pub economy: String,
+    pub allegiance: Option<String>,
+    pub government: Option<String>,
+    pub economy: Option<String>,
     #[serde(rename = "secondEconomy")]
-    pub second_economy: String,
-    pub population: u64,
-    pub security: String,
-    pub faction: String,
+    pub second_economy: Option<String>,
+    pub population: Option<u64>,
+    pub security: Option<String>,
+    pub faction: Option<String>,
     #[serde(rename = "factionState")]
-    pub faction_state: String
+    pub faction_state: Option<String>
 }
 
-#[derive(Debug, Clone, Deserialize, Default)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct PrimaryStar {
     #[serde(rename = "type")]
     pub type_field: String,
