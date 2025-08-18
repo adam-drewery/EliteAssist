@@ -225,7 +225,7 @@ impl ArdentClient {
         system_name: &str,
         commodity_name: &str,
         max_days_ago: Option<u32>
-    ) -> Result<SystemCommodityData, ArdentError> {
+    ) -> Result<Vec<TradeOrder>, ArdentError> {
         let path = format!("system/name/{}/commodity/name/{}", system_name, commodity_name);
         let mut query = Vec::new();
         if let Some(days) = max_days_ago {
@@ -590,14 +590,6 @@ pub struct SystemCommodity {
     pub stock_bracket: Option<u32>,
     #[serde(rename = "updatedAt")]
     pub updated_at: Option<String>,
-}
-
-#[derive(Debug, Clone, Deserialize)]
-pub struct SystemCommodityData {
-    pub commodity: String,
-    pub system: String,
-    pub imports: Vec<TradeOrder>,
-    pub exports: Vec<TradeOrder>,
 }
 
 #[derive(Debug, Clone, Deserialize)]

@@ -229,3 +229,107 @@ async fn test_invalid_base_url() {
         _ => panic!("Expected URL parse error"),
     }
 }
+
+#[tokio::test]
+async fn test_get_system_info_by_address() {
+    let client = ArdentClient::default();
+    // Sol's system address is known: 10477373803
+    let info = client.get_system_info_by_address(10477373803).await.unwrap();
+    
+    println!("Sol system info by address: {:?}", info.system_name);
+    assert_eq!(info.system_name, "Sol");
+    assert_eq!(info.system_address, 10477373803);
+}
+
+#[tokio::test]
+async fn test_get_system_commodity_imports() {
+    let client = ArdentClient::default();
+    let orders = client.get_system_commodity_imports("Sol", None).await.unwrap();
+    
+    println!("Sol commodity imports count: {}", orders.len());
+    if !orders.is_empty() {
+        let first_order = &orders[0];
+        assert!(!first_order.commodity_name.is_empty());
+        assert!(!first_order.station_name.is_empty());
+        assert_eq!(first_order.system_name, "Sol");
+        assert!(first_order.sell_price > 0);
+    }
+}
+
+#[tokio::test]
+async fn test_get_system_commodity_exports() {
+    let client = ArdentClient::default();
+    let orders = client.get_system_commodity_exports("Sol", None).await.unwrap();
+    
+    println!("Sol commodity exports count: {}", orders.len());
+    if !orders.is_empty() {
+        let first_order = &orders[0];
+        assert!(!first_order.commodity_name.is_empty());
+        assert!(!first_order.station_name.is_empty());
+        assert_eq!(first_order.system_name, "Sol");
+        assert!(first_order.buy_price > 0);
+    }
+}
+
+#[tokio::test]
+async fn test_get_system_commodity_data() {
+    let client = ArdentClient::default();
+    let data = client.get_system_commodity_data("Sol", "Gold", Some(30)).await.unwrap();
+
+    println!("Sol Gold commodity data: {:?}", data);
+
+    let data = &data[0];
+
+    assert_eq!(data.commodity_name, "gold");
+    assert_eq!(data.system_name, "Sol");
+}
+
+#[tokio::test]
+async fn test_get_nearby_commodity_imports() {
+    let client = ArdentClient::default();
+    let params = NearbyCommodityQueryParams {
+        min_volume: Some(10),
+        min_price: None,
+        max_price: None,
+        fleet_carriers: Some(false),
+        max_distance: Some(50),
+        max_days_ago: Some(7),
+    };
+    let orders = client.get_nearby_commodity_imports("Sol", "Gold", Some(params)).await.unwrap();
+    
+    println!("Nearby Gold imports count: {}", orders.len());
+    if !orders.is_empty() {
+        let first_order = &orders[0];
+        assert!(!first_order.commodity_name.is_empty());
+        assert!(!first_order.station_name.is_empty());
+        assert!(first_order.sell_price > 0);
+        // Check that the system is within the specified distance
+        let distance = ((first_order.system_x.powi(2) + first_order.system_y.powi(2) + first_order.system_z.powi(2)) as f64).sqrt();
+        assert!(distance <= 55.0); // Allow some tolerance
+    }
+}
+
+#[tokio::test]
+async fn test_get_nearby_commodity_exports() {
+    let client = ArdentClient::default();
+    let params = NearbyCommodityQueryParams {
+        min_volume: Some(10),
+        min_price: None,
+        max_price: None,
+        fleet_carriers: Some(false),
+        max_distance: Some(50),
+        max_days_ago: Some(7),
+    };
+    let orders = client.get_nearby_commodity_exports("Sol", "Gold", Some(params)).await.unwrap();
+    
+    println!("Nearby Gold exports count: {}", orders.len());
+    if !orders.is_empty() {
+        let first_order = &orders[0];
+        assert!(!first_order.commodity_name.is_empty());
+        assert!(!first_order.station_name.is_empty());
+        assert!(first_order.buy_price > 0);
+        // Check that the system is within the specified distance
+        let distance = ((first_order.system_x.powi(2) + first_order.system_y.powi(2) + first_order.system_z.powi(2)) as f64).sqrt();
+        assert!(distance <= 55.0); // Allow some tolerance
+    }
+}
