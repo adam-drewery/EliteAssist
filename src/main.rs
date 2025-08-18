@@ -18,6 +18,7 @@ mod font;
 
 mod material_locations;
 mod edsm;
+mod ardent;
 
 #[tokio::main]
 async fn main() {

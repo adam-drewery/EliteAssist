@@ -1,11 +1,12 @@
-mod test;
-
 use crate::state::State;
 use iced::futures::Stream;
 use iced::Subscription;
 use tokio::sync::mpsc;
 use tokio_stream::wrappers::ReceiverStream;
 use crate::gui::Message;
+
+#[cfg(test)]
+mod test;
 
 #[cfg(not(feature = "mock_events"))]
 use log::error;
