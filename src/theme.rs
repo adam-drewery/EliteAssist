@@ -92,7 +92,7 @@ pub mod style {
             background: DARK_GRAY.into(),
             bar: ORANGE.into(),
             border: Border {
-                width: 0.5,
+                width: 1.0,
                 color: ORANGE,
                 radius: radius(0),
             },
