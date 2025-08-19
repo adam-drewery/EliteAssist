@@ -1,3 +1,4 @@
+use crate::font::EUROSTILE;
 use crate::gui::Message;
 use crate::state::{Channel, State};
 use crate::theme::{GRAY, ORANGE, WHITE, YELLOW};
@@ -39,10 +40,12 @@ fn messages_column(state: &State) -> Column<'_, Message> {
                                 .height(16)
                                 .align_x(Right)
                                 .wrapping(Wrapping::None),
-                            column![text(&item.text).color(WHITE).size(16)]
-                                .padding([0, 8])
-                                .width(Fill)
-                                .align_x(Left),
+                            column![
+                                text(&item.text).color(WHITE).font(EUROSTILE).size(16)
+                            ]
+                            .padding([0, 8])
+                            .width(Fill)
+                            .align_x(Left),
                             column![
                                 text(&item.time_display)
                                     .size(12)

@@ -1,4 +1,4 @@
-use crate::font::EURO_CAPS;
+use crate::font::EUROSTILE;
 use crate::gui::Message;
 use crate::state::{ShipLockerItem, State};
 use crate::theme::style;
@@ -22,7 +22,7 @@ pub fn ship_locker(state: &State) -> Row<'_, Message> {
 pub fn locker_item_list<'a>(title: &'a str, items: &'a [ShipLockerItem]) -> Column<'a, Message> {
 
     column![
-        text(title).font(EURO_CAPS).size(20).color(ORANGE),
+        text(title).size(20).color(ORANGE),
         scrollable(column(
             items
             .iter()
@@ -31,7 +31,7 @@ pub fn locker_item_list<'a>(title: &'a str, items: &'a [ShipLockerItem]) -> Colu
 
                     let content = row![
                         text(item.count).size(16).color(YELLOW).width(36),
-                        text(&item.name).color(color).size(16)
+                        text(&item.name).color(color).size(16).font(EUROSTILE),
                     ]
                     .padding(2);
                 

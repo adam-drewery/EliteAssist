@@ -32,7 +32,7 @@ async fn main() {
     let _ = iced::application("EliteAssist", Gui::update, Gui::view)
         .font(font::bytes::EUROSTILE)
         .font(font::bytes::EURO_CAPS)
-        .default_font(font::EUROSTILE)
+        .default_font(font::EURO_CAPS)
         .subscription(subscription)
         .theme(theme)
         .window_size(Size::new(1920.0, 1080.0))

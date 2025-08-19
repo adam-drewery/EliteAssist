@@ -7,6 +7,7 @@ use iced::widget::image::Handle;
 use iced::widget::{column, container, image, row, scrollable, text, Column};
 use iced::Fill;
 use thousands::Separable;
+use crate::font::EUROSTILE;
 
 pub fn location(state: &State) -> Column<'_, Message> {
     column![
@@ -36,9 +37,9 @@ fn factions(state: &State) -> Column<'_, Message> {
         result = result.push(
             column![
                 row![
-                    column![text(&faction.name)],
+                    column![text(&faction.name).font(EUROSTILE)],
                     column![].width(Fill),
-                    column![text(states).color(GRAY)],
+                    column![text(states).color(GRAY).font(EUROSTILE)],
                 ]
             ]
         );

@@ -1,4 +1,3 @@
-use crate::font::EURO_CAPS;
 use crate::gui::Message;
 use crate::theme::style;
 use crate::theme::{GRAY, ORANGE};
@@ -7,13 +6,13 @@ use iced::{Fill, Right};
 
 pub fn header(title: &str) -> Row<'_, Message> {
     row![
-        container(text(title).font(EURO_CAPS).size(24).width(Fill)).style(style::header).padding([0, 8])
+        container(text(title).size(24).width(Fill)).style(style::header).padding([0, 8])
     ]
     .padding([12, 0])
 }
 
 pub fn sub_header(title: &str) -> Row<'_, Message> {
-    row![text(title).font(EURO_CAPS).size(20).color(ORANGE)]
+    row![text(title).size(20).color(ORANGE)]
 }
 
 pub fn details(label: &str, value: impl Into<String>) -> Row<'_, Message> {
@@ -22,11 +21,11 @@ pub fn details(label: &str, value: impl Into<String>) -> Row<'_, Message> {
     if value == "" { return row![] }
 
     row![
-        column![text(label).font(EURO_CAPS).color(GRAY).size(16)]
+        column![text(label).color(GRAY).size(16)]
             .align_x(Right)
             .padding([0, 8])
             .width(Fill),
-        column![text(value).font(EURO_CAPS).color(ORANGE).size(16)]
+        column![text(value).color(ORANGE).size(16)]
             .padding([0, 8])
             .width(Fill),
     ]
@@ -39,13 +38,13 @@ pub fn details_extra(label: &str, value: impl Into<String>, value2: impl Into<St
     if value == "" { return row![] }
 
     row![
-        column![text(label).font(EURO_CAPS).color(GRAY).size(16)]
+        column![text(label).color(GRAY).size(16)]
             .align_x(Right)
             .padding([0, 8])
             .width(Fill),
         row![
-            column![text(value).font(EURO_CAPS).color(ORANGE).size(16)],
-            column![text(value2).font(EURO_CAPS).color(GRAY).size(14)].padding(2)
+            column![text(value).color(ORANGE).size(16)],
+            column![text(value2).color(GRAY).size(14)].padding(2)
         ]
         .padding([0, 8])
         .width(Fill)
@@ -57,7 +56,7 @@ pub fn empty_text(label: &str) -> Column<'_, Message> {
         row![].height(Fill),
         row![
             column![].width(Fill),
-            column![text(label).font(EURO_CAPS)],
+            column![text(label)],
             column![].width(Fill),
         ],
         row![].height(Fill),

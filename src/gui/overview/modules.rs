@@ -1,7 +1,3 @@
-use iced::{Center, Fill, Right};
-use iced::widget::{container, row, column, text, Column, Row, image, scrollable};
-use iced::widget::image::Handle;
-use crate::font::EURO_CAPS;
 use crate::gui::components::header;
 use crate::gui::Message;
 use crate::image::engineering::ENGINEER_ICON_PNG;
@@ -9,6 +5,9 @@ use crate::image::ship_modules::*;
 use crate::state;
 use crate::state::State;
 use crate::theme::{style, GRAY, ORANGE, YELLOW};
+use iced::widget::image::Handle;
+use iced::widget::{column, container, image, row, scrollable, text, Column, Row};
+use iced::{Center, Fill, Right};
 
 pub fn ship_modules(state: &State) -> Column<'_, Message> {
 
@@ -64,7 +63,7 @@ fn module_group_title(title: &str, icon: Handle) -> Column<'_, Message> {
         row![
             column![image(icon).width(40).height(40)],
             column![].width(12),
-            column![text(title).font(EURO_CAPS).color(GRAY).size(30)],
+            column![text(title).color(GRAY).size(30)],
         ]
     ]
 }

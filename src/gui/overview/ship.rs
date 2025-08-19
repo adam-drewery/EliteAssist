@@ -1,4 +1,3 @@
-use crate::font::EURO_CAPS;
 use crate::gui::components::{details, header};
 use crate::gui::Message;
 use crate::state::State;
@@ -39,12 +38,12 @@ fn ship_title(ship_loadout: &state::ShipLoadout) -> Row<'_, Message> {
     row![
         column![
             text(&ship_loadout.ship_name)
-                .font(EURO_CAPS)
+
                 .color(ORANGE)
                 .size(30)
                 .align_x(Left),
             text(&ship_loadout.ship_type)
-                .font(EURO_CAPS)
+
                 .color(ORANGE)
                 .size(16)
                 .align_x(Left)
@@ -52,7 +51,7 @@ fn ship_title(ship_loadout: &state::ShipLoadout) -> Row<'_, Message> {
         column![].width(Fill),
         column![
             text(&ship_loadout.ship_ident)
-                .font(EURO_CAPS)
+
                 .color(GRAY)
                 .size(30)
                 .align_x(Right)

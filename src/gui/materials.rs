@@ -7,6 +7,7 @@ use iced::widget::svg::Handle;
 use iced::widget::tooltip::Position;
 use iced::widget::{column, row, scrollable, svg, text, tooltip, Column, Row};
 use iced::{Element, Fill, Top};
+use crate::font::EUROSTILE;
 
 pub fn materials(state: &State) -> Row<'_, Message> {
     row![
@@ -37,7 +38,7 @@ fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a,
                             3 => Handle::from_memory(GRADE_3_SVG),
                             4 => Handle::from_memory(GRADE_4_SVG),
                             5 => Handle::from_memory(GRADE_5_SVG),
-                            _ => panic!("Invalid rarity: {}", item.rarity),       
+                            _ => panic!("Invalid rarity: {}", item.rarity),
                         };
 
                         row![
@@ -47,11 +48,12 @@ fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a,
                                     text(item.count.to_string())
                                         .size(16)
                                         .color(YELLOW)
+                                        .font(EUROSTILE)
                                         .width(36),
                                     text(item.name).size(16),
                                 ]
                                 .padding(2),
-                                column(item.locations.into_iter().map(|loc| row![text(loc).size(16)].into()).collect::<Vec<Element<Message>>>()),
+                                column(item.locations.into_iter().map(|loc| row![text(loc).size(16).font(EUROSTILE)].into()).collect::<Vec<Element<Message>>>()),
                             Position::FollowCursor
                             )
                         .style(style::tooltip)
