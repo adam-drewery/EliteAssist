@@ -18,17 +18,22 @@ mod inara;
 mod lookup;
 mod query;
 
-#[tokio::main]
-async fn main() {
+fn main() {
 
     let mut clog = colog::default_builder();
     clog.filter(None, log::LevelFilter::Info);
     clog.init();
 
-    // load the mappings from sources like INARA etc.
-    // Eventually lets put this in a subscription so we can report on progress.
-    lookup::load().await;
+    // Create a Tokio runtime
+    let runtime = tokio::runtime::Runtime::new().unwrap();
 
+    // Load the mappings from sources like INARA etc.
+    // todo: Eventually lets put this in a subscription so we can report on progress.
+    runtime.block_on(async {
+        lookup::load().await;
+    });
+
+    // Run the Iced application
     let _ = iced::application("EliteAssist", Gui::update, Gui::view)
         .font(font::bytes::EUROSTILE)
         .font(font::bytes::EURO_CAPS)
@@ -39,4 +44,5 @@ async fn main() {
         .centered()
         .antialiasing(true)
         .run();
+
 }
