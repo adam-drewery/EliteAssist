@@ -150,7 +150,8 @@ async fn test_get_system_commodities() {
     println!("Sol commodities count: {}", commodities.len());
     if !commodities.is_empty() {
         let first_commodity = &commodities[0];
-        assert!(!first_commodity.commodity_name.is_empty());
+        assert!(!first_commodity.station_name.is_empty());
+        assert!(!first_commodity.station_type.is_empty());
     }
 
 }
