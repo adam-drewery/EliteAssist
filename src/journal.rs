@@ -1,5 +1,4 @@
 //!
-use crate::event::JournalEvent;
 use crate::gui::Message;
 use crate::state::State;
 use log::{error, info};
@@ -10,6 +9,10 @@ use std::path::{Path, PathBuf};
 use std::time::SystemTime;
 use tokio::sync::mpsc;
 use thiserror::Error;
+pub(crate) use crate::journal::event::Event;
+
+pub mod event;
+pub mod format;
 
 ///
 #[derive(Error, Debug)]
@@ -225,7 +228,7 @@ impl JournalWatcher {
                 if bytes_read > 0 {
                     let line = buffer.as_str();
                     info!("Journal file updated: {}", &line);
-                    let event: JournalEvent = serde_json::from_str(line)?;
+                    let event: Event = serde_json::from_str(line)?;
                     return Ok(Message::JournalEvent(event));
                 }
             }
@@ -318,7 +321,7 @@ fn get_journal_paths(dir: &Path) -> Result<Vec<PathBuf>, JournalError> {
 /// # Behavior
 ///
 /// 1. The function checks whether the file specified in `
-fn check_snapshot_file(file_details: &mut FileDetails) -> Result<Option<JournalEvent>, JournalError> {
+fn check_snapshot_file(file_details: &mut FileDetails) -> Result<Option<Event>, JournalError> {
     // Check if the file exists
     if !file_details.path.exists() {
         return Ok(None);
@@ -343,7 +346,7 @@ fn check_snapshot_file(file_details: &mut FileDetails) -> Result<Option<JournalE
             &file_details.path.file_name().unwrap_or_default()
         );
 
-        let event: JournalEvent = serde_json::from_str(&line)?;
+        let event: Event = serde_json::from_str(&line)?;
         return Ok(Some(event));
     }
 
@@ -493,7 +496,7 @@ impl HistoryLoader {
     /// * `Ok(Vec<JournalEvent>)` - A vector containing all successfully read and deserialized journal events.
     /// * `Err(JournalError)` - An error occurred while retrieving journal paths, opening files,
     ///   reading lines, or deserializing a line into
-    fn read_all_journal_events(&self) -> Result<Vec<JournalEvent>, JournalError> {
+    fn read_all_journal_events(&self) -> Result<Vec<Event>, JournalError> {
         let mut events = Vec::new();
         let files = get_journal_paths(&self.dir)?;
         for path in files {
@@ -505,7 +508,7 @@ impl HistoryLoader {
                 let n = reader.read_line(&mut line)?;
                 if n == 0 { break; }
                 if line.trim().is_empty() { continue; }
-                let ev: JournalEvent = serde_json::from_str(&line)?;
+                let ev: Event = serde_json::from_str(&line)?;
                 events.push(ev);
             }
         }
@@ -514,7 +517,7 @@ impl HistoryLoader {
 
     ///
     /// Reads snapshot event files from a specified directory and parses
-    fn read_snapshot_events(&self) -> Result<Vec<JournalEvent>, JournalError> {
+    fn read_snapshot_events(&self) -> Result<Vec<Event>, JournalError> {
         let names = [
             "Status.json",
             "Backpack.json",
@@ -529,7 +532,7 @@ impl HistoryLoader {
             if !path.exists() { continue; }
             let content = std::fs::read_to_string(&path)?;
             if content.trim().is_empty() { continue; }
-            let ev: JournalEvent = serde_json::from_str(&content)?;
+            let ev: Event = serde_json::from_str(&content)?;
             events.push(ev);
         }
         Ok(events)

@@ -1,5 +1,6 @@
 use crate::lookup::fdev_ids::Outfitting;
-use crate::{event, state};
+use crate::journal::event;
+use crate::state;
 
 impl Into<state::ShipModule> for event::LoadoutModule {
     fn into(self) -> state::ShipModule {

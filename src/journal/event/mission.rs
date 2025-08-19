@@ -1,4 +1,5 @@
-use crate::{event, state};
+use crate::journal::event;
+use crate::state;
 
 impl Into<state::Mission> for event::MissionAccepted {
     fn into(self) -> state::Mission {

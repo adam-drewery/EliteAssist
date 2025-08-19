@@ -7,7 +7,7 @@ mod messages;
 mod market;
 mod components;
 
-use crate::event::JournalEvent;
+use crate::journal::event::Event;
 use crate::image::LOADING_PNG;
 use crate::state::{ActiveScreen, State};
 use crate::theme::{style, ORANGE};
@@ -26,7 +26,7 @@ use ship_locker::ship_locker;
 #[derive(Clone, Debug)]
 pub enum Message {
     NavigateTo(ActiveScreen),
-    JournalEvent(JournalEvent),
+    JournalEvent(Event),
     
     StationsQueried(edsm::Stations),
     NearbySystemsQueried(Vec<edsm::System>),

@@ -7,7 +7,6 @@ pub mod crew;
 pub mod economy;
 pub mod engineering;
 pub mod fighter;
-pub mod format;
 pub mod loadout;
 pub mod location;
 pub mod mission;
@@ -23,7 +22,7 @@ use serde::Deserialize;
 pub struct AfmuRepairs {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "FullyRepaired")]
@@ -46,7 +45,7 @@ pub struct AfmuRepairs {
 pub struct ApproachSettlement {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BodyID")]
@@ -105,7 +104,7 @@ pub struct ApproachSettlement {
 pub struct AsteroidCracked {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Body")]
@@ -119,7 +118,7 @@ pub struct AsteroidCracked {
 pub struct BackpackChange {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Added")]
@@ -161,7 +160,7 @@ pub struct BackpackChangeEntry {
 pub struct Body {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Body")]
@@ -185,7 +184,7 @@ pub struct Body {
 pub struct Booking {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Cost")]
@@ -209,7 +208,7 @@ pub struct Booking {
 pub struct Bounty {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Faction")]
@@ -273,7 +272,7 @@ pub struct BountyReward {
 pub struct BuyData {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Cost")]
@@ -290,7 +289,7 @@ pub struct BuyData {
 pub struct BuyDrones {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BuyPrice")]
@@ -313,7 +312,7 @@ pub struct BuyDrones {
 pub struct BuyMicroResources {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Category")]
@@ -354,7 +353,7 @@ pub struct BuyMicroResources {
 pub struct Cancel {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Refund")]
@@ -368,7 +367,7 @@ pub struct Cancel {
 pub struct CapShipBond {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "AwardingFaction")]
@@ -388,7 +387,7 @@ pub struct CapShipBond {
 pub struct Cargo {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Count")]
@@ -408,7 +407,7 @@ pub struct Cargo {
 pub struct CargoDepot {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Not included for UpdateType of WingUpdate
@@ -475,7 +474,7 @@ pub struct CargoInventory {
 pub struct CargoTransfer {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Transfers")]
@@ -511,7 +510,7 @@ pub struct CargoTransferTransfer {
 pub struct Carrier {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "CarrierID")]
@@ -525,7 +524,7 @@ pub struct Carrier {
 pub struct CarrierBankTransfer {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Carrier balance after transfer
@@ -553,7 +552,7 @@ pub struct CarrierBankTransfer {
 pub struct CarrierBuy {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BoughtAtMarket")]
@@ -585,7 +584,7 @@ pub struct CarrierBuy {
 pub struct CarrierCrewServices {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "CarrierID")]
@@ -608,7 +607,7 @@ pub struct CarrierCrewServices {
 pub struct CarrierDecommission {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "CarrierID")]
@@ -628,7 +627,7 @@ pub struct CarrierDecommission {
 pub struct CarrierDepositFuel {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Amount")]
@@ -649,7 +648,7 @@ pub struct CarrierDepositFuel {
 pub struct CarrierDockingPermission {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "AllowNotorious")]
@@ -669,7 +668,7 @@ pub struct CarrierDockingPermission {
 pub struct CarrierFinance {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "AvailableBalance")]
@@ -716,7 +715,7 @@ pub struct CarrierFinance {
 pub struct CarrierJump {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Body")]
@@ -930,7 +929,7 @@ pub struct CarrierJumpFaction {
 pub struct CarrierJumpRequest {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Body")]
@@ -942,7 +941,7 @@ pub struct CarrierJumpRequest {
     #[serde(rename = "CarrierID")]
     pub carrier_id: u64,
 
-    #[serde(rename = "DepartureTime", with = "crate::event::format::optional_date")]
+    #[serde(rename = "DepartureTime", with = "crate::journal::format::optional_date")]
     pub departure_time: Option<DateTime<Utc>>,
 
     #[serde(rename = "SystemAddress")]
@@ -968,7 +967,7 @@ pub struct CarrierJumpStationFaction {
 pub struct CarrierLocation {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BodyID")]
@@ -990,7 +989,7 @@ pub struct CarrierLocation {
 pub struct CarrierNameChange {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Callsign")]
@@ -1009,7 +1008,7 @@ pub struct CarrierNameChange {
 pub struct CarrierPack {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "CarrierID")]
@@ -1038,7 +1037,7 @@ pub struct CarrierPack {
 pub struct CarrierStats {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "AllowNotorious")]
@@ -1187,7 +1186,7 @@ pub struct CarrierStatsSpaceUsage {
 pub struct CarrierTradeOrder {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BlackMarket")]
@@ -1225,7 +1224,7 @@ pub struct CarrierTradeOrder {
 pub struct ChangeCrewRole {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Role")]
@@ -1242,7 +1241,7 @@ pub struct ChangeCrewRole {
 pub struct ClearImpound {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
@@ -1271,7 +1270,7 @@ pub struct ClearImpound {
 pub struct CodexEntry {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BodyID")]
@@ -1346,7 +1345,7 @@ pub struct CodexEntry {
 pub struct CollectCargo {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MissionID")]
@@ -1370,7 +1369,7 @@ pub struct CollectCargo {
 pub struct CollectItems {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Count")]
@@ -1400,7 +1399,7 @@ pub struct CollectItems {
 pub struct ColonisationConstructionDepot {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ConstructionComplete")]
@@ -1447,7 +1446,7 @@ pub struct ColonisationConstructionDepotResourcesRequired {
 pub struct ColonisationContribution {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Contributions")]
@@ -1480,7 +1479,7 @@ pub struct ColonisationContributionContribution {
 pub struct Commander {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "FID")]
@@ -1497,7 +1496,7 @@ pub struct Commander {
 pub struct CommitCrime {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Bounty")]
@@ -1526,7 +1525,7 @@ pub struct CommitCrime {
 pub struct CommunityGoal {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "CurrentGoals")]
@@ -1549,7 +1548,7 @@ pub struct CommunityGoalCurrentGoal {
     #[serde(rename = "CurrentTotal")]
     pub current_total: u64,
 
-    #[serde(rename = "Expiry", with = "crate::event::format::date")]
+    #[serde(rename = "Expiry", with = "crate::journal::format::date")]
     pub expiry: DateTime<Utc>,
 
     #[serde(rename = "IsComplete")]
@@ -1610,7 +1609,7 @@ pub struct CommunityGoalCurrentGoalTopTier {
 pub struct CommunityGoalJoin {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "CGID")]
@@ -1630,7 +1629,7 @@ pub struct CommunityGoalJoin {
 pub struct CommunityGoalReward {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "CGID")]
@@ -1717,7 +1716,7 @@ pub struct Consumable {
 pub struct Continued {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Part")]
@@ -1731,7 +1730,7 @@ pub struct Continued {
 pub struct CreateSuitLoadout {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "LoadoutID")]
@@ -1763,7 +1762,7 @@ pub struct CreateSuitLoadout {
 pub struct Crew {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// H
@@ -1782,7 +1781,7 @@ pub struct Crew {
 pub struct CrewAssign {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "CrewID")]
@@ -1802,7 +1801,7 @@ pub struct CrewAssign {
 pub struct CrewFire {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "CrewID")]
@@ -1819,7 +1818,7 @@ pub struct CrewFire {
 pub struct CrewHire {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "CombatRank")]
@@ -1845,7 +1844,7 @@ pub struct CrewHire {
 pub struct CrewLaunchFighter {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Name of crew member launching in fighter
@@ -1865,7 +1864,7 @@ pub struct CrewLaunchFighter {
 pub struct CrewMember {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Player's commander name
@@ -1884,7 +1883,7 @@ pub struct CrewMember {
 pub struct CrewMemberRoleChange {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Player's commander name
@@ -1906,7 +1905,7 @@ pub struct CrewMemberRoleChange {
 pub struct CrimeVictim {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Fine or Bounty
@@ -1932,7 +1931,7 @@ pub struct CrimeVictim {
 pub struct Damage {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ID")]
@@ -1946,7 +1945,7 @@ pub struct Damage {
 pub struct DatalinkScan {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Message identifier from data link
@@ -1965,7 +1964,7 @@ pub struct DatalinkScan {
 pub struct DatalinkVoucher {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "PayeeFaction")]
@@ -1985,7 +1984,7 @@ pub struct DatalinkVoucher {
 pub struct DeliverPowerMicroResources {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// The ID of the market where the delivery took place.
@@ -2008,7 +2007,7 @@ pub struct DeliverPowerMicroResources {
 pub struct Died {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// When killed by a single entity
@@ -2039,7 +2038,7 @@ pub struct Died {
 pub struct DiscoveryScan {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Number of new bodies discovered
@@ -2057,7 +2056,7 @@ pub struct DiscoveryScan {
 pub struct Disembark {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Body")]
@@ -2113,7 +2112,7 @@ pub struct Disembark {
 pub struct Docked {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Only if any fine is active
@@ -2197,7 +2196,7 @@ pub struct Docked {
 pub struct DockFighter {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ID")]
@@ -2211,7 +2210,7 @@ pub struct DockFighter {
 pub struct DockingCancelled {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
@@ -2234,7 +2233,7 @@ pub struct DockingCancelled {
 pub struct DockingDenied {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
@@ -2260,7 +2259,7 @@ pub struct DockingDenied {
 pub struct DockingGranted {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "LandingPad")]
@@ -2286,7 +2285,7 @@ pub struct DockingGranted {
 pub struct DockingRequested {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "LandingPads")]
@@ -2312,7 +2311,7 @@ pub struct DockingRequested {
 pub struct DockingTimeout {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
@@ -2335,7 +2334,7 @@ pub struct DockingTimeout {
 pub struct DropItems {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Count")]
@@ -2364,7 +2363,7 @@ pub struct DropItems {
 pub struct DropshipDeploy {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Body")]
@@ -2393,7 +2392,7 @@ pub struct DropshipDeploy {
 pub struct EjectCargo {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Abandoned")]
@@ -2424,7 +2423,7 @@ pub struct EjectCargo {
 pub struct Embark {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Body")]
@@ -2500,7 +2499,7 @@ pub struct EmbarkCrew {
 pub struct Empty {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
 }
@@ -2511,7 +2510,7 @@ pub struct Empty {
 pub struct EndCrewSession {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// true if crew disbanded as a result of a crime in a lawful session
@@ -2530,7 +2529,7 @@ pub struct EndCrewSession {
 pub struct EngineerContribution {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Commodity")]
@@ -2570,7 +2569,7 @@ pub struct EngineerContribution {
 pub struct EngineerCraft {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// when applying a new effect
@@ -2648,7 +2647,7 @@ pub struct EngineerCraftModifier {
 pub struct EngineerLegacyConvert {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BlueprintID")]
@@ -2708,7 +2707,7 @@ pub struct EngineerLegacyConvertModifier {
 pub struct EngineerProgress {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Update for one engineer
@@ -2764,7 +2763,7 @@ pub struct EngineerProgressEngineer {
 pub struct EscapeInterdiction {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Interdictor")]
@@ -2798,7 +2797,7 @@ pub struct FactionActiveState {
 pub struct FactionKillBond {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "AwardingFaction")]
@@ -2836,7 +2835,7 @@ pub struct FactionRecoveringState {
 pub struct FCMaterials {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "CarrierID")]
@@ -2884,7 +2883,7 @@ pub struct FCMaterialsItem {
 pub struct FetchRemoteModule {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ServerId")]
@@ -2920,7 +2919,7 @@ pub struct FetchRemoteModule {
 pub struct FighterRebuilt {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ID")]
@@ -2936,7 +2935,7 @@ pub struct FighterRebuilt {
 pub struct Fileheader {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Game build number
@@ -2967,7 +2966,7 @@ pub struct Fileheader {
 pub struct Friends {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// the friend's commander name
@@ -2986,7 +2985,7 @@ pub struct Friends {
 pub struct FSDJump {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Body")]
@@ -3187,7 +3186,7 @@ pub struct FSDJumpFaction {
 pub struct FSDTarget {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Name")]
@@ -3210,7 +3209,7 @@ pub struct FSDTarget {
 pub struct FSSAllBodiesFound {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Count")]
@@ -3230,7 +3229,7 @@ pub struct FSSAllBodiesFound {
 pub struct FSSBodySignals {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BodyID")]
@@ -3253,7 +3252,7 @@ pub struct FSSBodySignals {
 pub struct FSSDiscoveryScan {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BodyCount")]
@@ -3279,7 +3278,7 @@ pub struct FSSDiscoveryScan {
 pub struct FSSSignalDiscovered {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// If it is a station
@@ -3344,7 +3343,7 @@ pub struct FSSSignalDiscovered {
 pub struct FuelScoop {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Tons fuel scooped
@@ -3363,7 +3362,7 @@ pub struct FuelScoop {
 pub struct HoloscreenHacked {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// The power that now owns the holo screen
@@ -3382,7 +3381,7 @@ pub struct HoloscreenHacked {
 pub struct HullDamage {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// True for ship-launched fighter
@@ -3404,7 +3403,7 @@ pub struct HullDamage {
 pub struct Interdicted {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// If player
@@ -3443,7 +3442,7 @@ pub struct Interdicted {
 pub struct Interdiction {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// If a player
@@ -3485,7 +3484,7 @@ pub struct Interdiction {
 pub struct Inventory {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Components")]
@@ -3529,7 +3528,7 @@ pub struct Item {
 pub struct JetConeBoost {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BoostValue")]
@@ -3543,7 +3542,7 @@ pub struct JetConeBoost {
 pub struct JetConeDamage {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Module")]
@@ -3560,7 +3559,7 @@ pub struct JetConeDamage {
 pub struct KickCrewMember {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Crew")]
@@ -3597,7 +3596,7 @@ pub struct LandingPads {
 pub struct LaunchDrone {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Type")]
@@ -3611,7 +3610,7 @@ pub struct LaunchDrone {
 pub struct LaunchFighter {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ID")]
@@ -3632,7 +3631,7 @@ pub struct LaunchFighter {
 pub struct LaunchSRV {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ID")]
@@ -3657,7 +3656,7 @@ pub struct LaunchSRV {
 pub struct LoadGame {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "build")]
@@ -3740,7 +3739,7 @@ pub struct LoadGame {
 pub struct Loadout {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "CargoCapacity")]
@@ -3800,7 +3799,7 @@ pub struct Loadout {
 pub struct LoadoutEquipModule {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Class")]
@@ -3957,7 +3956,7 @@ pub struct LoadoutModuleEngineeringModifier {
 pub struct Location {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Body")]
@@ -4207,7 +4206,7 @@ pub struct LocationFaction {
 pub struct Market {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "CarrierDockingAccess")]
@@ -4240,7 +4239,7 @@ pub struct Market {
 pub struct MarketBuy {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BuyPrice")]
@@ -4321,7 +4320,7 @@ pub struct MarketItem {
 pub struct MarketSell {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Average price paid
@@ -4369,7 +4368,7 @@ pub struct MarketSell {
 pub struct MassModuleStore {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Items")]
@@ -4438,7 +4437,7 @@ pub struct Material {
 pub struct MaterialCollected {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Category")]
@@ -4464,7 +4463,7 @@ pub struct MaterialCollected {
 pub struct MaterialDiscovered {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Category")]
@@ -4488,7 +4487,7 @@ pub struct MaterialDiscovered {
 pub struct Materials {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Encoded")]
@@ -4508,7 +4507,7 @@ pub struct Materials {
 pub struct MaterialTrade {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
@@ -4573,7 +4572,7 @@ pub struct MicroResources {
 pub struct Mission {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Fine")]
@@ -4596,7 +4595,7 @@ pub struct Mission {
 pub struct MissionAccepted {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Commodity")]
@@ -4622,7 +4621,7 @@ pub struct MissionAccepted {
     pub donation: Option<String>,
 
     /// Mission expiry time, in ISO 8601
-    #[serde(rename = "Expiry", with = "crate::event::format::optional_date")]
+    #[serde(rename = "Expiry", with = "crate::journal::format::optional_date")]
     pub expiry: Option<DateTime<Utc>>,
 
     /// Faction offering mission
@@ -4697,7 +4696,7 @@ pub struct MissionAccepted {
 pub struct MissionCompleted {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Commodity")]
@@ -4859,7 +4858,7 @@ pub struct MissionCompletedMaterialsReward {
 pub struct MissionRedirected {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "LocalisedName")]
@@ -4894,7 +4893,7 @@ pub struct MissionRedirected {
 pub struct Missions {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Active")]
@@ -4936,7 +4935,7 @@ pub struct MissionsFailed {
 pub struct ModuleBuy {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// The module being purchased
@@ -4993,7 +4992,7 @@ pub struct ModuleBuy {
 pub struct ModuleBuyAndStore {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// The module being purchased and stored
@@ -5026,7 +5025,7 @@ pub struct ModuleBuyAndStore {
 pub struct ModuleInfo {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// When written to ModulesInfo.json
@@ -5059,7 +5058,7 @@ pub struct ModuleInfoModule {
 pub struct ModuleRetrieve {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "EngineerModifications")]
@@ -5108,7 +5107,7 @@ pub struct ModuleRetrieve {
 pub struct ModuleSell {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
@@ -5140,7 +5139,7 @@ pub struct ModuleSell {
 pub struct ModuleSellRemote {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "SellItem")]
@@ -5172,7 +5171,7 @@ pub struct ModuleSellRemote {
 pub struct ModuleStore {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Cost")]
@@ -5221,7 +5220,7 @@ pub struct ModuleStore {
 pub struct ModuleSwap {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "FromItem")]
@@ -5259,7 +5258,7 @@ pub struct ModuleSwap {
 pub struct MultiSellExplorationData {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BaseValue")]
@@ -5297,7 +5296,7 @@ pub struct MultiSellExplorationDataDiscovered {
 pub struct Music {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MusicTrack")]
@@ -5326,7 +5325,7 @@ pub struct NameAndProportion {
 pub struct NavBeaconScan {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "NumBodies")]
@@ -5343,7 +5342,7 @@ pub struct NavBeaconScan {
 pub struct NavRoute {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Route")]
@@ -5357,7 +5356,7 @@ pub struct NavRoute {
 pub struct NavRouteClear {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Route")]
@@ -5396,7 +5395,7 @@ pub struct NavRouteRoute {
 pub struct NewCommander {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "FID")]
@@ -5417,7 +5416,7 @@ pub struct NewCommander {
 pub struct NpcCrewPaidWage {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Amount")]
@@ -5437,7 +5436,7 @@ pub struct NpcCrewPaidWage {
 pub struct NpcCrewRank {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "NpcCrewId")]
@@ -5457,7 +5456,7 @@ pub struct NpcCrewRank {
 pub struct Outfitting {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Only written in Outfitting.json
@@ -5500,7 +5499,7 @@ pub struct OutfittingItem {
 pub struct Passengers {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Array of passenger records
@@ -5537,7 +5536,7 @@ pub struct PassengersManifest {
 pub struct Payment {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "AllFines")]
@@ -5570,7 +5569,7 @@ pub struct Payment {
 pub struct Powerplay {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Merits")]
@@ -5597,7 +5596,7 @@ pub struct Powerplay {
 pub struct PowerplayDefect {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "FromPower")]
@@ -5615,7 +5614,7 @@ pub struct PowerplayDefect {
 pub struct PowerplayDelivery {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Count")]
@@ -5638,7 +5637,7 @@ pub struct PowerplayDelivery {
 pub struct PowerplayFastTrack {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Cost")]
@@ -5656,7 +5655,7 @@ pub struct PowerplayFastTrack {
 pub struct PowerplayJoin {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Power")]
@@ -5670,7 +5669,7 @@ pub struct PowerplayJoin {
 pub struct PowerplayMerits {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MeritsGained")]
@@ -5690,7 +5689,7 @@ pub struct PowerplayMerits {
 pub struct PowerplayRank {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Power")]
@@ -5707,7 +5706,7 @@ pub struct PowerplayRank {
 pub struct PowerplaySalary {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Amount")]
@@ -5724,7 +5723,7 @@ pub struct PowerplaySalary {
 pub struct PowerplayVote {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Power")]
@@ -5748,7 +5747,7 @@ pub struct PowerplayVote {
 pub struct PowerplayVoucher {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Power")]
@@ -5765,7 +5764,7 @@ pub struct PowerplayVoucher {
 pub struct Promotion {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Combat")]
@@ -5797,7 +5796,7 @@ pub struct Promotion {
 pub struct ProspectedAsteroid {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Content")]
@@ -5829,7 +5828,7 @@ pub struct ProspectedAsteroid {
 pub struct PVPKill {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Victim’s rank in range 0..8
@@ -5848,7 +5847,7 @@ pub struct PVPKill {
 pub struct Rank {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// P
@@ -5891,7 +5890,7 @@ pub struct Rank {
 pub struct RebootRepair {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Array of names of modules repaired
@@ -5906,7 +5905,7 @@ pub struct RebootRepair {
 pub struct ReceiveText {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Channel")]
@@ -5932,7 +5931,7 @@ pub struct ReceiveText {
 pub struct RedeemVoucher {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Net amount received, after any broker fee
@@ -5973,7 +5972,7 @@ pub struct RedeemVoucherFaction {
 pub struct Refuel {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Tons of fuel purchased
@@ -5992,7 +5991,7 @@ pub struct Refuel {
 pub struct Repair {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Cost")]
@@ -6014,7 +6013,7 @@ pub struct Repair {
 pub struct RepairDrone {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "CockpitRepaired")]
@@ -6034,7 +6033,7 @@ pub struct RepairDrone {
 pub struct Reputation {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Alliance")]
@@ -6057,7 +6056,7 @@ pub struct Reputation {
 pub struct RequestPowerMicroResources {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// The ID of the market where the request took place.
@@ -6080,7 +6079,7 @@ pub struct RequestPowerMicroResources {
 pub struct ReservoirReplenished {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "FuelMain")]
@@ -6097,7 +6096,7 @@ pub struct ReservoirReplenished {
 pub struct RestockVehicle {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Cost")]
@@ -6127,7 +6126,7 @@ pub struct RestockVehicle {
 pub struct Resurrect {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Whether the commander declared bankruptcy
@@ -6150,7 +6149,7 @@ pub struct Resurrect {
 pub struct SAAScanComplete {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BodyID")]
@@ -6191,7 +6190,7 @@ pub struct SAASignals {
 pub struct SAASignalsFound {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BodyID")]
@@ -6229,7 +6228,7 @@ pub struct SAASignalsFoundGenus {
 pub struct Scan {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Written for Star
@@ -6416,7 +6415,7 @@ pub struct ScanAtmosphereComposition {
 pub struct ScanBaryCentre {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "AscendingNode")]
@@ -6488,7 +6487,7 @@ pub struct ScanMaterial {
 pub struct Scanned {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ScanType")]
@@ -6502,7 +6501,7 @@ pub struct Scanned {
 pub struct ScanOrganic {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Body")]
@@ -6580,7 +6579,7 @@ pub struct ScanRing {
 pub struct ScientificResearch {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Category")]
@@ -6607,7 +6606,7 @@ pub struct ScientificResearch {
 pub struct Screenshot {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Altitude")]
@@ -6646,7 +6645,7 @@ pub struct Screenshot {
 pub struct SearchAndRescue {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Count")]
@@ -6672,7 +6671,7 @@ pub struct SearchAndRescue {
 pub struct SellDrones {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Count")]
@@ -6695,7 +6694,7 @@ pub struct SellDrones {
 pub struct SellExplorationData {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BaseValue")]
@@ -6723,7 +6722,7 @@ pub struct SellExplorationData {
 pub struct SellMicroResources {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
@@ -6746,7 +6745,7 @@ pub struct SellMicroResources {
 pub struct SellOrganicData {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BioData")]
@@ -6793,7 +6792,7 @@ pub struct SellOrganicDataBioData {
 pub struct SellShipOnRebuy {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "SellShipId")]
@@ -6816,7 +6815,7 @@ pub struct SellShipOnRebuy {
 pub struct SendText {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Message")]
@@ -6836,7 +6835,7 @@ pub struct SendText {
 pub struct SetUserShipName {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Ship")]
@@ -6859,7 +6858,7 @@ pub struct SetUserShipName {
 pub struct ShieldState {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// false when disabled, true when restored
@@ -6875,7 +6874,7 @@ pub struct ShieldState {
 pub struct Ship {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "NewShipID")]
@@ -6896,7 +6895,7 @@ pub struct Ship {
 pub struct ShipEquipmentPurchase {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Cost")]
@@ -6910,7 +6909,7 @@ pub struct ShipEquipmentPurchase {
 pub struct ShipLockerMaterials {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Components")]
@@ -6933,7 +6932,7 @@ pub struct ShipLockerMaterials {
 pub struct ShipTargeted {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// If Scan stage >= 3
@@ -7009,7 +7008,7 @@ pub struct ShipTargeted {
 pub struct Shipyard {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Only written in Shipyard.json
@@ -7041,7 +7040,7 @@ pub struct Shipyard {
 pub struct ShipyardBuy {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
@@ -7102,7 +7101,7 @@ pub struct ShipyardPriceList {
 pub struct ShipyardRedeem {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BundleID")]
@@ -7125,7 +7124,7 @@ pub struct ShipyardRedeem {
 pub struct ShipyardSell {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
@@ -7158,7 +7157,7 @@ pub struct ShipyardSell {
 pub struct ShipyardSwap {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
@@ -7187,7 +7186,7 @@ pub struct ShipyardSwap {
 pub struct ShipyardTransfer {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Distance")]
@@ -7226,7 +7225,7 @@ pub struct ShipyardTransfer {
 pub struct Squadron {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "SquadronName")]
@@ -7239,7 +7238,7 @@ pub struct Squadron {
 pub struct SquadronPromotion {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "NewRank")]
@@ -7258,7 +7257,7 @@ pub struct SquadronPromotion {
 pub struct SquadronStartup {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "CurrentRank")]
@@ -7276,7 +7275,7 @@ pub struct SquadronStartup {
 pub struct SRV {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "ID")]
@@ -7296,7 +7295,7 @@ pub struct SRV {
 pub struct StartJump {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "JumpType")]
@@ -7323,7 +7322,7 @@ pub struct StartJump {
 pub struct Statistics {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Bank_Account")]
@@ -8096,7 +8095,7 @@ pub struct StatisticsTrading {
 pub struct Status {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Altitude")]
@@ -8203,7 +8202,7 @@ pub struct StatusFuel {
 pub struct StoredModules {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Items")]
@@ -8275,7 +8274,7 @@ pub struct StoredModulesItem {
 pub struct StoredShips {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
@@ -8370,7 +8369,7 @@ pub struct StoredShipsShipsRemote {
 pub struct Suit {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Name")]
@@ -8396,7 +8395,7 @@ pub struct Suit {
 pub struct SuitLoadout {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "LoadoutID")]
@@ -8428,7 +8427,7 @@ pub struct SuitLoadout {
 pub struct SuitLoadoutLite {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "LoadoutID")]
@@ -8478,7 +8477,7 @@ pub struct SuitLoadoutModule {
 pub struct SupercruiseDestinationDrop {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
@@ -8501,7 +8500,7 @@ pub struct SupercruiseDestinationDrop {
 pub struct SupercruiseEntry {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Multicrew")]
@@ -8527,7 +8526,7 @@ pub struct SupercruiseEntry {
 pub struct SupercruiseExit {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Body")]
@@ -8559,7 +8558,7 @@ pub struct SupercruiseExit {
 pub struct SwitchSuitLoadout {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "LoadoutID")]
@@ -8591,7 +8590,7 @@ pub struct SwitchSuitLoadout {
 pub struct Synthesis {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Materials used with quantities
@@ -8611,7 +8610,7 @@ pub struct Synthesis {
 pub struct SystemClaim {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "StarSystem")]
@@ -8642,7 +8641,7 @@ pub struct SystemFaction {
 pub struct TechnologyBroker {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "BrokerType")]
@@ -8709,7 +8708,7 @@ pub struct ThargoidWar {
 pub struct Touchdown {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Body")]
@@ -8765,7 +8764,7 @@ pub struct Touchdown {
 pub struct TradeMicroResources {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Category")]
@@ -8797,7 +8796,7 @@ pub struct TradeMicroResources {
 pub struct TransferMicroResources {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Transfers")]
@@ -8836,7 +8835,7 @@ pub struct TransferMicroResourcesTransfer {
 pub struct TypeDetails {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Type")]
@@ -8853,7 +8852,7 @@ pub struct TypeDetails {
 pub struct UnderAttack {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Target")]
@@ -8867,7 +8866,7 @@ pub struct UnderAttack {
 pub struct Undocked {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "MarketID")]
@@ -8896,7 +8895,7 @@ pub struct Undocked {
 pub struct UpgradeSuit {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Class")]
@@ -8924,7 +8923,7 @@ pub struct UpgradeSuit {
 pub struct UpgradeWeapon {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Class")]
@@ -8953,7 +8952,7 @@ pub struct UpgradeWeapon {
 pub struct UseConsumable {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Name")]
@@ -8973,7 +8972,7 @@ pub struct UseConsumable {
 pub struct USSDrop {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "USSThreat")]
@@ -8993,7 +8992,7 @@ pub struct USSDrop {
 pub struct VehicleSwitch {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "To")]
@@ -9008,7 +9007,7 @@ pub struct VehicleSwitch {
 pub struct Weapon {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Class")]
@@ -9038,7 +9037,7 @@ pub struct Weapon {
 pub struct WingInvite {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "Name")]
@@ -9052,7 +9051,7 @@ pub struct WingInvite {
 pub struct WingJoin {
 
     /// Event timestamp
-    #[serde(with = "crate::event::format::date")]
+    #[serde(with = "crate::journal::format::date")]
     pub timestamp: DateTime<Utc>,
 
     /// Other player names already in wing
@@ -9063,7 +9062,7 @@ pub struct WingJoin {
 
 #[derive(Clone, Debug, Deserialize)]
 #[serde(tag = "event")]
-pub enum JournalEvent {
+pub enum Event {
     /// When written: when repairing modules using the Auto Field Maintenance Unit (AFMU)
     #[serde(rename = "AfmuRepairs")]
     AfmuRepairs(AfmuRepairs),

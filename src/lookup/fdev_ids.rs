@@ -177,7 +177,7 @@ impl Into<state::Material> for &Material {
             name: self.name.clone(),
             rarity: self.rarity.parse().unwrap(),
             count: 0,
-            locations: lookup::material_to_locations(&*self.name)
+            locations: lookup::locations_for_material(&*self.name)
         }
     }
 }

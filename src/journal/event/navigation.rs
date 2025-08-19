@@ -1,5 +1,7 @@
-use crate::{event, state};
-use crate::event::format::prettify_date;
+use crate::journal::event;
+use crate::journal::format::prettify_date;
+use crate::state;
+
 
 impl Into<state::GameEventLog> for event::Embark {
     fn into(self) -> state::GameEventLog {

@@ -636,7 +636,7 @@ function Generate-NestedStruct {
 
             # Add the field to the struct with appropriate serde attributes
             if ($jsonType -eq "string" -and $format -eq "date-time") {
-                $serdeAttrs = "rename = ""$propName"", with = ""crate::event::format::date"""
+                $serdeAttrs = "rename = ""$propName"", with = ""crate::journal::format::date"""
                 $rustStruct.AddFieldWithSerdeAttrs($rustPropName, $rustType, $propName, $prop.description, $serdeAttrs)
             } else {
                 $rustStruct.AddField($rustPropName, $rustType, $propName, $prop.description)
@@ -716,7 +716,7 @@ function Generate-RustStruct {
     $rustStruct.AddAttribute("#[derive(Clone, Debug, Deserialize)]")
 
     # Add timestamp field from base schema
-    $rustStruct.AddFieldWithSerdeAttrs("timestamp", "DateTime<Utc>", "timestamp", "Event timestamp", "with = ""crate::event::format::date""")
+    $rustStruct.AddFieldWithSerdeAttrs("timestamp", "DateTime<Utc>", "timestamp", "Event timestamp", "with = ""crate::journal::format::date""")
 
     # Process properties from the schema
     if ($schema.properties) {
@@ -790,7 +790,7 @@ function Generate-RustStruct {
 
             # Add the field to the struct with appropriate serde attributes
             if ($isOptional -and $jsonType -eq "string" -and $format -eq "date-time") {
-                $serdeAttrs = "rename = ""$propName"", with = ""crate::event::format::optional_date"""
+                $serdeAttrs = "rename = ""$propName"", with = ""crate::journal::format::optional_date"""
                 $rustStruct.AddFieldWithSerdeAttrs($rustPropName, $rustType, $propName, $prop.description, $serdeAttrs)
             } else {
                 $rustStruct.AddField($rustPropName, $rustType, $propName, $prop.description)
@@ -988,7 +988,7 @@ $allStructs = @{}
 $allStructNames = @()
 
 # Create a hashtable to store the original description for each event
-# This will be used for the JournalEvent enum variants
+# This will be used for the Event enum variants
 $eventDescriptions = @{}
 
 # Create a hashtable to track which types have already been processed
@@ -1090,10 +1090,10 @@ foreach ($dir in $schemaDirs) {
 }
 
 # Create the event.rs file with all structs
-$eventFilePath = Join-Path (Get-Location) "src/event.rs"
+$eventFilePath = Join-Path (Get-Location) "src/journal/event.rs"
 
 # Get all module files from the event directory
-$eventDir = Join-Path (Get-Location) "src/event"
+$eventDir = Join-Path (Get-Location) "src/journal/event"
 $moduleFiles = Get-ChildItem -Path $eventDir -Filter "*.rs" | ForEach-Object { $_.Name -replace '\.rs$', '' }
 
 # Add imports and module declarations
@@ -1302,10 +1302,10 @@ foreach ($key in ($mergedStructs.Keys | Sort-Object)) {
     $fileContent += "`n`n"
 }
 
-# Generate the JournalEvent enum
+# Generate the Event enum
 $fileContent += "#[derive(Clone, Debug, Deserialize)]"
 $fileContent += "`n#[serde(tag = ""event"")]"
-$fileContent += "`npub enum JournalEvent {"
+$fileContent += "`npub enum Event {"
 $fileContent += "`n"
 
 # Add enum variants for top-level structs in alphabetical order
@@ -1332,6 +1332,6 @@ $fileContent += "`n"
 # Write the file
 Set-Content -Path $eventFilePath -Value $fileContent
 
-Write-Host "Generated $eventFilePath with $($mergedStructNames.Count) structs (merged from $($allStructs.Count) original structs, including nested types) and JournalEvent enum"
+Write-Host "Generated $eventFilePath with $($mergedStructNames.Count) structs (merged from $($allStructs.Count) original structs, including nested types) and Event enum"
 
 Write-Host "Done!"

@@ -1,7 +1,8 @@
+use crate::journal::event;
+use crate::state;
+use crate::journal::format::prettify_date;
 use once_cell::sync::Lazy;
 use regex::Regex;
-use crate::{event, state};
-use crate::event::format::prettify_date;
 
 impl Into<state::ChatMessage> for event::ReceiveText {
     fn into(self) -> state::ChatMessage {

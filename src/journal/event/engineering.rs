@@ -1,4 +1,5 @@
-use crate::{event, state};
+use crate::journal::event;
+use crate::state;
 
 impl Into<state::Engineering> for event::LoadoutModuleEngineering {
     fn into(self) -> state::Engineering {

@@ -6,18 +6,17 @@ use crate::subscription::subscription;
 use crate::theme::theme;
 
 mod gui;
-mod event;
-mod journal;
+pub mod journal;
 mod state;
 mod subscription;
 mod theme;
 mod image;
-mod text;
 mod font;
 mod edsm;
 mod ardent;
 mod inara;
 mod lookup;
+mod query;
 
 #[tokio::main]
 async fn main() {

@@ -1,4 +1,5 @@
-use crate::{event, state};
+use crate::journal::event;
+use crate::state;
 
 impl Into<state::CurrentLocation> for event::Location {
     fn into(self) -> state::CurrentLocation {

@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 use thousands::Separable;
-use crate::{event, lookup, state};
-use crate::event::format::prettify_date;
+use crate::journal::event;
+use crate::{lookup, state};
+use crate::journal::format::{prettify_date, title_case};
 use crate::lookup::fdev_ids::all_materials;
-use crate::text::title_case;
 
 impl event::Materials {
 
@@ -69,7 +69,7 @@ impl Into<state::ShipLocker> for event::Inventory {
                     name: c.name_localised.clone().unwrap_or(title_case(&c.name)),
                     for_mission: c.mission_id.is_some(),
                     count: c.count,
-                    locations: lookup::material_to_locations(&c.name_localised.unwrap_or(c.name))
+                    locations: lookup::locations_for_material(&c.name_localised.unwrap_or(c.name))
                 }
             }).collect(),
         }
@@ -84,7 +84,7 @@ impl Into<state::ShipLockerItem> for event::Item {
             name: self.name_localised.clone().unwrap_or(title_case(&self.name)),
             for_mission: self.mission_id.is_some(),
             count: self.count,
-            locations: lookup::item_to_locations(&self.name_localised.unwrap_or(self.name))
+            locations: lookup::locations_for_item(&self.name_localised.unwrap_or(self.name))
         }
     }
 }
@@ -141,7 +141,7 @@ impl Into<state::ShipLockerItem> for event::Consumable {
             name: self.name_localised.clone().unwrap_or(title_case(&self.name)),
             count: self.count,
             for_mission: false,
-            locations: lookup::item_to_locations(&self.name_localised.unwrap_or(self.name))
+            locations: lookup::locations_for_item(&self.name_localised.unwrap_or(self.name))
         }
     }
 }

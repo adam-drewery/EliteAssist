@@ -20,15 +20,14 @@ pub use personal::*;
 pub use ship::*;
 pub use suit::*;
 
-use crate::edsm::EdsmClient;
-use crate::event::JournalEvent;
 use crate::gui::Message;
+use crate::journal;
+use crate::journal::format;
+use crate::query;
+use iced::Task;
 use serde::Deserialize;
 use std::collections::HashMap;
-use iced::Task;
-use log::{info, warn};
 use thousands::Separable;
-use crate::event::format::prettify_date;
 
 #[derive(Default)]
 pub struct State {
@@ -108,67 +107,67 @@ impl State {
             Message::JournalLoaded => {
                 self.journal_loaded = true;
 
-                return self.query_system(self.current_system.clone());
+                return query::system(&self.current_system);
             }
 
             Message::JournalEvent(event) => {
-
+                use journal::Event;
                 match event {
 
                     // BACKPACK
-                    JournalEvent::Backpack(_) => {}
-                    JournalEvent::BackpackChange(_) => {}
-                    JournalEvent::DropItems(_) => {}
-                    JournalEvent::CollectItems(_) => {}
-                    JournalEvent::UseConsumable(_) => {}
+                    Event::Backpack(_) => {}
+                    Event::BackpackChange(_) => {}
+                    Event::DropItems(_) => {}
+                    Event::CollectItems(_) => {}
+                    Event::UseConsumable(_) => {}
 
                     // CARGO
-                    JournalEvent::Cargo(_) => {}
-                    JournalEvent::CargoTransfer(_) => {}
-                    JournalEvent::CargoDepot(_) => {}
-                    JournalEvent::CollectCargo(_) => {}
-                    JournalEvent::EjectCargo(_) => {}
+                    Event::Cargo(_) => {}
+                    Event::CargoTransfer(_) => {}
+                    Event::CargoDepot(_) => {}
+                    Event::CollectCargo(_) => {}
+                    Event::EjectCargo(_) => {}
 
                     // CARRIER
-                    JournalEvent::CarrierLocation(_) => {}
-                    JournalEvent::CarrierJump(_) => {}
-                    JournalEvent::CarrierBuy(_) => {}
-                    JournalEvent::CarrierStats(_) => {}
-                    JournalEvent::CarrierJumpRequest(_) => {}
-                    JournalEvent::CarrierDecommission(_) => {}
-                    JournalEvent::CarrierCancelDecommission(_) => {}
-                    JournalEvent::CarrierBankTransfer(_) => {}
-                    JournalEvent::CarrierDepositFuel(_) => {}
-                    JournalEvent::CarrierCrewServices(_) => {}
-                    JournalEvent::CarrierFinance(_) => {}
-                    JournalEvent::CarrierShipPack(_) => {}
-                    JournalEvent::CarrierModulePack(_) => {}
-                    JournalEvent::CarrierTradeOrder(_) => {}
-                    JournalEvent::CarrierDockingPermission(_) => {}
-                    JournalEvent::CarrierNameChange(_) => {}
-                    JournalEvent::CarrierJumpCancelled(_) => {}
-                    JournalEvent::FCMaterials(_) => {}
+                    Event::CarrierLocation(_) => {}
+                    Event::CarrierJump(_) => {}
+                    Event::CarrierBuy(_) => {}
+                    Event::CarrierStats(_) => {}
+                    Event::CarrierJumpRequest(_) => {}
+                    Event::CarrierDecommission(_) => {}
+                    Event::CarrierCancelDecommission(_) => {}
+                    Event::CarrierBankTransfer(_) => {}
+                    Event::CarrierDepositFuel(_) => {}
+                    Event::CarrierCrewServices(_) => {}
+                    Event::CarrierFinance(_) => {}
+                    Event::CarrierShipPack(_) => {}
+                    Event::CarrierModulePack(_) => {}
+                    Event::CarrierTradeOrder(_) => {}
+                    Event::CarrierDockingPermission(_) => {}
+                    Event::CarrierNameChange(_) => {}
+                    Event::CarrierJumpCancelled(_) => {}
+                    Event::FCMaterials(_) => {}
 
                     // COLONISATION
-                    JournalEvent::ColonisationBeaconDeployed(_) => {}
-                    JournalEvent::ColonisationConstructionDepot(_) => {}
-                    JournalEvent::ColonisationContribution(_) => {}
-                    JournalEvent::ColonisationSystemClaim(_) => {}
-                    JournalEvent::ColonisationSystemClaimRelease(_) => {}
+                    Event::ColonisationBeaconDeployed(_) => {}
+                    Event::ColonisationConstructionDepot(_) => {}
+                    Event::ColonisationContribution(_) => {}
+                    Event::ColonisationSystemClaim(_) => {}
+                    Event::ColonisationSystemClaimRelease(_) => {}
 
                     // COMBAT
-                    JournalEvent::CapShipBond(_) => {}
-                    JournalEvent::UnderAttack(_) => {}
-                    JournalEvent::PVPKill(_) => {}
+                    Event::CapShipBond(_) => {}
+                    Event::UnderAttack(_) => {}
+                    Event::PVPKill(_) => {}
 
-                    JournalEvent::FactionKillBond(e) => {
+                    Event::FactionKillBond(e) => {
                         self.combat_bonds
                             .entry(e.awarding_faction.clone())
                             .and_modify(|v| *v = v.saturating_add(e.reward as i64))
                             .or_insert(e.reward as i64);
                     }
 
-                    JournalEvent::Bounty(e) => {
+                    Event::Bounty(e) => {
                         for bounty in e.rewards.unwrap_or_default() {
                             self.bounties
                                 .entry(bounty.faction.clone())
@@ -178,57 +177,57 @@ impl State {
                     }
 
                     // COMMUNITY GOAL
-                    JournalEvent::CommunityGoalJoin(_) => {}
-                    JournalEvent::CommunityGoalDiscard(_) => {}
-                    JournalEvent::CommunityGoalReward(_) => {}
-                    JournalEvent::CommunityGoal(_) => {}
-                    JournalEvent::ScientificResearch(_) => {}
+                    Event::CommunityGoalJoin(_) => {}
+                    Event::CommunityGoalDiscard(_) => {}
+                    Event::CommunityGoalReward(_) => {}
+                    Event::CommunityGoal(_) => {}
+                    Event::ScientificResearch(_) => {}
 
                     // CREW
-                    JournalEvent::QuitACrew(_) => {}
-                    JournalEvent::JoinACrew(_) => {}
-                    JournalEvent::CrewFire(_) => {}
-                    JournalEvent::CrewHire(_) => {}
-                    JournalEvent::KickCrewMember(_) => {}
+                    Event::QuitACrew(_) => {}
+                    Event::JoinACrew(_) => {}
+                    Event::CrewFire(_) => {}
+                    Event::CrewHire(_) => {}
+                    Event::KickCrewMember(_) => {}
 
-                    JournalEvent::CrewAssign(e) => self.logs.push(e.into()),
+                    Event::CrewAssign(e) => self.logs.push(e.into()),
 
-                    JournalEvent::CrewMemberRoleChange(e) => self.logs.push(e.into()),
+                    Event::CrewMemberRoleChange(e) => self.logs.push(e.into()),
 
-                    JournalEvent::CrewLaunchFighter(e) => self.logs.push(e.into()),
+                    Event::CrewLaunchFighter(e) => self.logs.push(e.into()),
 
-                    JournalEvent::ChangeCrewRole(e) => self.logs.push(e.into()),
+                    Event::ChangeCrewRole(e) => self.logs.push(e.into()),
 
-                    JournalEvent::EndCrewSession(e) => self.logs.push(e.into()),
+                    Event::EndCrewSession(e) => self.logs.push(e.into()),
 
-                    JournalEvent::NpcCrewRank(e) => self.logs.push(e.into()),
+                    Event::NpcCrewRank(e) => self.logs.push(e.into()),
 
-                    JournalEvent::CrewMemberJoins(e) => self.logs.push(e.into("joined")),
+                    Event::CrewMemberJoins(e) => self.logs.push(e.into("joined")),
 
-                    JournalEvent::CrewMemberQuits(e) => self.logs.push(e.into("quit")),
+                    Event::CrewMemberQuits(e) => self.logs.push(e.into("quit")),
 
-                    JournalEvent::NpcCrewPaidWage(e) => {
+                    Event::NpcCrewPaidWage(e) => {
                         if e.amount != 0 {
                             self.logs.push(e.into())
                         }
                     }
 
                     // CRIME
-                    JournalEvent::ClearImpound(_) => {}
-                    JournalEvent::CommitCrime(_) => {}
-                    JournalEvent::CrimeVictim(_) => {}
-                    JournalEvent::PayBounties(_) => {}
-                    JournalEvent::PayFines(_) => {}
-                    JournalEvent::HoloscreenHacked(_) => {}
+                    Event::ClearImpound(_) => {}
+                    Event::CommitCrime(_) => {}
+                    Event::CrimeVictim(_) => {}
+                    Event::PayBounties(_) => {}
+                    Event::PayFines(_) => {}
+                    Event::HoloscreenHacked(_) => {}
 
                     // DATA MARKET
-                    JournalEvent::SellExplorationData(_) => {}
-                    JournalEvent::BuyExplorationData(_) => {}
-                    JournalEvent::BuyTradeData(_) => {}
-                    JournalEvent::SellOrganicData(_) => {}
-                    JournalEvent::MultiSellExplorationData(_) => {}
+                    Event::SellExplorationData(_) => {}
+                    Event::BuyExplorationData(_) => {}
+                    Event::BuyTradeData(_) => {}
+                    Event::SellOrganicData(_) => {}
+                    Event::MultiSellExplorationData(_) => {}
 
-                    JournalEvent::RedeemVoucher(e) => {
+                    Event::RedeemVoucher(e) => {
                         let target = match e.r#type.as_str() {
                             "CombatBond" => &mut self.combat_bonds,
                             "bounty" => &mut self.bounties,
@@ -262,135 +261,135 @@ impl State {
                     }
 
                     // ENGINEERING
-                    JournalEvent::EngineerLegacyConvert(_) => {}
-                    JournalEvent::EngineerContribution(_) => {}
-                    JournalEvent::EngineerCraft(_) => {}
+                    Event::EngineerLegacyConvert(_) => {}
+                    Event::EngineerContribution(_) => {}
+                    Event::EngineerCraft(_) => {}
 
-                    JournalEvent::EngineerProgress(e) => self.engineers = e.into(),
+                    Event::EngineerProgress(e) => self.engineers = e.into(),
 
                     // ENVIRONMENT
-                    JournalEvent::JetConeDamage(_) => {}
-                    JournalEvent::CockpitBreached(_) => {}
-                    JournalEvent::HeatWarning(_) => {}
-                    JournalEvent::HeatDamage(_) => {}
-                    JournalEvent::ShipTargeted(_) => {}
-                    JournalEvent::HullDamage(_) => {}
-                    JournalEvent::SelfDestruct(_) => {}
-                    JournalEvent::SystemsShutdown(_) => {}
-                    JournalEvent::ShieldState(_) => {}
-                    JournalEvent::LaunchDrone(_) => {}
-                    JournalEvent::DatalinkVoucher(_) => {}
+                    Event::JetConeDamage(_) => {}
+                    Event::CockpitBreached(_) => {}
+                    Event::HeatWarning(_) => {}
+                    Event::HeatDamage(_) => {}
+                    Event::ShipTargeted(_) => {}
+                    Event::HullDamage(_) => {}
+                    Event::SelfDestruct(_) => {}
+                    Event::SystemsShutdown(_) => {}
+                    Event::ShieldState(_) => {}
+                    Event::LaunchDrone(_) => {}
+                    Event::DatalinkVoucher(_) => {}
 
                     // FIGHTER
-                    JournalEvent::VehicleSwitch(e) => self.logs.push(e.into()),
+                    Event::VehicleSwitch(e) => self.logs.push(e.into()),
 
-                    JournalEvent::LaunchFighter(e) => self.logs.push(e.into()),
+                    Event::LaunchFighter(e) => self.logs.push(e.into()),
 
-                    JournalEvent::FighterRebuilt(e) => self.logs.push(e.into()),
+                    Event::FighterRebuilt(e) => self.logs.push(e.into()),
 
-                    JournalEvent::DockFighter(e) => self.logs.push(e.into()),
+                    Event::DockFighter(e) => self.logs.push(e.into()),
 
-                    JournalEvent::FighterDestroyed(e) => {
+                    Event::FighterDestroyed(e) => {
                         self.logs.push(e.into("Destroyed", "Fighter"))
                     }
 
                     // FSD
-                    JournalEvent::Interdiction(_) => {}
-                    JournalEvent::Interdicted(_) => {}
-                    JournalEvent::EscapeInterdiction(_) => {}
-                    JournalEvent::SupercruiseEntry(_) => {}
-                    JournalEvent::SupercruiseExit(_) => {}
-                    JournalEvent::SupercruiseDestinationDrop(_) => {}
+                    Event::Interdiction(_) => {}
+                    Event::Interdicted(_) => {}
+                    Event::EscapeInterdiction(_) => {}
+                    Event::SupercruiseEntry(_) => {}
+                    Event::SupercruiseExit(_) => {}
+                    Event::SupercruiseDestinationDrop(_) => {}
 
-                    JournalEvent::FSDTarget(_) => {}
+                    Event::FSDTarget(_) => {}
 
-                    JournalEvent::StartJump(e) => self.logs.push(e.into()),
+                    Event::StartJump(e) => self.logs.push(e.into()),
 
-                    JournalEvent::FSDJump(e) => {
+                    Event::FSDJump(e) => {
                         self.current_system = e.star_system.to_string();
                         self.current_body = "".to_string();
                         self.location = e.into();
 
-                        return self.query_system(self.current_system.clone());
+                        return query::system(&self.current_system);
                     }
 
                     // FUEL
-                    JournalEvent::FuelScoop(_) => {}
-                    JournalEvent::ReservoirReplenished(_) => {}
+                    Event::FuelScoop(_) => {}
+                    Event::ReservoirReplenished(_) => {}
 
                     // MARKET
-                    JournalEvent::MarketBuy(_) => {}
-                    JournalEvent::MarketSell(_) => {}
-                    JournalEvent::TechnologyBroker(_) => {}
+                    Event::MarketBuy(_) => {}
+                    Event::MarketSell(_) => {}
+                    Event::TechnologyBroker(_) => {}
 
-                    JournalEvent::Market(e) => {
+                    Event::Market(e) => {
                         if !e.items.is_none() {
                             self.market = e.into();
                         }
                     }
 
                     // MATERIALS
-                    JournalEvent::MaterialDiscarded(_) => {}
-                    JournalEvent::MaterialCollected(_) => {}
-                    JournalEvent::MaterialDiscovered(_) => {}
-                    JournalEvent::MaterialTrade(_) => {}
-                    JournalEvent::Synthesis(_) => {}
+                    Event::MaterialDiscarded(_) => {}
+                    Event::MaterialCollected(_) => {}
+                    Event::MaterialDiscovered(_) => {}
+                    Event::MaterialTrade(_) => {}
+                    Event::Synthesis(_) => {}
 
-                    JournalEvent::Materials(e) => {
+                    Event::Materials(e) => {
                         if !e.is_empty() {
                             self.materials = e.into();
                         }
                     }
 
                     // MICRO RESOURCES
-                    JournalEvent::RequestPowerMicroResources(_) => {}
-                    JournalEvent::TransferMicroResources(_) => {}
-                    JournalEvent::DeliverPowerMicroResources(_) => {}
-                    JournalEvent::SellMicroResources(_) => {}
-                    JournalEvent::TradeMicroResources(_) => {}
-                    JournalEvent::BuyMicroResources(_) => {}
+                    Event::RequestPowerMicroResources(_) => {}
+                    Event::TransferMicroResources(_) => {}
+                    Event::DeliverPowerMicroResources(_) => {}
+                    Event::SellMicroResources(_) => {}
+                    Event::TradeMicroResources(_) => {}
+                    Event::BuyMicroResources(_) => {}
 
                     // MINING
-                    JournalEvent::ProspectedAsteroid(_) => {}
-                    JournalEvent::AsteroidCracked(_) => {}
-                    JournalEvent::MiningRefined(_) => {}
+                    Event::ProspectedAsteroid(_) => {}
+                    Event::AsteroidCracked(_) => {}
+                    Event::MiningRefined(_) => {}
 
                     // MISSIONS
-                    JournalEvent::Missions(_) => { /* this doesn't give us all the info we need */ }
-                    JournalEvent::MissionRedirected(_) => {}
+                    Event::Missions(_) => { /* this doesn't give us all the info we need */ }
+                    Event::MissionRedirected(_) => {}
 
-                    JournalEvent::MissionAccepted(e) => {
+                    Event::MissionAccepted(e) => {
                         self.missions.push(e.into());
                     }
 
-                    JournalEvent::MissionFailed(e) => {
+                    Event::MissionFailed(e) => {
                         self.missions.retain(|m| m.mission_id != e.mission_id);
                     }
 
-                    JournalEvent::MissionAbandoned(e) => {
+                    Event::MissionAbandoned(e) => {
                         self.missions.retain(|m| m.mission_id != e.mission_id);
                     }
 
-                    JournalEvent::MissionCompleted(e) => {
+                    Event::MissionCompleted(e) => {
                         self.missions.retain(|m| m.mission_id != e.mission_id);
                     }
 
                     // NAVIGATION
-                    JournalEvent::ApproachBody(_) => {}
-                    JournalEvent::LeaveBody(_) => {}
-                    JournalEvent::ApproachSettlement(_) => {}
-                    JournalEvent::DockingRequested(_) => {}
-                    JournalEvent::DockingGranted(_) => {}
-                    JournalEvent::DockingTimeout(_) => {}
-                    JournalEvent::DockingDenied(_) => {}
-                    JournalEvent::DockingCancelled(_) => {}
-                    JournalEvent::USSDrop(_) => {}
-                    JournalEvent::Touchdown(_) => {}
-                    JournalEvent::Liftoff(_) => {}
-                    JournalEvent::Undocked(_) => {}
-                    JournalEvent::JetConeBoost(_) => {}
+                    Event::ApproachBody(_) => {}
+                    Event::LeaveBody(_) => {}
+                    Event::ApproachSettlement(_) => {}
+                    Event::DockingRequested(_) => {}
+                    Event::DockingGranted(_) => {}
+                    Event::DockingTimeout(_) => {}
+                    Event::DockingDenied(_) => {}
+                    Event::DockingCancelled(_) => {}
+                    Event::USSDrop(_) => {}
+                    Event::Touchdown(_) => {}
+                    Event::Liftoff(_) => {}
+                    Event::Undocked(_) => {}
+                    Event::JetConeBoost(_) => {}
 
-                    JournalEvent::NavRoute(e) => {
+                    Event::NavRoute(e) => {
                         let route = e.into();
 
                         // The journal file gives us blank NavRoute events when we plot one. Kinda weird.
@@ -399,21 +398,21 @@ impl State {
                         }
                     }
 
-                    JournalEvent::NavRouteClear(_) => {
+                    Event::NavRouteClear(_) => {
                         self.nav_route.clear();
                     }
 
-                    JournalEvent::Disembark(e) => {
+                    Event::Disembark(e) => {
                         self.current_body = e.body.clone();
                         self.logs.push(e.into());
                     }
 
-                    JournalEvent::Embark(e) => {
+                    Event::Embark(e) => {
                         self.current_body = e.body.clone();
                         self.logs.push(e.into());
                     }
 
-                    JournalEvent::Docked(e) => {
+                    Event::Docked(e) => {
                         if let Some(active_fine) = e.active_fine {
                             self.crime.active_fine = active_fine;
                         }
@@ -422,7 +421,7 @@ impl State {
                         }
                     }
 
-                    JournalEvent::Location(e) => {
+                    Event::Location(e) => {
                         self.current_system = e.star_system.clone();
 
                         if e.body_type != "Star" {
@@ -433,34 +432,34 @@ impl State {
                     }
 
                     // OUTFITTING
-                    JournalEvent::Outfitting(_) => {}
-                    JournalEvent::ModuleInfo(_) => {}
-                    JournalEvent::ModuleBuyAndStore(_) => {}
-                    JournalEvent::ModuleSell(_) => {}
-                    JournalEvent::ModuleStore(_) => {}
-                    JournalEvent::ModuleRetrieve(_) => {}
-                    JournalEvent::MassModuleStore(_) => {}
-                    JournalEvent::ModuleSwap(_) => {}
-                    JournalEvent::ModuleBuy(_) => {}
-                    JournalEvent::ModuleSellRemote(_) => {}
-                    JournalEvent::FetchRemoteModule(_) => {}
-                    JournalEvent::StoredModules(_) => {}
+                    Event::Outfitting(_) => {}
+                    Event::ModuleInfo(_) => {}
+                    Event::ModuleBuyAndStore(_) => {}
+                    Event::ModuleSell(_) => {}
+                    Event::ModuleStore(_) => {}
+                    Event::ModuleRetrieve(_) => {}
+                    Event::MassModuleStore(_) => {}
+                    Event::ModuleSwap(_) => {}
+                    Event::ModuleBuy(_) => {}
+                    Event::ModuleSellRemote(_) => {}
+                    Event::FetchRemoteModule(_) => {}
+                    Event::StoredModules(_) => {}
 
-                    JournalEvent::Loadout(e) => self.ship_loadout = e.into(),
+                    Event::Loadout(e) => self.ship_loadout = e.into(),
 
                     // PASSENGERS
-                    JournalEvent::Passengers(_) => {}
-                    JournalEvent::SearchAndRescue(_) => {}
+                    Event::Passengers(_) => {}
+                    Event::SearchAndRescue(_) => {}
 
                     // PERSONAL
-                    JournalEvent::Statistics(_) => {}
-                    JournalEvent::Promotion(_) => {}
+                    Event::Statistics(_) => {}
+                    Event::Promotion(_) => {}
 
-                    JournalEvent::Commander(commander) => {
+                    Event::Commander(commander) => {
                         self.commander_name = "CMDR ".to_owned() + &commander.name;
                     }
 
-                    JournalEvent::Status(e) => {
+                    Event::Status(e) => {
                         if let Some(balance) = e.balance {
                             self.credits = balance.separate_with_commas() + " CR";
                         }
@@ -473,67 +472,67 @@ impl State {
                         }
                     }
 
-                    JournalEvent::Rank(e) => self.rank = e.into(),
+                    Event::Rank(e) => self.rank = e.into(),
 
-                    JournalEvent::Progress(e) => self.progress = e.into(),
+                    Event::Progress(e) => self.progress = e.into(),
 
-                    JournalEvent::Reputation(e) => self.reputation = e.into(),
+                    Event::Reputation(e) => self.reputation = e.into(),
 
                     // POWERPLAY
-                    JournalEvent::Powerplay(_) => {}
-                    JournalEvent::PowerplayJoin(_) => {}
-                    JournalEvent::PowerplayMerits(_) => {}
-                    JournalEvent::PowerplayRank(_) => {}
-                    JournalEvent::PowerplayFastTrack(_) => {}
-                    JournalEvent::PowerplayCollect(_) => {}
-                    JournalEvent::PowerplayVoucher(_) => {}
-                    JournalEvent::PowerplayVote(_) => {}
-                    JournalEvent::PowerplayDefect(_) => {}
-                    JournalEvent::PowerplayDeliver(_) => {}
-                    JournalEvent::PowerplaySalary(_) => {}
-                    JournalEvent::PowerplayLeave(_) => {}
+                    Event::Powerplay(_) => {}
+                    Event::PowerplayJoin(_) => {}
+                    Event::PowerplayMerits(_) => {}
+                    Event::PowerplayRank(_) => {}
+                    Event::PowerplayFastTrack(_) => {}
+                    Event::PowerplayCollect(_) => {}
+                    Event::PowerplayVoucher(_) => {}
+                    Event::PowerplayVote(_) => {}
+                    Event::PowerplayDefect(_) => {}
+                    Event::PowerplayDeliver(_) => {}
+                    Event::PowerplaySalary(_) => {}
+                    Event::PowerplayLeave(_) => {}
 
                     // SCAN
-                    JournalEvent::Scan(_) => {}
-                    JournalEvent::ScanBaryCentre(_) => {}
-                    JournalEvent::ScanOrganic(_) => {}
-                    JournalEvent::Scanned(_) => {}
-                    JournalEvent::CodexEntry(_) => {}
-                    JournalEvent::DatalinkScan(_) => {}
-                    JournalEvent::NavBeaconScan(_) => {}
-                    JournalEvent::DiscoveryScan(_) => {}
-                    JournalEvent::DataScanned(_) => {}
-                    JournalEvent::FSSBodySignals(_) => {}
-                    JournalEvent::FSSDiscoveryScan(_) => {}
-                    JournalEvent::FSSAllBodiesFound(_) => {}
-                    JournalEvent::FSSSignalDiscovered(_) => {}
-                    JournalEvent::SAASignalsFound(_) => {}
-                    JournalEvent::SAAScanComplete(_) => {}
+                    Event::Scan(_) => {}
+                    Event::ScanBaryCentre(_) => {}
+                    Event::ScanOrganic(_) => {}
+                    Event::Scanned(_) => {}
+                    Event::CodexEntry(_) => {}
+                    Event::DatalinkScan(_) => {}
+                    Event::NavBeaconScan(_) => {}
+                    Event::DiscoveryScan(_) => {}
+                    Event::DataScanned(_) => {}
+                    Event::FSSBodySignals(_) => {}
+                    Event::FSSDiscoveryScan(_) => {}
+                    Event::FSSAllBodiesFound(_) => {}
+                    Event::FSSSignalDiscovered(_) => {}
+                    Event::SAASignalsFound(_) => {}
+                    Event::SAAScanComplete(_) => {}
 
                     // SESSION
-                    JournalEvent::Continued(_) => {}
-                    JournalEvent::NewCommander(_) => {}
-                    JournalEvent::Friends(_) => {}
-                    JournalEvent::ClearSavedGame(_) => {}
-                    JournalEvent::Screenshot(_) => {}
-                    JournalEvent::Fileheader(_) => {}
-                    JournalEvent::SendText(_) => {}
-                    JournalEvent::Died(_) => {}
-                    JournalEvent::Resurrect(_) => {}
-                    JournalEvent::Music(_) => {}
+                    Event::Continued(_) => {}
+                    Event::NewCommander(_) => {}
+                    Event::Friends(_) => {}
+                    Event::ClearSavedGame(_) => {}
+                    Event::Screenshot(_) => {}
+                    Event::Fileheader(_) => {}
+                    Event::SendText(_) => {}
+                    Event::Died(_) => {}
+                    Event::Resurrect(_) => {}
+                    Event::Music(_) => {}
 
-                    JournalEvent::LoadGame(_) => {
+                    Event::LoadGame(_) => {
                         self.nav_route.clear();
                     }
 
-                    JournalEvent::ReceiveText(e) => {
+                    Event::ReceiveText(e) => {
 
                         if self.first_message_timestamp == 0 {
                             self.first_message_timestamp = e.timestamp.timestamp();
                         }
                         else {
                             self.latest_message_timestamp = e.timestamp.timestamp();
-                            self.latest_message_timestamp_formatted = prettify_date(&e.timestamp)
+                            self.latest_message_timestamp_formatted = format::prettify_date(&e.timestamp)
                         }
 
                         if e.channel != "npc" && e.channel != "starsystem" {
@@ -541,137 +540,100 @@ impl State {
                         }
                     }
 
-                    JournalEvent::Shutdown(_) => {
+                    Event::Shutdown(_) => {
                         self.nav_route.clear();
                     }
 
                     // SHIP LOCKER
-                    JournalEvent::ShipLockerMaterials(_) => {}
+                    Event::ShipLockerMaterials(_) => {}
 
-                    JournalEvent::ShipLocker(e) => {
+                    Event::ShipLocker(e) => {
                         if !e.is_empty() {
                             self.ship_locker = e.into();
                         }
                     }
 
                     // SHIP MAINTENANCE
-                    JournalEvent::RefuelAll(_) => {}
-                    JournalEvent::RefuelPartial(_) => {}
-                    JournalEvent::RepairAll(_) => {}
-                    JournalEvent::Repair(_) => {}
-                    JournalEvent::Resupply(_) => {}
-                    JournalEvent::BuyDrones(_) => {}
-                    JournalEvent::RepairDrone(_) => {}
-                    JournalEvent::SellDrones(_) => {}
-                    JournalEvent::RebootRepair(_) => {}
-                    JournalEvent::AfmuRepairs(_) => {}
+                    Event::RefuelAll(_) => {}
+                    Event::RefuelPartial(_) => {}
+                    Event::RepairAll(_) => {}
+                    Event::Repair(_) => {}
+                    Event::Resupply(_) => {}
+                    Event::BuyDrones(_) => {}
+                    Event::RepairDrone(_) => {}
+                    Event::SellDrones(_) => {}
+                    Event::RebootRepair(_) => {}
+                    Event::AfmuRepairs(_) => {}
 
-                    JournalEvent::RestockVehicle(e) => self.logs.push(e.into()),
+                    Event::RestockVehicle(e) => self.logs.push(e.into()),
 
                     // SHIPYARD
-                    JournalEvent::Shipyard(_) => {}
-                    JournalEvent::ShipyardNew(_) => {}
-                    JournalEvent::ShipyardRedeem(_) => {}
-                    JournalEvent::ShipyardBuy(_) => {}
-                    JournalEvent::ShipRedeemed(_) => {}
-                    JournalEvent::ShipyardSwap(_) => {}
-                    JournalEvent::ShipyardSell(_) => {}
-                    JournalEvent::ShipyardTransfer(_) => {}
-                    JournalEvent::SellShipOnRebuy(_) => {}
-                    JournalEvent::StoredShips(_) => {}
-                    JournalEvent::SetUserShipName(_) => {}
+                    Event::Shipyard(_) => {}
+                    Event::ShipyardNew(_) => {}
+                    Event::ShipyardRedeem(_) => {}
+                    Event::ShipyardBuy(_) => {}
+                    Event::ShipRedeemed(_) => {}
+                    Event::ShipyardSwap(_) => {}
+                    Event::ShipyardSell(_) => {}
+                    Event::ShipyardTransfer(_) => {}
+                    Event::SellShipOnRebuy(_) => {}
+                    Event::StoredShips(_) => {}
+                    Event::SetUserShipName(_) => {}
 
                     // SQUADRON
-                    JournalEvent::SquadronStartup(_) => {}
-                    JournalEvent::SquadronCreated(_) => {}
-                    JournalEvent::SquadronDemotion(_) => {}
-                    JournalEvent::SquadronPromotion(_) => {}
-                    JournalEvent::DisbandedSquadron(_) => {}
-                    JournalEvent::InvitedToSquadron(_) => {}
-                    JournalEvent::AppliedToSquadron(_) => {}
-                    JournalEvent::JoinedSquadron(_) => {}
-                    JournalEvent::KickedFromSquadron(_) => {}
-                    JournalEvent::LeftSquadron(_) => {}
-                    JournalEvent::SharedBookmarkToSquadron(_) => {}
+                    Event::SquadronStartup(_) => {}
+                    Event::SquadronCreated(_) => {}
+                    Event::SquadronDemotion(_) => {}
+                    Event::SquadronPromotion(_) => {}
+                    Event::DisbandedSquadron(_) => {}
+                    Event::InvitedToSquadron(_) => {}
+                    Event::AppliedToSquadron(_) => {}
+                    Event::JoinedSquadron(_) => {}
+                    Event::KickedFromSquadron(_) => {}
+                    Event::LeftSquadron(_) => {}
+                    Event::SharedBookmarkToSquadron(_) => {}
 
                     // SRV
-                    JournalEvent::DockSRV(_) => {}
-                    JournalEvent::LaunchSRV(_) => {}
-                    JournalEvent::SRVDestroyed(_) => {}
+                    Event::DockSRV(_) => {}
+                    Event::LaunchSRV(_) => {}
+                    Event::SRVDestroyed(_) => {}
 
                     // SUIT LOADOUT
-                    JournalEvent::BuySuit(_) => {}
-                    JournalEvent::SellSuit(_) => {}
-                    JournalEvent::UpgradeSuit(_) => {}
-                    JournalEvent::CreateSuitLoadout(_) => {}
-                    JournalEvent::RenameSuitLoadout(_) => {}
-                    JournalEvent::DeleteSuitLoadout(_) => {}
-                    JournalEvent::SwitchSuitLoadout(_) => {}
+                    Event::BuySuit(_) => {}
+                    Event::SellSuit(_) => {}
+                    Event::UpgradeSuit(_) => {}
+                    Event::CreateSuitLoadout(_) => {}
+                    Event::RenameSuitLoadout(_) => {}
+                    Event::DeleteSuitLoadout(_) => {}
+                    Event::SwitchSuitLoadout(_) => {}
 
-                    JournalEvent::SuitLoadout(e) => self.suit_loadout = e.into(),
+                    Event::SuitLoadout(e) => self.suit_loadout = e.into(),
 
                     // TAXI
-                    JournalEvent::BookTaxi(_) => {}
-                    JournalEvent::CancelTaxi(_) => {}
-                    JournalEvent::BookDropship(_) => {}
-                    JournalEvent::CancelDropship(_) => {}
-                    JournalEvent::DropshipDeploy(_) => {}
+                    Event::BookTaxi(_) => {}
+                    Event::CancelTaxi(_) => {}
+                    Event::BookDropship(_) => {}
+                    Event::CancelDropship(_) => {}
+                    Event::DropshipDeploy(_) => {}
 
                     // WEAPON
-                    JournalEvent::BuyWeapon(_) => {}
-                    JournalEvent::SellWeapon(_) => {}
-                    JournalEvent::UpgradeWeapon(_) => {}
-                    JournalEvent::LoadoutRemoveModule(_) => {}
-                    JournalEvent::LoadoutEquipModule(_) => {}
+                    Event::BuyWeapon(_) => {}
+                    Event::SellWeapon(_) => {}
+                    Event::UpgradeWeapon(_) => {}
+                    Event::LoadoutRemoveModule(_) => {}
+                    Event::LoadoutEquipModule(_) => {}
 
-                    JournalEvent::BuyAmmo(e) => self.logs.push(e.into("ammo")),
+                    Event::BuyAmmo(e) => self.logs.push(e.into("ammo")),
 
                     // WING
-                    JournalEvent::WingAdd(_) => {}
-                    JournalEvent::WingInvite(_) => {}
-                    JournalEvent::WingJoin(_) => {}
-                    JournalEvent::WingLeave(_) => {}
+                    Event::WingAdd(_) => {}
+                    Event::WingInvite(_) => {}
+                    Event::WingJoin(_) => {}
+                    Event::WingLeave(_) => {}
                 }
             }
         }
 
         Task::none()
-    }
-
-    fn query_system(&self, star_system: String) -> Task<Message> {
-        if !self.journal_loaded { return Task::none(); }
-
-        info!("Querying system: {}", star_system);
-        
-        macro_rules! fetch {
-            ($method:ident, $Msg:ident, $label:literal) => {{
-                let name = star_system.clone();
-                Task::perform(async move {
-                    let client = EdsmClient::default();
-                    match client.$method(name.as_str()).await {
-                        Ok(v) => Message::$Msg(v),
-                        Err(error) => { warn!("Failed to fetch {}: {}", $label, error); Message::Empty }
-                    }
-                }, |m| m)
-            }};
-            ($method:ident, $arg:expr, $Msg:ident, $label:literal) => {{
-                let name = star_system.clone();
-                Task::perform(async move {
-                    let client = EdsmClient::default();
-                    match client.$method(name.as_str(), $arg).await {
-                        Ok(v) => Message::$Msg(v),
-                        Err(error) => { warn!("Failed to fetch {}: {}", $label, error); Message::Empty }
-                    }
-                }, |m| m)
-            }};
-        }
-
-        Task::batch(vec![
-            fetch!(get_bodies, BodiesQueried, "bodies"),
-            fetch!(get_stations, StationsQueried, "stations"),
-            fetch!(get_factions, FactionsQueried, "factions"),
-            fetch!(get_traffic, TrafficQueried, "traffic"),
-            fetch!(get_deaths, DeathsQueried, "deaths"),
-        ])
     }
 }

@@ -1,5 +1,6 @@
-use crate::event::format::prettify_date;
-use crate::{event, state};
+use crate::journal::event;
+use crate::state;
+use crate::journal::format::prettify_date;
 
 impl Into<state::GameEventLog> for event::FighterRebuilt {
     fn into(self) -> state::GameEventLog {

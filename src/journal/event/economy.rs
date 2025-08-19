@@ -1,5 +1,6 @@
-use crate::{event, state};
-use crate::text::title_case;
+use crate::journal::event;
+use crate::journal::format::title_case;
+use crate::state;
 
 impl Into<state::Market> for event::Market {
     fn into(self) -> state::Market {

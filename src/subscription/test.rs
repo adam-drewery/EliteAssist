@@ -1,14 +1,14 @@
 use std::path::PathBuf;
-use crate::event::JournalEvent;
 use regex::Regex;
 use std::fs;
 use serde_json::Value;
+use crate::journal;
 
 fn test_deserialize_file(path: &PathBuf) -> Result<(), String> {
     let content = fs::read_to_string(path)
         .map_err(|e| format!("Failed to read {}: {}", path.display(), e))?;
 
-    serde_json::from_str::<Vec<JournalEvent>>(&content).map_err(|e| {
+    serde_json::from_str::<Vec<journal::Event>>(&content).map_err(|e| {
         let error = format!("Failed to deserialize {}: {}", path.display(), e);
         let re = Regex::new(r"(.*?), expected one of.*?(at line \d+ column \d+)").unwrap();
         if let Some(captures) = re.captures(&error) {
