@@ -50,7 +50,6 @@ pub fn locations_for_item(name: &str) -> Vec<String> {
     get_items(&ITEM_LOCATIONS, name)
 }
 
-// Cache of all (material, location) pairs scraped from Inara. Initialized once on first use.
 static MATERIAL_LOCATIONS: sync::OnceCell<HashMap<String, Vec<String>>> = sync::OnceCell::const_new();
 
 static ITEM_LOCATIONS: sync::OnceCell<HashMap<String, Vec<String>>> = sync::OnceCell::const_new();
@@ -90,7 +89,6 @@ pub async fn load() {
     init_locations!(MATERIAL_LOCATIONS, material_locations);
 }
 
-// Ship image bytes lookup: maps ship names and common aliases to image bytes (exact match)
 pub static SHIP_IMAGES: Map<&'static str, &'static [u8]> = phf_map! {
     // Core names (as displayed)
     "Adder" => ADDER_PNG,

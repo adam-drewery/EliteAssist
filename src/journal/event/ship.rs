@@ -3,6 +3,7 @@ use crate::journal::event;
 use crate::state;
 
 impl Into<state::ShipModule> for event::LoadoutModule {
+    
     fn into(self) -> state::ShipModule {
 
         let (class, rating, name, mount) = Outfitting::metadata(&self.item)
@@ -32,6 +33,7 @@ impl Into<state::ShipModule> for event::LoadoutModule {
 }
 
 impl Into<state::FuelCapacity> for event::LoadoutFuelCapacity {
+    
     fn into(self) -> state::FuelCapacity {
         state::FuelCapacity {
             main: self.main,

@@ -33,11 +33,20 @@ pub fn theme(_state: &State) -> Theme {
 }
 
 pub mod style {
+    
     use crate::theme::{BACKGROUND, DARK_GRAY, ORANGE, WHITE};
     use iced::border::radius;
     use iced::widget::container;
     use iced::Background::Color;
     use iced::{Border, Theme};
+    
+    fn orange_border() -> Border {
+        Border {
+            width: 1.0,
+            color: ORANGE,
+            radius: radius(0)
+        }
+    }
 
     pub fn header(_theme: &Theme) -> container::Style {
         container::Style {
@@ -52,11 +61,7 @@ pub mod style {
         container::Style {
             background: Some(DARK_GRAY.into()),
             text_color: Some(WHITE),
-            border: Border {
-                width: 0.0,
-                color: ORANGE,
-                radius: radius(0),
-            },
+            border: Default::default(),
             shadow: Default::default(),
         }
     }
@@ -65,11 +70,7 @@ pub mod style {
         container::Style {
             background: None,
             text_color: Some(WHITE),
-            border: Border {
-                width: 1.0,
-                color: ORANGE,
-                radius: radius(0),
-            },
+            border: orange_border(),
             shadow: Default::default(),
         }
     }
@@ -78,11 +79,7 @@ pub mod style {
         container::Style {
             background: Some(Color(BACKGROUND)),
             text_color: Some(ORANGE),
-            border: Border {
-                width: 1.0,
-                color: ORANGE,
-                radius: radius(0),
-            },
+            border: orange_border(),
             shadow: Default::default(),
         }
     }
@@ -91,11 +88,7 @@ pub mod style {
         iced::widget::progress_bar::Style {
             background: DARK_GRAY.into(),
             bar: ORANGE.into(),
-            border: Border {
-                width: 1.0,
-                color: ORANGE,
-                radius: radius(0),
-            },
+            border: orange_border(),
         }
     }
 }

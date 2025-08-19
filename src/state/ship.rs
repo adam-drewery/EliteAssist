@@ -18,7 +18,10 @@ pub struct ShipLoadout {
     pub max_jump_range: f64,
     pub fuel_capacity: FuelCapacity,
     pub rebuy: u64,
-    pub modules: Vec<ShipModule>
+    pub hardpoints: Vec<ShipModule>,
+    pub utilities: Vec<ShipModule>,
+    pub core_internals: Vec<ShipModule>,
+    pub optional_internals: Vec<ShipModule>,
 }
 
 pub struct ShipModule {

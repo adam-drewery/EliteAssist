@@ -1,18 +1,12 @@
-pub mod eurostile {
+use iced::Font;
 
-    use iced::Font;
+pub const EUROSTILE: Font = Font::with_name("Eurostile");
 
-    pub const FONT_BYTES: &[u8] = include_bytes!("../font/eurostile.ttf");
+pub const EURO_CAPS: Font = Font::with_name("Euro Caps");
 
-    pub const FONT: Font = Font::with_name("Eurostile");
-}
+pub mod bytes {
+    
+    pub const EUROSTILE: &[u8] = include_bytes!("../font/eurostile.ttf");
 
-//noinspection SpellCheckingInspection
-pub mod eurocaps {
-
-    use iced::Font;
-
-    pub const FONT_BYTES: &[u8] = include_bytes!("../font/eurocaps.ttf");
-
-    pub const FONT: Font = Font::with_name("Euro Caps");
+    pub const EURO_CAPS: &[u8] = include_bytes!("../font/eurocaps.ttf");
 }

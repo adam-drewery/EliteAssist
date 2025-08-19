@@ -46,7 +46,8 @@ pub struct Material {
     pub id: String,
     pub symbol: String,
     pub rarity: String,
-    #[serde(rename = "type")] pub r#type: String,
+    #[serde(rename = "type")] 
+    pub r#type: String,
     pub category: String,
     pub name: String,
 }

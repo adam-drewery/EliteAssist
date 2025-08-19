@@ -50,6 +50,24 @@ impl Into<state::ShipLoadout> for event::Loadout {
     fn into(self) -> state::ShipLoadout {
 
         let ship_type = Shipyard::metadata(&self.ship);
+
+        // Convert and categorize modules by slot type
+        let mut hardpoints: Vec<state::ShipModule> = Vec::new();
+        let mut utilities: Vec<state::ShipModule> = Vec::new();
+        let mut core_internals: Vec<state::ShipModule> = Vec::new();
+        let mut optional_internals: Vec<state::ShipModule> = Vec::new();
+
+        for m in self.modules.into_iter() {
+            let module: state::ShipModule = m.into();
+            match &module.slot {
+                state::SlotType::Hardpoints { size, .. } => {
+                    if *size == 0 { utilities.push(module); } else { hardpoints.push(module); }
+                }
+                state::SlotType::CoreInternal(_) => core_internals.push(module),
+                state::SlotType::OptionalInternal(_) => optional_internals.push(module),
+                state::SlotType::Cosmetic(_) | state::SlotType::Miscellaneous(_) | state::SlotType::Unknown(_) => {}
+            }
+        }
         
         state::ShipLoadout {
             timestamp: self.timestamp,
@@ -67,8 +85,11 @@ impl Into<state::ShipLoadout> for event::Loadout {
                 main: self.fuel_capacity.main,
                 reserve: self.fuel_capacity.reserve,
             },
-            modules: self.modules.into_iter().map(|m| m.into()).collect(),
             rebuy: self.rebuy,
+            hardpoints,
+            utilities,
+            core_internals,
+            optional_internals,
         }
     }
 }

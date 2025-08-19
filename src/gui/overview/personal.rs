@@ -6,7 +6,7 @@ use iced::widget::{column, container, progress_bar, row, scrollable, text, Colum
 use iced::{Element, Fill};
 use crate::centered_row;
 use crate::lookup::fdev_ids::Rank;
-use crate::font::eurocaps::FONT;
+use crate::font::EURO_CAPS;
 
 pub fn loadout(state: &State) -> Column<'_, Message> {
     column![
@@ -63,12 +63,12 @@ fn rank(title: &str, rank: u64, progress: u64, lookup: fn(&String) -> Option<&Ra
     column![
         container(
             column![
-                centered_row![text(title).size(16).color(ORANGE).font(FONT)].padding(4),
+                centered_row![text(title).size(16).color(ORANGE).font(EURO_CAPS)].padding(4),
                 row![progress_bar(0f32..=100f32, progress as f32).height(8).style(style::progress_bar)].padding(4),
                 centered_row![
                     row![
-                        text(rank_name).size(16).color(WHITE).font(FONT),
-                        text(format![" ({})", rank]).size(16).color(GRAY).font(FONT)
+                        text(rank_name).size(16).color(WHITE).font(EURO_CAPS),
+                        text(format![" ({})", rank]).size(16).color(GRAY).font(EURO_CAPS)
                     ]
                 ].padding(4)
             ]
@@ -94,7 +94,7 @@ fn superpower_rank(title: &str, rank: Option<u64>, progress: Option<u64>, reputa
     column![
         container(
             column![
-                centered_row![text(title).size(16).color(ORANGE).font(FONT)].padding(4),
+                centered_row![text(title).size(16).color(ORANGE).font(EURO_CAPS)].padding(4),
 
                     if progress.is_some() {
                         row![
@@ -109,9 +109,9 @@ fn superpower_rank(title: &str, rank: Option<u64>, progress: Option<u64>, reputa
                 centered_row![
                     if rank.is_some() {
                         row![
-                            text("Rank  ").size(16).color(GRAY).font(FONT),
-                            text(rank_name).size(16).color(WHITE).font(FONT),
-                            text(format![" ({})", rank.unwrap_or(0)]).size(16).color(GRAY).font(FONT)
+                            text("Rank  ").size(16).color(GRAY).font(EURO_CAPS),
+                            text(rank_name).size(16).color(WHITE).font(EURO_CAPS),
+                            text(format![" ({})", rank.unwrap_or(0)]).size(16).color(GRAY).font(EURO_CAPS)
                         ]
                     } else {
                         row![].height(29).into() // weird hack to get the text to line up
@@ -124,14 +124,14 @@ fn superpower_rank(title: &str, rank: Option<u64>, progress: Option<u64>, reputa
                 ].padding(4),
                 centered_row![
                     row![
-                        text("Reputation  ").size(16).color(GRAY).font(FONT),
+                        text("Reputation  ").size(16).color(GRAY).font(EURO_CAPS),
                         text(
                             if reputation > 0.75 { "Allied" }
                             else if reputation > 0.35 { "Friendly" }
                             else if reputation > 0.15 { "Cordial" }
                             else if reputation > 0.0 { "Neutral" }
                             else { "Unfriendly" }
-                        ).size(16).color(WHITE).font(FONT)
+                        ).size(16).color(WHITE).font(EURO_CAPS)
                         ]
                 ].padding(4)
             ]

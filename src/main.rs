@@ -6,7 +6,7 @@ use crate::subscription::subscription;
 use crate::theme::theme;
 
 mod gui;
-pub mod journal;
+mod journal;
 mod state;
 mod subscription;
 mod theme;
@@ -30,9 +30,9 @@ async fn main() {
     lookup::load().await;
 
     let _ = iced::application("EliteAssist", Gui::update, Gui::view)
-        .font(font::eurostile::FONT_BYTES)
-        .font(font::eurocaps::FONT_BYTES)
-        .default_font(font::eurostile::FONT)
+        .font(font::bytes::EUROSTILE)
+        .font(font::bytes::EURO_CAPS)
+        .default_font(font::EUROSTILE)
         .subscription(subscription)
         .theme(theme)
         .window_size(Size::new(1920.0, 1080.0))

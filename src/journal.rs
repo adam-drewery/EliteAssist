@@ -161,7 +161,7 @@ impl JournalWatcher {
             reader.seek(SeekFrom::End(0))?;
             (Some(reader), path, idx)
         } else {
-            info!("No journal files found. Waiting for files to be created...");
+            info!("No journal files were found. Waiting for files to be created...");
             (None, dir_path.clone(), 0)
         };
 
@@ -222,7 +222,7 @@ impl JournalWatcher {
         loop {
             // Check if we have a reader
             if let Some(reader) = &mut self.reader {
-                // Try to read next line from current file
+                // Try to read the next line from the current file
                 let mut buffer = String::new();
                 let bytes_read = reader.read_line(&mut buffer)?;
                 if bytes_read > 0 {
@@ -244,7 +244,7 @@ impl JournalWatcher {
                 let increased = journal_files.len() > self.journal_files.len();
                 let had_none = self.reader.is_none();
                 if increased {
-                    info!("New journal file detected, switching to newest file");
+                    info!("New journal file detected, switching to the newest file");
                     self.journal_files = journal_files;
                     self.current_file_index = self.journal_files.len() - 1;
                     self.current_journal_path = self.journal_files[self.current_file_index].clone();
@@ -272,7 +272,7 @@ impl JournalWatcher {
 
 ///
 fn get_journal_paths(dir: &Path) -> Result<Vec<PathBuf>, JournalError> {
-    // Check if directory exists; let the caller decide what to do if it doesn't
+    // Check if a directory exists; let the caller decide what to do if it doesn't
     if !dir.exists() {
         return Err(JournalError::DirectoryNotFound(dir.display().to_string()));
     }
@@ -314,13 +314,13 @@ fn get_journal_paths(dir: &Path) -> Result<Vec<PathBuf>, JournalError> {
 /// # Returns
 ///
 /// * `Result<Option<JournalEvent>, JournalError>`:
-///   - `Ok(Some(JournalEvent))`: If the file was updated and a valid `JournalEvent` was created after parsing its content.
+///   - `Ok(Some(JournalEvent))`: If the file was updated, and a valid `JournalEvent` was created after parsing its content.
 ///   - `Ok(None)`: If the file does not exist, is empty, or has not been modified since the last check.
 ///   - `Err(JournalError)`: If an error occurred during file operations, parsing, or metadata retrieval.
 ///
 /// # Behavior
 ///
-/// 1. The function checks whether the file specified in `
+/// 1. The function checks whether the file is specified in `
 fn check_snapshot_file(file_details: &mut FileDetails) -> Result<Option<Event>, JournalError> {
     // Check if the file exists
     if !file_details.path.exists() {
@@ -331,7 +331,7 @@ fn check_snapshot_file(file_details: &mut FileDetails) -> Result<Option<Event>, 
     let metadata = std::fs::metadata(&file_details.path)?;
     let modified = metadata.modified()?;
 
-    // Check if file has been modified since last check
+    // Check if a file has been modified since the last check
     if modified > file_details.last_modified {
         let mut line = String::new();
         let mut file_reader = BufReader::new(File::open(&file_details.path)?);
@@ -388,7 +388,7 @@ fn spawn_dir_watcher(tx: mpsc::Sender<()>, target_dir: PathBuf) {
                 }
             },
             Config::default(),
-        ).expect("Failed to create file watcher");
+        ).expect("Failed to create a file watcher");
 
         if let Err(e) = watcher.watch(&watch_path, mode) {
             error!("Failed to watch {}: {}", watch_path.display(), e);
@@ -409,12 +409,12 @@ pub struct SnapshotWatcher {
 }
 
 impl SnapshotWatcher {
-    /// Creates a new instance of the containing struct, initializing components necessary
+    /// Creates a new instance of the containing struct, initializing the components necessary
     pub fn new(path: PathBuf) -> Self {
         let (watcher_tx, watcher_rx) = mpsc::channel(32);
         // Watch the specific file; if it doesn't exist yet, spawn_dir_watcher will watch the parent recursively
         spawn_dir_watcher(watcher_tx.clone(), path.clone());
-        // Seed last_modified to current file's modified time to avoid emitting initial snapshot contents
+        // Seed last_modified to the current file's modified time to avoid emitting initial snapshot contents
         let mut file_details = FileDetails::new(path);
         if let Ok(meta) = std::fs::metadata(&file_details.path) {
             if let Ok(modified) = meta.modified() {
@@ -565,7 +565,7 @@ impl HistoryLoader {
             .into_iter()
             .map(Message::JournalEvent)
             .collect();
-        // Apply snapshots last to reflect current state
+        // Apply snapshots last to reflect the current state
         msgs.extend(snapshot_events.into_iter().map(Message::JournalEvent));
         msgs.push(Message::JournalLoaded);
         Ok(msgs)
@@ -591,7 +591,7 @@ impl HistoryLoader {
     ///    - Any errors encountered
     pub fn load_state(&self) -> Result<State, JournalError> {
         let mut state = State::default();
-        // Build from events only; do not trigger JournalLoaded side-effects here
+        // Build from events only; do not trigger JournalLoaded side effects here
         for ev in self.read_all_journal_events()? {
             let _ = state.update_from(Message::JournalEvent(ev));
         }
