@@ -49,7 +49,7 @@ async fn test_get_stations() {
 }
 
 #[tokio::test]
-#[ignore]
+#[ignore] // this endpoint just doesn't work MOST of the time. It doesn't even return an empty array but instead an empty object.
 async fn test_get_sphere_systems() {
     let client = EdsmClient::default();
     let systems = client.get_sphere_systems("Sol", 10.0).await.unwrap();

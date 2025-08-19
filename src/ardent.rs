@@ -127,7 +127,7 @@ impl ArdentClient {
         &self,
         commodity_name: &str,
         params: Option<CommodityQueryParams>
-    ) -> Result<Vec<TradeOrder>, ArdentError> {
+    ) -> Result<Vec<Commodity>, ArdentError> {
         let path = format!("commodity/name/{}/imports", commodity_name);
         let query_params = params.unwrap_or_default();
         let query = query_params.to_query_params();
@@ -139,7 +139,7 @@ impl ArdentClient {
         &self,
         commodity_name: &str,
         params: Option<CommodityQueryParams>
-    ) -> Result<Vec<TradeOrder>, ArdentError> {
+    ) -> Result<Vec<Commodity>, ArdentError> {
         let path = format!("commodity/name/{}/exports", commodity_name);
         let query_params = params.unwrap_or_default();
         let query = query_params.to_query_params();
@@ -190,7 +190,7 @@ impl ArdentClient {
     }
 
     /// GET https://api.ardent-insight.com/v2/system/name/{systemName}/commodities
-    pub async fn get_system_commodities(&self, system_name: &str) -> Result<Vec<SystemCommodity>, ArdentError> {
+    pub async fn get_system_commodities(&self, system_name: &str) -> Result<Vec<Commodity>, ArdentError> {
         let path = format!("system/name/{}/commodities", system_name);
         self.get_json(&path, &[]).await
     }
@@ -200,7 +200,7 @@ impl ArdentClient {
         &self,
         system_name: &str,
         params: Option<CommodityQueryParams>
-    ) -> Result<Vec<TradeOrder>, ArdentError> {
+    ) -> Result<Vec<Commodity>, ArdentError> {
         let path = format!("system/name/{}/commodities/imports", system_name);
         let query_params = params.unwrap_or_default();
         let query = query_params.to_query_params();
@@ -212,7 +212,7 @@ impl ArdentClient {
         &self,
         system_name: &str,
         params: Option<CommodityQueryParams>
-    ) -> Result<Vec<TradeOrder>, ArdentError> {
+    ) -> Result<Vec<Commodity>, ArdentError> {
         let path = format!("system/name/{}/commodities/exports", system_name);
         let query_params = params.unwrap_or_default();
         let query = query_params.to_query_params();
@@ -225,7 +225,7 @@ impl ArdentClient {
         system_name: &str,
         commodity_name: &str,
         max_days_ago: Option<u32>
-    ) -> Result<Vec<TradeOrder>, ArdentError> {
+    ) -> Result<Vec<Commodity>, ArdentError> {
         let path = format!("system/name/{}/commodity/name/{}", system_name, commodity_name);
         let mut query = Vec::new();
         if let Some(days) = max_days_ago {
@@ -240,7 +240,7 @@ impl ArdentClient {
         system_name: &str,
         commodity_name: &str,
         params: Option<NearbyCommodityQueryParams>
-    ) -> Result<Vec<TradeOrder>, ArdentError> {
+    ) -> Result<Vec<Commodity>, ArdentError> {
         let path = format!("system/name/{}/commodity/name/{}/nearby/imports", system_name, commodity_name);
         let query_params = params.unwrap_or_default();
         let query = query_params.to_query_params();
@@ -253,7 +253,7 @@ impl ArdentClient {
         system_name: &str,
         commodity_name: &str,
         params: Option<NearbyCommodityQueryParams>
-    ) -> Result<Vec<TradeOrder>, ArdentError> {
+    ) -> Result<Vec<Commodity>, ArdentError> {
         let path = format!("system/name/{}/commodity/name/{}/nearby/exports", system_name, commodity_name);
         let query_params = params.unwrap_or_default();
         let query = query_params.to_query_params();
@@ -267,7 +267,7 @@ impl ArdentClient {
         &self,
         market_id: u64,
         commodity_name: &str
-    ) -> Result<MarketCommodityData, ArdentError> {
+    ) -> Result<SystemCommodity, ArdentError> {
         let path = format!("market/{}/commodity/name/{}", market_id, commodity_name);
         self.get_json(&path, &[]).await
     }
@@ -400,11 +400,11 @@ pub struct CommodityInfo {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-pub struct TradeOrder {
+pub struct Commodity {
     #[serde(rename = "commodityName")]
     pub commodity_name: String,
     #[serde(rename = "marketId")]
-    pub market_id: i64,
+    pub market_id: u64,
     #[serde(rename = "stationName")]
     pub station_name: String,
     #[serde(rename = "stationType")]
@@ -418,7 +418,7 @@ pub struct TradeOrder {
     #[serde(rename = "bodyName")]
     pub body_name: Option<String>,
     #[serde(rename = "systemAddress")]
-    pub system_address: i64,
+    pub system_address: u64,
     #[serde(rename = "systemName")]
     pub system_name: String,
     #[serde(rename = "systemX")]
@@ -444,6 +444,28 @@ pub struct TradeOrder {
     // #[serde(rename = "stockBracket")]
     // pub stock_bracket: u32,
 
+    #[serde(rename = "updatedAt")]
+    pub updated_at: String,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct SystemCommodity {
+    #[serde(rename = "commodityName")]
+    pub commodity_name: String,
+    #[serde(rename = "marketId")]
+    pub market_id: u64,
+    #[serde(rename = "buyPrice")]
+    pub buy_price: u32,
+    pub demand: u32,
+    #[serde(rename = "demandBracket")]
+    pub demand_bracket: String,
+    #[serde(rename = "meanPrice")]
+    pub mean_price: u32,
+    #[serde(rename = "sellPrice")]
+    pub sell_price: u32,
+    pub stock: u32,
+    #[serde(rename = "stockBracket")]
+    pub stock_bracket: u32,
     #[serde(rename = "updatedAt")]
     pub updated_at: String,
 }
@@ -546,59 +568,6 @@ pub struct NearestService {
     #[serde(rename = "updatedAt")]
     pub updated_at: String,
     pub distance: i64,
-}
-
-#[derive(Debug, Clone, Deserialize)]
-pub struct SystemCommodity {
-    #[serde(rename = "commodityName")]
-    pub commodity_name: Option<String>,
-    #[serde(rename = "marketId")]
-    pub market_id: Option<u64>,
-    #[serde(rename = "stationName")]
-    pub station_name: String,
-    #[serde(rename = "stationType")]
-    pub station_type: String,
-    #[serde(rename = "distanceToArrival")]
-    pub distance_to_arrival: f64,
-    #[serde(rename = "maxLandingPadSize")]
-    pub max_landing_pad_size: i64,
-    #[serde(rename = "bodyId")]
-    pub body_id: i64,
-    #[serde(rename = "bodyName")]
-    pub body_name: String,
-    #[serde(rename = "systemAddress")]
-    pub system_address: i64,
-    #[serde(rename = "systemName")]
-    pub system_name: String,
-    #[serde(rename = "systemX")]
-    pub system_x: i64,
-    #[serde(rename = "systemY")]
-    pub system_y: i64,
-    #[serde(rename = "systemZ")]
-    pub system_z: i64,
-    #[serde(rename = "buyPrice")]
-    pub buy_price: Option<u32>,
-    pub demand: Option<u32>,
-    #[serde(rename = "demandBracket")]
-    pub demand_bracket: Option<u32>,
-    #[serde(rename = "meanPrice")]
-    pub mean_price: Option<u32>,
-    #[serde(rename = "sellPrice")]
-    pub sell_price: Option<u32>,
-    pub stock: Option<u32>,
-    #[serde(rename = "stockBracket")]
-    pub stock_bracket: Option<u32>,
-    #[serde(rename = "updatedAt")]
-    pub updated_at: Option<String>,
-}
-
-#[derive(Debug, Clone, Deserialize)]
-pub struct MarketCommodityData {
-    pub commodity: String,
-    pub market_id: u64,
-    pub price: Option<u64>,
-    pub volume: Option<u64>,
-    // Add more fields as needed
 }
 
 // ========================= Query Parameters =========================

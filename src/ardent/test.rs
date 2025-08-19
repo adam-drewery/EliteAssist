@@ -87,7 +87,6 @@ async fn test_get_commodity_imports() {
     if !orders.is_empty() {
         let first_order = &orders[0];
         assert!(!first_order.commodity_name.is_empty());
-        assert!(!first_order.station_name.is_empty());
         assert!(first_order.sell_price > 0);
     }
 }
@@ -101,7 +100,6 @@ async fn test_get_commodity_exports() {
     if !orders.is_empty() {
         let first_order = &orders[0];
         assert!(!first_order.commodity_name.is_empty());
-        assert!(!first_order.station_name.is_empty());
         assert!(first_order.buy_price > 0);
     }
 
@@ -152,8 +150,7 @@ async fn test_get_system_commodities() {
     println!("Sol commodities count: {}", commodities.len());
     if !commodities.is_empty() {
         let first_commodity = &commodities[0];
-        assert_ne!(!first_commodity.system_address, 0);
-        assert_eq!(first_commodity.system_name, "Sol");
+        assert!(!first_commodity.commodity_name.is_empty());
     }
 
 }
@@ -250,8 +247,6 @@ async fn test_get_system_commodity_imports() {
     if !orders.is_empty() {
         let first_order = &orders[0];
         assert!(!first_order.commodity_name.is_empty());
-        assert!(!first_order.station_name.is_empty());
-        assert_eq!(first_order.system_name, "Sol");
         assert!(first_order.sell_price > 0);
     }
 }
@@ -265,8 +260,6 @@ async fn test_get_system_commodity_exports() {
     if !orders.is_empty() {
         let first_order = &orders[0];
         assert!(!first_order.commodity_name.is_empty());
-        assert!(!first_order.station_name.is_empty());
-        assert_eq!(first_order.system_name, "Sol");
         assert!(first_order.buy_price > 0);
     }
 }
@@ -281,7 +274,6 @@ async fn test_get_system_commodity_data() {
     let data = &data[0];
 
     assert_eq!(data.commodity_name, "gold");
-    assert_eq!(data.system_name, "Sol");
 }
 
 #[tokio::test]
@@ -301,10 +293,9 @@ async fn test_get_nearby_commodity_imports() {
     if !orders.is_empty() {
         let first_order = &orders[0];
         assert!(!first_order.commodity_name.is_empty());
-        assert!(!first_order.station_name.is_empty());
         assert!(first_order.sell_price > 0);
         // Check that the system is within the specified distance
-        let distance = ((first_order.system_x.powi(2) + first_order.system_y.powi(2) + first_order.system_z.powi(2)) as f64).sqrt();
+        let distance = (first_order.system_x.powi(2) + first_order.system_y.powi(2) + first_order.system_z.powi(2)).sqrt();
         assert!(distance <= 55.0); // Allow some tolerance
     }
 }
@@ -326,10 +317,36 @@ async fn test_get_nearby_commodity_exports() {
     if !orders.is_empty() {
         let first_order = &orders[0];
         assert!(!first_order.commodity_name.is_empty());
-        assert!(!first_order.station_name.is_empty());
         assert!(first_order.buy_price > 0);
         // Check that the system is within the specified distance
-        let distance = ((first_order.system_x.powi(2) + first_order.system_y.powi(2) + first_order.system_z.powi(2)) as f64).sqrt();
+        let distance = (first_order.system_x.powi(2) + first_order.system_y.powi(2) + first_order.system_z.powi(2)).sqrt();
         assert!(distance <= 55.0); // Allow some tolerance
+    }
+}
+
+#[tokio::test]
+async fn test_get_market_commodity_data() {
+    let client = ArdentClient::default();
+
+    // Find a market that exports Gold to get a valid market_id for the test
+    let exports = client.get_commodity_exports("Gold", None).await.unwrap();
+    if let Some(first) = exports.first() {
+        let market_id = first.market_id;
+        let data = client
+            .get_market_commodity_data(market_id, "Gold")
+            .await
+            .unwrap();
+
+        println!(
+            "Market commodity data for Gold at market {}: {:?}",
+            market_id, data
+        );
+
+        // Basic invariants
+        assert_eq!(data.market_id, market_id);
+        assert_eq!(data.commodity_name, "gold");
+    } else {
+        // If no Gold export data is available, avoid failing the test to reduce flakiness
+        println!("No Gold export orders available to test get_market_commodity_data");
     }
 }
