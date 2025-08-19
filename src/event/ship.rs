@@ -1,4 +1,4 @@
-use crate::fdev_ids::Outfitting;
+use crate::lookup::fdev_ids::Outfitting;
 use crate::{event, state};
 
 impl Into<state::ShipModule> for event::LoadoutModule {

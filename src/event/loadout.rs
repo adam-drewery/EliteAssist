@@ -1,5 +1,5 @@
 use crate::{event, state};
-use crate::fdev_ids::Shipyard;
+use crate::lookup::fdev_ids::Shipyard;
 
 fn localized_name(name: String) -> String {
     if !name.starts_with('$') {

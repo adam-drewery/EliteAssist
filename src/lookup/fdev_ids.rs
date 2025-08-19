@@ -1,4 +1,4 @@
-use crate::{state, material_locations};
+use crate::{state, lookup};
 use once_cell::sync::Lazy;
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -57,100 +57,73 @@ pub struct Rank {
     pub name: String
 }
 
-fn insert_rank(map: &mut HashMap<String, Rank>, number: &str, name: &str) {
-    map.insert(
-        number.to_string(),
-        Rank {
-            number: number.to_string(),
-            name: name.to_string(),
-        },
-    );
-}
-
-// Hard-coded rank maps for Exobiologist and Mercenary (Odyssey). No idea why they're not included in fdev-ids.
-static EXOBIOLOGIST_RANKS: Lazy<HashMap<String, Rank>> = Lazy::new(|| {
-    let mut m = HashMap::new();
-    insert_rank(&mut m, "0", "Directionless");
-    insert_rank(&mut m, "1", "Mostly Directionless");
-    insert_rank(&mut m, "2", "Compiler");
-    insert_rank(&mut m, "3", "Collector");
-    insert_rank(&mut m, "4", "Cataloguer");
-    insert_rank(&mut m, "5", "Taxonomist");
-    insert_rank(&mut m, "6", "Ecologist");
-    insert_rank(&mut m, "7", "Geneticist");
-    insert_rank(&mut m, "8", "Elite");
-    m
-});
-
-static MERCENARY_RANKS: Lazy<HashMap<String, Rank>> = Lazy::new(|| {
-    let mut m = HashMap::new();
-    insert_rank(&mut m, "0", "Defenceless");
-    insert_rank(&mut m, "1", "Mostly Defenceless");
-    insert_rank(&mut m, "2", "Rookie");
-    insert_rank(&mut m, "3", "Soldier");
-    insert_rank(&mut m, "4", "Gunslinger");
-    insert_rank(&mut m, "5", "Warrior");
-    insert_rank(&mut m, "6", "Gladiator");
-    insert_rank(&mut m, "7", "Deadeye");
-    insert_rank(&mut m, "8", "Elite");
-    m
-});
-
 impl Outfitting {
     pub fn metadata(name: &String) -> Option<&Self> {
-        static_hashmap!("../fdev-ids/outfitting.csv", Outfitting, symbol).get(&name.to_lowercase())
+        static_hashmap!("../../fdev-ids/outfitting.csv", Outfitting, symbol).get(&name.to_lowercase())
     }
 }
 
 impl Shipyard {
     pub fn metadata(name: &String) -> Option<&Self> {
-        static_hashmap!("../fdev-ids/shipyard.csv", Shipyard, symbol).get(&name.to_lowercase())
+        static_hashmap!("../../fdev-ids/shipyard.csv", Shipyard, symbol).get(&name.to_lowercase())
     }
 }
 
 impl Material {
     pub fn metadata(name: &String) -> Option<&Self> {
-        static_hashmap!("../fdev-ids/material.csv", Material, symbol).get(&name.to_lowercase())
+        static_hashmap!("../../fdev-ids/material.csv", Material, symbol).get(&name.to_lowercase())
     }
 }
 
 impl Rank {
     pub fn cqc(name: &String) -> Option<&Self> {
-        static_hashmap!("../fdev-ids/CQCRank.csv", Rank, number).get(&name.to_lowercase())
+        static_hashmap!("../../fdev-ids/CQCRank.csv", Rank, number).get(&name.to_lowercase())
     }
 
     pub fn combat(name: &String) -> Option<&Self> {
-        static_hashmap!("../fdev-ids/combatrank.csv", Rank, number).get(&name.to_lowercase())
+        static_hashmap!("../../fdev-ids/combatrank.csv", Rank, number).get(&name.to_lowercase())
     }
 
     pub fn exploration(name: &String) -> Option<&Self> {
-        static_hashmap!("../fdev-ids/ExplorationRank.csv", Rank, number).get(&name.to_lowercase())
+        static_hashmap!("../../fdev-ids/ExplorationRank.csv", Rank, number).get(&name.to_lowercase())
     }
 
     pub fn trading(name: &String) -> Option<&Self> {
-        static_hashmap!("../fdev-ids/TradeRank.csv", Rank, number).get(&name.to_lowercase())
+        static_hashmap!("../../fdev-ids/TradeRank.csv", Rank, number).get(&name.to_lowercase())
     }
 
     // New hard-coded lookups for Odyssey ranks
     pub fn exobiologist(id: &String) -> Option<&Self> {
-        EXOBIOLOGIST_RANKS.get(&id.to_lowercase())
+        static RANKS: Lazy<HashMap<String, Rank>> = Lazy::new(|| {
+            lookup::EXOBIOLOGIST_RANKS
+                .entries()
+                .map(|(&k, &v)| (k.to_string(), Rank { number: k.to_string(), name: v.to_string() }))
+                .collect()
+        });
+        RANKS.get(&id.to_lowercase())
     }
 
     pub fn mercenary(id: &String) -> Option<&Self> {
-        MERCENARY_RANKS.get(&id.to_lowercase())
+        static RANKS: Lazy<HashMap<String, Rank>> = Lazy::new(|| {
+            lookup::MERCENARY_RANKS
+                .entries()
+                .map(|(&k, &v)| (k.to_string(), Rank { number: k.to_string(), name: v.to_string() }))
+                .collect()
+        });
+        RANKS.get(&id.to_lowercase())
     }
     
     pub fn federation(id: &String) -> Option<&Self> {
-        static_hashmap!("../fdev-ids/FederationRank.csv", Rank, number).get(&id.to_lowercase())
+        static_hashmap!("../../fdev-ids/FederationRank.csv", Rank, number).get(&id.to_lowercase())
     }
     
     pub fn empire(id: &String) -> Option<&Self> {
-        static_hashmap!("../fdev-ids/EmpireRank.csv", Rank, number).get(&id.to_lowercase())
+        static_hashmap!("../../fdev-ids/EmpireRank.csv", Rank, number).get(&id.to_lowercase())
     }
 }
 
 pub fn all_materials() -> state::Materials {
-    let materials = static_hashmap!("../fdev-ids/material.csv", Material, symbol);
+    let materials = static_hashmap!("../../fdev-ids/material.csv", Material, symbol);
     let mut raw = HashMap::new();
     let mut encoded = HashMap::new();
     let mut manufactured = HashMap::new();
@@ -189,6 +162,14 @@ pub fn all_materials() -> state::Materials {
     }
 }
 
+fn apply_name(input: &str) -> String {
+    lookup::CATEGORY_NAMES
+        .get(input)
+        .copied()
+        .unwrap_or(input)
+        .to_string()
+}
+
 impl Into<state::Material> for &Material {
     fn into(self) -> state::Material {
         state::Material {
@@ -196,31 +177,7 @@ impl Into<state::Material> for &Material {
             name: self.name.clone(),
             rarity: self.rarity.parse().unwrap(),
             count: 0,
-            locations: material_locations::component_locations(&*self.name)
-                .unwrap_or_default()
-                .iter()
-                .map(|&s| s.to_string())
-                .collect(),
+            locations: lookup::material_to_locations(&*self.name)
         }
     }
 }
-
-fn apply_name(input: &str) -> String {
-    CATEGORY_NAMES
-        .get(input)
-        .copied()
-        .unwrap_or(input)
-        .to_string()
-}
-
-static CATEGORY_NAMES: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
-    let mut m = HashMap::new();
-    m.insert("1", "Light Metals and Metalloids");
-    m.insert("2", "Reactive Nonmetals and Transition Metals");
-    m.insert("3", "Chalcogens and Transition Metals");
-    m.insert("4", "Base Metals and Post-Transition Metals");
-    m.insert("5", "Coinage and Industrial Metals");
-    m.insert("6", "Heavy Metals and Metalloids");
-    m.insert("7", "Diverse Utility Elements");
-    m
-});

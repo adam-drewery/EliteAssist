@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 use thousands::Separable;
-use crate::{event, state};
+use crate::{event, lookup, state};
 use crate::event::format::prettify_date;
-use crate::fdev_ids::all_materials;
+use crate::lookup::fdev_ids::all_materials;
 use crate::text::title_case;
 
 impl event::Materials {
@@ -62,7 +62,16 @@ impl Into<state::ShipLocker> for event::Inventory {
             items: map_vec(self.items),
             consumables: self.consumables.unwrap_or_default().into_iter().map(|c| c.into()).collect(),
             data: map_vec(self.data),
-            components: map_vec(self.components),
+
+            // this one's locations come from the "materials" map instead of "items" so treat it separately
+            components: self.components.unwrap_or_default().into_iter().map(|c| {
+                state::ShipLockerItem {
+                    name: c.name_localised.clone().unwrap_or(title_case(&c.name)),
+                    for_mission: c.mission_id.is_some(),
+                    count: c.count,
+                    locations: lookup::material_to_locations(&c.name_localised.unwrap_or(c.name))
+                }
+            }).collect(),
         }
     }
 }
@@ -72,9 +81,10 @@ impl Into<state::ShipLockerItem> for event::Item {
     fn into(self) -> state::ShipLockerItem {
 
         state::ShipLockerItem {
-            name: self.name_localised.unwrap_or(title_case(&self.name)),
+            name: self.name_localised.clone().unwrap_or(title_case(&self.name)),
             for_mission: self.mission_id.is_some(),
             count: self.count,
+            locations: lookup::item_to_locations(&self.name_localised.unwrap_or(self.name))
         }
     }
 }
@@ -128,9 +138,10 @@ impl Into<state::GameEventLog> for event::RestockVehicle {
 impl Into<state::ShipLockerItem> for event::Consumable {
     fn into(self) -> state::ShipLockerItem {
         state::ShipLockerItem {
-            name: self.name_localised.unwrap_or(title_case(&self.name)),
+            name: self.name_localised.clone().unwrap_or(title_case(&self.name)),
             count: self.count,
             for_mission: false,
+            locations: lookup::item_to_locations(&self.name_localised.unwrap_or(self.name))
         }
     }
 }

@@ -666,9 +666,7 @@ impl State {
             }};
         }
 
-        let jump_range = self.ship_loadout.max_jump_range as f32;
         Task::batch(vec![
-            fetch!(get_sphere_systems, jump_range, NearbySystemsQueried, "system"),
             fetch!(get_bodies, BodiesQueried, "bodies"),
             fetch!(get_stations, StationsQueried, "stations"),
             fetch!(get_factions, FactionsQueried, "factions"),

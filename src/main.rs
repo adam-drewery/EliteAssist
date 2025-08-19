@@ -13,12 +13,11 @@ mod subscription;
 mod theme;
 mod image;
 mod text;
-mod fdev_ids;
 mod font;
-
-mod material_locations;
 mod edsm;
 mod ardent;
+mod inara;
+mod lookup;
 
 #[tokio::main]
 async fn main() {
@@ -26,6 +25,10 @@ async fn main() {
     let mut clog = colog::default_builder();
     clog.filter(None, log::LevelFilter::Info);
     clog.init();
+
+    // load the mappings from sources like INARA etc.
+    // Eventually lets put this in a subscription so we can report on progress.
+    lookup::load().await;
 
     let _ = iced::application("EliteAssist", Gui::update, Gui::view)
         .font(font::eurostile::FONT_BYTES)

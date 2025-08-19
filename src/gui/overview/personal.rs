@@ -5,7 +5,7 @@ use crate::theme::{style, GRAY, ORANGE, WHITE};
 use iced::widget::{column, container, progress_bar, row, scrollable, text, Column};
 use iced::{Element, Fill};
 use crate::centered_row;
-use crate::fdev_ids::Rank;
+use crate::lookup::fdev_ids::Rank;
 use crate::font::eurocaps::FONT;
 
 pub fn loadout(state: &State) -> Column<'_, Message> {

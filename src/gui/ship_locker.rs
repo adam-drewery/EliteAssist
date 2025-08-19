@@ -1,6 +1,5 @@
 use crate::font::eurocaps::FONT;
 use crate::gui::Message;
-use crate::material_locations::item_locations;
 use crate::state::{ShipLockerItem, State};
 use crate::theme::style;
 use crate::theme::{BLUE, ORANGE, YELLOW};
@@ -35,15 +34,12 @@ pub fn locker_item_list<'a>(title: &'a str, items: &'a [ShipLockerItem]) -> Colu
                         text(&item.name).color(color).size(16)
                     ]
                     .padding(2);
-
-                    // Determine locations for tooltip based on list title
-                    let locations = item_locations(&item.name);
-
-                    let tooltip_content: Option<Element<Message>> = locations.map(|locs| {
+                
+                    let tooltip_content: Option<Element<Message>> = (!item.locations.is_empty()).then(|| {
                         column(
-                            locs
+                            item.locations
                                 .iter()
-                                .map(|loc| row![text(*loc).size(16)].into())
+                                .map(|loc| row![text(loc).size(16)].into())
                                 .collect::<Vec<Element<Message>>>()
                         )
                         .into()

@@ -73,11 +73,13 @@ pub struct ShipLocker {
     pub data: Vec<ShipLockerItem>
 }
 
+#[derive(Default)]
 pub struct ShipLockerItem {
 
     pub name: String,
     pub count: u64,
     pub for_mission: bool,
+    pub locations: Vec<String>
 }
 
 pub enum SlotType {
