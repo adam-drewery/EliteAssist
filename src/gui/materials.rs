@@ -1,12 +1,12 @@
 use crate::gui::components::sub_header;
 use crate::gui::Message;
-use crate::image::*;
+use crate::image::engineering::*;
 use crate::state::{MaterialGroup, State};
 use crate::theme::*;
 use iced::widget::svg::Handle;
+use iced::widget::tooltip::Position;
 use iced::widget::{column, row, scrollable, svg, text, tooltip, Column, Row};
 use iced::{Element, Fill, Top};
-use iced::widget::tooltip::Position;
 
 pub fn materials(state: &State) -> Row<'_, Message> {
     row![
@@ -37,7 +37,7 @@ fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a,
                             3 => Handle::from_memory(GRADE_3_SVG),
                             4 => Handle::from_memory(GRADE_4_SVG),
                             5 => Handle::from_memory(GRADE_5_SVG),
-                            _ => Handle::from_memory(COURIER_ICON),
+                            _ => panic!("Invalid rarity: {}", item.rarity),       
                         };
 
                         row![

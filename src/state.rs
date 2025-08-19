@@ -107,7 +107,9 @@ impl State {
             Message::JournalLoaded => {
                 self.journal_loaded = true;
 
-                return query::system(&self.current_system);
+                if self.journal_loaded {
+                    return query::system(&self.current_system);
+                }
             }
 
             Message::JournalEvent(event) => {
@@ -310,7 +312,9 @@ impl State {
                         self.current_body = "".to_string();
                         self.location = e.into();
 
-                        return query::system(&self.current_system);
+                        if self.journal_loaded {
+                            return query::system(&self.current_system);
+                        }
                     }
 
                     // FUEL

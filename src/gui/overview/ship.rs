@@ -1,7 +1,6 @@
 use crate::font::eurocaps::FONT;
 use crate::gui::components::{details, header};
 use crate::gui::Message;
-use crate::image::{CORE_INTERNAL_PNG, ENGINEER_ICON_PNG, FIXED_PNG, GIMBALLED_PNG, HARDPOINTS_PNG, OPTIONAL_INTERNAL_PNG, TURRET_PNG, UTILITIES_PNG};
 use crate::state::{ShipLoadout, ShipModule, SlotType, State};
 use crate::theme::style;
 use crate::theme::GRAY;
@@ -11,6 +10,9 @@ use iced::widget::image::Handle;
 use iced::widget::{column, container, image, row, scrollable, text, Column, Row};
 use iced::{Center, Element, Fill, Left, Right, Top};
 use thousands::Separable;
+use crate::image::engineering::ENGINEER_ICON_PNG;
+use crate::image::ship_modules::*;
+use crate::lookup;
 
 pub fn ship_modules(state: &State) -> Column<'_, Message> {
     let mut hardpoints: Vec<Element<Message>> = vec![];
@@ -82,26 +84,37 @@ pub fn ship_modules(state: &State) -> Column<'_, Message> {
 }
 
 pub fn ship_details(state: &State) -> Column<'_, Message> {
+
+    let ship_image_bytes = lookup::ship_image_bytes(state.ship_loadout.ship_type.as_str()).unwrap_or_default();
+    let ship_image = Handle::from_bytes(ship_image_bytes);
+
     column![
         header("Ship"),
         ship_title(&state.ship_loadout),
-        details("Rebuy", "CR ".to_owned() + &state.ship_loadout.rebuy.to_string().separate_with_commas()),
-        details("Cargo Capacity", state.ship_loadout.cargo_capacity.to_string() + " T"),
-        details("Hull Health", (state.ship_loadout.hull_health * 100.0).to_string() + "%"),
-        details("Fuel Capacity (Main)", state.ship_loadout.fuel_capacity.main.to_string() + " T"),
-        details("Fuel Capacity (Reserve)", state.ship_loadout.fuel_capacity.reserve.to_string() + " T"),
-        details("Max Jump Range", format!("{:.2} ly", state.ship_loadout.max_jump_range)),
-        details("Unladen Mass", format!("{:.2} T", state.ship_loadout.unladen_mass)),
+        row![
+            column![image(ship_image).height(160).width(160)].padding(8),
+            column![
+                details("Rebuy", "CR ".to_owned() + &state.ship_loadout.rebuy.to_string().separate_with_commas()),
+                details("Cargo Capacity", state.ship_loadout.cargo_capacity.to_string() + " T"),
+                details("Hull Health", (state.ship_loadout.hull_health * 100.0).to_string() + "%"),
+                details("Fuel Capacity (Main)", state.ship_loadout.fuel_capacity.main.to_string() + " T"),
+                details("Fuel Capacity (Reserve)", state.ship_loadout.fuel_capacity.reserve.to_string() + " T"),
+                details("Max Jump Range", format!("{:.2} ly", state.ship_loadout.max_jump_range)),
+                details("Unladen Mass", format!("{:.2} T", state.ship_loadout.unladen_mass))
+            ]
+        ]
     ]
     .padding(8)
 }
 
 fn module_group_title(title: &str, icon: Handle) -> Column<'_, Message> {
-    column![row![
-        column![image(icon).width(40).height(40)],
-        column![].width(12),
-        column![text(title).font(FONT).color(GRAY).size(30)],
-    ]]
+    column![
+        row![
+            column![image(icon).width(40).height(40)],
+            column![].width(12),
+            column![text(title).font(FONT).color(GRAY).size(30)],
+        ]
+    ]
 }
 
 fn ship_title(ship_loadout: &ShipLoadout) -> Row<'_, Message> {
