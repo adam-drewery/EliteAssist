@@ -6,6 +6,7 @@ authors = ["Adam Drewery"]
 license = "WTFPL2"
 repository = "github.com/adam-drewery/EliteAssist"
 description = "An assistive tool for Elite Dangerous that provides real-time game data monitoring and automation capabilities."
+keywords = ["elite", "dangerous"]
 
 [dependencies]
 serde = { version = "1.0.219", features = ["derive"] }
