@@ -22,6 +22,7 @@ use messages::messages;
 use navigation_bar::navigation_bar;
 use overview::overview;
 use ship_locker::ship_locker;
+use crate::font::EUROSTILE;
 
 #[derive(Clone, Debug)]
 pub enum Message {
@@ -78,9 +79,11 @@ fn waiting_spinner() -> Element<'static, Message> {
                 row![].height(Fill),
                 row![
                     column![].width(Fill),
-                    svg(svg::Handle::from_memory(LOADING_PNG))
-                        .width(128)
-                        .height(128),
+                    column![
+                        svg(svg::Handle::from_memory(LOADING_PNG)).width(128).height(128),
+                        text("Waiting for Journal Files...").color(ORANGE).size(32),
+                        text("todo: make the loading spinner animated").font(EUROSTILE).color(ORANGE).size(12),
+                    ].align_x(Center),
                     column![].width(Fill)
                 ],
                 row![].height(Fill)

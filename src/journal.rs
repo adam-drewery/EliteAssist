@@ -121,27 +121,32 @@ pub struct JournalWatcher {
 
 /// Returns the path to the Elite Dangerous journal directory as a `PathBuf`.
 ///
-/// This function constructs the absolute path to the journal directory for the game
-/// "Elite Dangerous" by appending a pre-defined relative path (specific to the game's
-/// save location in a Steam installation
+/// On Windows, this resolves to:
+///   %USERPROFILE%\\Saved Games\\Frontier Developments\\Elite Dangerous\\
+/// On Linux (Steam/Proton), this resolves to:
+///   $HOME/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/
+///
+/// The function uses the user's home/profile directory per OS and appends the expected relative location.
 pub fn get_journal_directory() -> Result<PathBuf, JournalError> {
-    /// A constant that defines the directory path to the save game files for the game
-    /// "Elite Dangerous" when running under Steam's Proton compatibility layer.
-    ///
-    /// # Path Explanation
-    /// - `.steam/steam/steamapps/compatdata/359320/pfx/`: This is the Proton prefix directory for "Elite Dangerous"
-    ///   (App ID: 359320) when run under Steam on Linux. Proton creates a Windows-like environment here.
-    /// - `drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/`:
-    ///   This mimics the expected Windows directory structure where "Elite Dangerous" save files are stored.
-    ///
-    /// # Usage
-    /// This constant is typically used in applications or scripts that need to locate and interact
-    /// with the save files for "Elite Dangerous" when played via Steam on a Linux-based system.
-    ///
-    /// #
-    const JOURNAL_DIRECTORY: &str = ".steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/";
-    let home = std::env::var("HOME").map_err(|_| JournalError::HomeDirectoryNotFound)?;
-    Ok(Path::new(&home).join(JOURNAL_DIRECTORY))
+    // Determine the Elite Dangerous journal directory consistently by using the
+    // user's home/profile directory for each OS and appending the expected
+    // relative location.
+    //
+    // - Linux (Steam/Proton): $HOME + proton prefix + Windows-like Saved Games path
+    // - Windows: %USERPROFILE% + Saved Games\\Frontier Developments\\Elite Dangerous
+    #[cfg(target_os = "windows")]
+    {
+        const JOURNAL_DIRECTORY: &str = "Saved Games\\Frontier Developments\\Elite Dangerous\\";
+        let user_profile = std::env::var("USERPROFILE").map_err(|_| JournalError::HomeDirectoryNotFound)?;
+        Ok(Path::new(&user_profile).join(JOURNAL_DIRECTORY))
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    {
+        const JOURNAL_DIRECTORY: &str = ".steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/";
+        let home = std::env::var("HOME").map_err(|_| JournalError::HomeDirectoryNotFound)?;
+        Ok(Path::new(&home).join(JOURNAL_DIRECTORY))
+    }
 }
 
 impl JournalWatcher {
