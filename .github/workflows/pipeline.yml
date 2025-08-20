@@ -19,39 +19,18 @@ env:
 
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
         with:
           submodules: recursive
-
-      - name: Install dependencies (Linux)
-        run: |
-          sudo apt-get update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            build-essential \
-            curl \
-            libx11-dev \
-            libxrandr-dev \
-            libxi-dev \
-            libxcb1-dev \
-            libgl1-mesa-dev \
-            libwayland-dev \
-            libudev-dev \
-            pkg-config \
-            git \
-            cmake \
-            libssl-dev
-
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
 
       - name: Test
         run: cargo test --verbose
 
   version:
     if: github.event_name == 'push'
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.compute.outputs.VERSION }}
     steps:
@@ -72,7 +51,7 @@ jobs:
     needs:
       - test
       - version
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.version.outputs.version }}
     steps:
@@ -84,42 +63,30 @@ jobs:
         run: |
           sed -i "s/^version = \".*\"/version = \"${VERSION}\"/" Cargo.toml
 
-      - name: Install dependencies
+      - name: Setup Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker
         run: |
-          sudo apt-get update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            build-essential \
-            curl \
-            libx11-dev \
-            libxrandr-dev \
-            libxi-dev \
-            libxcb1-dev \
-            libgl1-mesa-dev \
-            libwayland-dev \
-            libudev-dev \
-            pkg-config \
-            git \
-            cmake \
-            libssl-dev
-
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Build
-        run: cargo build --release
+          docker build -f linux.Dockerfile -t eliteassist-builder .
+          # Extract the built artifacts from the container
+          docker create --name temp-container eliteassist-builder
+          mkdir -p ./artifacts
+          docker cp temp-container:/app/target/release ./artifacts
+          docker rm temp-container
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: EliteAssist-linux
-          path: target/release/EliteAssist
+          path: ./artifacts/release/EliteAssist
 
   build-windows:
     if: github.event_name == 'push'
     needs:
       - test
       - version
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.version.outputs.version }}
     steps:
@@ -131,39 +98,22 @@ jobs:
         run: |
           sed -i "s/^version = \".*\"/version = \"${VERSION}\"/" Cargo.toml
 
-      - name: Install dependencies
+      - name: Setup Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Windows Docker image and extract artifact
         run: |
-          sudo apt-get update
-          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            build-essential \
-            curl \
-            ca-certificates \
-            pkg-config \
-            git \
-            cmake \
-            libssl-dev \
-            mingw-w64 \
-            gcc-mingw-w64 \
-            g++-mingw-w64
-
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Add Windows target
-        run: rustup target add x86_64-pc-windows-gnu
-
-      - name: Build
-        env:
-          CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER: x86_64-w64-mingw32-gcc
-          CC_x86_64_pc_windows_gnu: x86_64-w64-mingw32-gcc
-          CXX_x86_64_pc_windows_gnu: x86_64-w64-mingw32-g++
-        run: cargo build --release --target x86_64-pc-windows-gnu
+          docker build -f windows.Dockerfile -t eliteassist-windows-builder .
+          docker create --name temp-container eliteassist-windows-builder
+          mkdir -p ./artifacts/windows
+          docker cp temp-container:/app/target/x86_64-pc-windows-gnu/release/EliteAssist.exe ./artifacts/windows/EliteAssist.exe
+          docker rm temp-container
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: EliteAssist-windows
-          path: target/x86_64-pc-windows-gnu/release/EliteAssist.exe
+          path: ./artifacts/windows/EliteAssist.exe
 
   publish-github:
     if: github.event_name == 'push'
@@ -171,7 +121,7 @@ jobs:
       - build-linux
       - build-windows
       - version
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     environment: beta
     env:
       VERSION: ${{ needs.version.outputs.version }}
