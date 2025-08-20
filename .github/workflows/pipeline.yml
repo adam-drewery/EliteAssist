@@ -19,6 +19,7 @@ env:
 
 jobs:
   test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -29,6 +30,7 @@ jobs:
         run: cargo test --verbose
 
   version:
+    name: Versioning
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     outputs:
@@ -47,6 +49,7 @@ jobs:
           echo "VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
 
   build-linux:
+    name: Build / Linux
     if: github.event_name == 'push'
     needs:
       - test
@@ -82,6 +85,7 @@ jobs:
           path: ./artifacts/release/EliteAssist
 
   build-windows:
+    name: Build / Windows
     if: github.event_name == 'push'
     needs:
       - test
@@ -101,7 +105,7 @@ jobs:
       - name: Setup Docker
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Windows Docker image and extract artifact
+      - name: Build Docker
         run: |
           docker build -f windows.Dockerfile -t eliteassist-windows-builder .
           docker create --name temp-container eliteassist-windows-builder
@@ -116,6 +120,7 @@ jobs:
           path: ./artifacts/windows/EliteAssist.exe
 
   publish-github:
+    name: Publish / GitHub
     if: github.event_name == 'push'
     needs:
       - build-linux
@@ -142,7 +147,7 @@ jobs:
           name: EliteAssist-windows
           path: dist/windows
 
-      - name: Deploy
+      - name: Publish
         uses: softprops/action-gh-release@v2
         with:
           files: |
@@ -154,12 +159,13 @@ jobs:
 
 
   publish-crates-io:
+    name: Publish / crates.io
     if: github.event_name == 'push'
     needs:
       - build-linux
       - build-windows
       - version
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     env:
       VERSION: ${{ needs.version.outputs.version }}
     steps:
@@ -174,7 +180,7 @@ jobs:
         run: |
           sed -i "s/^version = \".*\"/version = \"${VERSION}\"/" Cargo.toml
 
-      - name: Publish to crates.io
+      - name: Publish
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
         run: cargo publish --allow-dirty
