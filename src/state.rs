@@ -308,6 +308,16 @@ impl State {
                     Event::StartJump(e) => self.logs.push(e.into()),
 
                     Event::FSDJump(e) => {
+
+                        // trim the new system from the start of our nav route if it matches.
+                        if !self.nav_route.is_empty() {
+                            if let Some(first) = self.nav_route.first() {
+                                if first.star_system == e.star_system {
+                                    self.nav_route.remove(0);
+                                }
+                            }
+                        }
+
                         self.current_system = e.star_system.to_string();
                         self.current_body = "".to_string();
                         self.location = e.into();
@@ -457,7 +467,31 @@ impl State {
 
                     // PERSONAL
                     Event::Statistics(_) => {}
-                    Event::Promotion(_) => {}
+                    Event::Promotion(promotion) => {
+
+                        // CQC isn't handled here because we can't rank up in that outside of CQC mode.
+
+                        if let Some(combat) = promotion.combat {
+                            self.rank.combat = combat;
+                            self.progress.combat = 0;
+                        }
+                        if let Some(trade) = promotion.trade {
+                            self.rank.trade = trade;
+                            self.progress.trade = 0;
+                        }
+                        if let Some(explore) = promotion.explore {
+                            self.rank.explore = explore;
+                            self.progress.explore = 0;
+                        }
+                        if let Some(soldier) = promotion.soldier {
+                            self.rank.soldier = soldier;
+                            self.progress.soldier = 0;
+                        }
+                        if let Some(exobiologist) = promotion.exobiologist {
+                            self.rank.exobiologist = exobiologist;
+                            self.progress.exobiologist = 0;
+                        }
+                    }
 
                     Event::Commander(commander) => {
                         self.commander_name = "CMDR ".to_owned() + &commander.name;
