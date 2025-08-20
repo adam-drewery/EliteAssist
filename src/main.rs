@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use iced::Size;
 use crate::gui::Gui;
 use crate::subscription::subscription;

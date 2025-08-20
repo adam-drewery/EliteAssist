@@ -5,7 +5,6 @@ use crate::journal::format::prettify_date;
 impl Into<state::GameEventLog> for event::FighterRebuilt {
     fn into(self) -> state::GameEventLog {
         state::GameEventLog {
-            time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Rebuilt".into(),
             noun: format!["Fighter {}", self.id.to_string()],
@@ -16,7 +15,6 @@ impl Into<state::GameEventLog> for event::FighterRebuilt {
 impl Into<state::GameEventLog> for event::DockFighter {
     fn into(self) -> state::GameEventLog {
         state::GameEventLog {
-            time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Docked".into(),
             noun: format!["Fighter {}", self.id.to_string()],
@@ -27,7 +25,6 @@ impl Into<state::GameEventLog> for event::DockFighter {
 impl Into<state::GameEventLog> for event::CrewLaunchFighter {
     fn into(self) -> state::GameEventLog {
         state::GameEventLog {
-            time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Launched".into(),
             noun: format!["Fighter by {}", self.crew],
@@ -38,7 +35,6 @@ impl Into<state::GameEventLog> for event::CrewLaunchFighter {
 impl Into<state::GameEventLog> for event::LaunchFighter {
     fn into(self) -> state::GameEventLog {
         state::GameEventLog {
-            time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Launched".into(),
             noun: format!["Fighter {}", self.id.to_string()],
@@ -49,7 +45,6 @@ impl Into<state::GameEventLog> for event::LaunchFighter {
 impl event::Damage {
     pub fn into(self, verb: &str, noun: &str) -> state::GameEventLog {
         state::GameEventLog {
-            time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: verb.into(),
             noun: match self.id {
@@ -63,7 +58,6 @@ impl event::Damage {
 impl Into<state::GameEventLog> for event::VehicleSwitch {
     fn into(self) -> state::GameEventLog {
         state::GameEventLog {
-            time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Switched to".into(),
             noun: self.to,

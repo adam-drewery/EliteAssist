@@ -6,7 +6,6 @@ use crate::state;
 impl Into<state::GameEventLog> for event::Embark {
     fn into(self) -> state::GameEventLog {
         state::GameEventLog {
-            time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Embarked".to_owned(),
             noun: join_location_parts(&self.star_system, &self.body, &self.station_name),
@@ -17,7 +16,6 @@ impl Into<state::GameEventLog> for event::Embark {
 impl Into<state::GameEventLog> for event::Disembark {
     fn into(self) -> state::GameEventLog {
         state::GameEventLog {
-            time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Disembarked".to_owned(),
             noun: join_location_parts(&self.star_system, &self.body, &self.station_name),
@@ -106,13 +104,11 @@ impl Into<state::GameEventLog> for event::StartJump {
 
         match self.jump_type.as_str() {
             "Supercruise" => state::GameEventLog {
-                time: self.timestamp,
                 time_display: prettify_date(&self.timestamp),
                 verb: "".into(),
                 noun: "Entered supercruise".into()
             },
             "Hyperspace" => state::GameEventLog {
-                time: self.timestamp,
                 time_display: prettify_date(&self.timestamp),
                 verb: "Jumped to".into(),
                 noun: format!["{} ({})", self.star_system.unwrap_or_default(), self.star_class.unwrap_or_default()]

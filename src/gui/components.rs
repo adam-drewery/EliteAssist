@@ -31,26 +31,6 @@ pub fn details(label: &str, value: impl Into<String>) -> Row<'_, Message> {
     ]
 }
 
-pub fn details_extra(label: &str, value: impl Into<String>, value2: impl Into<String>) -> Row<'_, Message> {
-
-    let value = value.into();
-    let value2 = value2.into();
-    if value == "" { return row![] }
-
-    row![
-        column![text(label).color(GRAY).size(16)]
-            .align_x(Right)
-            .padding([0, 8])
-            .width(Fill),
-        row![
-            column![text(value).color(ORANGE).size(16)],
-            column![text(value2).color(GRAY).size(14)].padding(2)
-        ]
-        .padding([0, 8])
-        .width(Fill)
-    ]
-}
-
 pub fn empty_text(label: &str) -> Column<'_, Message> {
     column![
         row![].height(Fill),

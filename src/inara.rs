@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::collections::{HashMap, HashSet};
 use log::info;
 use reqwest::header::{HeaderMap, HeaderValue, USER_AGENT};

@@ -1,13 +1,10 @@
-use chrono::{DateTime, Utc};
 use log::warn;
 use regex::Regex;
 
 #[derive(Default)]
 pub struct ShipLoadout {
 
-    pub timestamp: DateTime<Utc>,
     pub ship_type: String,
-    pub ship_id: u64,
     pub ship_name: String,
     pub ship_ident: String,
     pub hull_value: u64,
@@ -50,8 +47,6 @@ pub struct FuelCapacity {
 pub struct Engineering {
 
     pub engineer: String,
-    pub engineer_id: u64,
-    pub blueprint_id: u64,
     pub blueprint_name: String,
     pub level: u64,
     pub quality: f64,
@@ -91,7 +86,7 @@ pub enum SlotType {
     OptionalInternal(OptionalInternalType),
     Cosmetic(CosmeticType),
     Miscellaneous(MiscellaneousType),
-    Unknown(String),
+    Unknown,
 }
 
 pub enum CoreInternalType {
@@ -212,7 +207,7 @@ impl From<String> for SlotType {
             "VesselVoice" => SlotType::Cosmetic(CosmeticType::VesselVoice),
             _ => {
                 warn!("Unknown module slot: {}", value);
-                SlotType::Unknown(value)
+                SlotType::Unknown
             }
         }
     }

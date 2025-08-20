@@ -6,14 +6,12 @@ use regex::Regex;
 
 impl Into<state::ChatMessage> for event::ReceiveText {
     fn into(self) -> state::ChatMessage {
-        let (text, kind) = sanitize_name(&self.from);
+        let (text, _kind) = sanitize_name(&self.from);
 
         state::ChatMessage {
-            time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             text: self.message_localised.unwrap_or(self.message),
             from: text,
-            kind,
             channel: match self.channel.as_str() {
                 "local" => state::Channel::Local,
                 "npc" => state::Channel::Npc,

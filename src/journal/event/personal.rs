@@ -6,7 +6,6 @@ impl Into<state::Rank> for event::Rank {
     fn into(self) -> state::Rank {
 
         state::Rank {
-            timestamp: self.timestamp,
             combat: self.combat,
             trade: self.trade,
             explore: self.explore,
@@ -22,10 +21,8 @@ impl Into<state::Rank> for event::Rank {
 impl Into<state::Reputation> for event::Reputation {
     fn into(self) -> state::Reputation {
         state::Reputation {
-            timestamp: self.timestamp,
             empire: self.empire.unwrap_or_default(),
             federation: self.federation.unwrap_or_default(),
-            independent: self.independent.unwrap_or_default(),
             alliance: self.alliance.unwrap_or_default(),
         }
     }

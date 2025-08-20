@@ -23,11 +23,8 @@ fn localized_name(name: String) -> String {
 impl Into<state::SuitLoadout> for event::SuitLoadout {
     fn into(self) -> state::SuitLoadout {
         state::SuitLoadout {
-            timestamp: self.timestamp,
-            suit_id: self.suit_id,
             suit_name: localized_name(self.suit_name_localised.unwrap_or_else(|| self.suit_name)),
             suit_mods: self.suit_mods.into_iter().map(|m| m.into()).collect(),
-            loadout_id: self.loadout_id,
             loadout_name: self.loadout_name,
             modules: self.modules.into_iter().map(|m| m.into()).collect(),
         }
@@ -38,7 +35,6 @@ impl Into<state::SuitModule> for event::SuitLoadoutModule {
     fn into(self) -> state::SuitModule {
         state::SuitModule {
             slot_name: self.slot_name,
-            suit_module_id: self.suit_module_id,
             module_name: self.module_name_localised.unwrap_or(self.module_name),
             class: self.class,
             weapon_mods: self.weapon_mods,
@@ -65,14 +61,12 @@ impl Into<state::ShipLoadout> for event::Loadout {
                 }
                 state::SlotType::CoreInternal(_) => core_internals.push(module),
                 state::SlotType::OptionalInternal(_) => optional_internals.push(module),
-                state::SlotType::Cosmetic(_) | state::SlotType::Miscellaneous(_) | state::SlotType::Unknown(_) => {}
+                state::SlotType::Cosmetic(_) | state::SlotType::Miscellaneous(_) | state::SlotType::Unknown => {}
             }
         }
         
         state::ShipLoadout {
-            timestamp: self.timestamp,
             ship_type: ship_type.map(|s| s.name.clone()).unwrap_or(self.ship),
-            ship_id: self.ship_id,
             ship_name: self.ship_name,
             ship_ident: self.ship_ident,
             hull_value: self.hull_value.unwrap_or_default(),

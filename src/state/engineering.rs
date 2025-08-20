@@ -1,9 +1,6 @@
-use chrono::{DateTime, Utc};
-
 #[derive(Default)]
 pub struct EngineerProgress {
-    pub timestamp: DateTime<Utc>,
-    pub engineers: Vec<Engineer>,
+    pub engineers: Vec<Engineer>
 }
 
 pub struct Engineer {

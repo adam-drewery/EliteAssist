@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use crate::{state, lookup};
 use once_cell::sync::Lazy;
 use serde::Deserialize;

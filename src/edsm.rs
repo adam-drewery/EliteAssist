@@ -21,6 +21,8 @@
 //! }
 //! ```
 
+#![allow(dead_code)]
+
 mod into;
 mod stations;
 mod factions;

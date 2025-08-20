@@ -5,8 +5,6 @@ impl Into<state::Engineering> for event::LoadoutModuleEngineering {
     fn into(self) -> state::Engineering {
         state::Engineering {
             engineer: self.engineer.unwrap_or_default(),
-            engineer_id: self.engineer_id,
-            blueprint_id: self.blueprint_id,
             blueprint_name: self.blueprint_name.split('_').skip(1).next().unwrap_or_default().to_string(),
             level: self.level,
             quality: self.quality,
@@ -30,7 +28,6 @@ impl Into<state::Modifier> for event::LoadoutModuleEngineeringModifier {
 impl Into<state::EngineerProgress> for event::EngineerProgress {
     fn into(self) -> state::EngineerProgress {
         state::EngineerProgress {
-            timestamp: self.timestamp,
             engineers: self.engineers
                 .unwrap_or_default()
                 .into_iter()

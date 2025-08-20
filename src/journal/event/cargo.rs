@@ -116,7 +116,6 @@ fn map_vec(vec: Option<Vec<event::Item>>) -> Vec<state::ShipLockerItem> {
 impl event::ShipEquipmentPurchase {
     pub fn into(self, item: &str) -> state::GameEventLog {
         state::GameEventLog {
-            time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: format!("Bought {} for", item).into(),
             noun: format!("{}CR", &self.cost.to_string().separate_with_commas())
@@ -127,7 +126,6 @@ impl event::ShipEquipmentPurchase {
 impl Into<state::GameEventLog> for event::RestockVehicle {
     fn into(self) -> state::GameEventLog {
         state::GameEventLog {
-            time: self.timestamp,
             time_display: prettify_date(&self.timestamp),
             verb: "Restocked vehicles for".into(),
             noun: format!("{}CR", self.cost.to_string().separate_with_commas()),

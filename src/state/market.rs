@@ -1,6 +1,5 @@
 #[derive(Default)]
 pub struct Market {
-    pub id: u64,
     pub groups: Vec<MarketItemGroup>,
 }
 
@@ -10,7 +9,6 @@ pub struct MarketItemGroup {
 }
 
 pub struct MarketItem {
-    pub id: u64,
     pub name: String,
     pub buy_price: u64,
     pub sell_price: u64,

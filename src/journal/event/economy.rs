@@ -16,7 +16,6 @@ impl Into<state::Market> for event::Market {
         }
 
         state::Market {
-            id: self.market_id,
             groups: {
                 let mut groups: Vec<_> = groups.into_iter()
                     .map(|(category, items)| state::MarketItemGroup {
@@ -36,7 +35,6 @@ impl Into<state::MarketItem> for event::MarketItem {
     fn into(self) -> state::MarketItem {
 
         state::MarketItem {
-            id: self.id,
             name: self.name_localised.unwrap_or(title_case(&self.name)),
             buy_price: self.buy_price,
             sell_price: self.sell_price,

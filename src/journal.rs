@@ -1,6 +1,5 @@
 //!
 use crate::gui::Message;
-use crate::state::State;
 use log::{error, info};
 use notify::{Config, RecommendedWatcher, RecursiveMode, Watcher};
 use std::fs::{File, OpenOptions};
@@ -31,9 +30,6 @@ pub enum JournalError {
 
     #[error("Directory not found: {0}")]
     DirectoryNotFound(String),
-
-    #[error("File not found: {0}")]
-    FileNotFound(String),
 
     #[error("Failed to get home directory")]
     HomeDirectoryNotFound,
@@ -574,35 +570,5 @@ impl HistoryLoader {
         msgs.extend(snapshot_events.into_iter().map(Message::JournalEvent));
         msgs.push(Message::JournalLoaded);
         Ok(msgs)
-    }
-
-    /// Loads the application's state by building it from journal and snapshot events.
-    ///
-    /// This function reads all journal and snapshot events and uses them to update the state.
-    /// It avoids triggering any `JournalLoaded` side effects during the initial state construction.
-    ///
-    /// # Returns
-    ///
-    /// A `State` object representing the application's reconstructed state based on the events
-    /// retrieved from the journal and snapshot.
-    ///
-    /// # Behavior
-    ///
-    /// 1. Attempts to read all journal events using `self.read_all_journal_events()`. For each event
-    ///    retrieved, it updates the state by calling `state.update_from()`.
-    ///    - Any errors encountered during the journal event reading process will be logged.
-    /// 2. Attempts to read all snapshot events using `self.read_snapshot_events()`. For each event
-    ///    retrieved, it updates the state in the same manner.
-    ///    - Any errors encountered
-    pub fn load_state(&self) -> Result<State, JournalError> {
-        let mut state = State::default();
-        // Build from events only; do not trigger JournalLoaded side effects here
-        for ev in self.read_all_journal_events()? {
-            let _ = state.update_from(Message::JournalEvent(ev));
-        }
-        for ev in self.read_snapshot_events()? {
-            let _ = state.update_from(Message::JournalEvent(ev));
-        }
-        Ok(state)
     }
 }
