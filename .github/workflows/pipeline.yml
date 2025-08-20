@@ -119,8 +119,8 @@ jobs:
           name: EliteAssist-windows
           path: ./artifacts/windows/EliteAssist.exe
 
-  publish-github:
-    name: Publish / GitHub
+  publish:
+    name: Publish
     if: github.event_name == 'push'
     needs:
       - build-linux
@@ -156,31 +156,3 @@ jobs:
           prerelease: true
           generate_release_notes: true
           tag_name: v${{ env.VERSION }}
-
-
-  publish-crates-io:
-    name: Publish / crates.io
-    if: github.event_name == 'push'
-    needs:
-      - build-linux
-      - build-windows
-      - version
-    runs-on: ubuntu-latest
-    env:
-      VERSION: ${{ needs.version.outputs.version }}
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          submodules: recursive
-
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Apply Version to Cargo.toml
-        run: |
-          sed -i "s/^version = \".*\"/version = \"${VERSION}\"/" Cargo.toml
-
-      - name: Publish
-        env:
-          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-        run: cargo publish --allow-dirty
