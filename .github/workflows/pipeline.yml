@@ -21,32 +21,47 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: recursive
 
       - name: Test
         run: cargo test --verbose
 
-  deploy:
+  version:
     if: github.event_name == 'push'
-    needs: test
     runs-on: ubuntu-latest
-    environment: beta
+    outputs:
+      version: ${{ steps.compute.outputs.VERSION }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: recursive
-
-      - name: Configure Version
-        id: get_version
+      - name: Compute Version
+        id: compute
         run: |
           VERSION=$(grep '^version = ' Cargo.toml | cut -d '"' -f2)
           MAJOR=$(echo $VERSION | cut -d. -f1)
           MINOR=$(echo $VERSION | cut -d. -f2)
           NEW_VERSION="$MAJOR.$MINOR.${{ github.run_number }}"
-          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          sed -i "s/^version = \".*\"/version = \"$NEW_VERSION\"/" Cargo.toml
+          echo "VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+  build-linux:
+    if: github.event_name == 'push'
+    needs:
+      - test
+      - version
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Apply Version to Cargo.toml
+        run: |
+          sed -i "s/^version = \".*\"/version = \"${VERSION}\"/" Cargo.toml
 
       - name: Setup Docker
         uses: docker/setup-buildx-action@v3
@@ -60,10 +75,84 @@ jobs:
           docker cp temp-container:/app/target/release ./artifacts
           docker rm temp-container
 
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: EliteAssist-linux
+          path: ./artifacts/release/EliteAssist
+
+  build-windows:
+    if: github.event_name == 'push'
+    needs:
+      - test
+      - version
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Apply Version to Cargo.toml
+        run: |
+          sed -i "s/^version = \".*\"/version = \"${VERSION}\"/" Cargo.toml
+
+      - name: Build Windows in Docker
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}:/work" \
+            -w /work \
+            ghcr.io/cross-rs/x86_64-pc-windows-gnu:latest \
+            bash -lc "cargo build --release --target x86_64-pc-windows-gnu"
+
+      - name: Fix permissions on target directory (for artifact upload)
+        run: sudo chown -R $USER:$USER target || true
+
+      - name: Collect Windows artifact
+        run: |
+          mkdir -p ./artifacts/windows
+          cp target/x86_64-pc-windows-gnu/release/EliteAssist.exe ./artifacts/windows/EliteAssist.exe
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: EliteAssist-windows
+          path: ./artifacts/windows/EliteAssist.exe
+
+  deploy:
+    if: github.event_name == 'push'
+    needs:
+      - build-linux
+      - build-windows
+      - version
+    runs-on: ubuntu-latest
+    environment: beta
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: EliteAssist-linux
+          path: dist/linux
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: EliteAssist-windows
+          path: dist/windows
+
       - name: Deploy
         uses: softprops/action-gh-release@v2
         with:
-          files: ./artifacts/release/EliteAssist
+          files: |
+            dist/linux/EliteAssist
+            dist/windows/EliteAssist.exe
           prerelease: true
           generate_release_notes: true
           tag_name: v${{ env.VERSION }}
