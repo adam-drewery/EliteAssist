@@ -405,6 +405,9 @@ fn spawn_dir_watcher(tx: mpsc::Sender<()>, target_dir: PathBuf) {
 ///
 pub struct SnapshotWatcher {
     file: FileDetails,
+
+    // weird because its a recursive function and it clones this value
+    #[allow(dead_code)]
     watcher_tx: mpsc::Sender<()>,
     watcher_rx: mpsc::Receiver<()>,
 }
