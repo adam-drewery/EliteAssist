@@ -74,7 +74,7 @@ impl Gui {
     }
 }
 
-fn waiting_spinner() -> Element<'static, Message> {
+fn waiting_spinner<'a>() -> Element<'a, Message> {
     column![
                 row![].height(Fill),
                 row![
