@@ -3,7 +3,7 @@ use crate::image::SETTINGS;
 use crate::state::{PanelType, Screen, State};
 use crate::theme::{style, GRAY, ORANGE, WHITE};
 use iced::widget::button::{Status, Style};
-use iced::widget::{button, checkbox, column, row, svg, text, Column, Row};
+use iced::widget::{button, checkbox, column, row, svg, Column, Row};
 use iced::{Fill, Theme};
 use std::mem::discriminant;
 
