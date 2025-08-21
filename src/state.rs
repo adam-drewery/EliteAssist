@@ -30,7 +30,7 @@ use serde::Deserialize;
 use std::collections::HashMap;
 use thousands::Separable;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum PanelType {
     Loadout,
     Messages,
@@ -39,11 +39,56 @@ pub enum PanelType {
     ShipDetails,
     ShipModules,
     Ranks,
+    Missions,
+    Claims,
+}
+
+impl PanelType {
+    pub const fn all() -> [PanelType; 9] {
+        [
+            PanelType::Loadout,
+            PanelType::Messages,
+            PanelType::Route,
+            PanelType::Location,
+            PanelType::ShipDetails,
+            PanelType::ShipModules,
+            PanelType::Ranks,
+            PanelType::Missions,
+            PanelType::Claims,
+        ]
+    }
+    pub fn title(&self) -> &'static str {
+        match self {
+            PanelType::Loadout => "Loadout",
+            PanelType::Messages => "Messages",
+            PanelType::Route => "Route",
+            PanelType::Location => "Location",
+            PanelType::ShipDetails => "Ship",
+            PanelType::ShipModules => "Ship Modules",
+            PanelType::Ranks => "Ranks",
+            PanelType::Missions => "Missions",
+            PanelType::Claims => "Claims",
+        }
+    }
+
+    pub fn default_enabled_vec() -> Vec<PanelType> {
+        vec![
+            PanelType::Loadout,
+            PanelType::Messages,
+            PanelType::Route,
+            PanelType::Location,
+            PanelType::ShipDetails,
+            PanelType::ShipModules,
+            PanelType::Ranks,
+        ]
+    }
 }
 
 #[derive(Default)]
 pub struct State {
     pub overview_panes: Option<pane_grid::State<PanelType>>,
+    pub show_settings_menu: bool,
+    pub enabled_panels: Option<Vec<PanelType>>,
     pub commander_name: String,
     pub credits: String,
     pub current_system: String,
@@ -107,6 +152,41 @@ impl State {
 
         panes
     }
+
+    fn build_panes_from(list: &Vec<PanelType>) -> pane_grid::State<PanelType> {
+        // Fallback to default layout if list is empty
+        if list.is_empty() {
+            return Self::default_overview_panes();
+        }
+        let mut iter = list.iter();
+        let first = iter.next().cloned().unwrap_or(PanelType::Loadout);
+        let (mut panes, mut last_pane) = pane_grid::State::new(first);
+        for panel in iter.cloned() {
+            if let Some((new_pane, _split)) = panes.split(pane_grid::Axis::Vertical, last_pane, panel) {
+                last_pane = new_pane;
+            }
+        }
+        panes
+    }
+
+    // Helper: find the Pane that contains the given PanelType
+    fn find_pane_with(panes: &pane_grid::State<PanelType>, target: &PanelType) -> Option<pane_grid::Pane> {
+        // The iced::pane_grid::State exposes a `panes` field that can be iterated
+        // We iterate by reference to avoid moving the internal state
+        for (pane, content) in &panes.panes {
+            if content == target {
+                return Some(*pane);
+            }
+        }
+        None
+    }
+
+    pub fn is_panel_enabled(&self, panel: &PanelType) -> bool {
+        match &self.enabled_panels {
+            Some(v) => v.contains(panel),
+            None => PanelType::default_enabled_vec().contains(panel),
+        }
+    }
     pub fn update_from(&mut self, message: Message) -> Task<Message> {
 
         match message {
@@ -155,10 +235,74 @@ impl State {
                 }
             }
 
+            Message::ShowSettingsMenu(show) => {
+                self.show_settings_menu = show;
+            }
+
+            Message::TogglePanel(panel, enabled) => {
+                // Start from current enabled set (or all panels by default)
+                let mut list: Vec<PanelType> = self
+                    .enabled_panels
+                    .clone()
+                    .unwrap_or_else(|| PanelType::default_enabled_vec());
+
+                let was_enabled = list.contains(&panel);
+                let before_len = list.len();
+
+                if enabled {
+                    if !was_enabled {
+                        list.push(panel.clone());
+                    }
+                } else {
+                    // Prevent disabling the last remaining panel
+                    if was_enabled && list.len() > 1 {
+                        list.retain(|p| p != &panel);
+                    }
+                }
+                // Keep deterministic order according to PanelType::all()
+                let order = PanelType::all();
+                list.sort_by_key(|p| order.iter().position(|q| q == p).unwrap_or(usize::MAX));
+
+                let did_enable = enabled && !was_enabled;
+                let did_disable = !enabled && was_enabled && list.len() < before_len;
+
+                self.enabled_panels = Some(list.clone());
+
+                // Mutate current layout instead of rebuilding to preserve existing splits
+                if let Some(panes) = &mut self.overview_panes {
+                    if did_enable {
+                        // Insert the newly enabled panel by splitting an existing anchor pane
+                        if let Some((&anchor, _)) = panes.panes.iter().next() {
+                            let _ = panes.split(pane_grid::Axis::Horizontal, anchor, panel.clone());
+                        }
+                    } else if did_disable {
+                        // Close the pane containing this panel, preserving other layout
+                        if let Some(p) = Self::find_pane_with(panes, &panel) {
+                            let _ = panes.close(p);
+                        }
+                    }
+                }
+            }
+
             Message::JournalLoaded => {
                 self.journal_loaded = true;
                 if self.overview_panes.is_none() {
-                    self.overview_panes = Some(Self::default_overview_panes());
+                    // Start from the default layout to preserve intended split structure
+                    let mut panes = Self::default_overview_panes();
+                    // If some panels are disabled, close them while keeping the rest of the layout
+                    if let Some(enabled) = &self.enabled_panels {
+                        let enabled_set: std::collections::HashSet<_> = enabled.iter().cloned().collect();
+                        // Collect panes to close first to avoid borrowing issues
+                        let to_close: Vec<_> = panes
+                            .panes
+                            .iter()
+                            .filter_map(|(pane, content)| if !enabled_set.contains(content) { Some(*pane) } else { None })
+                            .collect();
+                        for p in to_close {
+                            let _ = panes.close(p);
+                        }
+                    }
+                    self.overview_panes = Some(panes);
                 }
 
                 if self.journal_loaded {

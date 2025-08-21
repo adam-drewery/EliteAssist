@@ -34,10 +34,9 @@ pub mod style {
     
     use crate::theme::{BACKGROUND, DARK_GRAY, ORANGE, WHITE};
     use iced::border::radius;
-    use iced::widget::container;
     use iced::Background::Color;
     use iced::{Border, Theme};
-    
+
     fn orange_border() -> Border {
         Border {
             width: 1.0,
@@ -46,8 +45,8 @@ pub mod style {
         }
     }
 
-    pub fn header(_theme: &Theme) -> container::Style {
-        container::Style {
+    pub fn header(_theme: &Theme) -> iced::widget::container::Style {
+        iced::widget::container::Style {
             background: Some(Color(ORANGE)),
             text_color: Some(WHITE),
             border: Default::default(),
@@ -55,8 +54,8 @@ pub mod style {
         }
     }
 
-    pub fn list_item(_theme: &Theme) -> container::Style {
-        container::Style {
+    pub fn list_item(_theme: &Theme) -> iced::widget::container::Style {
+        iced::widget::container::Style {
             background: Some(DARK_GRAY.into()),
             text_color: Some(WHITE),
             border: Default::default(),
@@ -64,8 +63,8 @@ pub mod style {
         }
     }
 
-    pub fn bordered(_theme: &Theme) -> container::Style {
-        container::Style {
+    pub fn bordered(_theme: &Theme) -> iced::widget::container::Style {
+        iced::widget::container::Style {
             background: None,
             text_color: Some(WHITE),
             border: orange_border(),
@@ -73,8 +72,8 @@ pub mod style {
         }
     }
 
-    pub fn tooltip(_theme: &Theme) -> container::Style {
-        container::Style {
+    pub fn tooltip(_theme: &Theme) -> iced::widget::container::Style {
+        iced::widget::container::Style {
             background: Some(Color(BACKGROUND)),
             text_color: Some(ORANGE),
             border: orange_border(),
@@ -87,6 +86,11 @@ pub mod style {
             background: DARK_GRAY.into(),
             bar: ORANGE.into(),
             border: orange_border(),
+        }
+    }
+    pub fn icon_button(_theme: &Theme, _status: iced::widget::svg::Status) -> iced::widget::svg::Style {
+        iced::widget::svg::Style {
+            color: Some(WHITE)
         }
     }
 }

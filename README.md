@@ -10,6 +10,7 @@ _A Linux compatible Elite:Dangerous companion for your second monitor_
 - [Requirements](#requirements)
 - [Current limitations](#current-limitations)
 - [Contributing](#contributing)
+- [Thanks](#thanks)
 
 ## Features
 
@@ -52,3 +53,14 @@ You need [Elite:Dangerous](https://store.steampowered.com/app/359320/Elite_Dange
 ## Contributing
 
 Open a [pull request](https://github.com/adam-drewery/EliteAssist/pulls) or maybe start a [discussion](https://github.com/adam-drewery/EliteAssist/discussions) if you have a cool idea. If you found a bug why not [open an issue](https://github.com/adam-drewery/EliteAssist/issues).
+
+## Thanks
+Big thanks to:
+- CMDR Qohen Leth for their awesome [cartoon ship vectors](https://www.reddit.com/r/EliteDangerous/comments/1mnmolv/elite_cartoon_ship_vectors_elite_ships_colouring/)
+- the [INARA](https://inara.cz) team.
+- Whoever made and maintains [EDSM](https://www.edsm.net).
+- Iain Collins for the [Ardent](https://github.com/iaincollins/ardent-api) API.
+- "jixxed" for these handy [journal schemas](https://github.com/jixxed/ed-journal-schemas)
+- The [Elite Dangerous Community Developers](https://github.com/EDCD).
+- The [Elite:Dangerous](https://www.elitedangerous.com) team.
+- The [Rust](https://www.rust-lang.org) team.

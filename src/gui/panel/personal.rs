@@ -169,7 +169,6 @@ pub fn claims(state: &State) -> Column<'_, Message> {
 
     if (state.bounties.len() == 0) && (state.combat_bonds.len() == 0) {
         return column![
-            header("Claims"),
             empty_text("No Claims"),
         ].height(Fill)
     }
@@ -183,7 +182,6 @@ pub fn claims(state: &State) -> Column<'_, Message> {
     );
 
     column![
-        header("Claims"),
         scrollable(column(all_claims.map(Element::from)))
     ].height(Fill)
 }
@@ -192,13 +190,11 @@ pub fn missions(state: &State) -> Column<'_, Message> {
 
     if state.missions.len() == 0 {
         return column![
-            header("Missions"),
             empty_text("No Missions"),
         ]
     }
 
     column![
-        header("Missions"),
         scrollable(column(state.missions.iter().map(|m| {
             column![
                 details(&m.faction, &m.name)

@@ -1,19 +1,13 @@
-mod navigation;
-mod personal;
-mod ship;
-mod modules;
-
-
 use crate::gui::Message;
 use crate::state::{PanelType, State};
 use crate::theme::style;
 use iced::widget::pane_grid;
 use iced::widget::{column, row, text, Column, Row};
 use iced::Fill;
-use modules::ship_modules;
-use navigation::{location, route};
-use personal::{loadout, messages, ranks};
-use ship::ship_details;
+use crate::gui::panel::modules::ship_modules;
+use crate::gui::panel::navigation::{location, route};
+use crate::gui::panel::personal::{claims, loadout, messages, missions, ranks};
+use crate::gui::panel::ship::ship_details;
 
 pub fn overview(state: &State) -> Row<'_, Message> {
     if let Some(panes) = &state.overview_panes {
@@ -28,6 +22,8 @@ pub fn overview(state: &State) -> Row<'_, Message> {
                 PanelType::Location => ("Location", location(state)),
                 PanelType::ShipDetails => ("Ship", ship_details(state)),
                 PanelType::ShipModules => ("Ship Modules", ship_modules(state)),
+                PanelType::Missions => ("Missions", missions(state)),
+                PanelType::Claims => ("Claims", claims(state)),
             };
 
             pane_grid::Content::new(content)

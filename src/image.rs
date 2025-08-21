@@ -1,4 +1,5 @@
 mod gui;
+pub use gui::SETTINGS;
 pub mod engineering;
 pub mod ship;
 pub mod ship_modules;

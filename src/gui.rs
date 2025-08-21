@@ -8,7 +8,7 @@ use chrono::Utc;
 use crate::font::EUROSTILE;
 use crate::image::LOADING_PNG;
 use crate::journal::event::Event;
-use crate::state::{Screen, State};
+use crate::state::{Screen, State, PanelType};
 use crate::theme::{style, ORANGE};
 use iced::widget::{column, pane_grid, progress_bar, row, svg, text};
 use iced::{Bottom, Center, Element, Fill, Task};
@@ -35,6 +35,10 @@ pub enum Message {
     // Pane grid interactions on the Overview screen
     PaneDragged(pane_grid::DragEvent),
     PaneResized(pane_grid::ResizeEvent),
+
+    // Settings menu / pane toggles
+    ShowSettingsMenu(bool),
+    TogglePanel(PanelType, bool),
 
     JournalLoaded,
     Empty,
