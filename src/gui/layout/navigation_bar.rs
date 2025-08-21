@@ -4,7 +4,7 @@ use crate::state::{PanelType, Screen, State};
 use crate::theme::{style, GRAY, ORANGE, WHITE};
 use iced::widget::button::{Status, Style};
 use iced::widget::{button, checkbox, column, row, svg, Column, Row};
-use iced::{Fill, Theme};
+use iced::{Fill, Right, Theme};
 use std::mem::discriminant;
 
 pub fn navigation_bar(state: &State) -> Row<'_, Message> {
@@ -23,9 +23,11 @@ pub fn navigation_bar(state: &State) -> Row<'_, Message> {
             let p = panel.clone();
             let cb = checkbox(panel.title(), checked)
                 .on_toggle(move |v| Message::TogglePanel(p.clone(), v));
+            
             items.push(cb.into());
+            items.push(column![].width(16).into());
         }
-        column(items)
+        column![row(items)]
             .padding(6)
             .spacing(4)
     } else {
@@ -39,7 +41,7 @@ pub fn navigation_bar(state: &State) -> Row<'_, Message> {
         navigation_button(state, "MARKET", Screen::Market),
         navigation_button(state, "LOG", Screen::Messages),
         column![].width(Fill),
-        column![settings_button, settings_menu]
+        column![settings_menu, settings_button].align_x(Right)
     ]
 }
 
