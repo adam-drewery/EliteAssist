@@ -166,7 +166,7 @@ impl ArdentClient {
     pub async fn get_nearby_systems(
         &self,
         system_name: &str,
-        max_distance: Option<u32>
+        max_distance: Option<f32>
     ) -> Result<Vec<NearbySystem>, ArdentError> {
         let path = format!("system/name/{}/nearby", system_name);
         let mut query = Vec::new();
@@ -538,7 +538,7 @@ pub struct SystemInfo {
 #[derive(Debug, Clone, Deserialize)]
 pub struct NearbySystem {
     #[serde(rename = "systemAddress")]
-    pub address: i64,
+    pub address: u64,
     #[serde(rename = "systemName")]
     pub name: String,
     #[serde(rename = "systemX")]

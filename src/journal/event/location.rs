@@ -8,9 +8,11 @@ impl Into<state::CurrentLocation> for event::Location {
             docked: self.docked,
             station_name: self.station_name,
             station_type: self.station_type,
-            station_faction: self.station_faction.map(|sf| state::SystemFaction {
-                name: sf.name,
-                faction_state: sf.faction_state,
+            station_faction: self.station_faction.map(|faction| {
+                state::SystemFaction {
+                    name: faction.name,
+                    faction_state: faction.faction_state,
+                }
             }),
             station_government: self.station_government_localised,
             station_services: self.station_services,

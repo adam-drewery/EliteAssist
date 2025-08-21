@@ -74,7 +74,7 @@ impl Into<state::ShipLoadout> for event::Loadout {
             hull_health: self.hull_health,
             unladen_mass: self.unladen_mass,
             cargo_capacity: self.cargo_capacity,
-            max_jump_range: self.max_jump_range,
+            max_jump_range: self.max_jump_range as f32,
             fuel_capacity: state::FuelCapacity {
                 main: self.fuel_capacity.main,
                 reserve: self.fuel_capacity.reserve,

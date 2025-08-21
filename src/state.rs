@@ -25,12 +25,24 @@ use crate::journal;
 use crate::journal::format;
 use crate::query;
 use iced::Task;
+use iced::widget::pane_grid;
 use serde::Deserialize;
 use std::collections::HashMap;
 use thousands::Separable;
 
+#[derive(Clone, Debug)]
+pub enum PanelType {
+    Loadout,
+    Messages,
+    Route,
+    Location,
+    ShipDetails,
+    ShipModules,
+}
+
 #[derive(Default)]
 pub struct State {
+    pub overview_panes: Option<pane_grid::State<PanelType>>,
     pub commander_name: String,
     pub credits: String,
     pub current_system: String,
@@ -39,7 +51,7 @@ pub struct State {
     pub ship_locker: ShipLocker,
     pub ship_loadout: ShipLoadout,
     pub suit_loadout: SuitLoadout,
-    pub active_screen: ActiveScreen,
+    pub active_screen: Screen,
     pub materials: Materials,
     pub messages: Vec<ChatMessage>,
     pub logs: Vec<GameEventLog>,
@@ -62,7 +74,7 @@ pub struct State {
 }
 
 #[derive(Clone, Debug, Default, Deserialize)]
-pub enum ActiveScreen {
+pub enum Screen {
     #[default]
     Commander,
     ShipLocker,
@@ -72,6 +84,16 @@ pub enum ActiveScreen {
 }
 
 impl State {
+    fn default_overview_panes() -> pane_grid::State<PanelType> {
+        let (mut panes, p1) = pane_grid::State::new(PanelType::Loadout);
+        let Some((p2, _)) = panes.split(pane_grid::Axis::Vertical, p1, PanelType::Route) else { return panes; };
+        let Some((p3, _)) = panes.split(pane_grid::Axis::Vertical, p2, PanelType::ShipDetails) else { return panes; };
+        let _ = panes.split(pane_grid::Axis::Horizontal, p1, PanelType::Messages);
+        let _ = panes.split(pane_grid::Axis::Horizontal, p2, PanelType::Location);
+        let _ = panes.split(pane_grid::Axis::Horizontal, p3, PanelType::ShipModules);
+        panes
+    }
+
     pub fn update_from(&mut self, message: Message) -> Task<Message> {
 
         match message {
@@ -89,26 +111,47 @@ impl State {
             }
 
             Message::BodiesQueried(bodies) => {
-                self.location.edsm_bodies = bodies.into();
-            }
-
-            Message::FactionsQueried(factions) => {
-                self.location.edsm_factions = Some(factions.into());
+                self.location.known_bodies = bodies.into();
             }
 
             Message::TrafficQueried(traffic) => {
-                self.location.edsm_traffic = Some(traffic.into());
+                self.location.traffic = Some(traffic.into());
             }
 
             Message::DeathsQueried(deaths) => {
-                self.location.edsm_deaths = Some(deaths.into());
+                self.location.deaths = Some(deaths.into());
+            }
+
+            Message::PaneDragged(event) => {
+                if let Some(panes) = &mut self.overview_panes {
+                    match event {
+                        pane_grid::DragEvent::Picked { .. } => {}
+                        pane_grid::DragEvent::Dropped { pane, target } => {
+                            panes.drop(pane, target);
+                        }
+                        pane_grid::DragEvent::Canceled { .. } => {
+                            // no-op on cancel
+                        }
+                    }
+                }
+            }
+
+            Message::PaneResized(event) => {
+                if let Some(panes) = &mut self.overview_panes {
+                    panes.resize(event.split, event.ratio);
+                }
             }
 
             Message::JournalLoaded => {
                 self.journal_loaded = true;
+                if self.overview_panes.is_none() {
+                    self.overview_panes = Some(Self::default_overview_panes());
+                }
 
                 if self.journal_loaded {
-                    return query::system(&self.current_system);
+                    return query::system(
+                        self.current_system.clone(),
+                        self.ship_loadout.max_jump_range);
                 }
             }
 
@@ -323,7 +366,9 @@ impl State {
                         self.location = e.into();
 
                         if self.journal_loaded {
-                            return query::system(&self.current_system);
+                            return query::system(
+                                self.current_system.clone(),
+                                self.ship_loadout.max_jump_range);
                         }
                     }
 

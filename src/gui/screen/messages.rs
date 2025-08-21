@@ -68,40 +68,48 @@ fn messages_column(state: &State) -> Column<'_, Message> {
 
 fn journal_column(state: &State) -> Column<'_, Message> {
     column![
-            text("Journal").size(20).color(ORANGE),
-            scrollable(column(
-                state
-                    .logs
-                    .iter()
-                    .map(|item| {
-                        row![
-                            column![text(&item.verb).color(ORANGE).size(16)]
-                                .padding([0, 4])
-                                .width(192)
-                                .align_x(Right),
-
-                            text(&item.noun)
+        text("Journal").size(20).color(ORANGE),
+        scrollable(column(
+            state
+                .logs
+                .iter()
+                .map(|item| {
+                    row![
+                        column![
+                            text(&item.verb)
+                                .color(ORANGE)
                                 .size(16)
-                                .color(WHITE)
-                                .width(Fill)
-                                .height(16)
-                                .align_x(Left)
-                                .wrapping(Wrapping::None),
-
-                            column![text(&item.time_display)
-                                .size(12)
-                                    .color(GRAY)
-                                    .width(192)
-                                    .height(16)
-                                    .align_x(Right)]
-                                .padding([0, 8])
+                                .font(EUROSTILE)
                         ]
-                        .padding(2)
-                    })
-                    .map(Element::from)
-            ))
-            .anchor_bottom()
-        ]
-        .width(Fill)
-        .align_x(Left)
+                        .padding([0, 4])
+                        .width(192)
+                        .align_x(Right),
+
+                        text(&item.noun)
+                            .size(16)
+                            .color(WHITE)
+                            .width(Fill)
+                            .height(16)
+                            .align_x(Left)
+                            .wrapping(Wrapping::None)
+                            .font(EUROSTILE),
+
+                        column![
+                            text(&item.time_display)
+                                .size(12)
+                                .color(GRAY)
+                                .width(192)
+                                .height(16)
+                                .align_x(Right)
+                            ]
+                            .padding([0, 8])
+                    ]
+                    .padding(2)
+                })
+                .map(Element::from)
+        ))
+        .anchor_bottom()
+    ]
+    .width(Fill)
+    .align_x(Left)
 }

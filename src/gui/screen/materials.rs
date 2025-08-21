@@ -50,10 +50,17 @@ fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a,
                                         .color(YELLOW)
                                         .font(EUROSTILE)
                                         .width(36),
-                                    text(item.name).size(16),
+                                    text(item.name)
+                                        .font(EUROSTILE)
+                                        .size(16),
                                 ]
                                 .padding(2),
-                                column(item.locations.into_iter().map(|loc| row![text(loc).size(16).font(EUROSTILE)].into()).collect::<Vec<Element<Message>>>()),
+                                column(
+                                    item.locations
+                                        .into_iter()
+                                        .map(|loc| row![text(loc).size(16).font(EUROSTILE)].into())
+                                        .collect::<Vec<Element<Message>>>()
+                            ),
                             Position::FollowCursor
                             )
                         .style(style::tooltip)

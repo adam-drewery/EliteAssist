@@ -1,3 +1,5 @@
+use crate::ardent;
+
 #[derive(Default, Clone, Debug)]
 pub struct NavRouteStep {
 
@@ -28,6 +30,7 @@ pub struct CurrentLocation {
     pub system_second_economy: String,
     pub system_government: String,
     pub system_security: String,
+    pub system_faction: Option<SystemFaction>,
     pub population: u64,
     pub body: String,
     pub body_id: u64,
@@ -40,22 +43,11 @@ pub struct CurrentLocation {
     pub powerplay_state_reinforcement: Option<u64>,
     pub powerplay_state_undermining: Option<u64>,
     pub factions: Vec<Faction>,
-    pub system_faction: Option<SystemFaction>,
-
-    // EDSM enrichment
     pub stations: Vec<Station>,
     pub nearby_systems: Vec<System>,
-    pub edsm_bodies: Vec<Body>,
-    pub edsm_factions: Option<Factions>,
-    pub edsm_traffic: Option<Counts>,
-    pub edsm_deaths: Option<Counts>,
-}
-
-
-#[derive(Default, Clone, Debug)]
-pub struct SystemFaction {
-    pub name: String,
-    pub faction_state: Option<String>,
+    pub known_bodies: Vec<Body>,
+    pub traffic: Option<Counts>,
+    pub deaths: Option<Counts>,
 }
 
 #[derive(Default, Clone, Debug)]
@@ -78,12 +70,17 @@ pub struct Faction {
 }
 
 #[derive(Default, Clone, Debug)]
+pub struct SystemFaction {
+    pub name: String,
+    pub faction_state: Option<String>,
+}
+
+#[derive(Default, Clone, Debug)]
 pub struct FactionState {
     pub state: String,
     pub trend: u64,
 }
 
-// ------------------------------ EDSM enrichment child structs ------------------------------
 #[derive(Default, Clone, Debug)]
 pub struct Station {
     pub id: i64,
@@ -100,8 +97,8 @@ pub struct Station {
     pub have_shipyard: bool,
     pub have_outfitting: bool,
     pub other_services: Vec<String>,
-    pub controlling_faction: FactionRef,
-    pub update_time: StationUpdateTime,
+    pub controlling_faction: String,
+    pub update_time: LastUpdated,
 }
 
 #[derive(Default, Clone, Debug)]
@@ -113,31 +110,11 @@ pub struct StationBody {
 }
 
 #[derive(Default, Clone, Debug)]
-pub struct FactionRef {
-    pub id: Option<u64>,
-    pub name: String,
-}
-
-#[derive(Default, Clone, Debug)]
-pub struct StationUpdateTime {
+pub struct LastUpdated {
     pub information: String,
     pub market: Option<String>,
     pub shipyard: Option<String>,
     pub outfitting: Option<String>,
-}
-
-#[derive(Default, Clone, Debug)]
-pub struct System {
-    pub coords: Vec<f64>,
-    pub permit_required: bool,
-    pub primary_star: PrimaryStarMeta,
-}
-
-#[derive(Default, Clone, Debug)]
-pub struct PrimaryStarMeta {
-    pub type_field: String,
-    pub name: String,
-    pub is_scoopable: bool,
 }
 
 #[derive(Default, Clone, Debug)]
@@ -151,43 +128,16 @@ pub struct Body {
 }
 
 #[derive(Default, Clone, Debug)]
+pub struct System {
+    pub address: u64,
+    pub name: String
+}
+
+#[derive(Default, Clone, Debug)]
 pub struct Counts {
     pub day: u64,
     pub week: u64,
     pub total: u64,
-}
-
-#[derive(Default, Clone, Debug)]
-pub struct Factions {
-    pub controlling_faction: FactionRef,
-    pub factions: Vec<FactionExtra>,
-}
-
-#[derive(Default, Clone, Debug)]
-pub struct FactionNamedState {
-    pub state: String,
-}
-
-#[derive(Default, Clone, Debug)]
-pub struct FactionTrend {
-    pub state: String,
-    pub trend: i32,
-}
-
-#[derive(Default, Clone, Debug)]
-pub struct FactionExtra {
-    pub id: u64,
-    pub name: String,
-    pub allegiance: String,
-    pub government: String,
-    pub influence: f64,
-    pub state: String,
-    pub happiness: String,
-    pub is_player: bool,
-    pub active_states: Vec<FactionNamedState>,
-    pub pending_states: Vec<FactionTrend>,
-    pub recovering_states: Vec<FactionTrend>,
-    pub last_update: u64,
 }
 
 impl NavRouteStep {
@@ -204,12 +154,11 @@ impl NavRouteStep {
     }
 }
 
-// ------------------------------ Nearby Systems ------------------------------
-#[derive(Default, Clone, Debug)]
-pub struct NearbySystem {
-    pub name: String,
-    pub id: u64,
-    pub id64: u64,
-    pub coords: Vec<f64>,
-    pub distance: f64,
+impl From<ardent::NearbySystem> for System {
+    fn from(value: ardent::NearbySystem) -> Self {
+        System {
+            name: value.name,
+            address: value.address
+        }
+    }
 }

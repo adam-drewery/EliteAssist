@@ -1,41 +1,41 @@
-mod overview;
-mod header_bar;
-mod materials;
-mod navigation_bar;
-mod ship_locker;
-mod messages;
-mod market;
+
+mod layout;
+mod panel;
+mod screen;
 mod components;
 
-use crate::journal::event::Event;
-use crate::image::LOADING_PNG;
-use crate::state::{ActiveScreen, State};
-use crate::theme::{style, ORANGE};
-use crate::{centered_column, centered_row, edsm};
 use chrono::Utc;
-use header_bar::header_bar;
-use iced::widget::{column, progress_bar, row, svg, text};
-use iced::{Bottom, Center, Element, Fill, Task};
-use market::market;
-use materials::materials;
-use messages::messages;
-use navigation_bar::navigation_bar;
-use overview::overview;
-use ship_locker::ship_locker;
 use crate::font::EUROSTILE;
+use crate::image::LOADING_PNG;
+use crate::journal::event::Event;
+use crate::state::{Screen, State};
+use crate::theme::{style, ORANGE};
+use iced::widget::{column, pane_grid, progress_bar, row, svg, text};
+use iced::{Bottom, Center, Element, Fill, Task};
+use crate::{ardent, centered_column, centered_row, edsm};
+use crate::gui::layout::header_bar;
+use crate::gui::layout::navigation_bar;
+use crate::gui::screen::market;
+use crate::gui::screen::materials;
+use crate::gui::screen::messages;
+use crate::gui::screen::overview;
+use crate::gui::screen::ship_locker;
 
 #[derive(Clone, Debug)]
 pub enum Message {
-    NavigateTo(ActiveScreen),
+    NavigateTo(Screen),
     JournalEvent(Event),
     
     StationsQueried(edsm::Stations),
-    NearbySystemsQueried(Vec<edsm::System>),
+    NearbySystemsQueried(Vec<ardent::NearbySystem>),
     BodiesQueried(edsm::Bodies),
-    FactionsQueried(edsm::Factions),
     TrafficQueried(edsm::Traffic),
     DeathsQueried(edsm::Deaths),
     
+    // Pane grid interactions on the Overview screen
+    PaneDragged(pane_grid::DragEvent),
+    PaneResized(pane_grid::ResizeEvent),
+
     JournalLoaded,
     Empty,
 }
@@ -54,11 +54,11 @@ impl Gui {
             column![
                 header_bar(state),
                 match state.active_screen {
-                    ActiveScreen::Commander => overview(state),
-                    ActiveScreen::Materials => materials(state),
-                    ActiveScreen::ShipLocker => ship_locker(state),
-                    ActiveScreen::Market => market(state),
-                    ActiveScreen::Messages => messages(state),
+                    Screen::Commander => overview(state),
+                    Screen::Materials => materials(state),
+                    Screen::ShipLocker => ship_locker(state),
+                    Screen::Market => market(state),
+                    Screen::Messages => messages(state),
                 }
                 .height(Fill),
                 navigation_bar(state).align_y(Bottom),
@@ -75,7 +75,7 @@ impl Gui {
 }
 
 fn waiting_spinner<'a>() -> Element<'a, Message> {
-    column![
+        column![
                 row![].height(Fill),
                 row![
                     column![].width(Fill),

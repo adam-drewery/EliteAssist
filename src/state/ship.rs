@@ -12,7 +12,7 @@ pub struct ShipLoadout {
     pub hull_health: f64,
     pub unladen_mass: f64,
     pub cargo_capacity: u64,
-    pub max_jump_range: f64,
+    pub max_jump_range: f32,
     pub fuel_capacity: FuelCapacity,
     pub rebuy: u64,
     pub hardpoints: Vec<ShipModule>,

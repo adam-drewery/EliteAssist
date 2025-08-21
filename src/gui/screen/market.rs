@@ -5,6 +5,7 @@ use crate::theme::{GRAY, ORANGE, WHITE, YELLOW};
 use iced::widget::scrollable;
 use iced::widget::{column, row, text, Row};
 use iced::{Bottom, Element, Fill, Left};
+use crate::font::EUROSTILE;
 
 pub fn market(state: &State) -> Row<'_, Message> {
     row![
@@ -62,5 +63,6 @@ fn name_cell(item: &MarketItem) -> Element<'_, Message> {
         .size(16)
         .color(if item.rare { YELLOW } else { ORANGE })
         .width(Fill)
+        .font(EUROSTILE)
         .into()
 }

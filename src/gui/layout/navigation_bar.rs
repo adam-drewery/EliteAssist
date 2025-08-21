@@ -1,5 +1,5 @@
 use crate::gui::Message;
-use crate::state::{ActiveScreen, State};
+use crate::state::{Screen, State};
 use crate::theme::{GRAY, ORANGE, WHITE};
 use iced::widget::button::{Status, Style};
 use iced::widget::{button, row, Column, Row};
@@ -8,15 +8,15 @@ use std::mem::discriminant;
 
 pub fn navigation_bar(state: &State) -> Row<'_, Message> {
     row![
-        navigation_button(state, "CMDR", ActiveScreen::Commander),
-        navigation_button(state, "MATERIALS", ActiveScreen::Materials),
-        navigation_button(state, "SHIP LOCKER", ActiveScreen::ShipLocker),
-        navigation_button(state, "MARKET", ActiveScreen::Market),
-        navigation_button(state, "LOG", ActiveScreen::Messages),
+        navigation_button(state, "CMDR", Screen::Commander),
+        navigation_button(state, "MATERIALS", Screen::Materials),
+        navigation_button(state, "SHIP LOCKER", Screen::ShipLocker),
+        navigation_button(state, "MARKET", Screen::Market),
+        navigation_button(state, "LOG", Screen::Messages),
     ]
 }
 
-fn navigation_button<'a>(state: &State, title: &'a str, screen: ActiveScreen) -> Column<'a, Message> {
+fn navigation_button<'a>(state: &State, title: &'a str, screen: Screen) -> Column<'a, Message> {
 
     let style = if discriminant(&state.active_screen) == discriminant(&screen) { selected_style }
         else { default_style };
