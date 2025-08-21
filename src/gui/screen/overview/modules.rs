@@ -1,4 +1,3 @@
-use crate::gui::components::header;
 use crate::gui::Message;
 use crate::image::engineering::ENGINEER_ICON_PNG;
 use crate::image::ship_modules::*;
@@ -12,7 +11,6 @@ use iced::{Center, Fill, Right};
 pub fn ship_modules(state: &State) -> Column<'_, Message> {
 
     column![
-        header("Modules"),
         scrollable(
             row![
                 column![

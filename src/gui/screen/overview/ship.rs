@@ -1,4 +1,4 @@
-use crate::gui::components::{details, header};
+use crate::gui::components::details;
 use crate::gui::Message;
 use crate::state::State;
 use crate::theme::GRAY;
@@ -16,7 +16,6 @@ pub fn ship_details(state: &State) -> Column<'_, Message> {
     let ship_image = Handle::from_bytes(ship_image_bytes);
 
     column![
-        header("Ship"),
         ship_title(&state.ship_loadout),
         row![
             column![image(ship_image).height(160).width(160)].padding(8),

@@ -10,14 +10,14 @@ use iced::{Element, Fill};
 
 pub fn loadout(state: &State) -> Column<'_, Message> {
     column![
-        column![
-                header("Loadout"),
-                details("Suit Name", &state.suit_loadout.suit_name),
-                details("Loadout", &state.suit_loadout.loadout_name)
-            ]
-            .padding(8),
-        column![
-            header("Ranks"),
+            details("Suit Name", &state.suit_loadout.suit_name),
+            details("Loadout", &state.suit_loadout.loadout_name)
+        ]
+        .padding(8)
+}
+
+pub fn ranks(state: &State) -> Column<'_, Message> {
+    column![
             row![
                 rank("Combat Rank", state.rank.combat, state.progress.combat, Rank::combat),
                 rank("Explorer Rank", state.rank.explore, state.progress.explore, Rank::exploration)
@@ -51,7 +51,6 @@ pub fn loadout(state: &State) -> Column<'_, Message> {
                     Some(Rank::empire))
             ],
         ].padding(8)
-    ]
 }
 
 fn rank(title: &str, rank: u64, progress: u64, lookup: fn(&String) -> Option<&Rank>) -> Column<'_, Message> {
@@ -142,7 +141,6 @@ fn superpower_rank(title: &str, rank: Option<u64>, progress: Option<u64>, reputa
 
 pub fn messages(state: &State) -> Column<'_, Message> {
     column![
-        header("Messages"),
         scrollable(column(
             state
                 .messages
@@ -162,7 +160,7 @@ pub fn messages(state: &State) -> Column<'_, Message> {
         ))
         .anchor_bottom()
     ]
-    .height(256)
+    .height(Fill)
     .padding(8)
 }
 

@@ -38,6 +38,7 @@ pub enum PanelType {
     Location,
     ShipDetails,
     ShipModules,
+    Ranks,
 }
 
 #[derive(Default)]
@@ -85,19 +86,27 @@ pub enum Screen {
 
 impl State {
     fn default_overview_panes() -> pane_grid::State<PanelType> {
-        let (mut panes, p1) = pane_grid::State::new(PanelType::Loadout);
-        let Some((p2, s1)) = panes.split(pane_grid::Axis::Vertical, p1, PanelType::Route) else { return panes; };
-        let Some((p3, s2)) = panes.split(pane_grid::Axis::Vertical, p2, PanelType::ShipDetails) else { return panes; };
-        let _ = panes.split(pane_grid::Axis::Horizontal, p1, PanelType::Messages);
-        let _ = panes.split(pane_grid::Axis::Horizontal, p2, PanelType::Location);
-        let _ = panes.split(pane_grid::Axis::Horizontal, p3, PanelType::ShipModules);
+        let (mut panes, pane_1) = pane_grid::State::new(PanelType::Loadout);
 
-        // make sure they're evenly spaced
-        panes.resize(s1, 1.0f32 / 3.0f32);
-        panes.resize(s2, 0.5f32);
+        let Some((pane_2, split_1)) = panes.split(pane_grid::Axis::Vertical, pane_1, PanelType::Route) else { return panes; };
+        let Some((pane_3, _split_2)) = panes.split(pane_grid::Axis::Vertical, pane_2, PanelType::ShipDetails) else { return panes; };
+
+        let Some((_, split_3)) = panes.split(pane_grid::Axis::Horizontal, pane_1, PanelType::Messages) else { return panes; };
+        let Some((_, split_4)) = panes.split(pane_grid::Axis::Horizontal, pane_1, PanelType::Ranks) else { return panes; };
+        let Some((_, split_5)) = panes.split(pane_grid::Axis::Horizontal, pane_2, PanelType::Location) else { return panes; };
+        let Some((_, split_6)) = panes.split(pane_grid::Axis::Horizontal, pane_3, PanelType::ShipModules) else { return panes; };
+
+        // Set vertical splits so each column takes up 1/3 of the space
+        panes.resize(split_1, 1.0f32 / 3.0f32);
+
+        // Set horizontal splits 
+        panes.resize(split_3, 0.66f32);
+        panes.resize(split_4, 0.3f32);
+        panes.resize(split_5, 0.6f32);
+        panes.resize(split_6, 0.3f32);
+
         panes
     }
-
     pub fn update_from(&mut self, message: Message) -> Task<Message> {
 
         match message {

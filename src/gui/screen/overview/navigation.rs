@@ -11,7 +11,6 @@ use crate::font::EUROSTILE;
 
 pub fn location(state: &State) -> Column<'_, Message> {
     column![
-        header("Location"),
         row![
             system(state),
             powerplay(state)
@@ -74,11 +73,9 @@ fn system(state: &State) -> Column<'_, Message> {
 }
 
 pub fn route(state: &State) -> Column<'_, Message> {
-    let title_column = column![header("Route")].padding(8);
 
     if state.nav_route.len() == 0 {
         return column![
-            title_column,
             empty_text("No current route")
         ]
     }
@@ -123,6 +120,6 @@ pub fn route(state: &State) -> Column<'_, Message> {
         }
     }
 
-    column![title_column, scrollable(items_column)].height(Fill)
+    column![scrollable(items_column)].height(Fill)
 }
 
