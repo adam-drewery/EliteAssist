@@ -17,6 +17,7 @@ mod ardent;
 mod inara;
 mod lookup;
 mod query;
+mod settings;
 
 fn main() {
 

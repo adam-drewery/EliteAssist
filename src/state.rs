@@ -26,11 +26,11 @@ use crate::journal::format;
 use crate::query;
 use iced::Task;
 use iced::widget::pane_grid;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use thousands::Separable;
 
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum PanelType {
     Loadout,
     Messages,
@@ -84,7 +84,6 @@ impl PanelType {
     }
 }
 
-#[derive(Default)]
 pub struct State {
     pub overview_panes: Option<pane_grid::State<PanelType>>,
     pub show_settings_menu: bool,
@@ -127,6 +126,57 @@ pub enum Screen {
     Market,
     Materials,
     Messages,
+}
+
+impl Default for State {
+    fn default() -> Self {
+        // Start with basic defaults for all fields
+        let mut s = Self {
+            overview_panes: None,
+            show_settings_menu: false,
+            enabled_panels: None,
+            commander_name: String::new(),
+            credits: String::new(),
+            current_system: String::new(),
+            current_body: String::new(),
+            location: Default::default(),
+            ship_locker: Default::default(),
+            ship_loadout: Default::default(),
+            suit_loadout: Default::default(),
+            active_screen: Default::default(),
+            materials: Default::default(),
+            messages: Vec::new(),
+            logs: Vec::new(),
+            crime: Default::default(),
+            market: Default::default(),
+            rank: Default::default(),
+            reputation: Default::default(),
+            engineers: Default::default(),
+            nav_route: Vec::new(),
+            missions: Vec::new(),
+            combat_bonds: HashMap::new(),
+            bounties: HashMap::new(),
+            discoveries: HashMap::new(),
+            progress: Default::default(),
+            journal_loaded: false,
+            first_message_timestamp: 0,
+            latest_message_timestamp: 0,
+            latest_message_timestamp_formatted: String::new(),
+        };
+
+        // Attempt to load persisted settings and apply
+        if let Some(settings) = crate::settings::Settings::load() {
+            if let Some(layout) = &settings.layout {
+                s.overview_panes = Some(crate::settings::build_panes_from_layout(layout));
+                // If visible list not provided, derive from layout leaves
+                s.enabled_panels = Some(settings.visible.unwrap_or_else(|| crate::settings::layout_leaf_panels(layout)));
+            } else if let Some(visible) = settings.visible {
+                s.enabled_panels = Some(visible);
+            }
+        }
+
+        s
+    }
 }
 
 impl State {
@@ -221,6 +271,7 @@ impl State {
                         pane_grid::DragEvent::Picked { .. } => {}
                         pane_grid::DragEvent::Dropped { pane, target } => {
                             panes.drop(pane, target);
+                            let _ = crate::settings::Settings::save_from_state(self);
                         }
                         pane_grid::DragEvent::Canceled { .. } => {
                             // no-op on cancel
@@ -232,6 +283,7 @@ impl State {
             Message::PaneResized(event) => {
                 if let Some(panes) = &mut self.overview_panes {
                     panes.resize(event.split, event.ratio);
+                    let _ = crate::settings::Settings::save_from_state(self);
                 }
             }
 
@@ -282,6 +334,8 @@ impl State {
                         }
                     }
                 }
+                // Persist settings after visibility/layout changes
+                let _ = crate::settings::Settings::save_from_state(self);
             }
 
             Message::JournalLoaded => {
@@ -303,6 +357,8 @@ impl State {
                         }
                     }
                     self.overview_panes = Some(panes);
+                    // Persist the initialized layout so a settings file exists even before any manual changes
+                    let _ = crate::settings::Settings::save_from_state(self);
                 }
 
                 if self.journal_loaded {
