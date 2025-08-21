@@ -119,7 +119,7 @@ async fn test_get_system_info() {
 #[tokio::test]
 async fn test_get_nearby_systems() {
     let client = ArdentClient::default();
-    let systems = client.get_nearby_systems("Sol", Some(20)).await.unwrap();
+    let systems = client.get_nearby_systems("Sol", Some(20f32)).await.unwrap();
         println!("Nearby systems count: {}", systems.len());
         if !systems.is_empty() {
             let first_system = &systems[0];
