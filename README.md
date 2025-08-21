@@ -14,7 +14,8 @@ _A Linux compatible Elite:Dangerous companion for your second monitor_
 
 ## Features
 
-- Overview screen with ship details, location and route data, personal details, outstanding transactions and missions:
+- Overview screen with ship details, location and route data, personal details, outstanding transactions and missions.
+- This screen is customizable- panels can be rearranged, removed or added, and the layout is automatically persisted in a settings file.
 
 ![Main application screen](docs/main_screen.png)
 
