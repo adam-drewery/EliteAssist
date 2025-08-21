@@ -1,3 +1,5 @@
+#![windows_subsystem = "windows"]
+
 use iced::Size;
 use crate::gui::Gui;
 use crate::subscription::subscription;
