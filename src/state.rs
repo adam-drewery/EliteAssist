@@ -86,11 +86,15 @@ pub enum Screen {
 impl State {
     fn default_overview_panes() -> pane_grid::State<PanelType> {
         let (mut panes, p1) = pane_grid::State::new(PanelType::Loadout);
-        let Some((p2, _)) = panes.split(pane_grid::Axis::Vertical, p1, PanelType::Route) else { return panes; };
-        let Some((p3, _)) = panes.split(pane_grid::Axis::Vertical, p2, PanelType::ShipDetails) else { return panes; };
+        let Some((p2, s1)) = panes.split(pane_grid::Axis::Vertical, p1, PanelType::Route) else { return panes; };
+        let Some((p3, s2)) = panes.split(pane_grid::Axis::Vertical, p2, PanelType::ShipDetails) else { return panes; };
         let _ = panes.split(pane_grid::Axis::Horizontal, p1, PanelType::Messages);
         let _ = panes.split(pane_grid::Axis::Horizontal, p2, PanelType::Location);
         let _ = panes.split(pane_grid::Axis::Horizontal, p3, PanelType::ShipModules);
+
+        // make sure they're evenly spaced
+        panes.resize(s1, 1.0f32 / 3.0f32);
+        panes.resize(s2, 0.5f32);
         panes
     }
 

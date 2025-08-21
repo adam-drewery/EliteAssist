@@ -1,7 +1,11 @@
-pub mod ship;
+mod gui;
 pub mod engineering;
+pub mod ship;
 pub mod ship_modules;
 
-pub const LOADING_PNG: &[u8] = include_bytes!("../image/loading.svg");
+pub const LOADING_PNG: &[u8] = include_bytes!("../img/loading.svg");
 
-pub const FUEL_STAR_PNG: &[u8] = include_bytes!("../image/fuel_star.png");
+pub const FUEL_STAR_PNG: &[u8] = include_bytes!("../img/fuel_star.png");
+
+
+
