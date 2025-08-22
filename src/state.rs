@@ -205,23 +205,7 @@ impl State {
 
         panes
     }
-
-    fn build_panes_from(list: &Vec<PanelType>) -> pane_grid::State<PanelType> {
-        // Fallback to default layout if list is empty
-        if list.is_empty() {
-            return Self::default_overview_panes();
-        }
-        let mut iter = list.iter();
-        let first = iter.next().cloned().unwrap_or(PanelType::Loadout);
-        let (mut panes, mut last_pane) = pane_grid::State::new(first);
-        for panel in iter.cloned() {
-            if let Some((new_pane, _split)) = panes.split(pane_grid::Axis::Vertical, last_pane, panel) {
-                last_pane = new_pane;
-            }
-        }
-        panes
-    }
-
+    
     // Helper: find the Pane that contains the given PanelType
     fn find_pane_with(panes: &pane_grid::State<PanelType>, target: &PanelType) -> Option<pane_grid::Pane> {
         // The iced::pane_grid::State exposes a `panes` field that can be iterated

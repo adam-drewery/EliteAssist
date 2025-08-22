@@ -38,12 +38,9 @@ impl Into<state::MarketItem> for event::MarketItem {
             name: self.name_localised.unwrap_or(title_case(&self.name)),
             buy_price: self.buy_price,
             sell_price: self.sell_price,
-            mean_price: self.mean_price,
             demand: self.demand,
             consumer: self.consumer,
             producer: self.producer,
-            demand_bracket: self.demand_bracket,
-            stock_bracket: self.stock_bracket,
             stock: self.stock,
             rare: self.rare,
         }
