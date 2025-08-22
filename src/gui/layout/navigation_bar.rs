@@ -25,10 +25,10 @@ pub fn navigation_bar(state: &State) -> Row<'_, Message> {
     let settings_menu: Column<'_, Message> = if state.show_settings_menu {
         // Build a list of checkboxes for each available panel
         let mut items: Vec<iced::Element<'_, Message>> = Vec::new();
-        for panel in pane::Type::all().iter() {
-            let checked = pane::is_enabled(state, panel);
-            let p = panel.clone();
-            let cb = checkbox(panel.title(), checked)
+        for pane in pane::Type::all().iter() {
+            let checked = pane.is_enabled(state);
+            let p = pane.clone();
+            let cb = checkbox(pane.title(), checked)
                 .on_toggle(move |v| Message::TogglePane(p.clone(), v));
             
             items.push(cb.into());

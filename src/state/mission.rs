@@ -1,3 +1,4 @@
+use crate::journal::event;
 use chrono::{DateTime, Utc};
 
 pub struct Mission {
@@ -15,8 +16,6 @@ pub struct Mission {
     pub reward: Option<u64>,
     pub mission_id: u64,
 }
-
-use crate::journal::event;
 
 impl From<event::MissionAccepted> for Mission {
     fn from(value: event::MissionAccepted) -> Self {

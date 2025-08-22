@@ -1,3 +1,5 @@
+use crate::journal::event;
+
 #[derive(Default)]
 pub struct Rank {
     pub combat: u64,
@@ -23,8 +25,6 @@ pub struct Reputation {
     pub federation: f64,
     pub alliance: f64
 }
-
-use crate::journal::event;
 
 impl From<event::Rank> for Rank {
     fn from(value: event::Rank) -> Self {

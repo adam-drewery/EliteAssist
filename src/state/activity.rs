@@ -1,12 +1,12 @@
+use crate::journal::event;
+use crate::journal::format::prettify_date;
+use thousands::Separable;
+
 pub struct GameEventLog {
     pub time_display: String,
     pub verb: String,
     pub noun: String,
 }
-
-use crate::journal::event;
-use crate::journal::format::prettify_date;
-use thousands::Separable;
 
 impl From<event::Embark> for GameEventLog {
     fn from(value: event::Embark) -> Self {

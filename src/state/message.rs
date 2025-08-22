@@ -1,3 +1,8 @@
+use crate::journal::event;
+use crate::journal::format::prettify_date;
+use once_cell::sync::Lazy;
+use regex::Regex;
+
 pub struct ChatMessage {
     pub time_display: String,
     pub from: String,
@@ -19,11 +24,6 @@ pub enum Channel {
     Squadron,
     SquadLeaders
 }
-
-use crate::journal::event;
-use crate::journal::format::prettify_date;
-use once_cell::sync::Lazy;
-use regex::Regex;
 
 impl From<event::ReceiveText> for ChatMessage {
     fn from(value: event::ReceiveText) -> Self {

@@ -1,3 +1,5 @@
+use crate::journal::event;
+
 #[derive(Default)]
 pub struct Engineer {
     pub engineer: String,
@@ -6,8 +8,6 @@ pub struct Engineer {
     pub rank_progress: u64,
     pub rank: u64,
 }
-
-use crate::journal::event;
 
 impl From<event::EngineerProgressEngineer> for Engineer {
     fn from(value: event::EngineerProgressEngineer) -> Self {

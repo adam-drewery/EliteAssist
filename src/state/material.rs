@@ -1,3 +1,7 @@
+use crate::journal::event;
+use crate::lookup::fdev_ids::all_materials;
+use std::collections::HashMap;
+
 #[derive(Clone, Default)]
 pub struct Materials {
     pub raw: Vec<MaterialGroup>,
@@ -19,9 +23,6 @@ pub struct Material {
     pub count: u64,
     pub locations: Vec<String>,
 }
-use crate::journal::event;
-use crate::lookup::fdev_ids::all_materials;
-use std::collections::HashMap;
 
 impl From<event::Materials> for Materials {
     fn from(value: event::Materials) -> Self {

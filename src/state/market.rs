@@ -1,3 +1,6 @@
+use crate::journal::event;
+use crate::journal::format::title_case;
+
 #[derive(Default)]
 pub struct Market {
     pub groups: Vec<MarketItemGroup>,
@@ -18,9 +21,6 @@ pub struct MarketItem {
     pub producer: bool,
     pub rare: bool,
 }
-
-use crate::journal::event;
-use crate::journal::format::title_case;
 
 impl From<event::Market> for Market {
     fn from(value: event::Market) -> Self {

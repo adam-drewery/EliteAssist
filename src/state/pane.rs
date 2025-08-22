@@ -18,6 +18,7 @@ pub enum Type {
 }
 
 impl Type {
+
     pub const fn all() -> [Type; 9] {
         [
             Type::Loadout,
@@ -57,6 +58,68 @@ impl Type {
             Type::Ranks,
         ]
     }
+
+    pub fn is_enabled(&self, state: &State) -> bool {
+        match &state.enabled_panes {
+            Some(v) => v.contains(self),
+            None => Type::default_enabled_vec().contains(self),
+        }
+    }
+
+    pub fn toggle(self, state: &mut State, enabled: bool) {
+
+        // Start from the current enabled set (or all panels by default)
+        let mut list: Vec<Type> = state
+            .enabled_panes
+            .clone()
+            .unwrap_or_else(|| Type::default_enabled_vec());
+
+        let was_enabled = list.contains(&self);
+        let before_len = list.len();
+
+        if enabled {
+            if !was_enabled {
+                list.push(self.clone());
+            }
+        } else {
+
+            // Prevent disabling the last remaining panel
+            if was_enabled && list.len() > 1 {
+                list.retain(|p| p != &self);
+            }
+        }
+
+        // Keep deterministic order according to PanelType::all()
+        let order = Type::all();
+        list.sort_by_key(|p| order.iter().position(|q| q == p).unwrap_or(usize::MAX));
+
+        let did_enable = enabled && !was_enabled;
+        let did_disable = !enabled && was_enabled && list.len() < before_len;
+
+        state.enabled_panes = Some(list.clone());
+
+        // Mutate the current layout instead of rebuilding to preserve existing splits
+        if let Some(panes) = &mut state.overview_panes {
+            if did_enable {
+
+                // Insert the newly enabled panel by splitting an existing anchor pane
+                if let Some((&anchor, _)) = panes.panes.iter().next() {
+                    let _ = panes.split(pane_grid::Axis::Horizontal, anchor, self.clone());
+                }
+            } else if did_disable {
+
+                // Close the pane containing this panel, preserving another layout
+                if let Some(p) = find_with(panes, &self) {
+                    let _ = panes.close(p);
+                }
+            }
+        }
+
+        // Persist settings after visibility/layout changes
+        Settings::save_from_state(state).unwrap_or_else(|e|
+            log::error!("Failed to save settings: {}", e));
+    }
+
 }
 
 pub fn defaults() -> pane_grid::State<Type> {
@@ -120,60 +183,6 @@ pub fn load(state: &mut State) {
     let _ = Settings::save_from_state(state);
 }
 
-pub fn toggle(state: &mut State, panel: Type, enabled: bool) {
-
-    // Start from the current enabled set (or all panels by default)
-    let mut list: Vec<Type> = state
-        .enabled_panes
-        .clone()
-        .unwrap_or_else(|| Type::default_enabled_vec());
-
-    let was_enabled = list.contains(&panel);
-    let before_len = list.len();
-
-    if enabled {
-        if !was_enabled {
-            list.push(panel.clone());
-        }
-    } else {
-
-        // Prevent disabling the last remaining panel
-        if was_enabled && list.len() > 1 {
-            list.retain(|p| p != &panel);
-        }
-    }
-
-    // Keep deterministic order according to PanelType::all()
-    let order = Type::all();
-    list.sort_by_key(|p| order.iter().position(|q| q == p).unwrap_or(usize::MAX));
-
-    let did_enable = enabled && !was_enabled;
-    let did_disable = !enabled && was_enabled && list.len() < before_len;
-
-    state.enabled_panes = Some(list.clone());
-
-    // Mutate the current layout instead of rebuilding to preserve existing splits
-    if let Some(panes) = &mut state.overview_panes {
-        if did_enable {
-
-            // Insert the newly enabled panel by splitting an existing anchor pane
-            if let Some((&anchor, _)) = panes.panes.iter().next() {
-                let _ = panes.split(pane_grid::Axis::Horizontal, anchor, panel.clone());
-            }
-        } else if did_disable {
-
-            // Close the pane containing this panel, preserving another layout
-            if let Some(p) = find_with(panes, &panel) {
-                let _ = panes.close(p);
-            }
-        }
-    }
-
-    // Persist settings after visibility/layout changes
-    Settings::save_from_state(state).unwrap_or_else(|e|
-        log::error!("Failed to save settings: {}", e));
-}
-
 pub fn dragged(state: &mut State, event: DragEvent) {
     if let Some(panes) = &mut state.overview_panes {
         match event {
@@ -184,12 +193,5 @@ pub fn dragged(state: &mut State, event: DragEvent) {
                 let _ = Settings::save_from_state(state);
             }
         }
-    }
-}
-
-pub fn is_enabled(state: &State, panel: &Type) -> bool {
-    match &state.enabled_panes {
-        Some(v) => v.contains(panel),
-        None => Type::default_enabled_vec().contains(panel),
     }
 }

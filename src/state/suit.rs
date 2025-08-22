@@ -1,11 +1,4 @@
-#[derive(Default)]
-pub struct SuitModule {
-
-    pub slot_name: String,
-    pub module_name: String,
-    pub class: u64,
-    pub weapon_mods: Vec<String>,
-}
+use crate::journal::event;
 
 #[derive(Default)]
 pub struct SuitLoadout {
@@ -16,7 +9,14 @@ pub struct SuitLoadout {
     pub modules: Vec<SuitModule>,
 }
 
-use crate::journal::event;
+#[derive(Default)]
+pub struct SuitModule {
+
+    pub slot_name: String,
+    pub module_name: String,
+    pub class: u64,
+    pub weapon_mods: Vec<String>,
+}
 
 fn localized_name(name: String) -> String {
     if !name.starts_with('$') {

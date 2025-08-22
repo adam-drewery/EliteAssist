@@ -178,7 +178,7 @@ impl State {
             }
 
             Message::TogglePane(pane, enabled) => {
-                pane::toggle(self, pane, enabled);
+                pane.toggle(self, enabled);
             }
 
             Message::ToggleFullscreen => {
