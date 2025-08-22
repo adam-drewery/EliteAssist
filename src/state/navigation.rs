@@ -4,14 +4,12 @@ use crate::ardent;
 pub struct NavRouteStep {
 
     pub star_system: String,
-    pub system_address: u64,
     pub star_pos: Vec<f64>,
     pub star_class: String,
 }
 
 #[derive(Default, Clone, Debug)]
 pub struct CurrentLocation {
-    pub dist_from_star_ls: Option<f64>,
     pub docked: bool,
     pub station_name: Option<String>,
     pub station_type: Option<String>,

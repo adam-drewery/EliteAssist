@@ -4,7 +4,6 @@ use crate::state;
 impl Into<state::CurrentLocation> for event::Location {
     fn into(self) -> state::CurrentLocation {
         state::CurrentLocation {
-            dist_from_star_ls: self.dist_from_star_ls,
             docked: self.docked,
             station_name: self.station_name,
             station_type: self.station_type,

@@ -106,7 +106,7 @@ pub struct State {
     pub market: Market,
     pub rank: Rank,
     pub reputation: Reputation,
-    pub engineers: EngineerProgress,
+    pub engineers: Vec<Engineer>,
     pub nav_route: Vec<NavRouteStep>,
     pub missions: Vec<Mission>,
     pub combat_bonds: HashMap<String, i64>,

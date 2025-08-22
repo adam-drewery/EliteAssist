@@ -1,8 +1,4 @@
 #[derive(Default)]
-pub struct EngineerProgress {
-    pub engineers: Vec<Engineer>
-}
-
 pub struct Engineer {
     pub engineer: String,
     pub engineer_id: u64,

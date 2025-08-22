@@ -43,7 +43,6 @@ fn join_location_parts(system: &String, body: &String, station: &Option<String>)
 impl Into<state::CurrentLocation> for event::FSDJump {
     fn into(self) -> state::CurrentLocation {
         state::CurrentLocation {
-            dist_from_star_ls: None,
             docked: false,
             station_name: None,
             station_type: None,
@@ -125,7 +124,6 @@ impl event::NavRoute {
                 .into_iter()
                 .map(|step| state::NavRouteStep {
                     star_system: step.star_system,
-                    system_address: step.system_address,
                     star_pos: step.star_pos,
                     star_class: step.star_class,
                 })

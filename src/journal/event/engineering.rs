@@ -25,15 +25,13 @@ impl Into<state::Modifier> for event::LoadoutModuleEngineeringModifier {
     }
 }
 
-impl Into<state::EngineerProgress> for event::EngineerProgress {
-    fn into(self) -> state::EngineerProgress {
-        state::EngineerProgress {
-            engineers: self.engineers
-                .unwrap_or_default()
-                .into_iter()
-                .map(|e| e.into())
-                .collect(),
-        }
+impl Into<Vec<state::Engineer>> for event::EngineerProgress {
+    fn into(self) -> Vec<state::Engineer> {
+        self.engineers
+            .unwrap_or_default()
+            .into_iter()
+            .map(|e| e.into())
+            .collect()
     }
 }
 
