@@ -2,6 +2,7 @@ use std::env;
 use std::fs;
 use std::io::Write;
 use std::path::{Path, PathBuf};
+use std::collections::{HashMap, HashSet};
 
 fn main() {
     let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
@@ -30,7 +31,8 @@ fn main() {
     let mut output = String::new();
 
     // Helpers
-    fn rust_escape(s: &str) -> String {
+    fn rust_string_lit(s: &str) -> String {
+        // Turn a raw string into a Rust string literal
         let mut out = String::with_capacity(s.len() + 2);
         out.push('"');
         for ch in s.chars() {
@@ -47,7 +49,25 @@ fn main() {
         out
     }
 
-    // Load a CSV file into Vec<Vec<(header, value)>>
+    fn sanitize_field(header: &str) -> String {
+        let s = header.trim().to_lowercase();
+        if s == "type" {
+            return "r#type".to_string();
+        }
+        // Replace non-identifier characters with '_' and avoid leading digits
+        let mut result = String::new();
+        for (i, ch) in s.chars().enumerate() {
+            let valid = ch.is_ascii_alphanumeric() || ch == '_';
+            let ch = if valid { ch } else { '_' };
+            if i == 0 && ch.is_ascii_digit() {
+                result.push('_');
+            }
+            result.push(ch);
+        }
+        if result.is_empty() { "_".to_string() } else { result }
+    }
+
+    // Load a CSV file into (headers, rows)
     fn load_csv(path: &Path) -> anyhow::Result<(Vec<String>, Vec<Vec<String>>)> {
         let mut rdr = csv::Reader::from_path(path)?;
         let headers = rdr
@@ -63,192 +83,94 @@ fn main() {
         Ok((headers, rows))
     }
 
-    // Generate Outfitting
-    {
-        let (headers, rows) = load_csv(&data_dir.join("outfitting.csv")).expect("load outfitting.csv");
-        // expect columns: id, symbol, category, name, mount, guidance, ship, class, rating, entitlement
-        let idx = |name: &str| headers.iter().position(|h| h.eq_ignore_ascii_case(name)).expect("missing column");
-        let id_i = idx("id");
-        let symbol_i = idx("symbol");
-        let category_i = idx("category");
-        let name_i = idx("name");
-        let mount_i = idx("mount");
-        let guidance_i = idx("guidance");
-        let ship_i = idx("ship");
-        let class_i = idx("class");
-        let rating_i = idx("rating");
-        let entitlement_i = idx("entitlement");
+    // Generic generator: emits struct (once per struct), DATA array, and PHF map
+    fn gen_table(
+        output: &mut String,
+        data_dir: &Path,
+        file_name: &str,
+        struct_name: &str,
+        const_prefix: &str,
+        key_header: &str,
+        emitted_structs: &mut HashSet<String>,
+    ) {
+        let (headers, rows) = load_csv(&data_dir.join(file_name)).expect("load csv");
 
-        output.push_str("pub static OUTFITTING_DATA: [Outfitting; ");
-        output.push_str(&rows.len().to_string());
-        output.push_str("] = [\n");
+        // Build field list and mapping to indices
+        let mut used = HashMap::<String, usize>::new();
+        let mut fields: Vec<(String, usize)> = Vec::new();
+        for (i, h) in headers.iter().enumerate() {
+            let base = sanitize_field(h);
+            let name = if let Some(count) = used.get(&base) {
+                let n = count + 1;
+                used.insert(base.clone(), n);
+                format!("{}_{n}", base)
+            } else {
+                used.insert(base.clone(), 0);
+                base
+            };
+            fields.push((name, i));
+        }
+
+        // Find key column index using header name match (case-insensitive)
+        let mut key_idx_opt = None;
+        for (i, h) in headers.iter().enumerate() {
+            if h.eq_ignore_ascii_case(key_header) {
+                key_idx_opt = Some(i);
+                break;
+            }
+        }
+        let key_idx = key_idx_opt.expect("missing key header");
+
+        // Emit struct if not already emitted
+        if emitted_structs.insert(struct_name.to_string()) {
+            output.push_str(&format!("pub struct {} {{\n", struct_name));
+            for (fname, _) in &fields {
+                output.push_str(&format!("    pub {}: &'static str,\n", fname));
+            }
+            output.push_str("}\n\n");
+        }
+
+        // Emit DATA array
+        output.push_str(&format!("pub static {}_DATA: [{}; {}] = [\n", const_prefix, struct_name, rows.len()));
         for r in &rows {
-            output.push_str("    Outfitting { ");
-            output.push_str("id: ");
-            output.push_str(&rust_escape(&r[id_i]));
-            output.push_str(", symbol: ");
-            output.push_str(&rust_escape(&r[symbol_i]));
-            output.push_str(", category: ");
-            output.push_str(&rust_escape(&r[category_i]));
-            output.push_str(", name: ");
-            output.push_str(&rust_escape(&r[name_i]));
-            output.push_str(", mount: ");
-            output.push_str(&rust_escape(&r[mount_i]));
-            output.push_str(", guidance: ");
-            output.push_str(&rust_escape(&r[guidance_i]));
-            output.push_str(", ship: ");
-            output.push_str(&rust_escape(&r[ship_i]));
-            output.push_str(", class: ");
-            output.push_str(&rust_escape(&r[class_i]));
-            output.push_str(", rating: ");
-            output.push_str(&rust_escape(&r[rating_i]));
-            output.push_str(", entitlement: ");
-            output.push_str(&rust_escape(&r[entitlement_i]));
+            output.push_str(&format!("    {} {{ ", struct_name));
+            for (idx, (fname, col)) in fields.iter().enumerate() {
+                if idx > 0 { output.push_str(", "); }
+                output.push_str(&format!("{}: {}", fname, rust_string_lit(&r[*col])));
+            }
             output.push_str(" },\n");
         }
         output.push_str("];\n\n");
 
+        // Build PHF map from lowercased key column to index
         let mut map = phf_codegen::Map::new();
         let mut pairs: Vec<(String, String)> = Vec::new();
         for (i, r) in rows.iter().enumerate() {
-            let key_lit = r[symbol_i].to_lowercase();
-            let val_lit = i.to_string();
-            pairs.push((key_lit, val_lit));
+            let key_code = r[key_idx].to_lowercase();
+            pairs.push((key_code, i.to_string()));
         }
         for (k, v) in &pairs {
             map.entry(k, v);
         }
-        output.push_str("pub static OUTFITTING_MAP: phf::Map<&'static str, usize> = ");
+        output.push_str(&format!("pub static {}_MAP: phf::Map<&'static str, usize> = ", const_prefix));
         output.push_str(&map.build().to_string());
         output.push_str(";\n\n");
     }
 
-    // Generate Shipyard
-    {
-        let (headers, rows) = load_csv(&data_dir.join("shipyard.csv")).expect("load shipyard.csv");
-        let idx = |name: &str| headers.iter().position(|h| h.eq_ignore_ascii_case(name)).expect("missing column");
-        let id_i = idx("id");
-        let symbol_i = idx("symbol");
-        let name_i = idx("name");
-        let entitlement_i = idx("entitlement");
+    let mut emitted_structs: HashSet<String> = HashSet::new();
 
-        output.push_str("pub static SHIPYARD_DATA: [Shipyard; ");
-        output.push_str(&rows.len().to_string());
-        output.push_str("] = [\n");
-        for r in &rows {
-            output.push_str("    Shipyard { ");
-            output.push_str("id: ");
-            output.push_str(&rust_escape(&r[id_i]));
-            output.push_str(", symbol: ");
-            output.push_str(&rust_escape(&r[symbol_i]));
-            output.push_str(", name: ");
-            output.push_str(&rust_escape(&r[name_i]));
-            output.push_str(", entitlement: ");
-            output.push_str(&rust_escape(&r[entitlement_i]));
-            output.push_str(" },\n");
-        }
-        output.push_str("];\n\n");
+    // Generate the main datasets using their headers
+    gen_table(&mut output, &data_dir, "outfitting.csv", "Outfitting", "OUTFITTING", "symbol", &mut emitted_structs);
+    gen_table(&mut output, &data_dir, "shipyard.csv",   "Shipyard",   "SHIPYARD",   "symbol", &mut emitted_structs);
+    gen_table(&mut output, &data_dir, "material.csv",   "Material",   "MATERIAL",   "symbol", &mut emitted_structs);
 
-        let mut map = phf_codegen::Map::new();
-        let mut pairs: Vec<(String, String)> = Vec::new();
-        for (i, r) in rows.iter().enumerate() {
-            let key_lit = r[symbol_i].to_lowercase();
-            let val_lit = i.to_string();
-            pairs.push((key_lit, val_lit));
-        }
-        for (k, v) in &pairs {
-            map.entry(k, v);
-        }
-        output.push_str("pub static SHIPYARD_MAP: phf::Map<&'static str, usize> = ");
-        output.push_str(&map.build().to_string());
-        output.push_str(";\n\n");
-    }
-
-    // Generate Material
-    {
-        let (headers, rows) = load_csv(&data_dir.join("material.csv")).expect("load material.csv");
-        let idx = |name: &str| headers.iter().position(|h| h.eq_ignore_ascii_case(name)).expect("missing column");
-        let id_i = idx("id");
-        let symbol_i = idx("symbol");
-        let rarity_i = idx("rarity");
-        let type_i = idx("type");
-        let category_i = idx("category");
-        let name_i = idx("name");
-
-        output.push_str("pub static MATERIAL_DATA: [Material; ");
-        output.push_str(&rows.len().to_string());
-        output.push_str("] = [\n");
-        for r in &rows {
-            output.push_str("    Material { ");
-            output.push_str("id: ");
-            output.push_str(&rust_escape(&r[id_i]));
-            output.push_str(", symbol: ");
-            output.push_str(&rust_escape(&r[symbol_i]));
-            output.push_str(", rarity: ");
-            output.push_str(&rust_escape(&r[rarity_i]));
-            output.push_str(", r#type: ");
-            output.push_str(&rust_escape(&r[type_i]));
-            output.push_str(", category: ");
-            output.push_str(&rust_escape(&r[category_i]));
-            output.push_str(", name: ");
-            output.push_str(&rust_escape(&r[name_i]));
-            output.push_str(" },\n");
-        }
-        output.push_str("];\n\n");
-
-        let mut map = phf_codegen::Map::new();
-        let mut pairs: Vec<(String, String)> = Vec::new();
-        for (i, r) in rows.iter().enumerate() {
-            let key_lit = r[symbol_i].to_lowercase();
-            let val_lit = i.to_string();
-            pairs.push((key_lit, val_lit));
-        }
-        for (k, v) in &pairs {
-            map.entry(k, v);
-        }
-        output.push_str("pub static MATERIAL_MAP: phf::Map<&'static str, usize> = ");
-        output.push_str(&map.build().to_string());
-        output.push_str(";\n\n");
-    }
-
-    // Helper to generate a rank set from a file name and const prefix
-    fn gen_rank(output: &mut String, data_dir: &Path, file_name: &str, const_prefix: &str) {
-        let (headers, rows) = load_csv(&data_dir.join(file_name)).expect("load rank csv");
-        let idx = |name: &str| headers.iter().position(|h| h.eq_ignore_ascii_case(name)).expect("missing column");
-        let number_i = idx("number");
-        let name_i = idx("name");
-
-        output.push_str(&format!("pub static {}_RANK_DATA: [Rank; {}] = [\n", const_prefix, rows.len()));
-        for r in &rows {
-            output.push_str("    Rank { number: ");
-            output.push_str(&rust_escape(&r[number_i]));
-            output.push_str(", name: ");
-            output.push_str(&rust_escape(&r[name_i]));
-            output.push_str(" },\n");
-        }
-        output.push_str("];\n\n");
-
-        let mut map = phf_codegen::Map::new();
-        let mut pairs: Vec<(String, String)> = Vec::new();
-        for (i, r) in rows.iter().enumerate() {
-            let key_lit = r[number_i].to_lowercase();
-            let val_lit = i.to_string();
-            pairs.push((key_lit, val_lit));
-        }
-        for (k, v) in &pairs {
-            map.entry(k, v);
-        }
-        output.push_str(&format!("pub static {}_RANK_MAP: phf::Map<&'static str, usize> = ", const_prefix));
-        output.push_str(&map.build().to_string());
-        output.push_str(";\n\n");
-    }
-
-    gen_rank(&mut output, &data_dir, "CQCRank.csv", "CQC");
-    gen_rank(&mut output, &data_dir, "combatrank.csv", "COMBAT");
-    gen_rank(&mut output, &data_dir, "ExplorationRank.csv", "EXPLORATION");
-    gen_rank(&mut output, &data_dir, "TradeRank.csv", "TRADE");
-    gen_rank(&mut output, &data_dir, "FederationRank.csv", "FEDERATION");
-    gen_rank(&mut output, &data_dir, "EmpireRank.csv", "EMPIRE");
+    // Generate rank sets with shared Rank struct and key 'number'
+    gen_table(&mut output, &data_dir, "CQCRank.csv",         "Rank", "CQC_RANK",         "number", &mut emitted_structs);
+    gen_table(&mut output, &data_dir, "combatrank.csv",      "Rank", "COMBAT_RANK",      "number", &mut emitted_structs);
+    gen_table(&mut output, &data_dir, "ExplorationRank.csv", "Rank", "EXPLORATION_RANK", "number", &mut emitted_structs);
+    gen_table(&mut output, &data_dir, "TradeRank.csv",       "Rank", "TRADE_RANK",       "number", &mut emitted_structs);
+    gen_table(&mut output, &data_dir, "FederationRank.csv",  "Rank", "FEDERATION_RANK",  "number", &mut emitted_structs);
+    gen_table(&mut output, &data_dir, "EmpireRank.csv",      "Rank", "EMPIRE_RANK",      "number", &mut emitted_structs);
 
     // Write file
     let mut f = fs::File::create(&gen_path).expect("file created");

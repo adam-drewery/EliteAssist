@@ -4,41 +4,7 @@ use crate::{state, lookup};
 use once_cell::sync::Lazy;
 use std::collections::HashMap;
 
-pub struct Outfitting {
-    pub id: &'static str,
-    pub symbol: &'static str,
-    pub category: &'static str,
-    pub name: &'static str,
-    pub mount: &'static str,
-    pub guidance: &'static str,
-    pub ship: &'static str,
-    pub class: &'static str,
-    pub rating: &'static str,
-    pub entitlement: &'static str,
-}
-
-pub struct Shipyard {
-    pub id: &'static str,
-    pub symbol: &'static str,
-    pub name: &'static str,
-    pub entitlement: &'static str,
-}
-
-pub struct Material {
-    pub id: &'static str,
-    pub symbol: &'static str,
-    pub rarity: &'static str,
-    pub r#type: &'static str,
-    pub category: &'static str,
-    pub name: &'static str,
-}
-
-pub struct Rank {
-    pub number: &'static str,
-    pub name: &'static str,
-}
-
-// Include compile-time generated data and PHF maps
+// Include compile-time generated structs, data and PHF maps
 include!(concat!(env!("OUT_DIR"), "/fdev_ids_gen.rs"));
 
 impl Outfitting {
