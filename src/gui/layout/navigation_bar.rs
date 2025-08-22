@@ -1,5 +1,5 @@
 use crate::gui::Message;
-use crate::image::SETTINGS;
+use crate::image::{SETTINGS, EXPAND, COLLAPSE};
 use crate::state::{PanelType, Screen, State};
 use crate::theme::{style, GRAY, ORANGE, WHITE};
 use iced::widget::button::{Status, Style};
@@ -8,7 +8,14 @@ use iced::{Fill, Right, Theme};
 use std::mem::discriminant;
 
 pub fn navigation_bar(state: &State) -> Row<'_, Message> {
-    // Right-side settings button and optional menu
+    // Right-side fullscreen toggle and settings button
+    let fullscreen_icon = if state.fullscreen { COLLAPSE } else { EXPAND };
+    let fullscreen_button = button(
+        svg(svg::Handle::from_memory(fullscreen_icon)).width(16).height(16).style(style::icon_button)
+    )
+        .on_press(Message::ToggleFullscreen)
+        .style(default_style);
+
     let settings_button = button(
         svg(svg::Handle::from_memory(SETTINGS)).width(16).height(16).style(style::icon_button)
     )
@@ -41,7 +48,10 @@ pub fn navigation_bar(state: &State) -> Row<'_, Message> {
         navigation_button(state, "MARKET", Screen::Market),
         navigation_button(state, "LOG", Screen::Messages),
         column![].width(Fill),
-        column![settings_menu, settings_button].align_x(Right)
+
+        // right-side buttons
+        column![fullscreen_button].align_x(Right).padding([0, 4]),
+        column![settings_menu, settings_button].align_x(Right).padding([0, 4])
     ]
 }
 

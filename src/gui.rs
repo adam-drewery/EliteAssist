@@ -40,6 +40,10 @@ pub enum Message {
     ShowSettingsMenu(bool),
     TogglePanel(PanelType, bool),
 
+    // Window controls
+    ToggleFullscreen,
+    ToggleFullscreenWithId(Option<iced::window::Id>),
+
     JournalLoaded,
     Empty,
 }

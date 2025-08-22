@@ -26,6 +26,7 @@ use crate::journal::format;
 use crate::query;
 use iced::Task;
 use iced::widget::pane_grid;
+use iced::window;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use thousands::Separable;
@@ -87,6 +88,7 @@ impl PanelType {
 pub struct State {
     pub overview_panes: Option<pane_grid::State<PanelType>>,
     pub show_settings_menu: bool,
+    pub fullscreen: bool,
     pub enabled_panels: Option<Vec<PanelType>>,
     pub commander_name: String,
     pub credits: String,
@@ -134,6 +136,7 @@ impl Default for State {
         let mut s = Self {
             overview_panes: None,
             show_settings_menu: false,
+            fullscreen: false,
             enabled_panels: None,
             commander_name: String::new(),
             credits: String::new(),
@@ -336,6 +339,19 @@ impl State {
                 }
                 // Persist settings after visibility/layout changes
                 let _ = crate::settings::Settings::save_from_state(self);
+            }
+
+            Message::ToggleFullscreen => {
+                // Request the latest window Id and handle in a follow-up message
+                return window::get_latest().map(Message::ToggleFullscreenWithId);
+            }
+
+            Message::ToggleFullscreenWithId(id_opt) => {
+                if let Some(id) = id_opt {
+                    let mode = if self.fullscreen { window::Mode::Windowed } else { window::Mode::Fullscreen };
+                    self.fullscreen = !self.fullscreen;
+                    return window::change_mode(id, mode).map(|_: ()| Message::Empty);
+                }
             }
 
             Message::JournalLoaded => {
