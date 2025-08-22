@@ -80,7 +80,7 @@ pub fn route(state: &State) -> Column<'_, Message> {
         ]
     }
 
-    let mut items_column = column![].padding(8);
+    let mut items_column = column![];
 
     for i in 0..state.nav_route.len() {
         let route_step = &state.nav_route[i];
@@ -103,23 +103,28 @@ pub fn route(state: &State) -> Column<'_, Message> {
 
             items_column = items_column.push(
                 row![
-                    container(row![
-                        column![text(&route_step.star_system)],
-                        column![].width(Fill),
-                        column![star_type_text],
-                        icons_column,
-                        column![].width(16),
-                        column![text(format!("{:.2} ly", distance))]
-                    ])
-                    .style(style::list_item)
-                    .padding(8)
+                    column![
+                        row![
+                            container(row![
+                                column![text(&route_step.star_system)],
+                                column![].width(Fill),
+                                column![star_type_text],
+                                icons_column,
+                                column![].width(16),
+                                column![text(format!("{:.2} ly", distance))]
+                            ])
+                            .style(style::list_item)
+                            .padding(8)
+                        ]
+                        .padding(8)
+                        .width(Fill)
+                    ],
+                    column![].width(16) // lil hack to give the scrollbar some space.
                 ]
-                .padding(8)
-                .width(Fill),
             );
         }
     }
 
-    column![scrollable(items_column)].height(Fill)
+    column![scrollable(items_column)].height(Fill).padding(8)
 }
 
