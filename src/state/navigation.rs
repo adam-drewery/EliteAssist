@@ -1,4 +1,5 @@
 use crate::ardent;
+use crate::journal::event;
 
 #[derive(Default, Clone, Debug)]
 pub struct NavRouteStep {
@@ -157,6 +158,120 @@ impl From<ardent::NearbySystem> for System {
         System {
             name: value.name,
             address: value.address
+        }
+    }
+}
+
+impl From<event::FSDJump> for CurrentLocation {
+    fn from(value: event::FSDJump) -> Self {
+        CurrentLocation {
+            docked: false,
+            station_name: None,
+            station_type: None,
+            station_faction: None,
+            station_government: None,
+            station_services: None,
+            station_economy: None,
+            station_economies: vec![],
+            taxi: value.taxi,
+            multicrew: value.multicrew,
+            star_system: value.star_system,
+            system_address: value.system_address,
+            star_pos: value.star_pos,
+            system_allegiance: value.system_allegiance,
+            system_economy: value.system_economy_localised.unwrap_or(value.system_economy),
+            system_second_economy: value.system_second_economy_localised.unwrap_or(value.system_second_economy),
+            system_government: value.system_government_localised.unwrap_or(value.system_government),
+            system_security: value.system_security_localised.unwrap_or(value.system_security),
+            population: value.population,
+            body: value.body,
+            body_id: value.body_id,
+            body_type: value.body_type,
+            powers: value.powers.clone(),
+            controlling_power: value.powers.and_then(|p| p.first().cloned()),
+            powerplay_state: value.powerplay_state,
+            powerplay_state_conflict_progress: None,
+            powerplay_state_control_progress: value.powerplay_state_control_progress,
+            powerplay_state_reinforcement: value.powerplay_state_reinforcement,
+            powerplay_state_undermining: value.powerplay_state_undermining,
+            factions: value.factions.unwrap_or_default().into_iter().map(|f| Faction {
+                name: f.name,
+                faction_state: f.faction_state,
+                government: f.government,
+                influence: f.influence,
+                allegiance: f.allegiance,
+                happiness: f.happiness,
+                my_reputation: f.my_reputation,
+                recovering_states: f.recovering_states.unwrap_or_default().into_iter().map(|s| FactionState { state: s.state, trend: s.trend }).collect(),
+                active_states: f.active_states.unwrap_or_default().into_iter().map(|s| FactionState { state: s.state, trend: 0 }).collect(),
+            }).collect(),
+            system_faction: value.system_faction.map(|f| SystemFaction { name: f.name, faction_state: f.faction_state }),
+            ..Default::default()
+        }
+    }
+}
+
+impl From<event::Location> for CurrentLocation {
+    fn from(value: event::Location) -> Self {
+        CurrentLocation {
+            docked: value.docked,
+            station_name: value.station_name,
+            station_type: value.station_type,
+            station_faction: value.station_faction.map(|faction| SystemFaction { name: faction.name, faction_state: faction.faction_state }),
+            station_government: value.station_government_localised,
+            station_services: value.station_services,
+            station_economy: value.station_economy_localised,
+            station_economies: value.station_economies.unwrap_or_default().into_iter().map(|economy| StationEconomy { name: economy.name_localised.unwrap_or_default(), proportion: economy.proportion }).collect(),
+            taxi: value.taxi,
+            multicrew: value.multicrew,
+            star_system: value.star_system,
+            system_address: value.system_address,
+            star_pos: value.star_pos,
+            system_allegiance: value.system_allegiance,
+            system_economy: value.system_economy_localised.unwrap_or(value.system_economy),
+            system_second_economy: value.system_second_economy_localised.unwrap_or(value.system_second_economy),
+            system_government: value.system_government_localised.unwrap_or(value.system_government),
+            system_security: value.system_security_localised.unwrap_or(value.system_security),
+            population: value.population,
+            body: value.body,
+            body_id: value.body_id,
+            body_type: value.body_type,
+            controlling_power: value.controlling_power,
+            powers: value.powers,
+            powerplay_state: value.powerplay_state,
+            powerplay_state_conflict_progress: None,
+            powerplay_state_control_progress: value.powerplay_state_control_progress,
+            powerplay_state_reinforcement: value.powerplay_state_reinforcement,
+            powerplay_state_undermining: value.powerplay_state_undermining,
+            factions: value.factions.unwrap_or_default().into_iter().map(|faction| Faction {
+                name: faction.name,
+                faction_state: faction.faction_state,
+                government: faction.government,
+                influence: faction.influence,
+                allegiance: faction.allegiance,
+                happiness: faction.happiness_localised.unwrap_or_default(),
+                my_reputation: faction.my_reputation,
+                recovering_states: faction.recovering_states.unwrap_or_default().into_iter().map(|state| FactionState { state: state.state, trend: state.trend }).collect(),
+                active_states: faction.active_states.unwrap_or_default().into_iter().map(|state| FactionState { state: state.state, trend: 0 }).collect(),
+            }).collect(),
+            system_faction: value.system_faction.map(|sf| SystemFaction { name: sf.name, faction_state: sf.faction_state }),
+            ..Default::default()
+        }
+    }
+}
+
+impl From<event::NavRoute> for Vec<NavRouteStep> {
+    fn from(value: event::NavRoute) -> Self {
+        match value.route {
+            Some(route) => route
+                .into_iter()
+                .map(|step| NavRouteStep {
+                    star_system: step.star_system,
+                    star_pos: step.star_pos,
+                    star_class: step.star_class,
+                })
+                .collect(),
+            None => Vec::new(),
         }
     }
 }

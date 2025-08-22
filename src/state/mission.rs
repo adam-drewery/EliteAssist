@@ -15,3 +15,24 @@ pub struct Mission {
     pub reward: Option<u64>,
     pub mission_id: u64,
 }
+
+use crate::journal::event;
+
+impl From<event::MissionAccepted> for Mission {
+    fn from(value: event::MissionAccepted) -> Self {
+        Mission {
+            name: value.localised_name,
+            mission_id: value.mission_id,
+            faction: value.faction,
+            commodity: value.commodity_localised,
+            count: value.count,
+            destination_system: value.destination_system,
+            destination_settlement: value.destination_settlement,
+            expiry: value.expiry,
+            wing: value.wing,
+            influence: value.influence,
+            reputation: value.reputation,
+            reward: value.reward,
+        }
+    }
+}

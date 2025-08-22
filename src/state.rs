@@ -460,9 +460,9 @@ impl State {
 
                     Event::NpcCrewRank(e) => self.logs.push(e.into()),
 
-                    Event::CrewMemberJoins(e) => self.logs.push(e.into("joined")),
+                    Event::CrewMemberJoins(e) => self.logs.push(log_crew_member(e, "joined")),
 
-                    Event::CrewMemberQuits(e) => self.logs.push(e.into("quit")),
+                    Event::CrewMemberQuits(e) => self.logs.push(log_crew_member(e, "quit")),
 
                     Event::NpcCrewPaidWage(e) => {
                         if e.amount != 0 {
@@ -548,7 +548,7 @@ impl State {
                     Event::DockFighter(e) => self.logs.push(e.into()),
 
                     Event::FighterDestroyed(e) => {
-                        self.logs.push(e.into("Destroyed", "Fighter"))
+                        self.logs.push(log_damage(e, "Destroyed", "Fighter"))
                     }
 
                     // FSD
@@ -608,7 +608,12 @@ impl State {
                     Event::Synthesis(_) => {}
 
                     Event::Materials(e) => {
-                        if !e.is_empty() {
+
+                        let is_empty = e.encoded.is_empty()
+                            && e.manufactured.is_empty()
+                            && e.raw.is_empty();
+
+                        if !is_empty {
                             self.materials = e.into();
                         }
                     }
@@ -662,7 +667,7 @@ impl State {
                     Event::JetConeBoost(_) => {}
 
                     Event::NavRoute(e) => {
-                        let route = e.into();
+                        let route: Vec<NavRouteStep> = e.into();
 
                         // The journal file gives us blank NavRoute events when we plot one. Kinda weird.
                         if !route.is_empty() {
@@ -844,7 +849,13 @@ impl State {
                     Event::ShipLockerMaterials(_) => {}
 
                     Event::ShipLocker(e) => {
-                        if !e.is_empty() {
+
+                        let is_empty = e.items.is_none()
+                            && e.components.is_none()
+                            && e.consumables.is_none()
+                            && e.data.is_none();
+
+                        if !is_empty {
                             self.ship_locker = e.into();
                         }
                     }
@@ -875,6 +886,7 @@ impl State {
                     Event::SellShipOnRebuy(_) => {}
                     Event::StoredShips(_) => {}
                     Event::SetUserShipName(_) => {}
+                    Event::ShipyardBankDeposit(_) => {}
 
                     // SQUADRON
                     Event::SquadronStartup(_) => {}
@@ -919,7 +931,7 @@ impl State {
                     Event::LoadoutRemoveModule(_) => {}
                     Event::LoadoutEquipModule(_) => {}
 
-                    Event::BuyAmmo(e) => self.logs.push(e.into("ammo")),
+                    Event::BuyAmmo(e) => self.logs.push(log_ship_equipment_purchase(e, "ammo")),
 
                     // WING
                     Event::WingAdd(_) => {}
