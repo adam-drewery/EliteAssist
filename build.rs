@@ -111,7 +111,7 @@ fn main() {
         let mut map = phf_codegen::Map::new();
         let mut pairs: Vec<(String, String)> = Vec::new();
         for (i, r) in rows.iter().enumerate() {
-            let key_lit = rust_escape(&r[symbol_i].to_lowercase());
+            let key_lit = r[symbol_i].to_lowercase();
             let val_lit = i.to_string();
             pairs.push((key_lit, val_lit));
         }
@@ -152,7 +152,7 @@ fn main() {
         let mut map = phf_codegen::Map::new();
         let mut pairs: Vec<(String, String)> = Vec::new();
         for (i, r) in rows.iter().enumerate() {
-            let key_lit = rust_escape(&r[symbol_i].to_lowercase());
+            let key_lit = r[symbol_i].to_lowercase();
             let val_lit = i.to_string();
             pairs.push((key_lit, val_lit));
         }
@@ -199,7 +199,7 @@ fn main() {
         let mut map = phf_codegen::Map::new();
         let mut pairs: Vec<(String, String)> = Vec::new();
         for (i, r) in rows.iter().enumerate() {
-            let key_lit = rust_escape(&r[symbol_i].to_lowercase());
+            let key_lit = r[symbol_i].to_lowercase();
             let val_lit = i.to_string();
             pairs.push((key_lit, val_lit));
         }
@@ -231,7 +231,7 @@ fn main() {
         let mut map = phf_codegen::Map::new();
         let mut pairs: Vec<(String, String)> = Vec::new();
         for (i, r) in rows.iter().enumerate() {
-            let key_lit = rust_escape(&r[number_i].to_lowercase());
+            let key_lit = r[number_i].to_lowercase();
             let val_lit = i.to_string();
             pairs.push((key_lit, val_lit));
         }
