@@ -8,6 +8,7 @@ mod navigation;
 mod personal;
 mod ship;
 mod suit;
+pub mod pane;
 
 pub use activity::*;
 pub use engineering::*;
@@ -27,69 +28,16 @@ use crate::query;
 use iced::Task;
 use iced::widget::pane_grid;
 use iced::window;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use std::collections::HashMap;
+use log::warn;
 use thousands::Separable;
 
-#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
-pub enum PanelType {
-    Loadout,
-    Messages,
-    Route,
-    Location,
-    ShipDetails,
-    ShipModules,
-    Ranks,
-    Missions,
-    Claims,
-}
-
-impl PanelType {
-    pub const fn all() -> [PanelType; 9] {
-        [
-            PanelType::Loadout,
-            PanelType::Messages,
-            PanelType::Route,
-            PanelType::Location,
-            PanelType::ShipDetails,
-            PanelType::ShipModules,
-            PanelType::Ranks,
-            PanelType::Missions,
-            PanelType::Claims,
-        ]
-    }
-    pub fn title(&self) -> &'static str {
-        match self {
-            PanelType::Loadout => "Loadout",
-            PanelType::Messages => "Messages",
-            PanelType::Route => "Route",
-            PanelType::Location => "Location",
-            PanelType::ShipDetails => "Ship",
-            PanelType::ShipModules => "Ship Modules",
-            PanelType::Ranks => "Ranks",
-            PanelType::Missions => "Missions",
-            PanelType::Claims => "Claims",
-        }
-    }
-
-    pub fn default_enabled_vec() -> Vec<PanelType> {
-        vec![
-            PanelType::Loadout,
-            PanelType::Messages,
-            PanelType::Route,
-            PanelType::Location,
-            PanelType::ShipDetails,
-            PanelType::ShipModules,
-            PanelType::Ranks,
-        ]
-    }
-}
-
 pub struct State {
-    pub overview_panes: Option<pane_grid::State<PanelType>>,
+    pub overview_panes: Option<pane_grid::State<pane::Type>>,
     pub show_settings_menu: bool,
     pub fullscreen: bool,
-    pub enabled_panels: Option<Vec<PanelType>>,
+    pub enabled_panes: Option<Vec<pane::Type>>,
     pub commander_name: String,
     pub credits: String,
     pub current_system: String,
@@ -132,12 +80,13 @@ pub enum Screen {
 
 impl Default for State {
     fn default() -> Self {
+
         // Start with basic defaults for all fields
-        let mut s = Self {
+        let mut state = Self {
             overview_panes: None,
             show_settings_menu: false,
             fullscreen: false,
-            enabled_panels: None,
+            enabled_panes: None,
             commander_name: String::new(),
             credits: String::new(),
             current_system: String::new(),
@@ -170,60 +119,21 @@ impl Default for State {
         // Attempt to load persisted settings and apply
         if let Some(settings) = crate::settings::Settings::load() {
             if let Some(layout) = &settings.layout {
-                s.overview_panes = Some(crate::settings::build_panes_from_layout(layout));
+                state.overview_panes = Some(crate::settings::build_panes_from_layout(layout));
+
                 // If visible list not provided, derive from layout leaves
-                s.enabled_panels = Some(settings.visible.unwrap_or_else(|| crate::settings::layout_leaf_panels(layout)));
+                state.enabled_panes = Some(settings.visible.unwrap_or_else(|| crate::settings::layout_leaf_panes(layout)));
             } else if let Some(visible) = settings.visible {
-                s.enabled_panels = Some(visible);
+                state.enabled_panes = Some(visible);
             }
         }
 
-        s
+        state
     }
 }
 
 impl State {
-    fn default_overview_panes() -> pane_grid::State<PanelType> {
-        let (mut panes, pane_1) = pane_grid::State::new(PanelType::Loadout);
 
-        let Some((pane_2, split_1)) = panes.split(pane_grid::Axis::Vertical, pane_1, PanelType::Route) else { return panes; };
-        let Some((pane_3, _split_2)) = panes.split(pane_grid::Axis::Vertical, pane_2, PanelType::ShipDetails) else { return panes; };
-
-        let Some((_, split_3)) = panes.split(pane_grid::Axis::Horizontal, pane_1, PanelType::Messages) else { return panes; };
-        let Some((_, split_4)) = panes.split(pane_grid::Axis::Horizontal, pane_1, PanelType::Ranks) else { return panes; };
-        let Some((_, split_5)) = panes.split(pane_grid::Axis::Horizontal, pane_2, PanelType::Location) else { return panes; };
-        let Some((_, split_6)) = panes.split(pane_grid::Axis::Horizontal, pane_3, PanelType::ShipModules) else { return panes; };
-
-        // Set vertical splits so each column takes up 1/3 of the space
-        panes.resize(split_1, 1.0f32 / 3.0f32);
-
-        // Set horizontal splits 
-        panes.resize(split_3, 0.66f32);
-        panes.resize(split_4, 0.3f32);
-        panes.resize(split_5, 0.6f32);
-        panes.resize(split_6, 0.3f32);
-
-        panes
-    }
-    
-    // Helper: find the Pane that contains the given PanelType
-    fn find_pane_with(panes: &pane_grid::State<PanelType>, target: &PanelType) -> Option<pane_grid::Pane> {
-        // The iced::pane_grid::State exposes a `panes` field that can be iterated
-        // We iterate by reference to avoid moving the internal state
-        for (pane, content) in &panes.panes {
-            if content == target {
-                return Some(*pane);
-            }
-        }
-        None
-    }
-
-    pub fn is_panel_enabled(&self, panel: &PanelType) -> bool {
-        match &self.enabled_panels {
-            Some(v) => v.contains(panel),
-            None => PanelType::default_enabled_vec().contains(panel),
-        }
-    }
     pub fn update_from(&mut self, message: Message) -> Task<Message> {
 
         match message {
@@ -253,18 +163,7 @@ impl State {
             }
 
             Message::PaneDragged(event) => {
-                if let Some(panes) = &mut self.overview_panes {
-                    match event {
-                        pane_grid::DragEvent::Picked { .. } => {}
-                        pane_grid::DragEvent::Dropped { pane, target } => {
-                            panes.drop(pane, target);
-                            let _ = crate::settings::Settings::save_from_state(self);
-                        }
-                        pane_grid::DragEvent::Canceled { .. } => {
-                            // no-op on cancel
-                        }
-                    }
-                }
+                pane::dragged(self, event);
             }
 
             Message::PaneResized(event) => {
@@ -278,51 +177,8 @@ impl State {
                 self.show_settings_menu = show;
             }
 
-            Message::TogglePanel(panel, enabled) => {
-                // Start from current enabled set (or all panels by default)
-                let mut list: Vec<PanelType> = self
-                    .enabled_panels
-                    .clone()
-                    .unwrap_or_else(|| PanelType::default_enabled_vec());
-
-                let was_enabled = list.contains(&panel);
-                let before_len = list.len();
-
-                if enabled {
-                    if !was_enabled {
-                        list.push(panel.clone());
-                    }
-                } else {
-                    // Prevent disabling the last remaining panel
-                    if was_enabled && list.len() > 1 {
-                        list.retain(|p| p != &panel);
-                    }
-                }
-                // Keep deterministic order according to PanelType::all()
-                let order = PanelType::all();
-                list.sort_by_key(|p| order.iter().position(|q| q == p).unwrap_or(usize::MAX));
-
-                let did_enable = enabled && !was_enabled;
-                let did_disable = !enabled && was_enabled && list.len() < before_len;
-
-                self.enabled_panels = Some(list.clone());
-
-                // Mutate current layout instead of rebuilding to preserve existing splits
-                if let Some(panes) = &mut self.overview_panes {
-                    if did_enable {
-                        // Insert the newly enabled panel by splitting an existing anchor pane
-                        if let Some((&anchor, _)) = panes.panes.iter().next() {
-                            let _ = panes.split(pane_grid::Axis::Horizontal, anchor, panel.clone());
-                        }
-                    } else if did_disable {
-                        // Close the pane containing this panel, preserving other layout
-                        if let Some(p) = Self::find_pane_with(panes, &panel) {
-                            let _ = panes.close(p);
-                        }
-                    }
-                }
-                // Persist settings after visibility/layout changes
-                let _ = crate::settings::Settings::save_from_state(self);
+            Message::TogglePane(pane, enabled) => {
+                pane::toggle(self, pane, enabled);
             }
 
             Message::ToggleFullscreen => {
@@ -341,35 +197,18 @@ impl State {
             Message::JournalLoaded => {
                 self.journal_loaded = true;
                 if self.overview_panes.is_none() {
-                    // Start from the default layout to preserve intended split structure
-                    let mut panes = Self::default_overview_panes();
-                    // If some panels are disabled, close them while keeping the rest of the layout
-                    if let Some(enabled) = &self.enabled_panels {
-                        let enabled_set: std::collections::HashSet<_> = enabled.iter().cloned().collect();
-                        // Collect panes to close first to avoid borrowing issues
-                        let to_close: Vec<_> = panes
-                            .panes
-                            .iter()
-                            .filter_map(|(pane, content)| if !enabled_set.contains(content) { Some(*pane) } else { None })
-                            .collect();
-                        for p in to_close {
-                            let _ = panes.close(p);
-                        }
-                    }
-                    self.overview_panes = Some(panes);
-                    // Persist the initialized layout so a settings file exists even before any manual changes
-                    let _ = crate::settings::Settings::save_from_state(self);
+                    pane::load(self)
                 }
 
-                if self.journal_loaded {
-                    return query::system(
-                        self.current_system.clone(),
-                        self.ship_loadout.max_jump_range);
-                }
+                return query::system(
+                    self.current_system.clone(),
+                    self.ship_loadout.max_jump_range);
             }
 
             Message::JournalEvent(event) => {
+
                 use journal::Event;
+
                 match event {
 
                     // BACKPACK
@@ -491,7 +330,8 @@ impl State {
                             "bounty" => &mut self.bounties,
                             "codex" => &mut self.discoveries,
                             _ => {
-                                panic!("Unknown voucher type: {}", e.r#type);
+                                warn!("Unknown voucher type: {}", e.r#type);
+                                return Task::none();
                             }
                         };
 

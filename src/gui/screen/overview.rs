@@ -1,5 +1,5 @@
 use crate::gui::Message;
-use crate::state::{PanelType, State};
+use crate::state::{pane, State};
 use crate::theme::style;
 use iced::widget::pane_grid;
 use iced::widget::{column, row, text, Column, Row};
@@ -15,15 +15,15 @@ pub fn overview(state: &State) -> Row<'_, Message> {
         let grid = pane_grid::PaneGrid::new(panes, |_, kind, _| {
             let (title, content): (&str, Column<'_, Message>) = match kind {
 
-                PanelType::Loadout => ("Loadout", loadout(state)),
-                PanelType::Ranks => ("Ranks", ranks(state)),
-                PanelType::Messages => ("Messages", messages(state)),
-                PanelType::Route => ("Route", route(state)),
-                PanelType::Location => ("Location", location(state)),
-                PanelType::ShipDetails => ("Ship", ship_details(state)),
-                PanelType::ShipModules => ("Ship Modules", ship_modules(state)),
-                PanelType::Missions => ("Missions", missions(state)),
-                PanelType::Claims => ("Claims", claims(state)),
+                pane::Type::Loadout => ("Loadout", loadout(state)),
+                pane::Type::Ranks => ("Ranks", ranks(state)),
+                pane::Type::Messages => ("Messages", messages(state)),
+                pane::Type::Route => ("Route", route(state)),
+                pane::Type::Location => ("Location", location(state)),
+                pane::Type::ShipDetails => ("Ship", ship_details(state)),
+                pane::Type::ShipModules => ("Ship Modules", ship_modules(state)),
+                pane::Type::Missions => ("Missions", missions(state)),
+                pane::Type::Claims => ("Claims", claims(state)),
             };
 
             pane_grid::Content::new(content)

@@ -8,7 +8,7 @@ use chrono::Utc;
 use crate::font::EUROSTILE;
 use crate::image::LOADING_PNG;
 use crate::journal::event::Event;
-use crate::state::{Screen, State, PanelType};
+use crate::state::{pane, Screen, State};
 use crate::theme::{style, ORANGE};
 use iced::widget::{column, pane_grid, progress_bar, row, svg, text};
 use iced::{Bottom, Center, Element, Fill, Task};
@@ -38,7 +38,7 @@ pub enum Message {
 
     // Settings menu / pane toggles
     ShowSettingsMenu(bool),
-    TogglePanel(PanelType, bool),
+    TogglePane(pane::Type, bool),
 
     // Window controls
     ToggleFullscreen,
