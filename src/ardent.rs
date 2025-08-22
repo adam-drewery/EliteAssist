@@ -460,7 +460,7 @@ pub struct MarketCommodityData {
     pub buy_price: u32,
     pub demand: u32,
     #[serde(rename = "demandBracket")]
-    pub demand_bracket: String,
+    pub demand_bracket: u32,
     #[serde(rename = "meanPrice")]
     pub mean_price: u32,
     #[serde(rename = "sellPrice")]
