@@ -1,18 +1,9 @@
-
 mod layout;
 mod panel;
 mod screen;
 mod components;
 
-use chrono::Utc;
 use crate::font::EUROSTILE;
-use crate::image::LOADING_PNG;
-use crate::journal::event::Event;
-use crate::state::{pane, Screen, State};
-use crate::theme::{style, ORANGE};
-use iced::widget::{column, pane_grid, progress_bar, row, svg, text};
-use iced::{Bottom, Center, Element, Fill, Task};
-use crate::{ardent, centered_column, centered_row, edsm};
 use crate::gui::layout::header_bar;
 use crate::gui::layout::navigation_bar;
 use crate::gui::screen::market;
@@ -20,6 +11,14 @@ use crate::gui::screen::materials;
 use crate::gui::screen::messages;
 use crate::gui::screen::overview;
 use crate::gui::screen::ship_locker;
+use crate::image::LOADING_PNG;
+use crate::journal::event::Event;
+use crate::state::{pane, Screen, State};
+use crate::theme::{style, ORANGE};
+use crate::{ardent, centered_column, centered_row, edsm};
+use chrono::Utc;
+use iced::widget::{column, pane_grid, progress_bar, row, svg, text};
+use iced::{Bottom, Center, Element, Fill, Task};
 
 #[derive(Clone, Debug)]
 pub enum Message {
@@ -51,7 +50,9 @@ pub enum Message {
 pub struct Gui;
 
 impl Gui {
+
     pub fn view(state: &State) -> Element<'_, Message> {
+
         if state.commander_name.is_empty() {
             waiting_spinner()
         }
@@ -59,27 +60,31 @@ impl Gui {
             loading_bar(state)
         }
         else {
-            column![
-                header_bar(state),
-                match state.active_screen {
-                    Screen::Commander => overview(state),
-                    Screen::Materials => materials(state),
-                    Screen::ShipLocker => ship_locker(state),
-                    Screen::Market => market(state),
-                    Screen::Messages => messages(state),
-                }
-                .height(Fill),
-                navigation_bar(state).align_y(Bottom),
-            ]
-                .width(Fill)
-                .padding(10)
-                .into()
+            main_layout(state)
         }
     }
 
     pub fn update(state: &mut State, message: Message) -> Task<Message> {
         state.update_from(message)
     }
+}
+
+fn main_layout(state: &State) -> Element<'_, Message> {
+    column![
+        header_bar(state),
+        match state.active_screen {
+            Screen::Commander => overview(state),
+            Screen::Materials => materials(state),
+            Screen::ShipLocker => ship_locker(state),
+            Screen::Market => market(state),
+            Screen::Messages => messages(state),
+        }
+        .height(Fill),
+        navigation_bar(state).align_y(Bottom),
+    ]
+    .width(Fill)
+    .padding(10)
+    .into()
 }
 
 fn waiting_spinner<'a>() -> Element<'a, Message> {
