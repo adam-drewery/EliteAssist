@@ -1,11 +1,10 @@
-use std::collections::HashMap;
-use log::warn;
 use phf::{phf_map, Map};
-use tokio::sync;
-use crate::inara;
 use crate::image::ship::*;
 
 pub mod fdev_ids;
+
+// Include compile-time generated INARA maps
+include!(concat!(env!("OUT_DIR"), "/inara_gen.rs"));
 
 // Hard-coded rank maps for Exobiologist and Mercenary (Odyssey). No idea why they're not included in fdev-ids.
 pub static EXOBIOLOGIST_RANKS: Map<&'static str, &'static str> = phf_map! {
@@ -43,50 +42,11 @@ pub static CATEGORY_NAMES: Map<&'static str, &'static str> = phf_map! {
 };
 
 pub fn locations_for_material(name: &str) -> Vec<String> {
-    get_items(&MATERIAL_LOCATIONS, name)
+    get_generated_items(&MATERIAL_LOCATIONS_MAP, MATERIAL_LOCATION_LISTS, name)
 }
 
 pub fn locations_for_item(name: &str) -> Vec<String> {
-    get_items(&ITEM_LOCATIONS, name)
-}
-
-static MATERIAL_LOCATIONS: sync::OnceCell<HashMap<String, Vec<String>>> = sync::OnceCell::const_new();
-
-static ITEM_LOCATIONS: sync::OnceCell<HashMap<String, Vec<String>>> = sync::OnceCell::const_new();
-
-fn get_items(cache: &sync::OnceCell<HashMap<String, Vec<String>>>, name: &str) -> Vec<String> {
-    cache.get()
-        .expect("load() called before")
-        .get(&name.to_lowercase())
-        .cloned()
-        .unwrap_or_default()
-}
-
-pub async fn load() {
-    macro_rules! init_locations {
-        ($cell:expr, $method:ident) => {
-            $cell
-                .get_or_init(|| async {
-                    let scraper = inara::Scraper::new();
-                    match scraper.$method().await {
-                        Ok(map) => {
-                            // Convert keys to lowercase for case-insensitive lookups
-                            map.into_iter()
-                               .map(|(k, v)| (k.to_lowercase(), v))
-                               .collect()
-                        },
-                        Err(e) => {
-                            warn!("Inara scraping failed: {}", e);
-                            return HashMap::new();
-                        }
-                    }
-                })
-                .await
-        };
-    }
-
-    init_locations!(ITEM_LOCATIONS, item_locations);
-    init_locations!(MATERIAL_LOCATIONS, material_locations);
+    get_generated_items(&ITEM_LOCATIONS_MAP, ITEM_LOCATION_LISTS, name)
 }
 
 pub static SHIP_IMAGES: Map<&'static str, &'static [u8]> = phf_map! {
@@ -162,4 +122,14 @@ pub static SHIP_IMAGES: Map<&'static str, &'static [u8]> = phf_map! {
 
 pub fn ship_image_bytes(name: &str) -> Option<&'static [u8]> {
     SHIP_IMAGES.get(name).copied()
+}
+
+fn get_generated_items(map: &Map<&'static str, usize>, lists: &[&[&str]], name: &str) -> Vec<String> {
+    let key = name.to_lowercase();
+    if let Some(&idx) = map.get(&key) {
+        if let Some(slice) = lists.get(idx) {
+            return slice.iter().map(|s| s.to_string()).collect();
+        }
+    }
+    Vec::new()
 }

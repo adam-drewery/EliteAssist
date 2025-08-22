@@ -14,7 +14,6 @@ mod image;
 mod font;
 mod edsm;
 mod ardent;
-mod inara;
 mod lookup;
 mod query;
 mod settings;
@@ -24,15 +23,6 @@ fn main() {
     let mut clog = colog::default_builder();
     clog.filter(None, log::LevelFilter::Info);
     clog.init();
-
-    // Create a Tokio runtime
-    let runtime = tokio::runtime::Runtime::new().unwrap();
-
-    // Load the mappings from sources like INARA etc.
-    // todo: Eventually lets put this in a subscription so we can report on progress.
-    runtime.block_on(async {
-        lookup::load().await;
-    });
 
     // Run the Iced application
     let _ = iced::application("EliteAssist", Gui::update, Gui::view)
