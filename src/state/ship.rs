@@ -100,8 +100,8 @@ impl From<event::LoadoutModule> for ShipModule {
             .map(|details| (
                 details.class.parse().unwrap_or(0),
                 details.rating.chars().next().unwrap_or('X'),
-                details.name.clone(),
-                details.mount.clone(),
+                details.name.to_string(),
+                details.mount.to_string(),
             ))
             .unwrap_or((0, 'X', value.item.clone(), "".to_string()));
 
@@ -368,7 +368,7 @@ impl From<event::Loadout> for ShipLoadout {
         }
 
         ShipLoadout {
-            ship_type: ship_type.map(|s| s.name.clone()).unwrap_or(value.ship),
+            ship_type: ship_type.map(|s| s.name.to_string()).unwrap_or(value.ship),
             ship_name: value.ship_name,
             ship_ident: value.ship_ident,
             hull_value: value.hull_value.unwrap_or_default(),

@@ -75,7 +75,7 @@ pub fn ranks(state: &State) -> Column<'_, Message> {
 fn rank(title: &str, rank: u64, progress: u64, lookup: fn(&String) -> Option<&Rank>) -> Column<'_, Message> {
     let rank_name = match lookup(&rank.to_string()) {
         None => String::from("Unknown"),
-        Some(title) => title.name.clone()
+        Some(title) => title.name.to_string()
     };
 
     column![
@@ -102,7 +102,7 @@ fn superpower_rank(title: &str, rank: Option<u64>, progress: Option<u64>, reputa
             match rank {
                 Some(r) => match func(&r.to_string()) {
                     None => String::from("Unknown"),
-                    Some(title) => title.name.clone()
+                    Some(title) => title.name.to_string()
                 },
                 None => String::from("Unknown")
             }
