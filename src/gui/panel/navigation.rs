@@ -68,7 +68,7 @@ fn system(state: &State) -> Column<'_, Message> {
         details("Economy", &state.location.system_economy),
         details("Population", state.location.population.to_string().separate_with_commas()),
         details("Security", &state.location.system_security.replace(" Security", "")),
-        details("Allegiance", &state.location.system_allegiance),
+        details("Allegiance", &state.location.system_allegiance.clone().unwrap_or_default()),
     ]
 }
 

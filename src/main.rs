@@ -6,7 +6,6 @@ use crate::subscription::subscription;
 use crate::theme::theme;
 
 mod gui;
-mod journal;
 mod state;
 mod subscription;
 mod theme;
@@ -17,6 +16,7 @@ mod ardent;
 mod lookup;
 mod query;
 mod settings;
+mod journal;
 
 fn main() {
 

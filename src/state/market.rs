@@ -1,4 +1,4 @@
-use crate::journal::event;
+use ed_journals::market::MarketEntry;
 use crate::journal::format::title_case;
 
 #[derive(Default)]
@@ -22,19 +22,19 @@ pub struct MarketItem {
     pub rare: bool,
 }
 
-impl From<event::Market> for Market {
-    fn from(value: event::Market) -> Self {
+impl From<ed_journals::market::Market> for Market {
+    fn from(value: ed_journals::market::Market) -> Self {
         let mut groups = std::collections::HashMap::new();
 
-        if let Some(mut items) = value.items {
-            items.sort_by(|a, b| a.name_localised.cmp(&b.name_localised));
+            let mut items = value.items.clone();
+            items.sort_by(|a, b| a.name_localized.cmp(&b.name_localized));
+
             for item in items {
                 groups
-                    .entry(item.category_localised.clone())
+                    .entry(item.category_localized.clone())
                     .or_insert_with(Vec::new)
                     .push(item.into());
             }
-        }
 
         Market {
             groups: {
@@ -52,10 +52,10 @@ impl From<event::Market> for Market {
     }
 }
 
-impl From<event::MarketItem> for MarketItem {
-    fn from(value: event::MarketItem) -> Self {
+impl From<MarketEntry> for MarketItem {
+    fn from(value: MarketEntry) -> Self {
         MarketItem {
-            name: value.name_localised.unwrap_or(title_case(&value.name)),
+            name: value.name_localized.unwrap_or(title_case(&value.name.to_string())),
             buy_price: value.buy_price,
             sell_price: value.sell_price,
             demand: value.demand,

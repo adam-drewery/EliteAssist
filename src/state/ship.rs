@@ -1,7 +1,6 @@
-use log::warn;
-use regex::Regex;
-use crate::journal::event;
-use crate::lookup::fdev_ids::Outfitting;
+use ed_journals::logs::loadout_event::LoadoutEvent;
+use ed_journals::logs::ship_locker_event::ShipLockerEventContents;
+use ed_journals::ship::{CoreSlot, ShipSlotKind};
 
 #[derive(Default)]
 pub struct ShipLoadout {
@@ -9,14 +8,14 @@ pub struct ShipLoadout {
     pub ship_type: String,
     pub ship_name: String,
     pub ship_ident: String,
-    pub hull_value: u64,
-    pub modules_value: u64,
-    pub hull_health: f64,
-    pub unladen_mass: f64,
-    pub cargo_capacity: u64,
+    pub hull_value: u32,
+    pub modules_value: u32,
+    pub hull_health: f32,
+    pub unladen_mass: f32,
+    pub cargo_capacity: u16,
     pub max_jump_range: f32,
     pub fuel_capacity: FuelCapacity,
-    pub rebuy: u64,
+    pub rebuy: u32,
     pub hardpoints: Vec<ShipModule>,
     pub utilities: Vec<ShipModule>,
     pub core_internals: Vec<ShipModule>,
@@ -28,13 +27,13 @@ pub struct ShipModule {
     pub slot: SlotType,
     pub name: String,
     pub on: bool,
-    pub priority: u64,
-    pub health: f64,
-    pub value: Option<u64>,
+    pub priority: u8,
+    pub health: f32,
+    pub value: Option<u32>,
     pub class: u8,
     pub rating: char,
-    pub ammo_in_clip: Option<u64>,
-    pub ammo_in_hopper: Option<u64>,
+    pub ammo_in_clip: Option<u32>,
+    pub ammo_in_hopper: Option<u32>,
     pub engineering: Option<Engineering>,
     pub mount: String,
 }
@@ -42,8 +41,8 @@ pub struct ShipModule {
 #[derive(Default)]
 pub struct FuelCapacity {
 
-    pub main: f64,
-    pub reserve: f64,
+    pub main: f32,
+    pub reserve: f32,
 }
 
 pub struct Engineering {
@@ -64,73 +63,6 @@ pub struct Modifier {
     pub less_is_good: u64,
 }
 
-impl From<event::LoadoutModuleEngineering> for Engineering {
-    fn from(value: event::LoadoutModuleEngineering) -> Self {
-        Engineering {
-            engineer: value.engineer.unwrap_or_default(),
-            blueprint_name: value
-                .blueprint_name
-                .split('_')
-                .skip(1)
-                .next()
-                .unwrap_or_default()
-                .to_string(),
-            level: value.level,
-            quality: value.quality,
-            experimental_effect: value.experimental_effect_localised.or(value.experimental_effect),
-            modifiers: value.modifiers.into_iter().map(|m| m.into()).collect(),
-        }
-    }
-}
-
-impl From<event::LoadoutModuleEngineeringModifier> for Modifier {
-    fn from(value: event::LoadoutModuleEngineeringModifier) -> Self {
-        Modifier {
-            label: value.label,
-            value: value.value.unwrap_or_default(),
-            original_value: value.original_value.unwrap_or_default(),
-            less_is_good: value.less_is_good.unwrap_or_default(),
-        }
-    }
-}
-
-impl From<event::LoadoutModule> for ShipModule {
-    fn from(value: event::LoadoutModule) -> Self {
-        let (class, rating, name, mount) = Outfitting::metadata(&value.item)
-            .map(|details| (
-                details.class.parse().unwrap_or(0),
-                details.rating.chars().next().unwrap_or('X'),
-                details.name.to_string(),
-                details.mount.to_string(),
-            ))
-            .unwrap_or((0, 'X', value.item.clone(), "".to_string()));
-
-        ShipModule {
-            slot: value.slot.into(),
-            name,
-            on: value.on,
-            priority: value.priority,
-            health: value.health,
-            value: value.value,
-            ammo_in_clip: value.ammo_in_clip,
-            ammo_in_hopper: value.ammo_in_hopper,
-            engineering: value.engineering.map(|e| e.into()),
-            class,
-            rating,
-            mount,
-        }
-    }
-}
-
-impl From<event::LoadoutFuelCapacity> for FuelCapacity {
-    fn from(value: event::LoadoutFuelCapacity) -> Self {
-        FuelCapacity {
-            main: value.main,
-            reserve: value.reserve,
-        }
-    }
-}
-
 #[derive(Default)]
 pub struct ShipLocker {
 
@@ -144,8 +76,8 @@ pub struct ShipLocker {
 pub struct ShipLockerItem {
 
     pub name: String,
-    pub count: u64,
-    pub for_mission: bool,
+    pub count: u16,
+    pub mission_id: Option<u64>,
     pub locations: Vec<String>
 }
 
@@ -167,6 +99,7 @@ pub enum CoreInternalType {
     Radar,
     FuelTank,
     Armour,
+    PlanetaryApproachSuite,
 }
 
 pub enum OptionalInternalType {
@@ -186,7 +119,7 @@ pub enum CosmeticType {
     Decal(u8),
     ShipName(u8),
     WeaponColour,
-    EngineColour,
+    EngineColour
 }
 
 pub enum MiscellaneousType {
@@ -199,155 +132,71 @@ pub enum MiscellaneousType {
     CargoHatch,
 }
 
-impl From<String> for SlotType {
-
-    fn from(value: String) -> Self {
-
-        // Compile regular expressions only once using lazy_static
-        use once_cell::sync::Lazy;
-        static SLOT_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"Slot(\d+)_Size(\d+)").unwrap());
-        static NUMBERED_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"(Military|Decal|ShipName|ShipID|Bobble)(\d+)").unwrap());
-        static HARDPOINT_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"(Tiny|Small|Medium|Large|Huge)Hardpoint(\d+)").unwrap());
-
-        // Handle optional slots like "Slot01_Size8"
-        if let Some(captures) = SLOT_REGEX.captures(&value) {
-            return SlotType::OptionalInternal(
-                OptionalInternalType::Optional {
-                    number: captures[1].parse().unwrap(),
-                    size: captures[2].parse().unwrap(),
-            });
-        }
-
-        // Handle numbered slots like "Military02", "Decal01", etc
-        if let Some(captures) = NUMBERED_REGEX.captures(&value) {
-            let number = captures[2].parse().unwrap();
-            return match &captures[1] {
-                "Military" => SlotType::OptionalInternal(OptionalInternalType::Military(number)),
-                "Decal" => SlotType::Cosmetic(CosmeticType::Decal(number)),
-                "ShipName" => SlotType::Cosmetic(CosmeticType::ShipName(number)),
-                "ShipID" => SlotType::Cosmetic(CosmeticType::ShipID),
-                "Bobble" => SlotType::Cosmetic(CosmeticType::Bobble(number)),
-                _ => unreachable!()
-            };
-        }
-
-        // Handle hardpoints like "MediumHardpoint2"
-        if let Some(captures) = HARDPOINT_REGEX.captures(&value) {
-            let size = match &captures[1] {
-                "Tiny" => 0,
-                "Small" => 1,
-                "Medium" => 2,
-                "Large" => 3,
-                "Huge" => 4,
-                _ => panic!("Unknown hardpoint size: {}", value)
-            };
-            return SlotType::Hardpoints {
-                number: captures[2].parse().unwrap(),
-                size,
-            };
-        }
-                
-        // Try to match enum variant name directly
-        match value.as_str() {
-            "MainEngines" => SlotType::CoreInternal(CoreInternalType::MainEngines),
-            "FrameShiftDrive" => SlotType::CoreInternal(CoreInternalType::FrameShiftDrive),
-            "PowerDistributor" => SlotType::CoreInternal(CoreInternalType::PowerDistributor),
-            "PowerPlant" => SlotType::CoreInternal(CoreInternalType::PowerPlant),
-            "LifeSupport" => SlotType::CoreInternal(CoreInternalType::LifeSupport),
-            "Radar" => SlotType::CoreInternal(CoreInternalType::Radar),
-            "Armour" => SlotType::CoreInternal(CoreInternalType::Armour),
-            "FuelTank" => SlotType::CoreInternal(CoreInternalType::FuelTank),
-            
-            "CargoHatch" => SlotType::Miscellaneous(MiscellaneousType::CargoHatch),
-            "ShipCockpit" => SlotType::Miscellaneous(MiscellaneousType::ShipCockpit),
-            "PlanetaryApproachSuite" => SlotType::Miscellaneous(MiscellaneousType::PlanetaryApproachSuite),
-            "DataLinkScanner" => SlotType::Miscellaneous(MiscellaneousType::DataLinkScanner),
-            "CodexScanner" => SlotType::Miscellaneous(MiscellaneousType::CodexScanner),
-            "DiscoveryScanner" => SlotType::Miscellaneous(MiscellaneousType::DiscoveryScanner),
-            "ColonisationSuite" => SlotType::Miscellaneous(MiscellaneousType::ColonisationSuite),
-            
-            "WeaponColour" => SlotType::Cosmetic(CosmeticType::WeaponColour),
-            "EngineColour" => SlotType::Cosmetic(CosmeticType::EngineColour),
-            "PaintJob" => SlotType::Cosmetic(CosmeticType::PaintJob),
-            "ShipKitSpoiler" => SlotType::Cosmetic(CosmeticType::ShipKitSpoiler),
-            "ShipKitWings" => SlotType::Cosmetic(CosmeticType::ShipKitWings),
-            "ShipKitTail" => SlotType::Cosmetic(CosmeticType::ShipKitTail),
-            "ShipKitBumper" => SlotType::Cosmetic(CosmeticType::ShipKitBumper),
-            "VesselVoice" => SlotType::Cosmetic(CosmeticType::VesselVoice),
-            _ => {
-                warn!("Unknown module slot: {}", value);
-                SlotType::Unknown
-            }
-        }
-    }
-}
-use crate::lookup::fdev_ids::Shipyard;
-use crate::lookup;
-use std::collections::HashMap;
-
-impl From<event::Inventory> for ShipLocker {
-    fn from(value: event::Inventory) -> Self {
+impl From <ed_journals::ship_locker::ShipLocker> for ShipLocker {
+    fn from(value: ed_journals::ship_locker::ShipLocker) -> Self {
         ShipLocker {
-            items: map_vec(value.items),
-            consumables: value.consumables.unwrap_or_default().into_iter().map(|c| c.into()).collect(),
-            data: map_vec(value.data),
-            components: value.components.unwrap_or_default().into_iter().map(|c| {
-                ShipLockerItem {
-                    name: c.name_localised.clone().unwrap_or(crate::journal::format::title_case(&c.name)),
-                    for_mission: c.mission_id.is_some(),
-                    count: c.count,
-                    locations: lookup::locations_for_material(&c.name_localised.unwrap_or(c.name))
-                }
+            items: value.items.into_iter().map(|i| ShipLockerItem {
+                name: i.name.to_string(),
+                count: i.count,
+                mission_id: i.mission_id,
+                locations: i.locations.unwrap_or_default(),
+            }).collect(),
+            components: value.components.into_iter().map(|i| ShipLockerItem {
+                name: i.name.to_string(),
+                count: i.count,
+                mission_id: i.mission_id,
+                locations: i.locations.unwrap_or_default(),
+            }).collect(),
+            consumables: value.consumables.into_iter().map(|i| ShipLockerItem {
+                name: i.name.to_string(),
+                count: i.count,
+                mission_id: i.mission_id,
+                locations: i.locations.unwrap_or_default(),
+            }).collect(),
+            data: value.data.into_iter().map(|i| ShipLockerItem {
+                name: i.name.to_string(),
+                count: i.count,
+                mission_id: i.mission_id,
+                locations: i.locations.unwrap_or_default(),
             }).collect(),
         }
     }
 }
 
-impl From<event::Item> for ShipLockerItem {
-    fn from(value: event::Item) -> Self {
-        ShipLockerItem {
-            name: value.name_localised.clone().unwrap_or(crate::journal::format::title_case(&value.name)),
-            for_mission: value.mission_id.is_some(),
-            count: value.count,
-            locations: lookup::locations_for_item(&value.name_localised.unwrap_or(value.name))
+impl From<ShipLockerEventContents> for ShipLocker {
+    
+    fn from(event: ShipLockerEventContents) -> Self {
+        ShipLocker {
+                items: event.items.into_iter().map(|i| ShipLockerItem {
+                    name: i.name,
+                    count: i.count,
+                    mission_id: i.mission_id,
+                    locations: i.locations.unwrap_or_default(),
+                }).collect(),
+                components: event.components.into_iter().map(|i| ShipLockerItem {
+                    name: i.name,
+                    count: i.count,
+                    mission_id: i.mission_id,
+                    locations: i.locations.unwrap_or_default(),
+                }).collect(),
+                consumables: event.consumables.into_iter().map(|i| ShipLockerItem {
+                    name: i.name,
+                    count: i.count,
+                    mission_id: i.mission_id,
+                    locations: i.locations.unwrap_or_default(),
+                }).collect(),
+                data: event.data.into_iter().map(|i| ShipLockerItem {
+                    name: i.name,
+                    count: i.count,
+                    mission_id: i.mission_id,
+                    locations: i.locations.unwrap_or_default(),
+                }).collect(),
+            }
         }
-    }
 }
 
-impl From<event::Consumable> for ShipLockerItem {
-    fn from(value: event::Consumable) -> Self {
-        ShipLockerItem {
-            name: value.name_localised.clone().unwrap_or(crate::journal::format::title_case(&value.name)),
-            count: value.count,
-            for_mission: false,
-            locations: lookup::locations_for_item(&value.name_localised.unwrap_or(value.name))
-        }
-    }
-}
-
-fn group_and_sort(items: Vec<event::Item>) -> Vec<event::Item> {
-    let mut grouped_items: HashMap<(String, Option<u64>), event::Item> = HashMap::new();
-    for item in items {
-        grouped_items
-            .entry((item.name.clone(), item.mission_id))
-            .and_modify(|e| e.count += item.count)
-            .or_insert(item);
-    }
-    let mut items: Vec<_> = grouped_items.into_values().collect();
-    items.sort_by(|a, b| a.name.cmp(&b.name));
-    items
-}
-
-fn map_vec(vec: Option<Vec<event::Item>>) -> Vec<ShipLockerItem> {
-    group_and_sort(vec.unwrap_or_default())
-        .into_iter()
-        .map(|f| f.into())
-        .collect()
-}
-
-impl From<event::Loadout> for ShipLoadout {
-    fn from(value: event::Loadout) -> Self {
-        let ship_type = Shipyard::metadata(&value.ship);
+impl From<LoadoutEvent> for ShipLoadout {
+    fn from(value: LoadoutEvent) -> Self {
 
         // Convert and categorize modules by slot type
         let mut hardpoints: Vec<ShipModule> = Vec::new();
@@ -356,19 +205,67 @@ impl From<event::Loadout> for ShipLoadout {
         let mut optional_internals: Vec<ShipModule> = Vec::new();
 
         for m in value.modules.into_iter() {
-            let module: ShipModule = m.into();
-            match &module.slot {
-                SlotType::Hardpoints { size, .. } => {
-                    if *size == 0 { utilities.push(module); } else { hardpoints.push(module); }
-                }
+            let module = ShipModule {
+
+                name: m.item.to_string(),
+                slot: match m.slot.kind {
+                    ShipSlotKind::ShipCockpit => SlotType::Miscellaneous(MiscellaneousType::ShipCockpit),
+                    ShipSlotKind::CargoHatch => SlotType::Miscellaneous(MiscellaneousType::CargoHatch),
+                    ShipSlotKind::UtilityMount => SlotType::Hardpoints { number: 0, size: 0 },
+                    ShipSlotKind::Hardpoint(size) => SlotType::Hardpoints { number: 0, size: size.size_nr() },
+                    ShipSlotKind::OptionalInternal(size) => SlotType::OptionalInternal(OptionalInternalType::Optional { number: 0, size }),
+                    ShipSlotKind::Military => SlotType::OptionalInternal(OptionalInternalType::Military(0)),
+                    ShipSlotKind::CoreInternal(kind) => SlotType::CoreInternal(match kind {
+                        CoreSlot::Armour => CoreInternalType::Armour,
+                        CoreSlot::PowerPlant => CoreInternalType::PowerPlant,
+                        CoreSlot::MainEngines => CoreInternalType::MainEngines,
+                        CoreSlot::FrameShiftDrive => CoreInternalType::FrameShiftDrive,
+                        CoreSlot::LifeSupport => CoreInternalType::LifeSupport,
+                        CoreSlot::PowerDistributor => CoreInternalType::PowerDistributor,
+                        CoreSlot::Sensors => CoreInternalType::Radar,
+                        CoreSlot::FuelTank => CoreInternalType::FuelTank,
+                        CoreSlot::PlanetaryApproachSuite => CoreInternalType::PlanetaryApproachSuite
+                    }),
+                    ShipSlotKind::DataLinkScanner => SlotType::Miscellaneous(MiscellaneousType::DataLinkScanner),
+                    ShipSlotKind::CodexScanner => SlotType::Miscellaneous(MiscellaneousType::CodexScanner),
+                    ShipSlotKind::DiscoveryScanner => SlotType::Miscellaneous(MiscellaneousType::DiscoveryScanner),
+                    ShipSlotKind::PaintJob => SlotType::Cosmetic(CosmeticType::PaintJob),
+                    ShipSlotKind::Decal => SlotType::Cosmetic(CosmeticType::Decal(0)),
+                    ShipSlotKind::VesselVoice => SlotType::Cosmetic(CosmeticType::VesselVoice),
+                    ShipSlotKind::Nameplate => SlotType::Cosmetic(CosmeticType::ShipName(0)),
+                    ShipSlotKind::IDPlate => SlotType::Cosmetic(CosmeticType::ShipID),
+                    ShipSlotKind::Bobble => SlotType::Cosmetic(CosmeticType::Bobble(0)),
+                    ShipSlotKind::StringLights => SlotType::Unknown,
+                    ShipSlotKind::EngineColor => SlotType::Cosmetic(CosmeticType::EngineColour),
+                    ShipSlotKind::WeaponColor => SlotType::Cosmetic(CosmeticType::WeaponColour),
+                    ShipSlotKind::ShipKitSpoiler => SlotType::Cosmetic(CosmeticType::ShipKitSpoiler),
+                    ShipSlotKind::ShipKitWings => SlotType::Cosmetic(CosmeticType::ShipKitWings),
+                    ShipSlotKind::ShipKitTail => SlotType::Cosmetic(CosmeticType::ShipKitTail),
+                    ShipSlotKind::ShipKitBumper => SlotType::Cosmetic(CosmeticType::ShipKitBumper),
+                },
+
+                on: m.on,
+                priority: m.priority,
+                health: m.health,
+                value: m.value,
+                class: m.class,
+                rating: m.rating,
+                ammo_in_clip: m.ammo_in_clip,
+                ammo_in_hopper: m.ammo_in_hopper,
+                engineering: None,
+                mount: m.mount.unwrap_or_default(),
+            };
+
+            match module.slot {
+                SlotType::Hardpoints { .. } => hardpoints.push(module),
                 SlotType::CoreInternal(_) => core_internals.push(module),
                 SlotType::OptionalInternal(_) => optional_internals.push(module),
-                SlotType::Cosmetic(_) | SlotType::Miscellaneous(_) | SlotType::Unknown => {}
+                _ => utilities.push(module),
             }
-        }
+        };
 
         ShipLoadout {
-            ship_type: ship_type.map(|s| s.name.to_string()).unwrap_or(value.ship),
+            ship_type: value.ship.to_string(),
             ship_name: value.ship_name,
             ship_ident: value.ship_ident,
             hull_value: value.hull_value.unwrap_or_default(),
@@ -376,8 +273,11 @@ impl From<event::Loadout> for ShipLoadout {
             hull_health: value.hull_health,
             unladen_mass: value.unladen_mass,
             cargo_capacity: value.cargo_capacity,
-            max_jump_range: value.max_jump_range as f32,
-            fuel_capacity: value.fuel_capacity.into(),
+            max_jump_range: value.max_jump_range,
+            fuel_capacity: FuelCapacity {
+                main: value.fuel_capacity.main,
+                reserve: value.fuel_capacity.reserve,
+            },
             rebuy: value.rebuy,
             hardpoints,
             utilities,

@@ -4,3 +4,6 @@
 [submodule "journal-schemas"]
 	path = journal-schemas
 	url = https://github.com/jixxed/ed-journal-schemas.git
+[submodule "ed-journals"]
+	path = ed-journals
+	url = https://github.com/adam-drewery/ed-journals.git

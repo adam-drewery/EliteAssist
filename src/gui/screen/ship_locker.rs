@@ -27,7 +27,7 @@ pub fn locker_item_list<'a>(title: &'a str, items: &'a [ShipLockerItem]) -> Colu
             items
             .iter()
                 .map(|item| {
-                    let color = if item.for_mission { BLUE } else { Color::WHITE };
+                    let color = if !item.mission_id.is_none() { BLUE } else { Color::WHITE };
 
                     let content = row![
                         text(item.count).size(16).color(YELLOW).width(36),

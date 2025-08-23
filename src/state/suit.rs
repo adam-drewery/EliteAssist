@@ -1,4 +1,5 @@
-use crate::journal::event;
+use ed_journals::logs::suit_loadout_event::SuitLoadoutEvent;
+use ed_journals::odyssey::{SuitMod, SuitSlot};
 
 #[derive(Default)]
 pub struct SuitLoadout {
@@ -13,9 +14,7 @@ pub struct SuitLoadout {
 pub struct SuitModule {
 
     pub slot_name: String,
-    pub module_name: String,
-    pub class: u64,
-    pub weapon_mods: Vec<String>,
+    pub class: u8,
 }
 
 fn localized_name(name: String) -> String {
@@ -36,24 +35,37 @@ fn localized_name(name: String) -> String {
         .join(" ")
 }
 
-impl From<event::SuitLoadoutModule> for SuitModule {
-    fn from(value: event::SuitLoadoutModule) -> Self {
-        SuitModule {
-            slot_name: value.slot_name,
-            module_name: value.module_name_localised.unwrap_or(value.module_name),
-            class: value.class,
-            weapon_mods: value.weapon_mods,
-        }
-    }
-}
-
-impl From<event::SuitLoadout> for SuitLoadout {
-    fn from(value: event::SuitLoadout) -> Self {
+impl From<SuitLoadoutEvent> for SuitLoadout {
+    fn from(value: SuitLoadoutEvent) -> Self {
         SuitLoadout {
-            suit_name: localized_name(value.suit_name_localised.unwrap_or_else(|| value.suit_name)),
-            suit_mods: value.suit_mods.into_iter().map(|m| m.into()).collect(),
             loadout_name: value.loadout_name,
-            modules: value.modules.into_iter().map(|m| m.into()).collect(),
+            suit_name: value.suit_name_localized,
+            suit_mods: value.suit_mods.into_iter().map(|x| {
+                match x {
+                    SuitMod::ReducedToolBatteryConsumption => "Reduced Tool Battery Consumption",
+                    SuitMod::ImprovedBatteryCapacity => "Improved Battery Capacity",
+                    SuitMod::IncreasedSprintDuration => "Increased Sprint Duration",
+                    SuitMod::CombatMovementSpeed => "Combat Movement Speed",
+                    SuitMod::ImprovedJumpAssist => "Improved Jump Assist",
+                    SuitMod::IncreasedAirReserves => "Increased Air Reserves",
+                    SuitMod::NightVision => "Night Vision",
+                    SuitMod::EnhancedTracking => "Enhanced Tracking",
+                    SuitMod::ExtraBackpackCapacity => "Extra Backpack Capacity",
+                    SuitMod::AddedMeleeDamage => "Added Melee Damage",
+                    SuitMod::DamageResistance => "Damage Resistance",
+                    SuitMod::ExtraAmmoCapacity => "Extra Ammo Capacity",
+                    SuitMod::FasterShieldRegen => "Faster Shield Regen",
+                    SuitMod::QuieterFootsteps => "Quieter Footsteps"
+                }.to_string()
+            }).collect(),
+            modules: value.modules.into_iter().map(|m| SuitModule {
+                slot_name: match m.slot_name {
+                    SuitSlot::PrimaryWeapon1 => "Primary Weapon 1".to_string(),
+                    SuitSlot::PrimaryWeapon2 => "Primary Weapon 2".to_string(),
+                    SuitSlot::SecondaryWeapon => "Secondary Weapon".to_string(),
+                },
+                class: value.suit_name.class,
+            }).collect()
         }
     }
 }

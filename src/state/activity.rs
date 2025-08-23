@@ -1,4 +1,19 @@
-use crate::journal::event;
+use chrono::{DateTime, Utc};
+use ed_journals::logs::change_crew_role_event::{ChangeCrewRoleEvent, ChangeCrewRoleEventRole};
+use ed_journals::logs::crew_assign_event::{CrewAssignEvent, CrewAssignEventRole};
+use ed_journals::logs::crew_launch_fighter_event::CrewLaunchFighterEvent;
+use ed_journals::logs::crew_member_role_change_event::{CrewMemberRoleChangeEvent, CrewMemberRoleChangeEventRole};
+use ed_journals::logs::disembark_event::DisembarkEvent;
+use ed_journals::logs::dock_fighter_event::DockFighterEvent;
+use ed_journals::logs::embark_event::EmbarkEvent;
+use ed_journals::logs::end_crew_session_event::EndCrewSessionEvent;
+use ed_journals::logs::fighter_rebuilt_event::FighterRebuiltEvent;
+use ed_journals::logs::launch_fighter_event::LaunchFighterEvent;
+use ed_journals::logs::npc_crew_rank_event::NPCCrewRankEvent;
+use ed_journals::logs::npc_crew_wage_paid_event::NPCCrewWagePaidEvent;
+use ed_journals::logs::restock_vehicle_event::RestockVehicleEvent;
+use ed_journals::logs::start_jump_event::{StartJumpEvent, StartJumpType};
+use ed_journals::logs::vehicle_switch_event::{VehicleSwitchEvent, VehicleSwitchEventTo};
 use crate::journal::format::prettify_date;
 use thousands::Separable;
 
@@ -8,165 +23,155 @@ pub struct GameEventLog {
     pub noun: String,
 }
 
-impl From<event::Embark> for GameEventLog {
-    fn from(value: event::Embark) -> Self {
+impl GameEventLog {
+    pub fn from_embark(value: EmbarkEvent, timestamp: DateTime<Utc>) -> Self {
         GameEventLog {
-            time_display: prettify_date(&value.timestamp),
+            time_display: prettify_date(&timestamp),
             verb: "Embarked".to_owned(),
             noun: join_location_parts(&value.star_system, &value.body, &value.station_name),
         }
     }
-}
 
-impl From<event::Disembark> for GameEventLog {
-    fn from(value: event::Disembark) -> Self {
+    pub fn from_disembark(value: DisembarkEvent, timestamp: DateTime<Utc>) -> Self {
         GameEventLog {
-            time_display: prettify_date(&value.timestamp),
+            time_display: prettify_date(&timestamp),
             verb: "Disembarked".to_owned(),
             noun: join_location_parts(&value.star_system, &value.body, &value.station_name),
         }
     }
-}
 
-impl From<event::StartJump> for GameEventLog {
-    fn from(value: event::StartJump) -> Self {
-        match value.jump_type.as_str() {
-            "Supercruise" => GameEventLog {
-                time_display: prettify_date(&value.timestamp),
+    pub fn from_start_jump(value: StartJumpEvent, timestamp: DateTime<Utc>) -> Self {
+        match value.jump {
+            StartJumpType::Supercruise => GameEventLog {
+                time_display: prettify_date(&timestamp),
                 verb: "".into(),
                 noun: "Entered supercruise".into(),
             },
-            "Hyperspace" => GameEventLog {
-                time_display: prettify_date(&value.timestamp),
+            StartJumpType::Hyperspace { star_system, system_address: _, star_class } => GameEventLog {
+                time_display: prettify_date(&timestamp),
                 verb: "Jumped to".into(),
                 noun: format!(
                     "{} ({})",
-                    value.star_system.unwrap_or_default(),
-                    value.star_class.unwrap_or_default()
+                    star_system,
+                    star_class
                 ),
-            },
-            _ => panic!("Unknown jump type"),
+            }
         }
     }
-}
 
-// Crew-related events
-impl From<event::CrewAssign> for GameEventLog {
-    fn from(value: event::CrewAssign) -> Self {
+    pub fn from_crew_assign(value: CrewAssignEvent, timestamp: DateTime<Utc>) -> Self {
         GameEventLog {
-            time_display: prettify_date(&value.timestamp),
+            time_display: prettify_date(&timestamp),
             verb: "Assigned".into(),
-            noun: format!("{} as {}", value.name, value.role),
+            noun: match value.role {
+                CrewAssignEventRole::Active => {
+                    format!("{} as active", value.name)
+                }
+                CrewAssignEventRole::OnShoreLeave => {
+                    format!("{} to shore leave", value.name)
+                }
+            },
         }
     }
-}
 
-impl From<event::CrewMemberRoleChange> for GameEventLog {
-    fn from(value: event::CrewMemberRoleChange) -> Self {
+    pub fn from_crew_member_role_change(value: CrewMemberRoleChangeEvent, timestamp: DateTime<Utc>) -> Self {
         GameEventLog {
-            time_display: prettify_date(&value.timestamp),
-            verb: "Assigned role".into(),
-            noun: format!("{} to {}", value.role, value.crew),
+            time_display: prettify_date(&timestamp),
+            verb: "Assigned role".to_string(),
+            noun: format!("{} to {}", match value.role {
+                CrewMemberRoleChangeEventRole::Idle => "Idle".to_string(),
+                CrewMemberRoleChangeEventRole::FireCon => "Fire con".to_string(),
+                CrewMemberRoleChangeEventRole::FighterCon => "Fighter con".to_string(),
+                CrewMemberRoleChangeEventRole::OnFoot => "On foot".to_string(),
+                CrewMemberRoleChangeEventRole::Helm => "Helm".to_string(),
+            }, value.crew),
         }
     }
-}
 
-impl From<event::EndCrewSession> for GameEventLog {
-    fn from(value: event::EndCrewSession) -> Self {
+    pub fn from_end_crew_session(value: EndCrewSessionEvent, timestamp: DateTime<Utc>) -> Self {
         GameEventLog {
-            time_display: prettify_date(&value.timestamp),
+            time_display: prettify_date(&timestamp),
             verb: "Ended".into(),
-            noun: if value.telepresence.is_some_and(|x| x) { "remote session".into() } else { "crew session".into() },
+            noun: if value.telepresence { "remote session".into() } else { "crew session".into() },
         }
     }
-}
 
-impl From<event::NpcCrewRank> for GameEventLog {
-    fn from(value: event::NpcCrewRank) -> Self {
+    pub fn from_npc_crew_rank(value: NPCCrewRankEvent, timestamp: DateTime<Utc>) -> Self {
         GameEventLog {
-            time_display: prettify_date(&value.timestamp),
+            time_display: prettify_date(&timestamp),
             verb: "Promoted crew member".into(),
             noun: value.npc_crew_name,
         }
     }
-}
 
-impl From<event::ChangeCrewRole> for GameEventLog {
-    fn from(value: event::ChangeCrewRole) -> Self {
+    pub fn from_change_crew_role(value: ChangeCrewRoleEvent, timestamp: DateTime<Utc>) -> Self {
         GameEventLog {
-            time_display: prettify_date(&value.timestamp),
+            time_display: prettify_date(&timestamp),
             verb: "Changed role to".into(),
-            noun: value.role,
+            noun: match value.role {
+                ChangeCrewRoleEventRole::Idle => "Idle".into(),
+                ChangeCrewRoleEventRole::FireCon => "Fire con".into(),
+                ChangeCrewRoleEventRole::FighterCon => "Fighter con".into(),
+                ChangeCrewRoleEventRole::OnFoot => "On foot".into(),
+                ChangeCrewRoleEventRole::Helm => "Helm".into(),
+            },
         }
     }
-}
 
-impl From<event::NpcCrewPaidWage> for GameEventLog {
-    fn from(value: event::NpcCrewPaidWage) -> Self {
+    pub fn from_npc_crew_wage_paid(value: NPCCrewWagePaidEvent, timestamp: DateTime<Utc>) -> Self {
         GameEventLog {
-            time_display: prettify_date(&value.timestamp),
+            time_display: prettify_date(&timestamp),
             verb: "Paid".into(),
             noun: format!("{} to {}", value.amount.separate_with_commas(), value.npc_crew_name),
         }
     }
-}
 
-// Fighter-related events
-impl From<event::FighterRebuilt> for GameEventLog {
-    fn from(value: event::FighterRebuilt) -> Self {
+    pub fn from_fighter_rebuilt(value: FighterRebuiltEvent, timestamp: DateTime<Utc>) -> Self {
         GameEventLog {
-            time_display: prettify_date(&value.timestamp),
+            time_display: prettify_date(&timestamp),
             verb: "Rebuilt".into(),
             noun: format!("Fighter {}", value.id.to_string()),
         }
     }
-}
 
-impl From<event::DockFighter> for GameEventLog {
-    fn from(value: event::DockFighter) -> Self {
+    pub fn from_dock_fighter(value: DockFighterEvent, timestamp: DateTime<Utc>) -> Self {
         GameEventLog {
-            time_display: prettify_date(&value.timestamp),
+            time_display: prettify_date(&timestamp),
             verb: "Docked".into(),
             noun: format!("Fighter {}", value.id.to_string()),
         }
     }
-}
 
-impl From<event::CrewLaunchFighter> for GameEventLog {
-    fn from(value: event::CrewLaunchFighter) -> Self {
+    pub fn from_crew_launch_fighter(value: CrewLaunchFighterEvent, timestamp: DateTime<Utc>) -> Self {
         GameEventLog {
-            time_display: prettify_date(&value.timestamp),
+            time_display: prettify_date(&timestamp),
             verb: "Launched".into(),
-            noun: format!("Fighter by {}", value.crew),
+            noun: format!("Fighter by {}", value.name),
         }
     }
-}
 
-impl From<event::LaunchFighter> for GameEventLog {
-    fn from(value: event::LaunchFighter) -> Self {
+    pub fn from_launch_fighter(value: LaunchFighterEvent, timestamp: DateTime<Utc>) -> Self {
         GameEventLog {
-            time_display: prettify_date(&value.timestamp),
+            time_display: prettify_date(&timestamp),
             verb: "Launched".into(),
             noun: format!("Fighter {}", value.id.to_string()),
         }
     }
-}
 
-impl From<event::VehicleSwitch> for GameEventLog {
-    fn from(value: event::VehicleSwitch) -> Self {
+    pub fn from_vehicle_switch(value: VehicleSwitchEvent, timestamp: DateTime<Utc>) -> Self {
         GameEventLog {
-            time_display: prettify_date(&value.timestamp),
+            time_display: prettify_date(&timestamp),
             verb: "Switched to".into(),
-            noun: value.to,
+            noun: match value.to {
+                VehicleSwitchEventTo::Fighter => "Fighter".into(),
+                VehicleSwitchEventTo::Mothership => "Mothership".into()
+            },
         }
     }
-}
 
-// Cargo/Restock
-impl From<event::RestockVehicle> for GameEventLog {
-    fn from(value: event::RestockVehicle) -> Self {
+    pub fn from_restock_vehicle(value: RestockVehicleEvent, timestamp: DateTime<Utc>) -> Self {
         GameEventLog {
-            time_display: prettify_date(&value.timestamp),
+            time_display: prettify_date(&timestamp),
             verb: "Restocked vehicles for".into(),
             noun: format!("{}CR", value.cost.to_string().separate_with_commas()),
         }
@@ -188,38 +193,4 @@ fn join_location_parts(system: &String, body: &String, station: &Option<String>)
         }
     }
     parts.join(" | ")
-}
-pub fn log_ship_equipment_purchase(e: event::ShipEquipmentPurchase, item: &str) -> GameEventLog {
-    GameEventLog {
-        time_display: prettify_date(&e.timestamp),
-        verb: format!("Bought {} for", item),
-        noun: format!("{}CR", e.cost.to_string().separate_with_commas()),
-    }
-}
-
-pub fn log_crew_member(e: event::CrewMember, verb: &str) -> GameEventLog {
-    GameEventLog {
-        time_display: prettify_date(&e.timestamp),
-        verb: format!("Crew {}", verb),
-        noun: format!(
-            "{} {}",
-            e.crew,
-            if e.telepresence.is_some_and(|x| x) {
-                "remotely"
-            } else {
-                "to crew"
-            }
-        ),
-    }
-}
-
-pub fn log_damage(e: event::Damage, verb: &str, noun: &str) -> GameEventLog {
-    GameEventLog {
-        time_display: prettify_date(&e.timestamp),
-        verb: verb.to_string(),
-        noun: match e.id {
-            None => noun.to_string(),
-            Some(id) => format!("{} {}", noun, id),
-        },
-    }
 }

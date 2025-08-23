@@ -18,19 +18,19 @@ pub fn loadout(state: &State) -> Column<'_, Message> {
                 details("Modification", mod_name).into()
             })
         ).padding(8),
-        sub_header("Weapons"),
-        column(
-            state.suit_loadout.modules.iter().map(|module| {
-                column![
-                    details(&module.slot_name, &module.module_name),
-                    column(
-                        module.weapon_mods.iter().map(|mod_name| {
-                            details("Modification", mod_name).into()
-                        })
-                    ).padding([0, 16])
-                ].into()
-            })
-        ).padding(8)
+        sub_header("Weapons: TODO"),
+        // column(
+        //     state.suit_loadout.modules.iter().map(|module| {
+        //         column![
+        //             details(&module.slot_name, &module.module_name),
+        //             column(
+        //                 module.weapon_mods.iter().map(|mod_name| {
+        //                     details("Modification", mod_name).into()
+        //                 })
+        //             ).padding([0, 16])
+        //         ].into()
+        //     })
+        // ).padding(8)
     ]
     .padding(8)
 }
@@ -38,16 +38,16 @@ pub fn loadout(state: &State) -> Column<'_, Message> {
 pub fn ranks(state: &State) -> Column<'_, Message> {
     column![
             row![
-                rank("Combat Rank", state.rank.combat, state.progress.combat, Rank::combat),
-                rank("Explorer Rank", state.rank.explore, state.progress.explore, Rank::exploration)
+                rank("Combat Rank", state.rank.combat.as_str(), state.progress.combat, Rank::combat),
+                rank("Explorer Rank", state.rank.explore.as_str(), state.progress.explore, Rank::exploration)
             ],
             row![
-                rank("Trade Rank", state.rank.trade, state.progress.trade, Rank::trading),
-                rank("CQC Rank", state.rank.cqc, state.progress.cqc, Rank::cqc)
+                rank("Trade Rank", state.rank.trade.as_str(), state.progress.trade, Rank::trading),
+                rank("CQC Rank", state.rank.cqc.as_str(), state.progress.cqc, Rank::cqc)
             ],
             row![
-                rank("Mercenary Rank", state.rank.soldier, state.progress.soldier, Rank::mercenary),
-                rank("Exobiologist Rank", state.rank.exobiologist, state.progress.exobiologist, Rank::exobiologist)
+                rank("Mercenary Rank", state.rank.mercenary.as_str(), state.progress.soldier, Rank::mercenary),
+                rank("Exobiologist Rank", state.rank.exobiology.as_str(), state.progress.exobiologist, Rank::exobiologist)
             ],
             row![
                 superpower_rank(
@@ -58,13 +58,13 @@ pub fn ranks(state: &State) -> Column<'_, Message> {
                     None),
                 superpower_rank(
                     "Federation",
-                    Some(state.rank.federation),
+                    Some(state.rank.federation.as_str()),
                     Some(state.progress.federation),
                     state.reputation.federation,
                     Some(Rank::federation)),
                 superpower_rank(
                     "Empire",
-                    Some(state.rank.empire),
+                    Some(state.rank.empire.as_str()),
                     Some(state.progress.empire),
                     state.reputation.empire,
                     Some(Rank::empire))
@@ -72,7 +72,7 @@ pub fn ranks(state: &State) -> Column<'_, Message> {
         ].padding(8)
 }
 
-fn rank(title: &str, rank: u64, progress: u64, lookup: fn(&String) -> Option<&Rank>) -> Column<'_, Message> {
+fn rank<'a>(title: &'a str, rank: &str, progress: u8, lookup: fn(&String) -> Option<&Rank>) -> Column<'a, Message> {
     let rank_name = match lookup(&rank.to_string()) {
         None => String::from("Unknown"),
         Some(title) => title.name.to_string()
@@ -85,8 +85,7 @@ fn rank(title: &str, rank: u64, progress: u64, lookup: fn(&String) -> Option<&Ra
                 row![progress_bar(0f32..=100f32, progress as f32).height(8).style(style::progress_bar)].padding(4),
                 centered_row![
                     row![
-                        text(rank_name).size(16).color(WHITE),
-                        text(format![" ({})", rank]).size(16).color(GRAY)
+                        text(rank_name).size(16).color(WHITE)
                     ]
                 ].padding(4)
             ]
@@ -95,7 +94,7 @@ fn rank(title: &str, rank: u64, progress: u64, lookup: fn(&String) -> Option<&Ra
         .padding(4)
 }
 
-fn superpower_rank(title: &str, rank: Option<u64>, progress: Option<u64>, reputation: f64, lookup: Option<fn(&String) -> Option<&Rank>>) -> Column<'_, Message> {
+fn superpower_rank<'a>(title: &'a str, rank: Option<&str>, progress: Option<u8>, reputation: f32, lookup: Option<fn(&String) -> Option<&Rank>>) -> Column<'a, Message> {
     let rank_name = match lookup {
         None => "".to_string(),
         Some(func) => {
@@ -128,8 +127,7 @@ fn superpower_rank(title: &str, rank: Option<u64>, progress: Option<u64>, reputa
                     if rank.is_some() {
                         row![
                             text("Rank  ").size(16).color(GRAY),
-                            text(rank_name).size(16).color(WHITE),
-                            text(format![" ({})", rank.unwrap_or(0)]).size(16).color(GRAY)
+                            text(rank_name).size(16).color(WHITE)
                         ]
                     } else {
                         row![].height(29).into() // weird hack to get the text to line up

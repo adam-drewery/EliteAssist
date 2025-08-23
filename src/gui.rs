@@ -4,26 +4,23 @@ mod screen;
 mod components;
 
 use crate::font::EUROSTILE;
-use crate::gui::layout::header_bar;
-use crate::gui::layout::navigation_bar;
-use crate::gui::screen::market;
-use crate::gui::screen::materials;
-use crate::gui::screen::messages;
-use crate::gui::screen::overview;
+use crate::gui::layout::*;
+use crate::gui::screen::*;
 use crate::gui::screen::ship_locker;
 use crate::image::LOADING_PNG;
-use crate::journal::event::Event;
 use crate::state::{pane, Screen, State};
 use crate::theme::{style, ORANGE};
 use crate::{ardent, centered_column, centered_row, edsm};
 use chrono::Utc;
 use iced::widget::{column, pane_grid, progress_bar, row, svg, text};
-use iced::{Bottom, Center, Element, Fill, Task};
+use iced::{window, Bottom, Center, Element, Fill, Task};
 
 #[derive(Clone, Debug)]
 pub enum Message {
     NavigateTo(Screen),
-    JournalEvent(Event),
+
+    JournalEvent(ed_journals::journal::JournalEvent),
+    LogEvent(ed_journals::logs::LogEvent),
     
     StationsQueried(edsm::Stations),
     NearbySystemsQueried(Vec<ardent::NearbySystem>),
@@ -41,7 +38,7 @@ pub enum Message {
 
     // Window controls
     ToggleFullscreen,
-    ToggleFullscreenWithId(Option<iced::window::Id>),
+    ToggleFullscreenWithId(Option<window::Id>),
 
     JournalLoaded,
     Empty,
