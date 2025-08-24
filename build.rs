@@ -12,4 +12,7 @@ fn main() {
 
     // Generate INARA-derived location maps
     codegen::inara::generate(&out_dir);
+
+    // Generate journal events (Rust port of generate_events.ps1)
+    codegen::events::generate(&manifest_dir, &out_dir);
 }

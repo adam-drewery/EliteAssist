@@ -53,3 +53,4 @@ pub mod util {
 
 pub mod fdev_ids;
 pub mod inara;
+pub mod events;
