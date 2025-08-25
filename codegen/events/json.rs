@@ -49,7 +49,8 @@ impl SchemaObject {
                     .collect()
             });
         
-        let required = value.get("required")
+        // Collect required fields (for objects) by default from the current schema
+        let mut required = value.get("required")
             .and_then(|v| v.as_array())
             .map(|arr| {
                 arr.iter()
@@ -59,31 +60,85 @@ impl SchemaObject {
             })
             .unwrap_or_default();
 
-        let items = Some(SchemaItems::Map(BTreeMap::new()));
+        // Parse array items if this schema represents an array
+        let mut items: Option<SchemaItems> = None;
+        if r#type == "array" {
+            if let Some(items_value) = value.get("items") {
+                match items_value {
+                    Value::Object(obj) => {
+                        // Determine if the item has a type property
+                        let item_type_opt = obj.get("type").and_then(|v| v.as_str());
+                        let item_has_properties = obj.get("properties").and_then(|v| v.as_object()).is_some();
 
-        //
-        // // TODO: Handle the items you fucking dummy
-        // let items = value.get("items").map(|items_value| {
-        //     if let Some(items_obj) = items_value.as_object() {
-        //         if items_obj.contains_key("properties") {
-        //             // This is a schema object with properties
-        //             let mut map = BTreeMap::new();
-        //             if let Some(props) = items_obj.get("properties").and_then(|v| v.as_object()) {
-        //                 for (k, v) in props {
-        //                     map.insert(k.clone(), SchemaObject::from_value(v));
-        //                 }
-        //             }
-        //             SchemaItems::Map(map)
-        //         } else {
-        //             // This is a simple schema object
-        //             SchemaItems::Single(Box::new(SchemaObject::from_value(items_value)))
-        //         }
-        //     } else {
-        //         // This is a simple schema object
-        //         SchemaItems::Single(Box::new(SchemaObject::from_value(items_value)))
-        //     }
-        // });
-        //
+                        if item_type_opt.is_none() {
+                            // No type property - treat the items object itself as the map
+                            let props_map: BTreeMap<String, SchemaObject> = obj
+                                .iter()
+                                .map(|(k, v)| (k.clone(), SchemaObject::from_value(v)))
+                                .collect();
+                            items = Some(SchemaItems::Map(props_map));
+                        } else if item_type_opt == Some("object") || item_has_properties {
+                            // Build a map of properties for the item object
+                            let props_map: BTreeMap<String, SchemaObject> = obj
+                                .get("properties")
+                                .and_then(|v| v.as_object())
+                                .map(|props| {
+                                    props
+                                        .iter()
+                                        .map(|(k, v)| (k.clone(), SchemaObject::from_value(v)))
+                                        .collect()
+                                })
+                                .unwrap_or_default();
+
+                            // Propagate inner required fields up to the array schema so that
+                            // codegen can mark fields correctly when generating the item struct
+                            if let Some(inner_required) = obj.get("required").and_then(|v| v.as_array()) {
+                                required = inner_required
+                                    .iter()
+                                    .filter_map(|v| v.as_str())
+                                    .map(|s| s.to_string())
+                                    .collect();
+                            }
+
+                            items = Some(SchemaItems::Map(props_map));
+                        } else {
+                            // Primitive or other non-object item schema
+                            let item_schema = SchemaObject::from_value(items_value);
+                            items = Some(SchemaItems::Single(Box::new(item_schema)));
+                        }
+                    }
+                    Value::Array(arr) => {
+                        // Tuple validation: use the first item schema if present
+                        if let Some(first) = arr.first() {
+                            let item_schema = SchemaObject::from_value(first);
+                            // If the first element is an object with properties, flatten it to Map
+                            if let Some(props) = first.get("properties").and_then(|v| v.as_object()) {
+                                let props_map: BTreeMap<String, SchemaObject> = props
+                                    .iter()
+                                    .map(|(k, v)| (k.clone(), SchemaObject::from_value(v)))
+                                    .collect();
+
+                                if let Some(inner_required) = first.get("required").and_then(|v| v.as_array()) {
+                                    required = inner_required
+                                        .iter()
+                                        .filter_map(|v| v.as_str())
+                                        .map(|s| s.to_string())
+                                        .collect();
+                                }
+
+                                items = Some(SchemaItems::Map(props_map));
+                            } else {
+                                items = Some(SchemaItems::Single(Box::new(item_schema)));
+                            }
+                        }
+                    }
+                    _ => {
+                        // Unsupported form; leave as None
+                        items = None;
+                    }
+                }
+            }
+        }
 
         SchemaObject {
             title,
