@@ -1,5 +1,5 @@
 use anyhow::Result;
-use crate::codegen::events::json::SchemaObject;
+use crate::codegen::events::json::{SchemaItems, SchemaObject};
 use crate::codegen::events::text;
 
 pub fn build(schemas: Vec<SchemaObject>) -> Result<codegen::Scope> {
@@ -22,9 +22,7 @@ pub fn build(schemas: Vec<SchemaObject>) -> Result<codegen::Scope> {
     Ok(scope)
 }
 
-
 fn build_struct(scope: &mut codegen::Scope, schema: &SchemaObject, parent_prop_name: Option<String>) -> String {
-
     let is_top_level = parent_prop_name.is_none();
     let name = match parent_prop_name {
         None => text::to_pascal_case(&schema.title),
@@ -46,10 +44,24 @@ fn build_struct(scope: &mut codegen::Scope, schema: &SchemaObject, parent_prop_n
     // Collect nested schemas to process after we're done with the current struct
     let mut nested_schemas = Vec::new();
 
+    // todo: there's a bug in here for sure. What's this?:
+    // todo: its missing the items field on the array schema
+    //pub struct Component {
+    //     _ref: Option</* UNSUPPORTED TYPE:  on $ref */ ()>,
+    // }
+    let items_to_iterate = if schema.r#type == "array" {
+        match &schema.items {
+            None => &schema.properties,
+            Some(items) => match items {
+                SchemaItems::Single(_) => &schema.properties,
+                SchemaItems::Map(map) => &map
+            }
+        }
+    } else {
+        &schema.properties
+    };
 
-    println!("cargo:warning={:?}", &schema);
-
-    for property in &schema.properties {
+    for property in items_to_iterate {
         let is_required = schema.required.contains(&property.0);
 
         let name = match property.0.as_str() {
@@ -71,15 +83,28 @@ fn build_struct(scope: &mut codegen::Scope, schema: &SchemaObject, parent_prop_n
             "object" => {
                 // Instead of recursing immediately, collect the schema for later processing
                 nested_schemas.push((property.1, None));
-                property.1.title.to_string()
+                text::to_pascal_case(&property.1.title).to_string()
             }
             "array" => {
-                    let sub_type_name = text::singularize(property.1.title.as_str());
-                    nested_schemas.push((&property.1, Some(sub_type_name.clone())));
-                    format!("Vec<{}>", sub_type_name)
-
+                match &property.1.items.clone().unwrap() {
+                    SchemaItems::Single(obj) => {
+                        let sub_type_name = match obj.r#type.as_str() {
+                            "string" => "String",
+                            "integer" => "i64",
+                            "number" => "u64",
+                            "boolean" => "bool",
+                            _ => panic!("Unsupported array type: {}", obj.r#type)
+                        };
+                        format!("Vec<{}>", sub_type_name)
+                    }
+                    SchemaItems::Map(map) => {
+                        let sub_type_name = text::singularize(property.1.title.as_str());
+                        nested_schemas.push((&property.1, Some(sub_type_name.clone())));
+                        format!("Vec<{}>", sub_type_name)
+                    }
+                }
             }
-            _ => format!("/* UNSUPPORTED TYPE: {} */ ()", property.1.r#type)
+            _ => format!("/* UNSUPPORTED TYPE: {} on {} */ ()", property.1.r#type, property.0)
         };
 
         if !is_required {
