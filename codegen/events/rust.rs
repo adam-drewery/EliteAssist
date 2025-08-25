@@ -1,12 +1,19 @@
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashSet};
 use anyhow::Result;
 use crate::codegen::events::json::{SchemaItems, SchemaObject};
 use crate::codegen::events::text;
 
 pub fn build(schemas: Vec<SchemaObject>) -> Result<codegen::Scope> {
     let mut scope = codegen::Scope::new();
+    let mut generated: HashSet<String> = HashSet::new();
+    scope.import("chrono", "{DateTime, Utc}");
+    scope.import("serde", "Deserialize");
 
-    let enum_ = scope.new_enum("Event").vis("pub");
+    scope.raw("#[derive(Clone, Debug, Deserialize)]");
+    scope.raw("#[serde(tag = \"event\")]");
+    let enum_ = scope.new_enum("Event")
+        .vis("pub");
+    
 
     // First, add all enum variants
     for schema in &schemas {
@@ -26,13 +33,13 @@ pub fn build(schemas: Vec<SchemaObject>) -> Result<codegen::Scope> {
 
     // Then create all structs
     for schema in schemas {
-        build_struct(&mut scope, &schema, None);
+        build_struct(&mut scope, &mut generated, &schema, None);
     }
 
     Ok(scope)
 }
 
-fn build_struct(scope: &mut codegen::Scope, schema: &SchemaObject, parent_prop_name: Option<String>) -> String {
+fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, schema: &SchemaObject, parent_prop_name: Option<String>) -> String {
     let is_top_level = parent_prop_name.is_none();
 
     // Generate a name for the struct based on the schema title or the parent property name
@@ -44,9 +51,22 @@ fn build_struct(scope: &mut codegen::Scope, schema: &SchemaObject, parent_prop_n
         Some(name) => text::singularize(&name)
     };
 
+    // Prevent duplicate struct generation
+    if !generated.insert(struct_name.clone()) {
+        return match &schema.title {
+            None => struct_name,
+            Some(title) => title.to_string()
+        };
+    }
+
     let struct_ = scope
         .new_struct(struct_name.as_str())
         .vis("pub");
+
+    // Add derives for all structs so serde field attributes work on nested types too
+    struct_.derive("Clone")
+        .derive("Debug")
+        .derive("Deserialize");
 
     // Add a doc comment for the struct if a description is provided
     if let Some(description) = &schema.description {
@@ -54,20 +74,14 @@ fn build_struct(scope: &mut codegen::Scope, schema: &SchemaObject, parent_prop_n
     }
 
     if is_top_level {
-        struct_.derive("Clone")
-            .derive("Debug")
-            .derive("Deserialize")
-            .new_field("timestamp", "DateTime<Utc>");
+        struct_.new_field("timestamp", "DateTime<Utc>")
+            .annotation("#[serde(with = \"crate::journal::format::date\")]");
     }
 
     // Collect nested schemas to process after we're done with the current struct
     let mut nested_schemas = Vec::new();
 
-    // todo: there's a bug in here for sure. What's this?:
-    // todo: its missing the items field on the array schema
-    //pub struct Component {
-    //     _ref: Option</* UNSUPPORTED TYPE:  on $ref */ ()>,
-    // }
+    // Determine which property contains the actual schema, based on the type property
     let items_to_iterate = if schema.r#type == "array" {
         match &schema.items {
             None => panic!("Array type '{}' contained no items: {:?}", struct_name, schema),
@@ -112,11 +126,15 @@ fn build_struct(scope: &mut codegen::Scope, schema: &SchemaObject, parent_prop_n
             "number" => "f64".to_string(),
             "boolean" => "bool".to_string(),
             "object" => {
-                // Instead of recursing immediately, collect the schema for later processing
-                nested_schemas.push((property.1, None));
+                // Instead of recursing immediately, collect the schema for later processing. Ensure nested type names are prefixed with parent struct name.
                 match &property.1.title {
                     None => panic!("Object type '{}' on '{}' contained no title: {:?}", property_name, struct_name, property.1),
-                    Some(title) => text::to_pascal_case(title).to_string()
+                    Some(title) => {
+                        let base_name = format!("{}{}", struct_name, text::to_pascal_case(title));
+                        let sub_type_name = text::singularize(&base_name);
+                        nested_schemas.push((property.1, Some(sub_type_name.clone())));
+                        sub_type_name
+                    }
                 }
             }
             "array" => {
@@ -134,11 +152,11 @@ fn build_struct(scope: &mut codegen::Scope, schema: &SchemaObject, parent_prop_n
 
                             format!("Vec<{}>", sub_type_name)
                         }
-                        SchemaItems::Map(map) => {
+                        SchemaItems::Map(_) => {
                             match &property.1.title {
                                 None => panic!("Array type '{}' on '{}' contained no title: {:?}", property_name, struct_name, property.1),
                                 Some(title) => {
-                                    let sub_type_name = text::singularize(title.as_str());
+                                    let sub_type_name = format!("{}{}", struct_name, text::singularize(title.as_str()));
                                     nested_schemas.push((&property.1, Some(sub_type_name.clone())));
                                     format!("Vec<{}>", sub_type_name)
                                 }
@@ -158,12 +176,18 @@ fn build_struct(scope: &mut codegen::Scope, schema: &SchemaObject, parent_prop_n
             type_.push('>');
         }
 
-        struct_.new_field(property_name, type_);
+        let field = struct_.new_field(property_name, type_.clone());
+        field.annotation(format!("#[serde(rename = \"{}\")]", property.0));
+        if type_ == "DateTime<Utc>" {
+            field.annotation("#[serde(with = \"crate::journal::format::date\")]".to_string());
+        } else if type_ == "Option<DateTime<Utc>>" {
+            field.annotation("#[serde(with = \"crate::journal::format::optional_date\")]".to_string());
+        }
     }
 
     // Now process all nested schemas after we're done with the current struct
     for nested_schema in nested_schemas {
-        build_struct(scope, nested_schema.0, nested_schema.1);
+        build_struct(scope, generated, nested_schema.0, nested_schema.1);
     }
 
     match &schema.title {
