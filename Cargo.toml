@@ -32,7 +32,7 @@ scraper = "0.24.0"
 [build-dependencies]
 phf_codegen = "0.13.1"
 csv = "1.3"
-anyhow = "1"
+anyhow = "1.0.99"
 phf = {version = "0.13.1", features = ["macros"]}
 codegen = "0.2.0"
 reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls"] }
@@ -43,3 +43,6 @@ chrono = "0.4.41"
 
 [features]
 mock_events = []
+
+[dev-dependencies]
+anyhow = "1.0.99"
