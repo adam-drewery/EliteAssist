@@ -9,8 +9,6 @@ use std::path::Path;
 
 pub fn generate(manifest_dir: &Path, out_dir: &Path) {
 
-
-
     let schema_root = manifest_dir.join("journal-schemas").join("schemas");
     let schemas = json::load_schemas(schema_root.as_path()).expect("schemas to load");
 

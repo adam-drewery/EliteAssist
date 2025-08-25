@@ -1,52 +1,30 @@
-use phf::phf_map;
+use std::collections::HashMap;
+use std::sync::OnceLock;
 
-pub static STRUCT_NAME_REPLACEMENTS: phf::Map<&'static str, &'static str> = phf_map! {
-    // Keep as is (from issue description)
-    "SquadronPromotion" => "SquadronPromotion",
+macro_rules! struct_name_map {
+    ( $( [$($key:expr),*] => $value:expr ),* ) => {
+        {
+            let mut map = HashMap::new();
+            $(
+                map.insert(vec![$($key),*], $value);
+            )*
+            map
+        }
+    };
+}
 
-    // Generic ones
-    "WingLeave" => "Empty",
-    "MiningRefined" => "TypeDetails",
-    "ProspectedAsteroidMaterial" => "NameAndProportion",
+static STRUCT_NAME_MERGES: OnceLock<HashMap<Vec<&'static str>, &'static str>> = OnceLock::new();
 
-    "LeaveBody" => "Body",
-    "MaterialDiscarded" => "MaterialCollected",
-    "SquadronCreated" => "Squadron",
-    "HeatDamage" => "Damage",
-    "PayFines" => "Payment",
-    "CarrierShipPack" => "CarrierPack",
-    "SellSuit" => "Suit",
-    "MissionFailed" => "Mission",
-    "RenameSuitLoadout" => "SuitLoadoutLite",
-    "SellWeapon" => "Weapon", 
-    "ShipLocker" => "Inventory",
-    "BookTaxi" => "Booking",
-    "ShipyardNew" => "Ship",
-    "RepairAll" => "ShipEquipmentPurchase",
-    "CarrierJumpCancelled" => "Carrier",
-    "RefuelPartial" => "Refuel",
-    "SRVDestroyed" => "SRV",
-    "QuitACrew" => "Crew",
-    "PowerplayDeliver" => "PowerplayDelivery",
-    "LoadoutRemoveModule" => "LoadoutEquipModule",
-    "BuyTradeData" => "BuyData",
-    "CrewMemberQuits" => "CrewMember",
-    "DockingRequestedLandingPads" => "LandingPads",
-    "CancelTaxi" => "Cancel",
-    "UpgradeWeaponResource" => "Material",
-    "SAASignalsFoundSignal" => "SAASignals",
-    "ShipLockerMaterialsItem" => "Item",
-    "TradeMicroResourcesOffered" => "MicroResources",
-    "LocationPowerplayConflictProgress" => "ConflictProgress",
-    "LocationFactionActiveState" => "FactionActiveState",
-    "LocationFactionRecoveringState" => "FactionRecoveringState",
-    "LocationSystemFaction" => "SystemFaction",
-    "LocationThargoidWar" => "ThargoidWar",
-    "ShipLockerMaterialsConsumable" => "Consumable",
-    "LocationConflictFaction1" => "ConflictFaction1",
-    "LocationConflictFaction2" => "ConflictFaction2",
-    "SwitchSuitLoadoutModule" => "SuitLoadoutModule",
-    "PowerplayLeave" => "PowerplayJoin",
-    "MaterialTradeReceived" => "MaterialTraded",
-    "ColonisationSystemClaimRelease" => "SystemClaim",
-};
+pub fn struct_name_merges() -> &'static HashMap<Vec<&'static str>, &'static str> {
+    STRUCT_NAME_MERGES.get_or_init(|| {
+        struct_name_map! {
+            ["JoinACrew", "QuitACrew"] => "Crew",
+            ["FighterDestroyed", "HeatDamage"] => "Damage",
+            ["BuySuit", "SellSuit"] => "Suit",
+            ["PayBounties", "PayFines"] => "Payment",
+            ["Commodities", "CommodityReward", "Encoded", "Ingredients", "Manufactured", "Materials", "Raw", "Resources"] => "Material",
+            ["Backpack", "ShipLocker"] => "Inventory",
+            ["Active", "Complete", "Failed"] => "MissionStatus"
+        }
+    })
+}

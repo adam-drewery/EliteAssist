@@ -1,9 +1,171 @@
-use std::collections::{BTreeMap, HashSet};
-use anyhow::Result;
 use crate::codegen::events::json::{SchemaItems, SchemaObject};
 use crate::codegen::events::text;
+use anyhow::Result;
+use std::collections::{BTreeMap, HashMap, HashSet};
 
-pub fn build(schemas: Vec<SchemaObject>) -> Result<codegen::Scope> {
+mod dedupe {
+    use super::*;
+    use crate::codegen::events::fixes;
+
+    pub fn merge(schemas: &mut Vec<SchemaObject>) {
+        // 1) Collect duplicates by structural signature (including nested)
+        let mut groups: HashMap<String, Vec<String>> = HashMap::new();
+
+        for schema in schemas.iter() {
+            collect_signatures(schema, &mut groups);
+        }
+
+        // 2) Build rename map based on STRUCT_NAME_MERGES and warn for unmatched duplicates
+        let mut rename_map: HashMap<String, String> = HashMap::new();
+        for (_sig, mut names) in groups.into_iter() {
+            names.sort();
+            names.dedup();
+            if names.len() > 1 {
+                if let Some(target) = find_merge_target(&names) {
+                    for n in &names {
+                        if n != target {
+                            rename_map.insert(n.clone(), target.to_string());
+                        }
+                    }
+                } else {
+                    // Emit cargo warning with the names formatted like a Rust array
+                    let arr = format!("[{}]", names.iter().map(|n| format!("\"{}\"", n)).collect::<Vec<_>>().join(", "));
+                    println!("cargo:warning=duplicate structures detected {}", arr);
+                }
+            }
+        }
+
+        // 3) Apply renames recursively
+        for schema in schemas.iter_mut() {
+            apply_renames(schema, &rename_map);
+        }
+    }
+
+    fn find_merge_target(names: &[String]) -> Option<&'static str> {
+        // Compare order-insensitively against keys in STRUCT_NAME_MERGES
+        for (k, v) in fixes::struct_name_merges().iter() {
+            if k.len() != names.len() { continue; }
+            let mut k_sorted: Vec<&str> = k.iter().copied().collect();
+            k_sorted.sort();
+            let mut n_sorted: Vec<&str> = names.iter().map(|s| s.as_str()).collect();
+            n_sorted.sort();
+            if k_sorted == n_sorted { return Some(*v); }
+        }
+        None
+    }
+
+    fn collect_signatures(schema: &SchemaObject, groups: &mut HashMap<String, Vec<String>>) {
+        // compute signature and collect title (as PascalCase struct name)
+        let sig = signature(schema);
+        if let Some(title) = &schema.title {
+            let name = text::to_pascal_case(title);
+            groups.entry(sig.clone()).or_default().push(name);
+        }
+
+        // Recurse into properties
+        if let Some(props) = &schema.properties {
+            for (_k, v) in props.iter() {
+                collect_signatures(v, groups);
+            }
+        }
+
+        // Recurse into array items if present
+        if let Some(items) = &schema.items {
+            match items {
+                SchemaItems::Single(inner) => {
+                    collect_signatures(inner.as_ref(), groups);
+                }
+                SchemaItems::Map(map) => {
+                    for (_k, v) in map.iter() {
+                        collect_signatures(v, groups);
+                    }
+                }
+            }
+        }
+    }
+
+    fn signature(schema: &SchemaObject) -> String {
+        // Build a deterministic structural signature ignoring titles/descriptions
+        let mut parts: Vec<String> = Vec::new();
+        parts.push(format!("type={}", schema.r#type));
+        if let Some(fmt) = &schema.format { parts.push(format!("format={}", fmt)); }
+
+        if let Some(props) = &schema.properties {
+            let mut prop_parts: Vec<String> = Vec::new();
+            for (k, v) in props.iter() {
+                prop_parts.push(format!("{}:{}", k, signature(v)));
+            }
+            parts.push(format!("props=[{}]", prop_parts.join(",")));
+        }
+
+        if let Some(items) = &schema.items {
+            match items {
+                SchemaItems::Single(inner) => {
+                    parts.push(format!("items_single:{{{}}}", signature(inner.as_ref())));
+                }
+                SchemaItems::Map(map) => {
+                    let mut item_parts: Vec<String> = Vec::new();
+                    for (k, v) in map.iter() {
+                        item_parts.push(format!("{}:{}", k, signature(v)));
+                    }
+                    parts.push(format!("items_map=[{}]", item_parts.join(",")));
+                }
+            }
+        }
+
+        if !schema.required.is_empty() {
+            let mut req = schema.required.clone();
+            req.sort();
+            parts.push(format!("required=[{}]", req.join(",")));
+        }
+
+        parts.join("|")
+    }
+
+    fn apply_renames(schema: &mut SchemaObject, rename_map: &HashMap<String, String>) {
+        if let Some(title) = &schema.title {
+            let pascal = text::to_pascal_case(title);
+            if let Some(new_name) = rename_map.get(&pascal) {
+                schema.title = Some(new_name.clone());
+            }
+        }
+
+        if let Some(props) = schema.properties.as_mut() {
+            for (_k, v) in props.iter_mut() {
+                apply_renames(v, rename_map);
+            }
+        }
+
+        if let Some(items) = schema.items.as_mut() {
+            match items {
+                SchemaItems::Single(inner) => apply_renames(inner.as_mut(), rename_map),
+                SchemaItems::Map(map) => {
+                    for (_k, v) in map.iter_mut() { apply_renames(v, rename_map); }
+                }
+            }
+        }
+    }
+}
+
+pub fn build(mut schemas: Vec<SchemaObject>) -> Result<codegen::Scope> {
+    // Merge duplicate schemas by renaming according to mapping and warn for unmatched duplicates
+    dedupe::merge(&mut schemas);
+
+    // Remove top-level duplicates by title so only one with that name remains
+    let mut seen_titles: HashSet<String> = HashSet::new();
+    let mut unique_schemas: Vec<SchemaObject> = Vec::new();
+    for s in schemas.into_iter() {
+        match &s.title {
+            None => panic!("Top-level schema missing title: {:?}", s),
+            Some(t) => {
+                let t = t.clone();
+                if seen_titles.insert(t) {
+                    unique_schemas.push(s);
+                }
+            }
+        }
+    }
+
     let mut scope = codegen::Scope::new();
     let mut generated: HashSet<String> = HashSet::new();
     scope.import("chrono", "{DateTime, Utc}");
@@ -13,11 +175,9 @@ pub fn build(schemas: Vec<SchemaObject>) -> Result<codegen::Scope> {
     scope.raw("#[serde(tag = \"event\")]");
     let enum_ = scope.new_enum("Event")
         .vis("pub");
-    
 
     // First, add all enum variants
-    for schema in &schemas {
-
+    for schema in &unique_schemas {
         match &schema.title {
             None => panic!("Top-level schema missing title: {:?}", schema),
             Some(title) => {
@@ -32,7 +192,7 @@ pub fn build(schemas: Vec<SchemaObject>) -> Result<codegen::Scope> {
     }
 
     // Then create all structs
-    for schema in schemas {
+    for schema in unique_schemas {
         build_struct(&mut scope, &mut generated, &schema, None);
     }
 
@@ -74,8 +234,10 @@ fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, sch
     }
 
     if is_top_level {
-        struct_.new_field("timestamp", "DateTime<Utc>")
-            .annotation("#[serde(with = \"crate::journal::format::date\")]");
+        struct_
+            .new_field("timestamp", "DateTime<Utc>")
+            .annotation("#[serde(with = \"crate::journal::format::date\")]")
+            .vis("pub");
     }
 
     // Collect nested schemas to process after we're done with the current struct
@@ -176,7 +338,7 @@ fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, sch
             type_.push('>');
         }
 
-        let field = struct_.new_field(property_name, type_.clone());
+        let field = struct_.new_field(property_name, type_.clone()).vis("pub");
         field.annotation(format!("#[serde(rename = \"{}\")]", property.0));
         if type_ == "DateTime<Utc>" {
             field.annotation("#[serde(with = \"crate::journal::format::date\")]".to_string());
