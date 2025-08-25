@@ -8,34 +8,44 @@ mod dedupe {
     use crate::codegen::events::fixes;
 
     pub fn merge(schemas: &mut Vec<SchemaObject>) {
-        // 1) Collect duplicates by structural signature (including nested)
-        let mut groups: HashMap<String, Vec<String>> = HashMap::new();
+        // 1) Collect duplicates by structural signature (including nested),
+        //    tracking both the real generated struct name and the local title-based name
+        let mut groups: HashMap<String, Vec<(String, String)>> = HashMap::new();
 
         for schema in schemas.iter() {
-            collect_signatures(schema, &mut groups);
+            collect_signatures(schema, None, &mut groups);
         }
 
-        // 2) Build rename map based on STRUCT_NAME_MERGES and warn for unmatched duplicates
+        // 2) Build rename map based on STRUCT_NAME_MERGES (match by title-based names)
+        //    and warn for unmatched duplicates (print real struct names)
         let mut rename_map: HashMap<String, String> = HashMap::new();
-        for (_sig, mut names) in groups.into_iter() {
-            names.sort();
-            names.dedup();
-            if names.len() > 1 {
-                if let Some(target) = find_merge_target(&names) {
-                    for n in &names {
-                        if n != target {
-                            rename_map.insert(n.clone(), target.to_string());
+        for (_sig, entries) in groups.into_iter() {
+            let mut real_names: Vec<String> = entries.iter().map(|(real, _)| real.clone()).collect();
+            real_names.sort();
+            real_names.dedup();
+
+            if real_names.len() > 1 {
+                let mut title_names: Vec<String> = entries.iter().map(|(_, title)| title.clone()).collect();
+                title_names.sort();
+                title_names.dedup();
+
+                if title_names.len() > 1 {
+                    if let Some(target) = find_merge_target(&title_names) {
+                        for t in &title_names {
+                            if t != target {
+                                rename_map.insert(t.clone(), target.to_string());
+                            }
                         }
+                    } else {
+                        // Emit cargo warning with the real struct names formatted like a Rust array
+                        let arr = format!("[{}]", real_names.iter().map(|n| format!("\"{}\"", n)).collect::<Vec<_>>().join(", "));
+                        println!("cargo:warning=duplicate structures detected {}", arr);
                     }
-                } else {
-                    // Emit cargo warning with the names formatted like a Rust array
-                    let arr = format!("[{}]", names.iter().map(|n| format!("\"{}\"", n)).collect::<Vec<_>>().join(", "));
-                    println!("cargo:warning=duplicate structures detected {}", arr);
                 }
             }
         }
 
-        // 3) Apply renames recursively
+        // 3) Apply renames recursively (keyed by title-based names)
         for schema in schemas.iter_mut() {
             apply_renames(schema, &rename_map);
         }
@@ -54,30 +64,86 @@ mod dedupe {
         None
     }
 
-    fn collect_signatures(schema: &SchemaObject, groups: &mut HashMap<String, Vec<String>>) {
-        // compute signature and collect title (as PascalCase struct name)
-        let sig = signature(schema);
-        if let Some(title) = &schema.title {
-            let name = text::to_pascal_case(title);
-            groups.entry(sig.clone()).or_default().push(name);
+    fn produces_struct(schema: &SchemaObject) -> bool {
+        match schema.r#type.as_str() {
+            "object" => true,
+            "array" => match &schema.items {
+                Some(SchemaItems::Map(_)) => true,   // arrays of objects (we generate a struct for these)
+                _ => false,                          // arrays of primitives or unspecified -> no struct generated
+            },
+            _ => false, // primitives do not generate their own struct
         }
+    }
 
-        // Recurse into properties
-        if let Some(props) = &schema.properties {
-            for (_k, v) in props.iter() {
-                collect_signatures(v, groups);
-            }
-        }
-
-        // Recurse into array items if present
-        if let Some(items) = &schema.items {
-            match items {
-                SchemaItems::Single(inner) => {
-                    collect_signatures(inner.as_ref(), groups);
+    fn compute_real_name(schema: &SchemaObject, parent: Option<&str>) -> Option<String> {
+        if !produces_struct(schema) { return None; }
+        let title = schema.title.as_ref()?;
+        match schema.r#type.as_str() {
+            "object" => {
+                match parent {
+                    None => Some(text::to_pascal_case(title)),
+                    Some(p) => {
+                        let base = format!("{}{}", p, text::to_pascal_case(title));
+                        Some(text::singularize(&base))
+                    }
                 }
-                SchemaItems::Map(map) => {
-                    for (_k, v) in map.iter() {
-                        collect_signatures(v, groups);
+            }
+            "array" => {
+                match parent {
+                    None => Some(text::to_pascal_case(title)),
+                    Some(p) => {
+                        let base = format!("{}{}", p, text::singularize(title.as_str()));
+                        Some(text::singularize(&base))
+                    }
+                }
+            }
+            _ => None
+        }
+    }
+
+    fn collect_signatures(schema: &SchemaObject, parent_real: Option<String>, groups: &mut HashMap<String, Vec<(String, String)>>) {
+        // compute signature and collect names only for schemas that produce structs
+        let sig = signature(schema);
+        if let Some(real_name) = compute_real_name(schema, parent_real.as_deref()) {
+            if let Some(title) = &schema.title {
+                let title_name = text::to_pascal_case(title);
+                groups.entry(sig.clone()).or_default().push((real_name.clone(), title_name));
+            }
+            // This schema will serve as the parent for nested generated types
+            let next_parent = Some(real_name);
+
+            // Recurse into properties
+            if let Some(props) = &schema.properties {
+                for (_k, v) in props.iter() {
+                    collect_signatures(v, next_parent.clone(), groups);
+                }
+            }
+
+            // Recurse into array items if present
+            if let Some(items) = &schema.items {
+                match items {
+                    SchemaItems::Single(inner) => {
+                        collect_signatures(inner.as_ref(), next_parent.clone(), groups);
+                    }
+                    SchemaItems::Map(map) => {
+                        for (_k, v) in map.iter() {
+                            collect_signatures(v, next_parent.clone(), groups);
+                        }
+                    }
+                }
+            }
+        } else {
+            // Not a struct-producing schema, but still traverse its children to find deeper structs
+            if let Some(props) = &schema.properties {
+                for (_k, v) in props.iter() {
+                    collect_signatures(v, parent_real.clone(), groups);
+                }
+            }
+            if let Some(items) = &schema.items {
+                match items {
+                    SchemaItems::Single(inner) => collect_signatures(inner.as_ref(), parent_real.clone(), groups),
+                    SchemaItems::Map(map) => {
+                        for (_k, v) in map.iter() { collect_signatures(v, parent_real.clone(), groups); }
                     }
                 }
             }

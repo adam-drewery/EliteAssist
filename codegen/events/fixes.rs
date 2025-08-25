@@ -22,9 +22,22 @@ pub fn struct_name_merges() -> &'static HashMap<Vec<&'static str>, &'static str>
             ["FighterDestroyed", "HeatDamage"] => "Damage",
             ["BuySuit", "SellSuit"] => "Suit",
             ["PayBounties", "PayFines"] => "Payment",
-            ["Commodities", "CommodityReward", "Encoded", "Ingredients", "Manufactured", "Materials", "Raw", "Resources"] => "Material",
             ["Backpack", "ShipLocker"] => "Inventory",
-            ["Active", "Complete", "Failed"] => "MissionStatus"
+            ["CockpitBreached", "ColonisationBeaconDeployed", "HeatWarning", "Resupply", "SelfDestruct", "Shutdown", "SystemsShutdown", "WingLeave"] => "Empty",
+            ["PowerplayCollect", "PowerplayDeliver"] => "PowerplayDelivery",
+            ["Liftoff", "Touchdown"] => "Liftoff",
+            ["LoadoutEquipModule", "LoadoutRemoveModule"] => "LoadoutModule",
+            ["CarrierModulePack", "CarrierShipPack"] => "CarrierPack",
+            ["CarrierJumpFactionPendingState", "CarrierJumpFactionRecoveringState", "FSDJumpFactionPendingState", "FSDJumpFactionRecoveringState", "LocationFactionPendingState", "LocationFactionRecoveringState"] => "FactionState",
+            ["DataScanned", "MiningRefined"] => "TypeStub",
+            ["ClearSavedGame", "Commander"] => "Commander",
+            ["PowerplayJoin", "PowerplayLeave"] => "Powerplay",
+            ["CreateSuitLoadout", "SuitLoadout", "SwitchSuitLoadout"] => "SuitLoadout",
+            ["CarrierStatsModulePack", "CarrierStatsShipPack"] => "CarrierStatsPack",
+            ["BuyExplorationData", "BuyTradeData"] => "BuyData",
+            ["MissionAbandoned", "MissionFailed"] => "MissionFailed",
+            ["DockSRV", "SRVDestroyed"] => "SRVEvent",
+            ["BackpackComponent", "BackpackData", "BackpackItem", "ShipLockerComponent", "ShipLockerData", "ShipLockerItem", "ShipLockerMaterialsComponent", "ShipLockerMaterialsData", "ShipLockerMaterialsItem"] => "InventoryItem"
         }
     })
 }
