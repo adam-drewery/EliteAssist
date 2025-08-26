@@ -303,8 +303,8 @@ impl From<event::Inventory> for ShipLocker {
     }
 }
 
-impl From<event::Item> for ShipLockerItem {
-    fn from(value: event::Item) -> Self {
+impl From<event::MicroResource> for ShipLockerItem {
+    fn from(value: event::MicroResource) -> Self {
         ShipLockerItem {
             name: value.name_localised.clone().unwrap_or(crate::journal::format::title_case(&value.name)),
             for_mission: value.mission_id.is_some(),
@@ -325,8 +325,8 @@ impl From<event::Consumable> for ShipLockerItem {
     }
 }
 
-fn group_and_sort(items: Vec<event::Item>) -> Vec<event::Item> {
-    let mut grouped_items: HashMap<(String, Option<u64>), event::Item> = HashMap::new();
+fn group_and_sort(items: Vec<event::MicroResource>) -> Vec<event::MicroResource> {
+    let mut grouped_items: HashMap<(String, Option<u64>), event::MicroResource> = HashMap::new();
     for item in items {
         grouped_items
             .entry((item.name.clone(), item.mission_id))
@@ -338,7 +338,7 @@ fn group_and_sort(items: Vec<event::Item>) -> Vec<event::Item> {
     items
 }
 
-fn map_vec(vec: Option<Vec<event::Item>>) -> Vec<ShipLockerItem> {
+fn map_vec(vec: Option<Vec<event::MicroResource>>) -> Vec<ShipLockerItem> {
     group_and_sort(vec.unwrap_or_default())
         .into_iter()
         .map(|f| f.into())

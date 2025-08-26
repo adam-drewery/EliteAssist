@@ -71,19 +71,6 @@ pub fn merge(schemas: &mut Vec<SchemaObject>) {
     }
 }
 
-fn find_merge_target(names: &[String]) -> Option<&'static str> {
-    // Compare order-insensitively against keys in STRUCT_NAME_MERGES
-    for (k, v) in overrides::struct_names().iter() {
-        if k.len() != names.len() { continue; }
-        let mut k_sorted: Vec<&str> = k.iter().copied().collect();
-        k_sorted.sort();
-        let mut n_sorted: Vec<&str> = names.iter().map(|s| s.as_str()).collect();
-        n_sorted.sort();
-        if k_sorted == n_sorted { return Some(*v); }
-    }
-    None
-}
-
 fn produces_struct(schema: &SchemaObject) -> bool {
     match schema.r#type.as_str() {
         "object" => true,
