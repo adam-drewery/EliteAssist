@@ -37,7 +37,8 @@ pub fn struct_name_merges() -> &'static HashMap<Vec<&'static str>, &'static str>
             ["BuyExplorationData", "BuyTradeData"] => "BuyData",
             ["MissionAbandoned", "MissionFailed"] => "MissionFailed",
             ["DockSRV", "SRVDestroyed"] => "SRVEvent",
-            ["BackpackComponent", "BackpackData", "BackpackItem", "ShipLockerComponent", "ShipLockerData", "ShipLockerItem", "ShipLockerMaterialsComponent", "ShipLockerMaterialsData", "ShipLockerMaterialsItem"] => "InventoryItem"
+            ["BackpackComponent", "BackpackData", "BackpackItem", "ShipLockerComponent", "ShipLockerData", "ShipLockerItem", "ShipLockerMaterialsComponent", "ShipLockerMaterialsData", "ShipLockerMaterialsItem"] => "InventoryItem",
+            ["CrewMemberJoins", "CrewMemberQuits"] => "CrewMember"
         }
     })
 }

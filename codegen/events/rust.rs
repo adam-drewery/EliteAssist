@@ -45,9 +45,9 @@ mod dedupe {
             }
         }
 
-        // 3) Apply renames recursively (keyed by title-based names)
+        // 3) Apply struct name hints recursively (keyed by title-based names)
         for schema in schemas.iter_mut() {
-            apply_renames(schema, &rename_map);
+            apply_struct_hints(schema, &rename_map);
         }
     }
 
@@ -188,25 +188,26 @@ mod dedupe {
         parts.join("|")
     }
 
-    fn apply_renames(schema: &mut SchemaObject, rename_map: &HashMap<String, String>) {
+    fn apply_struct_hints(schema: &mut SchemaObject, rename_map: &HashMap<String, String>) {
         if let Some(title) = &schema.title {
             let pascal = text::to_pascal_case(title);
-            if let Some(new_name) = rename_map.get(&pascal) {
-                schema.title = Some(new_name.clone());
+            if let Some(target) = rename_map.get(&pascal) {
+                // Do not rename title (to preserve enum variants); set a struct name hint instead
+                schema.struct_name_hint = Some(target.clone());
             }
         }
 
         if let Some(props) = schema.properties.as_mut() {
             for (_k, v) in props.iter_mut() {
-                apply_renames(v, rename_map);
+                apply_struct_hints(v, rename_map);
             }
         }
 
         if let Some(items) = schema.items.as_mut() {
             match items {
-                SchemaItems::Single(inner) => apply_renames(inner.as_mut(), rename_map),
+                SchemaItems::Single(inner) => apply_struct_hints(inner.as_mut(), rename_map),
                 SchemaItems::Map(map) => {
-                    for (_k, v) in map.iter_mut() { apply_renames(v, rename_map); }
+                    for (_k, v) in map.iter_mut() { apply_struct_hints(v, rename_map); }
                 }
             }
         }
@@ -214,52 +215,30 @@ mod dedupe {
 }
 
 pub fn build(mut schemas: Vec<SchemaObject>) -> Result<codegen::Scope> {
-    // Merge duplicate schemas by renaming according to mapping and warn for unmatched duplicates
+    // Detect duplicate structures and set struct name hints; do not rename titles
     dedupe::merge(&mut schemas);
-
-    // Remove top-level duplicates by title so only one with that name remains
-    let mut seen_titles: HashSet<String> = HashSet::new();
-    let mut unique_schemas: Vec<SchemaObject> = Vec::new();
-    for s in schemas.into_iter() {
-        match &s.title {
-            None => panic!("Top-level schema missing title: {:?}", s),
-            Some(t) => {
-                let t = t.clone();
-                if seen_titles.insert(t) {
-                    unique_schemas.push(s);
-                }
-            }
-        }
-    }
 
     let mut scope = codegen::Scope::new();
     let mut generated: HashSet<String> = HashSet::new();
     scope.import("chrono", "{DateTime, Utc}");
     scope.import("serde", "Deserialize");
 
-    scope.raw("#[derive(Clone, Debug, Deserialize)]");
-    scope.raw("#[serde(tag = \"event\")]");
-    let enum_ = scope.new_enum("Event")
-        .vis("pub");
-
-    // First, add all enum variants
-    for schema in &unique_schemas {
-        match &schema.title {
-            None => panic!("Top-level schema missing title: {:?}", schema),
-            Some(title) => {
-                let variant = enum_.new_variant(title.as_str())
-                    .tuple(title.as_str());
-
-                if let Some(description) = &schema.description {
-                    variant.annotation(format!("/// {}", description));
-                }
-            }
-        }
+    // 1) Generate all structs (deduped by actual struct name), capturing each top-level schema's struct name
+    let mut top_level: Vec<(String, Option<String>, String)> = Vec::new(); // (variant_name, description, struct_name)
+    for schema in &schemas {
+        let title = schema.title.clone().expect("Top-level schema missing title");
+        let struct_name = build_struct(&mut scope, &mut generated, schema, None);
+        top_level.push((title, schema.description.clone(), struct_name));
     }
 
-    // Then create all structs
-    for schema in unique_schemas {
-        build_struct(&mut scope, &mut generated, &schema, None);
+    // 2) Generate the Event enum after structs so variants never collapse
+    scope.raw("#[derive(Clone, Debug, Deserialize)]");
+    scope.raw("#[serde(tag = \"event\")]");
+    let enum_ = scope.new_enum("Event").vis("pub");
+
+    for (variant_name, description, struct_name) in top_level {
+        let variant = enum_.new_variant(variant_name.as_str()).tuple(struct_name.as_str());
+        if let Some(desc) = description { variant.annotation(format!("/// {}", desc)); }
     }
 
     Ok(scope)
@@ -268,21 +247,22 @@ pub fn build(mut schemas: Vec<SchemaObject>) -> Result<codegen::Scope> {
 fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, schema: &SchemaObject, parent_prop_name: Option<String>) -> String {
     let is_top_level = parent_prop_name.is_none();
 
-    // Generate a name for the struct based on the schema title or the parent property name
+    // Generate a name for the struct based on struct_name_hint, schema title, or the parent-provided name
     let struct_name = match parent_prop_name {
         None => match &schema.title {
             None => panic!("Schema missing title and no title hint provided from parent: {:?}", schema),
-            Some(title) => text::to_pascal_case(&title),
+            Some(title) => schema
+                .struct_name_hint
+                .clone()
+                .unwrap_or_else(|| text::to_pascal_case(&title)),
         },
-        Some(name) => text::singularize(&name)
+        Some(name) => name,
     };
 
     // Prevent duplicate struct generation
     if !generated.insert(struct_name.clone()) {
-        return match &schema.title {
-            None => struct_name,
-            Some(title) => title.to_string()
-        };
+        // Struct with this name already generated; just return the actual struct name
+        return struct_name;
     }
 
     let struct_ = scope
@@ -418,8 +398,6 @@ fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, sch
         build_struct(scope, generated, nested_schema.0, nested_schema.1);
     }
 
-    match &schema.title {
-        None => panic!("Schema missing title: {:?}", schema),
-        Some(title) => title.to_string()
-    }
+    // Return the actual struct name used/generated
+    struct_name
 }

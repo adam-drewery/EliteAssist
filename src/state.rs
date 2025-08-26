@@ -778,6 +778,7 @@ impl State {
                     Event::WingInvite(_) => {}
                     Event::WingJoin(_) => {}
                     Event::WingLeave(_) => {}
+                    Event::ShipLockerBackpack(_) => {}
                 }
             }
         }

@@ -14,6 +14,8 @@ pub struct SchemaObject {
     pub properties: Option<BTreeMap<String, SchemaObject>>,
     pub items: Option<SchemaItems>,
     pub required: Vec<String>,
+    // Optional override for the Rust struct name to support deduplication without renaming enum variants
+    pub struct_name_hint: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -213,6 +215,7 @@ impl SchemaObject {
             properties,
             items,
             required,
+            struct_name_hint: None,
         }
     }
 }
