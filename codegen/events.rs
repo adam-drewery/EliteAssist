@@ -2,6 +2,7 @@ mod fixes;
 mod json;
 mod rust;
 mod text;
+mod dedupe;
 
 use std::fs;
 use std::io::Write;
