@@ -2,14 +2,14 @@ use crate::journal::event;
 
 #[derive(Default)]
 pub struct Rank {
-    pub combat: u64,
-    pub trade: u64,
-    pub explore: u64,
-    pub soldier: u64,
-    pub exobiologist: u64,
-    pub empire: u64,
-    pub federation: u64,
-    pub cqc: u64
+    pub combat: u8,
+    pub trade: u8,
+    pub explore: u8,
+    pub soldier: u8,
+    pub exobiologist: u8,
+    pub empire: u8,
+    pub federation: u8,
+    pub cqc: u8
 }
 
 #[derive(Default)]
@@ -44,8 +44,8 @@ impl From<event::Rank> for Rank {
 impl From<event::Reputation> for Reputation {
     fn from(value: event::Reputation) -> Self {
         Reputation {
-            empire: value.empire.unwrap_or_default(),
-            federation: value.federation.unwrap_or_default(),
+            empire: value.empire.map(|v| v as f64).unwrap_or_default(),
+            federation: value.federation.map(|v| v as f64).unwrap_or_default(),
             alliance: value.alliance.unwrap_or_default(),
         }
     }

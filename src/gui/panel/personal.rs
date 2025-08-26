@@ -72,7 +72,7 @@ pub fn ranks(state: &State) -> Column<'_, Message> {
         ].padding(8)
 }
 
-fn rank(title: &str, rank: u64, progress: u64, lookup: fn(&String) -> Option<&Rank>) -> Column<'_, Message> {
+fn rank(title: &str, rank: u8, progress: u8, lookup: fn(&String) -> Option<&Rank>) -> Column<'_, Message> {
     let rank_name = match lookup(&rank.to_string()) {
         None => String::from("Unknown"),
         Some(title) => title.name.to_string()
@@ -95,7 +95,7 @@ fn rank(title: &str, rank: u64, progress: u64, lookup: fn(&String) -> Option<&Ra
         .padding(4)
 }
 
-fn superpower_rank(title: &str, rank: Option<u64>, progress: Option<u64>, reputation: f64, lookup: Option<fn(&String) -> Option<&Rank>>) -> Column<'_, Message> {
+fn superpower_rank(title: &str, rank: Option<u8>, progress: Option<u8>, reputation: f64, lookup: Option<fn(&String) -> Option<&Rank>>) -> Column<'_, Message> {
     let rank_name = match lookup {
         None => "".to_string(),
         Some(func) => {

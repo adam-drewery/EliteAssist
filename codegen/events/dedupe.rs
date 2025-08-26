@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use crate::codegen::events::{overrides, text};
+use crate::codegen::events::{r#override, text};
 use crate::codegen::events::json::{SchemaItems, SchemaObject};
 
 pub fn merge(schemas: &mut Vec<SchemaObject>) {
@@ -27,7 +27,7 @@ pub fn merge(schemas: &mut Vec<SchemaObject>) {
             // Apply any overrides whose keys are subsets of the set of real struct names in this group
             let mut applied_any = false;
             let real_set: std::collections::HashSet<&str> = real_names.iter().map(|s| s.as_str()).collect();
-            for (k, v) in overrides::struct_names().iter() {
+            for (k, v) in r#override::struct_names().iter() {
                 if k.iter().all(|name| real_set.contains(*name)) {
                     for t in k.iter() {
                         if *t != *v {
@@ -47,7 +47,7 @@ pub fn merge(schemas: &mut Vec<SchemaObject>) {
     }
 
     // 2b) Always apply explicit overrides globally, regardless of structural grouping
-    for (k, v) in overrides::struct_names().iter() {
+    for (k, v) in r#override::struct_names().iter() {
         for t in k.iter() {
             if *t != *v {
                 rename_map.entry((*t).to_string()).or_insert((*v).to_string());

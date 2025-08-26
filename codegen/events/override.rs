@@ -13,10 +13,22 @@ macro_rules! struct_name_map {
     };
 }
 
-static STRUCT_NAME_MERGES: OnceLock<HashMap<Vec<&'static str>, &'static str>> = OnceLock::new();
+static STRUCT_NAME_OVERRIDES: OnceLock<HashMap<Vec<&'static str>, &'static str>> = OnceLock::new();
+
+pub static FIELD_TYPES: phf::Map<&'static str, &'static str> = phf::phf_map! {
+    "cqc" => "u8",
+    "combat" => "u8",
+    "empire" => "u8",
+    "exobiologist" => "u8",
+    "explore" => "u8",
+    "federation" => "u8",
+    "soldier" => "u8",
+    "trade" => "u8"
+    
+};
 
 pub fn struct_names() -> &'static HashMap<Vec<&'static str>, &'static str> {
-    STRUCT_NAME_MERGES.get_or_init(|| {
+    STRUCT_NAME_OVERRIDES.get_or_init(|| {
         struct_name_map! {
             ["JoinACrew", "QuitACrew"] => "Crew",
             ["FighterDestroyed", "HeatDamage"] => "Damage",

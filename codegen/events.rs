@@ -1,4 +1,4 @@
-mod overrides;
+mod r#override;
 mod json;
 mod rust;
 mod text;

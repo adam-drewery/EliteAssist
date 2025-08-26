@@ -1,5 +1,5 @@
 use crate::codegen::events::json::{SchemaItems, SchemaObject};
-use crate::codegen::events::{dedupe, text};
+use crate::codegen::events::{dedupe, text, r#override};
 use anyhow::Result;
 use std::collections::{BTreeMap, HashSet};
 
@@ -169,6 +169,11 @@ fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, sch
                 "()".to_string()
             }
         };
+
+        // Apply FIELD_TYPES override by property name
+        if let Some(forced) = r#override::FIELD_TYPES.get(property_name.as_str()) {
+            type_ = (*forced).to_string();
+        }
 
         if !is_required {
             type_.insert_str(0, "Option<");
