@@ -329,7 +329,7 @@ pub struct StationTypes {
     #[serde(rename = "AsteroidBase")]
     pub asteroid_base: u64,
     #[serde(rename = "Bernal")]
-    pub bernal: u64,
+    pub bernal: Option<u64>,
     #[serde(rename = "Coriolis")]
     pub coriolis: u64,
     #[serde(rename = "CraterOutpost")]

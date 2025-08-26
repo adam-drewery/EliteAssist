@@ -3,4 +3,5 @@
 // Do not edit manually; edit codegen or schemas instead.
 
 #![allow(clippy::all)]
+#![allow(dead_code)]
 include!(concat!(env!("OUT_DIR"), "/event.rs"));

@@ -16,15 +16,14 @@ macro_rules! struct_name_map {
 static STRUCT_NAME_OVERRIDES: OnceLock<HashMap<Vec<&'static str>, &'static str>> = OnceLock::new();
 
 pub static FIELD_TYPES: phf::Map<&'static str, &'static str> = phf::phf_map! {
-    "cqc" => "u8",
-    "combat" => "u8",
-    "empire" => "u8",
-    "exobiologist" => "u8",
-    "explore" => "u8",
-    "federation" => "u8",
-    "soldier" => "u8",
-    "trade" => "u8"
-    
+    "Rank.cqc" => "u8",
+    "Rank.combat" => "u8",
+    "Rank.empire" => "u8",
+    "Rank.exobiologist" => "u8",
+    "Rank.explore" => "u8",
+    "Rank.federation" => "u8",
+    "Rank.soldier" => "u8",
+    "Rank.trade" => "u8",
 };
 
 pub fn struct_names() -> &'static HashMap<Vec<&'static str>, &'static str> {
@@ -74,7 +73,7 @@ pub fn struct_names() -> &'static HashMap<Vec<&'static str>, &'static str> {
             ["BackpackComponent", "BackpackData", "BackpackItem", "ShipLockerComponent", "ShipLockerData", "ShipLockerItem", "ShipLockerMaterialsComponent", "ShipLockerMaterialsData", "ShipLockerMaterialsItem"] => "MicroResource",
             ["EngineerCraftIngredient", "MaterialsEncoded", "MaterialsManufactured", "MaterialsRaw", "MissionCompletedCommodityReward", "SynthesisMaterial", "TechnologyBrokerCommodity", "UpgradeSuitResource", "UpgradeWeaponResource"] => "Material",
             ["CarrierJumpStationFaction", "WingAdd", "WingInvite"] => "NameStub",
-            ["DeleteSuitLoadout", "RenameSuitLoadout"] => "SuitLoadout",
+            ["DeleteSuitLoadout", "RenameSuitLoadout"] => "SuitLoadoutStub",
             ["SquadronDemotion", "SquadronPromotion"] => "SquadronPromotion",
             ["CarrierCancelDecommission", "CarrierJumpCancelled"] => "CarrierStub",
             ["AppliedToSquadron", "DisbandedSquadron", "InvitedToSquadron", "JoinedSquadron", "KickedFromSquadron", "LeftSquadron", "SharedBookmarkToSquadron", "SquadronCreated"] => "Squadron",

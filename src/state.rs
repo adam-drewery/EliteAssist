@@ -575,23 +575,23 @@ impl State {
                         // CQC isn't handled here because we can't rank up in that outside of CQC mode.
 
                         if let Some(combat) = promotion.combat {
-                            self.rank.combat = combat;
+                            self.rank.combat = combat as u8;
                             self.progress.combat = 0;
                         }
                         if let Some(trade) = promotion.trade {
-                            self.rank.trade = trade;
+                            self.rank.trade = trade as u8;
                             self.progress.trade = 0;
                         }
                         if let Some(explore) = promotion.explore {
-                            self.rank.explore = explore;
+                            self.rank.explore = explore as u8;
                             self.progress.explore = 0;
                         }
                         if let Some(soldier) = promotion.soldier {
-                            self.rank.soldier = soldier;
+                            self.rank.soldier = soldier as u8;
                             self.progress.soldier = 0;
                         }
                         if let Some(exobiologist) = promotion.exobiologist {
-                            self.rank.exobiologist = exobiologist;
+                            self.rank.exobiologist = exobiologist as u8;
                             self.progress.exobiologist = 0;
                         }
                     }

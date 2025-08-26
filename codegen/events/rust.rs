@@ -170,8 +170,11 @@ fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, sch
             }
         };
 
-        // Apply FIELD_TYPES override by property name
-        if let Some(forced) = r#override::FIELD_TYPES.get(property_name.as_str()) {
+        // Apply FIELD_TYPES override by struct-qualified field name first, then by plain field name (legacy)
+        let qualified_key = format!("{}.{}", struct_name, property_name);
+        if let Some(forced) = r#override::FIELD_TYPES.get(qualified_key.as_str()) {
+            type_ = (*forced).to_string();
+        } else if let Some(forced) = r#override::FIELD_TYPES.get(property_name.as_str()) {
             type_ = (*forced).to_string();
         }
 
