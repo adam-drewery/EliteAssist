@@ -90,8 +90,8 @@ fn stream_history() -> impl Stream<Item=Message> {
             Err(e) => { error!("Failed to start history loader: {}", e); return; }
         };
         match loader.load_messages() {
-            Ok(msgs) => {
-                for msg in msgs.into_iter() {
+            Ok(messages) => {
+                for msg in messages.into_iter() {
                     if sender.send(msg).await.is_err() { break; }
                 }
             }
