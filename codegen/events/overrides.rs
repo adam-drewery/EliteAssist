@@ -45,7 +45,7 @@ pub fn struct_names() -> &'static HashMap<Vec<&'static str>, &'static str> {
             ["RefuelAll", "RefuelPartial"] => "Refuel",
             ["MaterialCollected", "MaterialDiscarded"] => "InventoryMaterial",
             ["ApproachSettlementStationFaction", "CarrierJumpSystemFaction", "DockedStationFaction", "FSDJumpSystemFaction", "LocationStationFaction", "LocationSystemFaction"] => "Faction",
-            ["BuyMicroResourcesMicroResource", "DeliverPowerMicroResourcesMicroResource", "RequestPowerMicroResourcesMicroResource", "SellMicroResourcesMicroResource", "TechnologyBrokerMaterial", "TradeMicroResourcesOffered"] => "MicroResource",
+            ["BuyMicroResourcesMicroResource", "DeliverPowerMicroResourcesMicroResource", "RequestPowerMicroResourcesMicroResource", "SellMicroResourcesMicroResource", "TechnologyBrokerMaterial", "TradeMicroResourcesOffered"] => "MicroResourceTrade",
             ["BuyAmmo", "RepairAll"] => "ShipMaintenance",
             ["BuyWeapon", "SellWeapon"] => "WeaponTrade",
             ["ApproachBody", "LeaveBody"] => "Body",
