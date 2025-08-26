@@ -189,7 +189,7 @@ fn join_location_parts(system: &String, body: &String, station: &Option<String>)
     }
     parts.join(" | ")
 }
-pub fn log_ship_equipment_purchase(e: event::ShipEquipmentPurchase, item: &str) -> GameEventLog {
+pub fn log_ship_equipment_purchase(e: event::ShipMaintenance, item: &str) -> GameEventLog {
     GameEventLog {
         time_display: prettify_date(&e.timestamp),
         verb: format!("Bought {} for", item),

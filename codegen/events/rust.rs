@@ -45,7 +45,7 @@ fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, sch
                 .clone()
                 .unwrap_or_else(|| text::to_pascal_case(&title)),
         },
-        Some(name) => name,
+        Some(name) => schema.struct_name_hint.clone().unwrap_or(name),
     };
 
     // Prevent duplicate struct generation
@@ -119,7 +119,7 @@ fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, sch
                     "String".to_string()
                 }
             }
-            "integer" => "i64".to_string(),
+            "integer" => "u64".to_string(),
             "number" => "f64".to_string(),
             "boolean" => "bool".to_string(),
             "object" => {
@@ -129,8 +129,9 @@ fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, sch
                     Some(title) => {
                         let base_name = format!("{}{}", struct_name, text::to_pascal_case(title));
                         let sub_type_name = text::singularize(&base_name);
-                        nested_schemas.push((property.1, Some(sub_type_name.clone())));
-                        sub_type_name
+                        let effective_name = property.1.struct_name_hint.clone().unwrap_or(sub_type_name.clone());
+                        nested_schemas.push((property.1, Some(effective_name.clone())));
+                        effective_name
                     }
                 }
             }
@@ -141,8 +142,8 @@ fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, sch
                         SchemaItems::Single(obj) => {
                             let sub_type_name = match obj.r#type.as_str() {
                                 "string" => "String",
-                                "integer" => "i64",
-                                "number" => "u64",
+                                "integer" => "u64",
+                                "number" => "f64",
                                 "boolean" => "bool",
                                 _ => panic!("Unsupported array type: {} for struct: {}", obj.r#type, struct_name)
                             };
@@ -154,8 +155,9 @@ fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, sch
                                 None => panic!("Array type '{}' on '{}' contained no title: {:?}", property_name, struct_name, property.1),
                                 Some(title) => {
                                     let sub_type_name = format!("{}{}", struct_name, text::singularize(title.as_str()));
-                                    nested_schemas.push((&property.1, Some(sub_type_name.clone())));
-                                    format!("Vec<{}>", sub_type_name)
+                                    let effective_name = property.1.struct_name_hint.clone().unwrap_or(sub_type_name.clone());
+                                    nested_schemas.push((&property.1, Some(effective_name.clone())));
+                                    format!("Vec<{}>", effective_name)
                                 }
                             }
                         }

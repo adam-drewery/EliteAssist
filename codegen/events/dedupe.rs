@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use crate::codegen::events::{fixes, text};
+use crate::codegen::events::{overrides, text};
 use crate::codegen::events::json::{SchemaItems, SchemaObject};
 
 pub fn merge(schemas: &mut Vec<SchemaObject>) {
@@ -12,35 +12,60 @@ pub fn merge(schemas: &mut Vec<SchemaObject>) {
     }
 
     // 2) Build rename map based on STRUCT_NAME_MERGES (match by title-based names)
-    //    and warn for unmatched duplicates (print real struct names)
+    //    Apply overrides even if they are a subset of the duplicates; warn only when no override applied.
     let mut rename_map: HashMap<String, String> = HashMap::new();
     for (_sig, entries) in groups.into_iter() {
         let mut real_names: Vec<String> = entries.iter().map(|(real, _)| real.clone()).collect();
         real_names.sort();
         real_names.dedup();
 
-        if real_names.len() > 1 {
-            let mut title_names: Vec<String> = entries.iter().map(|(_, title)| title.clone()).collect();
-            title_names.sort();
-            title_names.dedup();
+        let mut title_names: Vec<String> = entries.iter().map(|(_, title)| title.clone()).collect();
+        title_names.sort();
+        title_names.dedup();
 
-            if title_names.len() > 1 {
-                if let Some(target) = find_merge_target(&title_names) {
-                    for t in &title_names {
-                        if t != target {
-                            rename_map.insert(t.clone(), target.to_string());
+        if real_names.len() > 1 {
+            // Apply any overrides whose keys are subsets of the set of real struct names in this group
+            let mut applied_any = false;
+            let real_set: std::collections::HashSet<&str> = real_names.iter().map(|s| s.as_str()).collect();
+            for (k, v) in overrides::struct_names().iter() {
+                if k.iter().all(|name| real_set.contains(*name)) {
+                    for t in k.iter() {
+                        if *t != *v {
+                            rename_map.insert((*t).to_string(), (*v).to_string());
+                            applied_any = true;
                         }
                     }
-                } else {
-                    // Emit cargo warning with the real struct names formatted like a Rust array
-                    let arr = format!("[{}]", real_names.iter().map(|n| format!("\"{}\"", n)).collect::<Vec<_>>().join(", "));
-                    println!("cargo:warning=duplicate structures detected {}", arr);
                 }
+            }
+
+            if !applied_any {
+                // Emit cargo warning with the real struct names formatted like a Rust array
+                let arr = format!("[{}]", real_names.iter().map(|n| format!("\"{}\"", n)).collect::<Vec<_>>().join(", "));
+                println!("cargo:warning=duplicate structures detected {}", arr);
             }
         }
     }
 
-    // 3) Apply struct name hints recursively (keyed by title-based names)
+    // 2b) Always apply explicit overrides globally, regardless of structural grouping
+    for (k, v) in overrides::struct_names().iter() {
+        for t in k.iter() {
+            if *t != *v {
+                rename_map.entry((*t).to_string()).or_insert((*v).to_string());
+            }
+        }
+    }
+
+    // 3) Apply explicit struct name hints for top-level schemas by title
+    for schema in schemas.iter_mut() {
+        if let Some(title) = &schema.title {
+            let pascal = text::to_pascal_case(title);
+            if let Some(target) = rename_map.get(&pascal) {
+                schema.struct_name_hint = Some(target.clone());
+            }
+        }
+    }
+
+    // 4) Apply struct name hints recursively (also covers nested)
     for schema in schemas.iter_mut() {
         apply_struct_hints(schema, &rename_map);
     }
@@ -48,7 +73,7 @@ pub fn merge(schemas: &mut Vec<SchemaObject>) {
 
 fn find_merge_target(names: &[String]) -> Option<&'static str> {
     // Compare order-insensitively against keys in STRUCT_NAME_MERGES
-    for (k, v) in fixes::struct_name_merges().iter() {
+    for (k, v) in overrides::struct_names().iter() {
         if k.len() != names.len() { continue; }
         let mut k_sorted: Vec<&str> = k.iter().copied().collect();
         k_sorted.sort();
@@ -184,25 +209,55 @@ fn signature(schema: &SchemaObject) -> String {
 }
 
 fn apply_struct_hints(schema: &mut SchemaObject, rename_map: &HashMap<String, String>) {
-    if let Some(title) = &schema.title {
-        let pascal = text::to_pascal_case(title);
-        if let Some(target) = rename_map.get(&pascal) {
-            // Do not rename title (to preserve enum variants); set a struct name hint instead
-            schema.struct_name_hint = Some(target.clone());
-        }
-    }
+    // Wrapper to preserve original signature; delegate to recursive with parent tracking
+    apply_struct_hints_with_parent(schema, rename_map, None);
+}
 
-    if let Some(props) = schema.properties.as_mut() {
-        for (_k, v) in props.iter_mut() {
-            apply_struct_hints(v, rename_map);
+fn apply_struct_hints_with_parent(schema: &mut SchemaObject, rename_map: &HashMap<String, String>, parent_real: Option<String>) {
+    // Prefer lookup by fully-qualified real struct name (scoped), fallback to title-based for legacy cases
+    if let Some(real) = compute_real_name(schema, parent_real.as_deref()) {
+        // Apply hint for both top-level and nested structs. For nested, avoid renaming to parent's name to prevent recursion.
+        if let Some(target) = rename_map.get(&real) {
+            if Some(target.as_str()) != parent_real.as_deref() {
+                schema.struct_name_hint = Some(target.clone());
+            }
+        } else if let Some(title) = &schema.title {
+            let pascal = text::to_pascal_case(title);
+            if let Some(target) = rename_map.get(&pascal) {
+                if Some(target.as_str()) != parent_real.as_deref() {
+                    schema.struct_name_hint = Some(target.clone());
+                }
+            }
         }
-    }
 
-    if let Some(items) = schema.items.as_mut() {
-        match items {
-            SchemaItems::Single(inner) => apply_struct_hints(inner.as_mut(), rename_map),
-            SchemaItems::Map(map) => {
-                for (_k, v) in map.iter_mut() { apply_struct_hints(v, rename_map); }
+        // Recurse with this real name as parent for nested types
+        let next_parent = Some(real);
+        if let Some(props) = schema.properties.as_mut() {
+            for (_k, v) in props.iter_mut() {
+                apply_struct_hints_with_parent(v, rename_map, next_parent.clone());
+            }
+        }
+        if let Some(items) = schema.items.as_mut() {
+            match items {
+                SchemaItems::Single(inner) => apply_struct_hints_with_parent(inner.as_mut(), rename_map, next_parent.clone()),
+                SchemaItems::Map(map) => {
+                    for (_k, v) in map.iter_mut() { apply_struct_hints_with_parent(v, rename_map, next_parent.clone()); }
+                }
+            }
+        }
+    } else {
+        // Not a struct-producing schema; still traverse
+        if let Some(props) = schema.properties.as_mut() {
+            for (_k, v) in props.iter_mut() {
+                apply_struct_hints_with_parent(v, rename_map, parent_real.clone());
+            }
+        }
+        if let Some(items) = schema.items.as_mut() {
+            match items {
+                SchemaItems::Single(inner) => apply_struct_hints_with_parent(inner.as_mut(), rename_map, parent_real.clone()),
+                SchemaItems::Map(map) => {
+                    for (_k, v) in map.iter_mut() { apply_struct_hints_with_parent(v, rename_map, parent_real.clone()); }
+                }
             }
         }
     }
