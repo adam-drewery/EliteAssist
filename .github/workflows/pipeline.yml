@@ -18,19 +18,19 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-#  test:
-#    name: Test
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v5
-#        with:
-#          submodules: recursive
-#
-#      - name: Build
-#        run: cargo build --verbose
-#
-#      - name: Test
-#        run: cargo test --verbose
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Build
+        run: cargo build --verbose
+
+      - name: Test
+        run: cargo test --verbose
 
   version:
     name: Versioning
@@ -55,7 +55,7 @@ jobs:
     name: Build / Linux
     if: github.event_name == 'push'
     needs:
-      #- test
+      - test
       - version
     runs-on: ubuntu-latest
     env:
@@ -91,7 +91,7 @@ jobs:
     name: Build / Windows
     if: github.event_name == 'push'
     needs:
-      #- test
+      - test
       - version
     runs-on: ubuntu-latest
     env:
