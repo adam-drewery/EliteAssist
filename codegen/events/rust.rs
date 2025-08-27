@@ -197,8 +197,6 @@ fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, sch
         build_struct(scope, generated, nested_schema.0, nested_schema.1);
     }
 
-    println!("cargo:warning=BUILT {:?}", struct_);
-    
     // Return the actual struct name used/generated
     struct_name
 }
