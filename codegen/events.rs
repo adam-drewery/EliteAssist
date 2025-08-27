@@ -14,9 +14,11 @@ pub fn generate(manifest_dir: &Path, out_dir: &Path) {
     let schemas = json::load_schemas(schema_root.as_path()).expect("schemas to load");
 
     // Filter out base Event schema
-    let schemas: Vec<_> = schemas.into_iter()
+    let mut schemas: Vec<_> = schemas.into_iter()
         .filter(|schema| schema.title.as_deref() != Some("Event"))
         .collect();
+
+    schemas.sort_by(|a, b| a.title.as_ref().cmp(&b.title.as_ref()));
 
     let output = rust::build(schemas).expect("rust types to build");
 
