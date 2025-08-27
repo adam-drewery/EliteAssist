@@ -26,9 +26,6 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Build
-        run: cargo build --verbose
-
       - name: Test
         run: cargo test --verbose
 
