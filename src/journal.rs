@@ -512,7 +512,10 @@ impl HistoryLoader {
                 let n = reader.read_line(&mut line)?;
                 if n == 0 { break; }
                 if line.trim().is_empty() { continue; }
-                let ev: Event = serde_json::from_str(&line)?;
+                let ev: Event = serde_json::from_str(&line).map_err(|e| {
+                    error!("Failed to parse JSON: {}\nJSON: {}", e, &line);
+                    e
+                })?;
                 events.push(ev);
             }
         }

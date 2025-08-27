@@ -50,7 +50,7 @@ pub fn struct_names() -> &'static HashMap<Vec<&'static str>, &'static str> {
             ["DockSRV", "SRVDestroyed"] => "SRVEvent",
             ["BackpackComponent", "BackpackData", "BackpackItem", "ShipLockerComponent", "ShipLockerData", "ShipLockerItem", "ShipLockerMaterialsComponent", "ShipLockerMaterialsData", "ShipLockerMaterialsItem"] => "InventoryItem",
             ["CrewMemberJoins", "CrewMemberQuits"] => "CrewMember",
-            ["CommunityGoalDiscard", "CommunityGoalJoin"] => "CommunityGoal",
+            ["CommunityGoalDiscard", "CommunityGoalJoin"] => "CommunityGoalChange",
             ["ReservoirReplenished", "StatusFuel"] => "Fuel",
             ["MaterialTradePaid", "MaterialTradeReceived"] => "MaterialTrade",
             ["RefuelAll", "RefuelPartial"] => "Refuel",
