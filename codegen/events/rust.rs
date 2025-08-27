@@ -54,7 +54,7 @@ fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, sch
         return struct_name;
     }
 
-    let mut struct_ = scope
+    let struct_ = scope
         .new_struct(struct_name.as_str())
         .vis("pub");
 
@@ -96,6 +96,7 @@ fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, sch
             // some schemas have no properties, e.g. ColonisationBeaconDeployed. It will still have a timestamp added later though.
             None => &BTreeMap::new(),
             Some(properties) => properties
+
         }
     };
 
@@ -192,12 +193,12 @@ fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, sch
     }
 
     // Now process all nested schemas after we're done with the current struct
-    let cloned_struct = struct_.clone();
     for nested_schema in nested_schemas {
-        println!("cargo:warning=BUILT {:?}", cloned_struct);
         build_struct(scope, generated, nested_schema.0, nested_schema.1);
     }
 
+    println!("cargo:warning=BUILT {:?}", struct_);
+    
     // Return the actual struct name used/generated
     struct_name
 }
