@@ -37,7 +37,7 @@ pub fn struct_names() -> &'static HashMap<Vec<&'static str>, &'static str> {
             ["CockpitBreached", "ColonisationBeaconDeployed", "HeatWarning", "Resupply", "SelfDestruct", "Shutdown", "SystemsShutdown", "WingLeave"] => "Empty",
             ["PowerplayCollect", "PowerplayDeliver"] => "PowerplayDelivery",
             ["Liftoff", "Touchdown"] => "Liftoff",
-            ["LoadoutEquipModule", "LoadoutRemoveModule"] => "LoadoutModule",
+            ["LoadoutEquipModule", "LoadoutRemoveModule"] => "SuitLoadoutChange",
             ["CarrierModulePack", "CarrierShipPack"] => "CarrierPack",
             ["CarrierJumpFactionPendingState", "CarrierJumpFactionRecoveringState", "FSDJumpFactionPendingState", "FSDJumpFactionRecoveringState", "LocationFactionPendingState", "LocationFactionRecoveringState"] => "FactionState",
             ["DataScanned", "MiningRefined"] => "TypeStub",
