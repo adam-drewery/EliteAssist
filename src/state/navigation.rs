@@ -96,7 +96,7 @@ pub struct Station {
     pub have_shipyard: bool,
     pub have_outfitting: bool,
     pub other_services: Vec<String>,
-    pub controlling_faction: String,
+    pub controlling_faction: Option<String>,
     pub update_time: LastUpdated,
 }
 

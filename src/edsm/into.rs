@@ -24,7 +24,7 @@ impl Into<state::Station> for edsm::Station {
             have_shipyard: self.have_shipyard,
             have_outfitting: self.have_outfitting,
             other_services: self.other_services,
-            controlling_faction: self.controlling_faction.name,
+            controlling_faction: self.controlling_faction.map(|f| f.name),
             update_time: self.update_time.into(),
         }
     }

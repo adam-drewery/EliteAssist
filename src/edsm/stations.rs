@@ -34,7 +34,7 @@ pub struct Station {
     #[serde(rename = "otherServices")]
     pub other_services: Vec<String>,
     #[serde(rename = "controllingFaction")]
-    pub controlling_faction: ControllingFaction,
+    pub controlling_faction: Option<ControllingFaction>,
     #[serde(rename = "updateTime")]
     pub update_time: UpdateTime,
 }
