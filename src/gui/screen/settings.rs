@@ -1,0 +1,82 @@
+use crate::gui::Message;
+use crate::state::{State, pane};
+use crate::theme::{GRAY, ORANGE, style};
+use iced::widget::{Column, Row, button, checkbox, column, row, scrollable, text, text_input, container, svg};
+use iced::{Element, Fill};
+use iced::widget::svg::Handle;
+use crate::image;
+
+pub fn settings(state: &State) -> Row<'_, Message> {
+    let screens_list: Column<'_, Message> = {
+        let mut items: Vec<Element<'_, Message>> = Vec::new();
+        for (idx, screen) in state.custom_screens.iter().enumerate() {
+            let is_selected = idx == state.selected_custom_screen;
+            items.push(
+                row![
+                    button(text(screen.name.as_ref()))
+                        .on_press(Message::SelectCustomScreen(idx))
+                        .style(if is_selected { style::selected_button } else { style::button })
+                        .width(Fill),
+                ]
+                .padding(4)
+                .into(),
+            );
+        }
+
+        column![
+            row![
+                column![text("Screens").size(24).color(ORANGE)],
+                column![].width(Fill),
+                column![button(svg(Handle::from_memory(image::gui::ADD)).height(16)).on_press(Message::AddCustomScreen)],
+                column![].width(4),
+                column![button(svg(Handle::from_memory(image::gui::REMOVE)).height(16)).on_press(Message::RemoveCustomScreen)]
+            ],
+            scrollable(column(items)).height(Fill)
+        ]
+        .spacing(8)
+    };
+
+    // Right side: rename + pane toggles for selected
+    let right_side: Column<'_, Message> = {
+        let current_name = state
+            .custom_screens
+            .get(state.selected_custom_screen)
+            .map(|s| s.name.as_ref())
+            .unwrap_or("");
+
+        let mut pane_items: Vec<Element<'_, Message>> = Vec::new();
+        for p in pane::Type::all().iter() {
+            let checked = p.is_enabled(state);
+            let p2 = p.clone();
+            pane_items.push(
+                checkbox(p.title(), checked)
+                    .on_toggle(move |v| Message::TogglePane(p2.clone(), v))
+                    .into(),
+            );
+        }
+
+        column![
+            text("Settings").size(24).color(ORANGE),
+            // text("Rename selected screen:").size(16).color(GRAY),
+            text_input("Screen name", current_name)
+                .on_input(|value: String| Message::RenameCustomScreen(value.into())),
+            text("Visible panes:").size(16).color(GRAY),
+            scrollable(column(pane_items)).height(Fill)
+        ]
+        .spacing(8)
+    };
+
+    row![
+        column![
+            row![].width(Fill),
+            row![
+                column![].width(Fill),
+                column![container(screens_list).style(style::bordered).height(Fill).width(Fill).padding(8)].width(240),
+                column![].width(8),
+                column![container(right_side).style(style::bordered).height(Fill).width(Fill).padding(8)].width(Fill),
+                column![].width(Fill)
+            ],
+            row![].width(Fill)
+        ]
+    ]
+}

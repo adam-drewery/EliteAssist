@@ -40,6 +40,10 @@ pub struct State {
     pub fullscreen: bool,
     pub enabled_panes: Option<Vec<pane::Type>>,
     pub commander_name: Box<str>,
+
+    // Custom screens management
+    pub custom_screens: Vec<crate::settings::CustomScreen>,
+    pub selected_custom_screen: usize,
     pub credits: Box<str>,
     pub current_system: Box<str>,
     pub current_body: Box<str>,
@@ -77,6 +81,7 @@ pub enum Screen {
     Market,
     Materials,
     Messages,
+    Settings,
 }
 
 impl Default for State {
@@ -89,6 +94,8 @@ impl Default for State {
             fullscreen: false,
             enabled_panes: None,
             commander_name: String::new().into(),
+            custom_screens: Vec::new(),
+            selected_custom_screen: 0,
             credits: String::new().into(),
             current_system: String::new().into(),
             current_body: String::new().into(),
@@ -119,14 +126,42 @@ impl Default for State {
 
         // Attempt to load persisted settings and apply
         if let Some(settings) = crate::settings::Settings::load() {
-            if let Some(layout) = &settings.layout {
-                state.overview_panes = Some(crate::settings::build_panes_from_layout(layout));
+            if let Some(screens) = settings.custom_screens.clone() {
+                // Use multi-screen config
+                state.custom_screens = screens.clone();
+                let len = state.custom_screens.len();
+                state.selected_custom_screen = settings.selected_screen.unwrap_or(0).min(len.saturating_sub(1).max(0));
 
-                // If visible list not provided, derive from layout leaves
-                state.enabled_panes = Some(settings.visible.unwrap_or_else(|| crate::settings::layout_leaf_panes(layout)));
-            } else if let Some(visible) = settings.visible {
-                state.enabled_panes = Some(visible);
+                if let Some(sel) = state.custom_screens.get(state.selected_custom_screen) {
+                    if let Some(layout) = &sel.layout {
+                        state.overview_panes = Some(crate::settings::build_panes_from_layout(layout));
+                        state.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| crate::settings::layout_leaf_panes(layout)));
+                    } else {
+                        state.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| pane::Type::default_enabled_vec()));
+                    }
+                }
+            } else {
+                // Backward compatibility: single overview layout/visible
+                if let Some(layout) = &settings.layout {
+                    state.overview_panes = Some(crate::settings::build_panes_from_layout(layout));
+                    state.enabled_panes = Some(settings.visible.clone().unwrap_or_else(|| crate::settings::layout_leaf_panes(layout)));
+                } else if let Some(visible) = settings.visible.clone() {
+                    state.enabled_panes = Some(visible);
+                }
+
+                // Initialize custom_screens with a single entry named "Overview"
+                state.custom_screens.push(crate::settings::CustomScreen {
+                    name: "Overview".into(),
+                    layout: settings.layout.clone(),
+                    visible: settings.visible.clone(),
+                });
+                state.selected_custom_screen = 0;
             }
+        }
+
+        // If no panes were built from a saved layout, build default layout based on enabled set
+        if state.overview_panes.is_none() {
+            pane::load(&mut state);
         }
 
         state
@@ -134,6 +169,22 @@ impl Default for State {
 }
 
 impl State {
+
+    pub fn sync_selected_custom_screen_from_live(&mut self) {
+        // Ensure there is at least one custom screen entry
+        if self.custom_screens.is_empty() { return; }
+        let idx = self.selected_custom_screen.min(self.custom_screens.len().saturating_sub(1));
+        if let Some(sel) = self.custom_screens.get_mut(idx) {
+            // Update layout from current overview_panes
+            if let Some(panes) = &self.overview_panes {
+                let layout = crate::settings::to_layout_node(panes);
+                sel.layout = Some(layout);
+            }
+            // Update visible panes list from current state
+            let visible = self.enabled_panes.clone().unwrap_or_else(|| pane::Type::default_enabled_vec());
+            sel.visible = Some(visible);
+        }
+    }
 
     pub fn update_from(&mut self, message: Message) -> Task<Message> {
 
@@ -170,6 +221,8 @@ impl State {
             Message::PaneResized(event) => {
                 if let Some(panes) = &mut self.overview_panes {
                     panes.resize(event.split, event.ratio);
+                    // Sync the layout into the selected custom screen before saving
+                    self.sync_selected_custom_screen_from_live();
                     let _ = crate::settings::Settings::save_from_state(self);
                 }
             }
@@ -180,7 +233,94 @@ impl State {
 
             Message::TogglePane(pane, enabled) => {
                 pane.toggle(self, enabled);
-            }
+            },
+
+            Message::AddCustomScreen => {
+                // Clone current layout/visibility into a new screen
+                let (layout_opt, visible_opt) = if let Some(panes) = &self.overview_panes {
+                    let layout = crate::settings::to_layout_node(panes);
+                    let visible = self
+                        .enabled_panes
+                        .clone()
+                        .unwrap_or_else(|| crate::settings::layout_leaf_panes(&layout));
+                    (Some(layout), Some(visible))
+                } else {
+                    (None, Some(self.enabled_panes.clone().unwrap_or_else(|| pane::Type::default_enabled_vec())))
+                };
+
+                let name = format!("Screen {}", self.custom_screens.len() + 1).into();
+                self.custom_screens.push(crate::settings::CustomScreen {
+                    name,
+                    layout: layout_opt,
+                    visible: visible_opt,
+                });
+                self.selected_custom_screen = self.custom_screens.len().saturating_sub(1);
+                let _ = crate::settings::Settings::save_from_state(self);
+            },
+
+            Message::RemoveCustomScreen => {
+                if self.custom_screens.len() > 1 {
+                    let idx = self.selected_custom_screen.min(self.custom_screens.len() - 1);
+                    self.custom_screens.remove(idx);
+                    // Clamp selection
+                    if self.selected_custom_screen >= self.custom_screens.len() {
+                        if self.custom_screens.is_empty() { self.selected_custom_screen = 0; } else { self.selected_custom_screen = self.custom_screens.len() - 1; }
+                    }
+                    // Load selected screen configuration
+                    if let Some(sel) = self.custom_screens.get(self.selected_custom_screen) {
+                        if let Some(layout) = &sel.layout {
+                            self.overview_panes = Some(crate::settings::build_panes_from_layout(layout));
+                            self.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| crate::settings::layout_leaf_panes(layout)));
+                        } else {
+                            self.overview_panes = None;
+                            self.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| pane::Type::default_enabled_vec()));
+                        }
+                    }
+                    let _ = crate::settings::Settings::save_from_state(self);
+                }
+            },
+
+            Message::SelectCustomScreen(idx) => {
+                if !self.custom_screens.is_empty() {
+                    self.selected_custom_screen = idx.min(self.custom_screens.len() - 1);
+                    if let Some(sel) = self.custom_screens.get(self.selected_custom_screen) {
+                        if let Some(layout) = &sel.layout {
+                            self.overview_panes = Some(crate::settings::build_panes_from_layout(layout));
+                            self.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| crate::settings::layout_leaf_panes(layout)));
+                        } else {
+                            self.overview_panes = None;
+                            self.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| pane::Type::default_enabled_vec()));
+                        }
+                    }
+                    let _ = crate::settings::Settings::save_from_state(self);
+                }
+            },
+
+            Message::RenameCustomScreen(name) => {
+                if let Some(sel) = self.custom_screens.get_mut(self.selected_custom_screen) {
+                    sel.name = name;
+                    let _ = crate::settings::Settings::save_from_state(self);
+                }
+            },
+
+            Message::NavigateToCustomScreen(idx) => {
+                if !self.custom_screens.is_empty() {
+                    let max_idx = self.custom_screens.len().saturating_sub(1);
+                    self.selected_custom_screen = idx.min(max_idx);
+                    if let Some(sel) = self.custom_screens.get(self.selected_custom_screen) {
+                        if let Some(layout) = &sel.layout {
+                            self.overview_panes = Some(crate::settings::build_panes_from_layout(layout));
+                            self.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| crate::settings::layout_leaf_panes(layout)));
+                        } else {
+                            self.overview_panes = None;
+                            self.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| pane::Type::default_enabled_vec()));
+                        }
+                    }
+                    // Switch to Commander screen which displays the selected custom screen layout
+                    self.active_screen = Screen::Commander;
+                    let _ = crate::settings::Settings::save_from_state(self);
+                }
+            },
 
             Message::ToggleFullscreen => {
                 // Request the latest window Id and handle in a follow-up message

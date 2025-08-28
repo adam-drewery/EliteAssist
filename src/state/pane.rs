@@ -116,6 +116,7 @@ impl Type {
         }
 
         // Persist settings after visibility/layout changes
+        state.sync_selected_custom_screen_from_live();
         Settings::save_from_state(state).unwrap_or_else(|e|
             log::error!("Failed to save settings: {}", e));
     }
@@ -190,6 +191,8 @@ pub fn dragged(state: &mut State, event: DragEvent) {
             DragEvent::Picked { .. } => {}
             DragEvent::Dropped { pane, target } => {
                 panes.drop(pane, target);
+                // Sync into selected custom screen before saving
+                state.sync_selected_custom_screen_from_live();
                 let _ = Settings::save_from_state(state);
             }
         }

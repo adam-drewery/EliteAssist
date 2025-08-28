@@ -11,6 +11,7 @@ use crate::gui::screen::materials;
 use crate::gui::screen::messages;
 use crate::gui::screen::overview;
 use crate::gui::screen::ship_locker;
+use crate::gui::screen::settings;
 use crate::image::LOADING_PNG;
 use crate::journal::event::Event;
 use crate::state::{pane, Screen, State};
@@ -23,6 +24,7 @@ use iced::{Bottom, Center, Element, Fill, Task};
 #[derive(Clone, Debug)]
 pub enum Message {
     NavigateTo(Screen),
+    NavigateToCustomScreen(usize),
     JournalEvent(Event),
     
     StationsQueried(edsm::Stations),
@@ -35,9 +37,13 @@ pub enum Message {
     PaneDragged(pane_grid::DragEvent),
     PaneResized(pane_grid::ResizeEvent),
 
-    // Settings menu / pane toggles
+    // Settings and custom screens
     ShowSettingsMenu(bool),
     TogglePane(pane::Type, bool),
+    AddCustomScreen,
+    RemoveCustomScreen,
+    SelectCustomScreen(usize),
+    RenameCustomScreen(Box<str>),
 
     // Window controls
     ToggleFullscreen,
@@ -78,6 +84,7 @@ fn main_layout(state: &State) -> Element<'_, Message> {
             Screen::ShipLocker => ship_locker(state),
             Screen::Market => market(state),
             Screen::Messages => messages(state),
+            Screen::Settings => settings(state),
         }
         .height(Fill),
         navigation_bar(state).align_y(Bottom),

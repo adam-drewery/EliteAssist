@@ -1,11 +1,11 @@
 use crate::gui::Message;
-use crate::image::{SETTINGS, EXPAND, COLLAPSE};
 use crate::state::{pane, Screen, State};
 use crate::theme::{style, GRAY, ORANGE, WHITE};
 use iced::widget::button::{Status, Style};
 use iced::widget::{button, checkbox, column, row, svg, Column, Row};
 use iced::{Fill, Right, Theme};
 use std::mem::discriminant;
+use crate::image::gui::{COLLAPSE, EXPAND, SETTINGS};
 
 pub fn navigation_bar(state: &State) -> Row<'_, Message> {
     // Right-side fullscreen toggle and settings button
@@ -19,7 +19,7 @@ pub fn navigation_bar(state: &State) -> Row<'_, Message> {
     let settings_button = button(
         svg(svg::Handle::from_memory(SETTINGS)).width(16).height(16).style(style::icon_button)
     )
-        .on_press(Message::ShowSettingsMenu(!state.show_settings_menu))
+        .on_press(Message::NavigateTo(Screen::Settings))
         .style(default_style);
 
     let settings_menu: Column<'_, Message> = if state.show_settings_menu {
@@ -41,8 +41,18 @@ pub fn navigation_bar(state: &State) -> Row<'_, Message> {
         column![]
     };
 
+    // Left: dynamic buttons for custom screens
+    let mut custom_buttons: Vec<iced::Element<'_, Message>> = Vec::new();
+    for (idx, scr) in state.custom_screens.iter().enumerate() {
+        let is_selected = matches!(state.active_screen, Screen::Commander) && state.selected_custom_screen == idx;
+        let style_fn = if is_selected { selected_style } else { default_style };
+        custom_buttons.push(
+            column![button(scr.name.as_ref()).on_press(Message::NavigateToCustomScreen(idx)).style(style_fn)].padding(5).into()
+        );
+    }
+
     row![
-        navigation_button(state, "CMDR", Screen::Commander),
+        row(custom_buttons),
         navigation_button(state, "MATERIALS", Screen::Materials),
         navigation_button(state, "SHIP LOCKER", Screen::ShipLocker),
         navigation_button(state, "MARKET", Screen::Market),

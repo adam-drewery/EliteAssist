@@ -1,5 +1,4 @@
-mod gui;
-pub use gui::{SETTINGS, EXPAND, COLLAPSE};
+pub mod gui;
 pub mod engineering;
 pub mod ship;
 pub mod ship_modules;

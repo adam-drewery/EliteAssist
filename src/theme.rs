@@ -31,11 +31,12 @@ pub fn theme(_state: &State) -> Theme {
 }
 
 pub mod style {
-    
-    use crate::theme::{BACKGROUND, DARK_GRAY, ORANGE, WHITE};
+
+    use crate::theme::{BACKGROUND, DARK_GRAY, GRAY, ORANGE, WHITE};
     use iced::border::radius;
     use iced::Background::Color;
     use iced::{Border, Theme};
+    use iced::widget::button::Status;
 
     fn orange_border() -> Border {
         Border {
@@ -58,6 +59,34 @@ pub mod style {
         iced::widget::container::Style {
             background: Some(DARK_GRAY.into()),
             text_color: Some(WHITE),
+            border: Default::default(),
+            shadow: Default::default(),
+        }
+    }
+
+    pub fn selected_button(_theme: &Theme, status: Status) -> iced::widget::button::Style {
+        iced::widget::button::Style {
+            background: Some(DARK_GRAY.into()),
+            text_color: match status {
+                Status::Active => ORANGE,
+                Status::Hovered => WHITE,
+                Status::Pressed => ORANGE,
+                Status::Disabled => DARK_GRAY,
+            },
+            border: orange_border(),
+            shadow: Default::default(),
+        }
+    }
+
+    pub fn button(_theme: &Theme, status: Status) -> iced::widget::button::Style {
+        iced::widget::button::Style {
+            background: Some(DARK_GRAY.into()),
+            text_color: match status {
+                Status::Active => GRAY,
+                Status::Hovered => WHITE,
+                Status::Pressed => ORANGE,
+                Status::Disabled => GRAY,
+            },
             border: Default::default(),
             shadow: Default::default(),
         }
