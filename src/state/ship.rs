@@ -150,53 +150,12 @@ pub struct ShipLockerItem {
 }
 
 pub enum SlotType {
-    Hardpoints { number: u8, size: u8 },
-    CoreInternal(CoreInternalType),
-    OptionalInternal(OptionalInternalType),
-    Cosmetic(CosmeticType),
-    Miscellaneous(MiscellaneousType),
+    Hardpoints { size: u8 },
+    CoreInternal,
+    OptionalInternal,
+    Cosmetic,
+    Miscellaneous,
     Unknown,
-}
-
-pub enum CoreInternalType {
-    MainEngines,
-    FrameShiftDrive,
-    PowerDistributor,
-    PowerPlant,
-    LifeSupport,
-    Radar,
-    FuelTank,
-    Armour,
-}
-
-pub enum OptionalInternalType {
-    Optional { number: u8, size: u8 },
-    Military(u8),
-}
-
-pub enum CosmeticType {
-    ShipID,
-    Bobble(u8),
-    ShipKitSpoiler,
-    ShipKitWings,
-    ShipKitTail,
-    ShipKitBumper,
-    VesselVoice,
-    PaintJob,
-    Decal(u8),
-    ShipName(u8),
-    WeaponColour,
-    EngineColour,
-}
-
-pub enum MiscellaneousType {
-    ColonisationSuite,
-    ShipCockpit,
-    PlanetaryApproachSuite,
-    DataLinkScanner,
-    CodexScanner,
-    DiscoveryScanner,
-    CargoHatch,
 }
 
 impl From<&str> for SlotType {
@@ -205,28 +164,17 @@ impl From<&str> for SlotType {
 
         // Compile regular expressions only once using lazy_static
         use once_cell::sync::Lazy;
-        static SLOT_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"Slot(\d+)_Size(\d+)").unwrap());
         static NUMBERED_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"(Military|Decal|ShipName|ShipID|Bobble)(\d+)").unwrap());
         static HARDPOINT_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"(Tiny|Small|Medium|Large|Huge)Hardpoint(\d+)").unwrap());
 
-        // Handle optional slots like "Slot01_Size8"
-        if let Some(captures) = SLOT_REGEX.captures(&value) {
-            return SlotType::OptionalInternal(
-                OptionalInternalType::Optional {
-                    number: captures[1].parse().unwrap(),
-                    size: captures[2].parse().unwrap(),
-            });
-        }
-
         // Handle numbered slots like "Military02", "Decal01", etc
         if let Some(captures) = NUMBERED_REGEX.captures(&value) {
-            let number = captures[2].parse().unwrap();
             return match &captures[1] {
-                "Military" => SlotType::OptionalInternal(OptionalInternalType::Military(number)),
-                "Decal" => SlotType::Cosmetic(CosmeticType::Decal(number)),
-                "ShipName" => SlotType::Cosmetic(CosmeticType::ShipName(number)),
-                "ShipID" => SlotType::Cosmetic(CosmeticType::ShipID),
-                "Bobble" => SlotType::Cosmetic(CosmeticType::Bobble(number)),
+                "Military" => SlotType::OptionalInternal,
+                "Decal" => SlotType::Cosmetic,
+                "ShipName" => SlotType::Cosmetic,
+                "ShipID" => SlotType::Cosmetic,
+                "Bobble" => SlotType::Cosmetic,
                 _ => unreachable!()
             };
         }
@@ -241,39 +189,36 @@ impl From<&str> for SlotType {
                 "Huge" => 4,
                 _ => panic!("Unknown hardpoint size: {}", value)
             };
-            return SlotType::Hardpoints {
-                number: captures[2].parse().unwrap(),
-                size,
-            };
+            return SlotType::Hardpoints { size };
         }
                 
         // Try to match enum variant name directly
         match value.as_ref() {
-            "MainEngines" => SlotType::CoreInternal(CoreInternalType::MainEngines),
-            "FrameShiftDrive" => SlotType::CoreInternal(CoreInternalType::FrameShiftDrive),
-            "PowerDistributor" => SlotType::CoreInternal(CoreInternalType::PowerDistributor),
-            "PowerPlant" => SlotType::CoreInternal(CoreInternalType::PowerPlant),
-            "LifeSupport" => SlotType::CoreInternal(CoreInternalType::LifeSupport),
-            "Radar" => SlotType::CoreInternal(CoreInternalType::Radar),
-            "Armour" => SlotType::CoreInternal(CoreInternalType::Armour),
-            "FuelTank" => SlotType::CoreInternal(CoreInternalType::FuelTank),
+            "MainEngines" => SlotType::CoreInternal,
+            "FrameShiftDrive" => SlotType::CoreInternal,
+            "PowerDistributor" => SlotType::CoreInternal,
+            "PowerPlant" => SlotType::CoreInternal,
+            "LifeSupport" => SlotType::CoreInternal,
+            "Radar" => SlotType::CoreInternal,
+            "Armour" => SlotType::CoreInternal,
+            "FuelTank" => SlotType::CoreInternal,
             
-            "CargoHatch" => SlotType::Miscellaneous(MiscellaneousType::CargoHatch),
-            "ShipCockpit" => SlotType::Miscellaneous(MiscellaneousType::ShipCockpit),
-            "PlanetaryApproachSuite" => SlotType::Miscellaneous(MiscellaneousType::PlanetaryApproachSuite),
-            "DataLinkScanner" => SlotType::Miscellaneous(MiscellaneousType::DataLinkScanner),
-            "CodexScanner" => SlotType::Miscellaneous(MiscellaneousType::CodexScanner),
-            "DiscoveryScanner" => SlotType::Miscellaneous(MiscellaneousType::DiscoveryScanner),
-            "ColonisationSuite" => SlotType::Miscellaneous(MiscellaneousType::ColonisationSuite),
+            "CargoHatch" => SlotType::Miscellaneous,
+            "ShipCockpit" => SlotType::Miscellaneous,
+            "PlanetaryApproachSuite" => SlotType::Miscellaneous,
+            "DataLinkScanner" => SlotType::Miscellaneous,
+            "CodexScanner" => SlotType::Miscellaneous,
+            "DiscoveryScanner" => SlotType::Miscellaneous,
+            "ColonisationSuite" => SlotType::Miscellaneous,
             
-            "WeaponColour" => SlotType::Cosmetic(CosmeticType::WeaponColour),
-            "EngineColour" => SlotType::Cosmetic(CosmeticType::EngineColour),
-            "PaintJob" => SlotType::Cosmetic(CosmeticType::PaintJob),
-            "ShipKitSpoiler" => SlotType::Cosmetic(CosmeticType::ShipKitSpoiler),
-            "ShipKitWings" => SlotType::Cosmetic(CosmeticType::ShipKitWings),
-            "ShipKitTail" => SlotType::Cosmetic(CosmeticType::ShipKitTail),
-            "ShipKitBumper" => SlotType::Cosmetic(CosmeticType::ShipKitBumper),
-            "VesselVoice" => SlotType::Cosmetic(CosmeticType::VesselVoice),
+            "WeaponColour" => SlotType::Cosmetic,
+            "EngineColour" => SlotType::Cosmetic,
+            "PaintJob" => SlotType::Cosmetic,
+            "ShipKitSpoiler" => SlotType::Cosmetic,
+            "ShipKitWings" => SlotType::Cosmetic,
+            "ShipKitTail" => SlotType::Cosmetic,
+            "ShipKitBumper" => SlotType::Cosmetic,
+            "VesselVoice" => SlotType::Cosmetic,
             _ => {
                 warn!("Unknown module slot: {}", value);
                 SlotType::Unknown
@@ -380,9 +325,9 @@ impl From<event::Loadout> for ShipLoadout {
                 SlotType::Hardpoints { size, .. } => {
                     if *size == 0 { utilities.push(module); } else { hardpoints.push(module); }
                 }
-                SlotType::CoreInternal(_) => core_internals.push(module),
-                SlotType::OptionalInternal(_) => optional_internals.push(module),
-                SlotType::Cosmetic(_) | SlotType::Miscellaneous(_) | SlotType::Unknown => {}
+                SlotType::CoreInternal => core_internals.push(module),
+                SlotType::OptionalInternal => optional_internals.push(module),
+                SlotType::Cosmetic | SlotType::Miscellaneous | SlotType::Unknown => {}
             }
         }
 

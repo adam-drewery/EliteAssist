@@ -30,9 +30,9 @@ async fn test_get_bodies() {
     println!("Sol bodies count: {}", bodies.bodies.len());
     assert!(!bodies.bodies.is_empty());
     // Sol should have many bodies including Earth
-    let earth = bodies.bodies.iter().find(|b| b.name == "Earth").unwrap();
-    assert_eq!(earth.name, "Earth");
-    assert_eq!(earth.body_type, "Planet");
+    let earth = bodies.bodies.iter().find(|b| b.name.as_ref() == "Earth").unwrap();
+    assert_eq!(earth.name.as_ref(), "Earth");
+    assert_eq!(earth.body_type.as_ref(), "Planet");
 
 }
 
@@ -41,7 +41,7 @@ async fn test_get_stations() {
     let client = EdsmClient::default();
     let stations = client.get_stations("Sol").await.unwrap();
     println!("Sol stations count: {}", stations.stations.len());
-    assert_eq!(stations.name, "Sol");
+    assert_eq!(stations.name.as_ref(), "Sol");
     if !stations.stations.is_empty() {
         let first_station = &stations.stations[0];
         assert!(!first_station.name.is_empty());

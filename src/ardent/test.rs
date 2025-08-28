@@ -76,7 +76,7 @@ async fn test_get_commodity_info() {
     let info = client.get_commodity_info("Gold").await.unwrap();
 
     println!("Gold commodity info: {:?}", info);
-    assert_eq!(info.commodity_name, "gold");
+    assert_eq!(info.commodity_name.as_ref(), "gold");
 }
 
 #[tokio::test]
@@ -111,7 +111,7 @@ async fn test_get_system_info() {
     let info = client.get_system_info("Sol").await.unwrap();
 
     println!("Sol system info: {:?}", info.system_address);
-    assert_eq!(info.system_name, "Sol");
+    assert_eq!(info.system_name.as_ref(), "Sol");
     assert_ne!(info.system_address, 0);
 
 }
@@ -235,7 +235,7 @@ async fn test_get_system_info_by_address() {
     let info = client.get_system_info_by_address(10477373803).await.unwrap();
     
     println!("Sol system info by address: {:?}", info.system_name);
-    assert_eq!(info.system_name, "Sol");
+    assert_eq!(info.system_name.as_ref(), "Sol");
     assert_eq!(info.system_address, 10477373803);
 }
 
@@ -274,7 +274,7 @@ async fn test_get_system_commodity_data() {
 
     let data = &data[0];
 
-    assert_eq!(data.commodity_name, "gold");
+    assert_eq!(data.commodity_name.as_ref(), "gold");
 }
 
 #[tokio::test]
@@ -345,7 +345,7 @@ async fn test_get_market_commodity_data() {
 
         // Basic invariants
         assert_eq!(data.market_id, market_id);
-        assert_eq!(data.commodity_name, "gold");
+        assert_eq!(data.commodity_name.as_ref(), "gold");
     } else {
         // If no Gold export data is available, avoid failing the test to reduce flakiness
         println!("No Gold export orders available to test get_market_commodity_data");
