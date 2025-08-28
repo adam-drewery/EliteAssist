@@ -23,7 +23,7 @@ pub fn market(state: &State) -> Row<'_, Message> {
             .padding(2)
             .width(Fill),
             scrollable(column(state.market.groups.iter().flat_map(|group| {
-                let mut rows = vec![text(&group.name)
+                let mut rows = vec![text(group.name.as_ref())
                     .size(20)
                     .color(GRAY)
                     .align_x(Left)
@@ -59,7 +59,7 @@ fn cell<'a>(value: impl text::IntoFragment<'a>) -> Element<'a, Message> {
 }
 
 fn name_cell(item: &MarketItem) -> Element<'_, Message> {
-    text(&item.name)
+    text(item.name.as_ref())
         .size(16)
         .color(if item.rare { YELLOW } else { ORANGE })
         .width(Fill)

@@ -26,17 +26,16 @@ fn factions(state: &State) -> Column<'_, Message> {
 
     let mut result = column![sub_header("Factions")];
 
-    // todo: why do i have to clone this, i don't wanna
     for faction in &state.location.factions {
         let states =  {
-            let state_names: Vec<String> = faction.active_states.iter().map(|s| s.state.clone()).collect();
+            let state_names: Vec<&str> = faction.active_states.iter().map(|s| s.state.as_ref()).collect();
             format!("{} | {} | {}", faction.allegiance, faction.government, state_names.join(" | "))
         };
 
         result = result.push(
             column![
                 row![
-                    column![text(&faction.name).font(EUROSTILE)],
+                    column![text(faction.name.as_ref()).font(EUROSTILE)],
                     column![].width(Fill),
                     column![text(states).color(GRAY).font(EUROSTILE)],
                 ]
@@ -64,11 +63,11 @@ fn powerplay(state: &State) -> Column<'_, Message> {
 fn system(state: &State) -> Column<'_, Message> {
     column![
         sub_header("System"),
-        details("Government", &state.location.system_government),
-        details("Economy", &state.location.system_economy),
+        details("Government", state.location.system_government.as_ref()),
+        details("Economy", state.location.system_economy.as_ref()),
         details("Population", state.location.population.to_string().separate_with_commas()),
         details("Security", &state.location.system_security.replace(" Security", "")),
-        details("Allegiance", &state.location.system_allegiance),
+        details("Allegiance", state.location.system_allegiance.as_ref()),
     ]
 }
 
@@ -89,7 +88,7 @@ pub fn route(state: &State) -> Column<'_, Message> {
             let distance = &prev_step.distance_to(&route_step);
 
             let mut icons_column = column![];
-            let mut star_type_text = text(&route_step.star_class);
+            let mut star_type_text = text(route_step.star_class.as_ref());
 
             if route_step.is_fuel_star() {
                 icons_column = icons_column.push(
@@ -106,7 +105,7 @@ pub fn route(state: &State) -> Column<'_, Message> {
                     column![
                         row![
                             container(row![
-                                column![text(&route_step.star_system)],
+                                column![text(route_step.star_system.as_ref())],
                                 column![].width(Fill),
                                 column![star_type_text],
                                 icons_column,

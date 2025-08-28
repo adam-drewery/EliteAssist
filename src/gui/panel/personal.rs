@@ -11,21 +11,21 @@ use iced::{Element, Fill};
 pub fn loadout(state: &State) -> Column<'_, Message> {
     column![
         sub_header("Suit"),
-        details("Name", &state.suit_loadout.suit_name),
-        details("Loadout", &state.suit_loadout.loadout_name),
+        details("Name", state.suit_loadout.suit_name.as_ref()),
+        details("Loadout", state.suit_loadout.loadout_name.as_ref()),
         column(
             state.suit_loadout.suit_mods.iter().map(|mod_name| {
-                details("Modification", mod_name).into()
+                details("Modification", mod_name.as_ref()).into()
             })
         ).padding(8),
         sub_header("Weapons"),
         column(
             state.suit_loadout.modules.iter().map(|module| {
                 column![
-                    details(&module.slot_name, &module.module_name),
+                    details(&module.slot_name, module.module_name.as_ref()),
                     column(
                         module.weapon_mods.iter().map(|mod_name| {
-                            details("Modification", mod_name).into()
+                            details("Modification", mod_name.as_ref()).into()
                         })
                     ).padding([0, 16])
                 ].into()
@@ -72,7 +72,7 @@ pub fn ranks(state: &State) -> Column<'_, Message> {
         ].padding(8)
 }
 
-fn rank(title: &str, rank: u8, progress: u8, lookup: fn(&String) -> Option<&Rank>) -> Column<'_, Message> {
+fn rank(title: &str, rank: u8, progress: u8, lookup: fn(&str) -> Option<&Rank>) -> Column<'_, Message> {
     let rank_name = match lookup(&rank.to_string()) {
         None => String::from("Unknown"),
         Some(title) => title.name.to_string()
@@ -95,7 +95,7 @@ fn rank(title: &str, rank: u8, progress: u8, lookup: fn(&String) -> Option<&Rank
         .padding(4)
 }
 
-fn superpower_rank(title: &str, rank: Option<u8>, progress: Option<u8>, reputation: f64, lookup: Option<fn(&String) -> Option<&Rank>>) -> Column<'_, Message> {
+fn superpower_rank(title: &str, rank: Option<u8>, progress: Option<u8>, reputation: f64, lookup: Option<fn(&str) -> Option<&Rank>>) -> Column<'_, Message> {
     let rank_name = match lookup {
         None => "".to_string(),
         Some(func) => {
@@ -168,11 +168,11 @@ pub fn messages(state: &State) -> Column<'_, Message> {
                 .map(|item| {
                     column![
                         row![
-                            column![text(&item.from).size(16).color(ORANGE)],
+                            column![text(item.from.as_ref()).size(16).color(ORANGE)],
                             column![].width(12),
-                            column![text(&item.time_display).size(12).color(GRAY)].padding(3),
+                            column![text(item.time_display.as_ref()).size(12).color(GRAY)].padding(3),
                         ],
-                        row![text(&item.text).color(WHITE).font(EUROSTILE).size(16)]
+                        row![text(item.text.as_ref()).color(WHITE).font(EUROSTILE).size(16)]
                     ].width(Fill)
                 })
                 .map(Element::from)
@@ -216,7 +216,7 @@ pub fn missions(state: &State) -> Column<'_, Message> {
     column![
         scrollable(column(state.missions.iter().map(|m| {
             column![
-                details(&m.faction, &m.name)
+                details(&m.faction, m.name.as_ref())
             ]
         }).map(Element::from)))
     ].height(Fill)

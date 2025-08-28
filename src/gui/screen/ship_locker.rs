@@ -31,7 +31,7 @@ pub fn locker_item_list<'a>(title: &'a str, items: &'a [ShipLockerItem]) -> Colu
 
                     let content = row![
                         text(item.count).size(16).color(YELLOW).width(36),
-                        text(&item.name).color(color).size(16).font(EUROSTILE),
+                        text(item.name.as_ref()).color(color).size(16).font(EUROSTILE),
                     ]
                     .padding(2);
                 
@@ -39,7 +39,7 @@ pub fn locker_item_list<'a>(title: &'a str, items: &'a [ShipLockerItem]) -> Colu
                         column(
                             item.locations
                                 .iter()
-                                .map(|loc| row![text(loc).size(16)].into())
+                                .map(|loc| row![text(loc.as_ref()).size(16)].into())
                                 .collect::<Vec<Element<Message>>>()
                         )
                         .into()

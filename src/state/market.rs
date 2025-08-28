@@ -7,12 +7,12 @@ pub struct Market {
 }
 
 pub struct MarketItemGroup {
-    pub name: String,
+    pub name: Box<str>,
     pub items: Vec<MarketItem>,
 }
 
 pub struct MarketItem {
-    pub name: String,
+    pub name: Box<str>,
     pub buy_price: u64,
     pub sell_price: u64,
     pub stock: u64,
@@ -55,7 +55,7 @@ impl From<event::Market> for Market {
 impl From<event::MarketItem> for MarketItem {
     fn from(value: event::MarketItem) -> Self {
         MarketItem {
-            name: value.name_localised.unwrap_or(title_case(&value.name)),
+            name: value.name_localised.unwrap_or(title_case(value.name.as_ref()).into()),
             buy_price: value.buy_price,
             sell_price: value.sell_price,
             demand: value.demand,

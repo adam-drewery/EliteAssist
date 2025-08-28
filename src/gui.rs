@@ -118,7 +118,7 @@ fn loading_bar(state: &State) -> Element<'_, Message> {
             row![
                 column![text("Loading...").color(ORANGE).size(32)],
                 column![].width(Fill),
-                column![text(&state.latest_message_timestamp_formatted).color(ORANGE).size(32)]
+                column![text(state.latest_message_timestamp_formatted.as_ref()).color(ORANGE).size(32)]
 
             ]
         ]

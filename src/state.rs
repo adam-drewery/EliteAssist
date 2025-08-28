@@ -38,10 +38,10 @@ pub struct State {
     pub show_settings_menu: bool,
     pub fullscreen: bool,
     pub enabled_panes: Option<Vec<pane::Type>>,
-    pub commander_name: String,
-    pub credits: String,
-    pub current_system: String,
-    pub current_body: String,
+    pub commander_name: Box<str>,
+    pub credits: Box<str>,
+    pub current_system: Box<str>,
+    pub current_body: Box<str>,
     pub location: CurrentLocation,
     pub ship_locker: ShipLocker,
     pub ship_loadout: ShipLoadout,
@@ -57,15 +57,15 @@ pub struct State {
     pub engineers: Vec<Engineer>,
     pub nav_route: Vec<NavRouteStep>,
     pub missions: Vec<Mission>,
-    pub combat_bonds: HashMap<String, i64>,
-    pub bounties: HashMap<String, i64>,
-    pub discoveries: HashMap<String, i64>,
+    pub combat_bonds: HashMap<Box<str>, i64>,
+    pub bounties: HashMap<Box<str>, i64>,
+    pub discoveries: HashMap<Box<str>, i64>,
     pub progress: Rank,
 
     pub journal_loaded: bool,
     pub first_message_timestamp: i64,
     pub latest_message_timestamp: i64,
-    pub latest_message_timestamp_formatted: String
+    pub latest_message_timestamp_formatted: Box<str>
 }
 
 #[derive(Clone, Debug, Default, Deserialize)]
@@ -87,10 +87,10 @@ impl Default for State {
             show_settings_menu: false,
             fullscreen: false,
             enabled_panes: None,
-            commander_name: String::new(),
-            credits: String::new(),
-            current_system: String::new(),
-            current_body: String::new(),
+            commander_name: String::new().into(),
+            credits: String::new().into(),
+            current_system: String::new().into(),
+            current_body: String::new().into(),
             location: Default::default(),
             ship_locker: Default::default(),
             ship_loadout: Default::default(),
@@ -113,7 +113,7 @@ impl Default for State {
             journal_loaded: false,
             first_message_timestamp: 0,
             latest_message_timestamp: 0,
-            latest_message_timestamp_formatted: String::new(),
+            latest_message_timestamp_formatted: String::new().into(),
         };
 
         // Attempt to load persisted settings and apply
@@ -201,7 +201,7 @@ impl State {
                 }
 
                 return query::system(
-                    self.current_system.clone(),
+                    self.current_system.as_ref(),
                     self.ship_loadout.max_jump_range);
             }
 
@@ -325,7 +325,7 @@ impl State {
                     Event::MultiSellExplorationData(_) => {}
 
                     Event::RedeemVoucher(e) => {
-                        let target = match e.r#type.as_str() {
+                        let target = match e.r#type.as_ref() {
                             "CombatBond" => &mut self.combat_bonds,
                             "bounty" => &mut self.bounties,
                             "codex" => &mut self.discoveries,
@@ -414,13 +414,13 @@ impl State {
                             }
                         }
 
-                        self.current_system = e.star_system.to_string();
-                        self.current_body = "".to_string();
+                        self.current_system = e.star_system.clone();
+                        self.current_body = String::new().into();
                         self.location = e.into();
 
                         if self.journal_loaded {
                             return query::system(
-                                self.current_system.clone(),
+                                self.current_system.as_ref(),
                                 self.ship_loadout.max_jump_range);
                         }
                     }
@@ -541,7 +541,7 @@ impl State {
                     Event::Location(e) => {
                         self.current_system = e.star_system.clone();
 
-                        if e.body_type != "Star" {
+                        if e.body_type.as_ref() != "Star" {
                             self.current_body = e.body.clone();
                         }
 
@@ -597,12 +597,12 @@ impl State {
                     }
 
                     Event::Commander(commander) => {
-                        self.commander_name = "CMDR ".to_owned() + &commander.name;
+                        self.commander_name = ("CMDR ".to_string() + commander.name.as_ref()).into();
                     }
 
                     Event::Status(e) => {
                         if let Some(balance) = e.balance {
-                            self.credits = balance.separate_with_commas() + " CR";
+                            self.credits = (balance.separate_with_commas() + " CR").into();
                         }
                         if let Some(legal_state) = e.legal_state {
                             self.crime.legal_state = legal_state;
@@ -676,7 +676,7 @@ impl State {
                             self.latest_message_timestamp_formatted = format::prettify_date(&e.timestamp)
                         }
 
-                        if e.channel != "npc" && e.channel != "starsystem" {
+                        if e.channel.as_ref() != "npc" && e.channel.as_ref() != "starsystem" {
                             self.messages.push(e.into());
                         }
                     }

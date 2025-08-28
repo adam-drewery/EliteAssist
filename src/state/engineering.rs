@@ -2,9 +2,9 @@ use crate::journal::event;
 
 #[derive(Default)]
 pub struct Engineer {
-    pub engineer: String,
+    pub engineer: Box<str>,
     pub engineer_id: u64,
-    pub progress: String,
+    pub progress: Box<str>,
     pub rank_progress: u64,
     pub rank: u64,
 }

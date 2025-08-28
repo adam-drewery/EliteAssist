@@ -12,7 +12,7 @@ use thousands::Separable;
 
 pub fn ship_details(state: &State) -> Column<'_, Message> {
 
-    let ship_image_bytes = lookup::ship_image_bytes(state.ship_loadout.ship_type.as_str()).unwrap_or_default();
+    let ship_image_bytes = lookup::ship_image_bytes(state.ship_loadout.ship_type.as_ref()).unwrap_or_default();
     let ship_image = Handle::from_bytes(ship_image_bytes);
 
     column![
@@ -36,12 +36,12 @@ pub fn ship_details(state: &State) -> Column<'_, Message> {
 fn ship_title(ship_loadout: &state::ShipLoadout) -> Row<'_, Message> {
     row![
         column![
-            text(&ship_loadout.ship_name)
+            text(ship_loadout.ship_name.as_ref())
 
                 .color(ORANGE)
                 .size(30)
                 .align_x(Left),
-            text(&ship_loadout.ship_type)
+            text(ship_loadout.ship_type.as_ref())
 
                 .color(ORANGE)
                 .size(16)
@@ -49,7 +49,7 @@ fn ship_title(ship_loadout: &state::ShipLoadout) -> Row<'_, Message> {
         ],
         column![].width(Fill),
         column![
-            text(&ship_loadout.ship_ident)
+            text(ship_loadout.ship_ident.as_ref())
 
                 .color(GRAY)
                 .size(30)

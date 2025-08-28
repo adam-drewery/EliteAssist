@@ -11,17 +11,17 @@ pub struct Materials {
 
 #[derive(Clone)]
 pub struct MaterialGroup {
-    pub name: String,
+    pub name: Box<str>,
     pub materials: Vec<Material>,
 }
 
 #[derive(Clone)]
 pub struct Material {
-    pub id: String,
-    pub name: String,
+    pub id: Box<str>,
+    pub name: Box<str>,
     pub rarity: u8,
     pub count: u64,
-    pub locations: Vec<String>,
+    pub locations: Vec<Box<str>>,
 }
 
 impl From<event::Materials> for Materials {
@@ -29,27 +29,27 @@ impl From<event::Materials> for Materials {
         // Build a name->count map from the event
         let count_map: HashMap<String, u64> = value
             .raw
-            .iter()
-            .map(|m| (m.name.clone(), m.count))
-            .chain(value.manufactured.iter().map(|m| (m.name.clone(), m.count)))
-            .chain(value.encoded.iter().map(|m| (m.name.clone(), m.count)))
+            .into_iter()
+            .map(|m| (m.name.to_string(), m.count))
+            .chain(value.manufactured.into_iter().map(|m| (m.name.to_string(), m.count)))
+            .chain(value.encoded.into_iter().map(|m| (m.name.to_string(), m.count)))
             .collect();
 
         // Start with the canonical materials list, then apply counts where present
         let mut materials = all_materials().clone();
         for group in &mut materials.raw {
             for material in &mut group.materials {
-                material.count = *count_map.get(&material.id).unwrap_or(&0);
+                material.count = *count_map.get(material.id.as_ref()).unwrap_or(&0);
             }
         }
         for group in &mut materials.manufactured {
             for material in &mut group.materials {
-                material.count = *count_map.get(&material.id).unwrap_or(&0);
+                material.count = *count_map.get(material.id.as_ref()).unwrap_or(&0);
             }
         }
         for group in &mut materials.encoded {
             for material in &mut group.materials {
-                material.count = *count_map.get(&material.id).unwrap_or(&0);
+                material.count = *count_map.get(&material.id.to_string()).unwrap_or(&0);
             }
         }
         materials

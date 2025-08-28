@@ -279,7 +279,7 @@ impl ArdentClient {
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct Version {
-    pub version: String,
+    pub version: Box<str>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -291,7 +291,7 @@ pub struct Stats {
     pub trade: TradeStats,
     #[serde(rename = "updatedInLast24Hours")]
     pub updated_in_last_24_hours: u64,
-    pub timestamp: String,
+    pub timestamp: Box<str>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -314,11 +314,11 @@ pub struct TradeStats {
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct StationEconomiesStats {
-    pub primary: std::collections::HashMap<String, u64>,
-    pub secondary: std::collections::HashMap<String, u64>,
+    pub primary: std::collections::HashMap<Box<str>, u64>,
+    pub secondary: std::collections::HashMap<Box<str>, u64>,
     #[serde(rename = "fleetCarriers")]
     pub fleet_carriers: u64,
-    pub timestamp: String,
+    pub timestamp: Box<str>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -363,13 +363,13 @@ pub struct StationTypeStats {
     #[serde(rename = "stationTypes")]
     pub station_types: StationTypes,
     pub total: i64,
-    pub timestamp: String,
+    pub timestamp: Box<str>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct CommodityReport {
     #[serde(rename = "commodityName")]
-    pub commodity_name: String,
+    pub commodity_name: Box<str>,
     #[serde(rename = "maxBuyPrice")]
     pub max_buy_price: Option<u64>,
     #[serde(rename = "minBuyPrice")]
@@ -391,26 +391,26 @@ pub struct CommodityReport {
     pub rare_market_id: Option<u64>,
     #[serde(rename = "rareMaxCount")]
     pub rare_max_count: Option<u64>,
-    pub timestamp: String,
+    pub timestamp: Box<str>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct CommodityInfo {
     #[serde(rename = "commodityName")]
-    pub commodity_name: String,
+    pub commodity_name: Box<str>,
     // Add more fields as needed based on the actual API response
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct Commodity {
     #[serde(rename = "commodityName")]
-    pub commodity_name: String,
+    pub commodity_name: Box<str>,
     #[serde(rename = "marketId")]
     pub market_id: u64,
     #[serde(rename = "stationName")]
-    pub station_name: String,
+    pub station_name: Box<str>,
     #[serde(rename = "stationType")]
-    pub station_type: String,
+    pub station_type: Box<str>,
     #[serde(rename = "distanceToArrival")]
     pub distance_to_arrival: f64,
     #[serde(rename = "maxLandingPadSize")]
@@ -418,11 +418,11 @@ pub struct Commodity {
     #[serde(rename = "bodyId")]
     pub body_id: Option<u64>,
     #[serde(rename = "bodyName")]
-    pub body_name: Option<String>,
+    pub body_name: Option<Box<str>>,
     #[serde(rename = "systemAddress")]
     pub system_address: u64,
     #[serde(rename = "systemName")]
-    pub system_name: String,
+    pub system_name: Box<str>,
     #[serde(rename = "systemX")]
     pub system_x: f64,
     #[serde(rename = "systemY")]
@@ -433,7 +433,7 @@ pub struct Commodity {
     pub buy_price: u32,
     pub demand: u32,
 
-    // todo: this doesn't work because presumably PHP jank is returning empty values as an empty string.
+    // this doesn't work because presumably PHP jank is returning empty values as an empty Box<str>.
     // #[serde(rename = "demandBracket")]
     // pub demand_bracket: u32,
     #[serde(rename = "meanPrice")]
@@ -442,18 +442,18 @@ pub struct Commodity {
     pub sell_price: u32,
     pub stock: u32,
 
-    // todo: this also probably doesn't work.
+    // this also probably doesn't work.
     // #[serde(rename = "stockBracket")]
     // pub stock_bracket: u32,
 
     #[serde(rename = "updatedAt")]
-    pub updated_at: String,
+    pub updated_at: Box<str>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct MarketCommodityData {
     #[serde(rename = "commodityName")]
-    pub commodity_name: String,
+    pub commodity_name: Box<str>,
     #[serde(rename = "marketId")]
     pub market_id: u64,
     #[serde(rename = "buyPrice")]
@@ -469,20 +469,20 @@ pub struct MarketCommodityData {
     #[serde(rename = "stockBracket")]
     pub stock_bracket: u32,
     #[serde(rename = "updatedAt")]
-    pub updated_at: String,
+    pub updated_at: Box<str>,
 }
 
 // all the actual commodity details can be null in here for some reason.
 #[derive(Debug, Clone, Deserialize)]
 pub struct SystemCommodity {
     #[serde(rename = "commodityName")]
-    pub commodity_name: Option<String>,
+    pub commodity_name: Option<Box<str>>,
     #[serde(rename = "marketId")]
     pub market_id: Option<u64>,
     #[serde(rename = "stationName")]
-    pub station_name: String,
+    pub station_name: Box<str>,
     #[serde(rename = "stationType")]
-    pub station_type: String,
+    pub station_type: Box<str>,
     #[serde(rename = "distanceToArrival")]
     pub distance_to_arrival: f64,
     #[serde(rename = "maxLandingPadSize")]
@@ -490,11 +490,11 @@ pub struct SystemCommodity {
     #[serde(rename = "bodyId")]
     pub body_id: i64,
     #[serde(rename = "bodyName")]
-    pub body_name: String,
+    pub body_name: Box<str>,
     #[serde(rename = "systemAddress")]
     pub system_address: i64,
     #[serde(rename = "systemName")]
-    pub system_name: String,
+    pub system_name: Box<str>,
     #[serde(rename = "systemX")]
     pub system_x: i64,
     #[serde(rename = "systemY")]
@@ -514,7 +514,7 @@ pub struct SystemCommodity {
     #[serde(rename = "stockBracket")]
     pub stock_bracket: Option<u32>,
     #[serde(rename = "updatedAt")]
-    pub updated_at: Option<String>,
+    pub updated_at: Option<Box<str>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -522,7 +522,7 @@ pub struct SystemInfo {
     #[serde(rename = "systemAddress")]
     pub system_address: i64,
     #[serde(rename = "systemName")]
-    pub system_name: String,
+    pub system_name: Box<str>,
     #[serde(rename = "systemX")]
     pub system_x: i64,
     #[serde(rename = "systemY")]
@@ -530,9 +530,9 @@ pub struct SystemInfo {
     #[serde(rename = "systemZ")]
     pub system_z: i64,
     #[serde(rename = "systemSector")]
-    pub system_sector: String,
+    pub system_sector: Box<str>,
     #[serde(rename = "updatedAt")]
-    pub updated_at: String,
+    pub updated_at: Box<str>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -540,7 +540,7 @@ pub struct NearbySystem {
     #[serde(rename = "systemAddress")]
     pub address: u64,
     #[serde(rename = "systemName")]
-    pub name: String,
+    pub name: Box<str>,
     #[serde(rename = "systemX")]
     pub x: f64,
     #[serde(rename = "systemY")]
@@ -548,9 +548,9 @@ pub struct NearbySystem {
     #[serde(rename = "systemZ")]
     pub z: f64,
     #[serde(rename = "systemSector")]
-    pub sector: String,
+    pub sector: Box<str>,
     #[serde(rename = "updatedAt")]
-    pub updated_at: String,
+    pub updated_at: Box<str>,
     pub distance: f64,
 }
 
@@ -559,19 +559,19 @@ pub struct NearestService {
     #[serde(rename = "marketId")]
     pub market_id: u64,
     #[serde(rename = "stationName")]
-    pub station_name: String,
+    pub station_name: Box<str>,
     #[serde(rename = "distanceToArrival")]
     pub distance_to_arrival: f64,
     #[serde(rename = "stationType")]
-    pub station_type: String,
-    pub allegiance: Option<String>,
-    pub government: Option<String>,
+    pub station_type: Box<str>,
+    pub allegiance: Option<Box<str>>,
+    pub government: Option<Box<str>>,
     #[serde(rename = "controllingFaction")]
-    pub controlling_faction: Option<String>,
+    pub controlling_faction: Option<Box<str>>,
     #[serde(rename = "primaryEconomy")]
-    pub primary_economy: Option<String>,
+    pub primary_economy: Option<Box<str>>,
     #[serde(rename = "secondaryEconomy")]
-    pub secondary_economy: Option<String>,
+    pub secondary_economy: Option<Box<str>>,
     pub shipyard: u8,
     pub outfitting: u8,
     #[serde(rename = "blackMarket")]
@@ -597,7 +597,7 @@ pub struct NearestService {
     #[serde(rename = "systemAddress")]
     pub system_address: i64,
     #[serde(rename = "systemName")]
-    pub system_name: String,
+    pub system_name: Box<str>,
     #[serde(rename = "systemX")]
     pub system_x: f64,
     #[serde(rename = "systemY")]
@@ -607,13 +607,13 @@ pub struct NearestService {
     #[serde(rename = "bodyId")]
     pub body_id: Option<i64>,
     #[serde(rename = "bodyName")]
-    pub body_name: Option<String>,
+    pub body_name: Option<Box<str>>,
     pub latitude: Option<f64>,
     pub longitude: Option<f64>,
     #[serde(rename = "maxLandingPadSize")]
     pub max_landing_pad_size: i64,
     #[serde(rename = "updatedAt")]
-    pub updated_at: String,
+    pub updated_at: Box<str>,
     pub distance: i64,
 }
 

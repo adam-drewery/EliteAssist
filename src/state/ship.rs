@@ -6,9 +6,9 @@ use crate::lookup::fdev_ids::Outfitting;
 #[derive(Default)]
 pub struct ShipLoadout {
 
-    pub ship_type: String,
-    pub ship_name: String,
-    pub ship_ident: String,
+    pub ship_type: Box<str>,
+    pub ship_name: Box<str>,
+    pub ship_ident: Box<str>,
     pub hull_value: u64,
     pub modules_value: u64,
     pub hull_health: f64,
@@ -26,7 +26,7 @@ pub struct ShipLoadout {
 pub struct ShipModule {
 
     pub slot: SlotType,
-    pub name: String,
+    pub name: Box<str>,
     pub on: bool,
     pub priority: u64,
     pub health: f64,
@@ -36,7 +36,7 @@ pub struct ShipModule {
     pub ammo_in_clip: Option<u64>,
     pub ammo_in_hopper: Option<u64>,
     pub engineering: Option<Engineering>,
-    pub mount: String,
+    pub mount: Box<str>,
 }
 
 #[derive(Default)]
@@ -48,17 +48,17 @@ pub struct FuelCapacity {
 
 pub struct Engineering {
 
-    pub engineer: String,
-    pub blueprint_name: String,
+    pub engineer: Box<str>,
+    pub blueprint_name: Box<str>,
     pub level: u64,
     pub quality: f64,
-    pub experimental_effect: Option<String>,
+    pub experimental_effect: Option<Box<str>>,
     pub modifiers: Vec<Modifier>,
 }
 
 pub struct Modifier {
 
-    pub label: String,
+    pub label: Box<str>,
     pub value: f64,
     pub original_value: f64,
     pub less_is_good: u64,
@@ -74,7 +74,7 @@ impl From<event::LoadoutModuleEngineering> for Engineering {
                 .skip(1)
                 .next()
                 .unwrap_or_default()
-                .to_string(),
+                .into(),
             level: value.level,
             quality: value.quality,
             experimental_effect: value.experimental_effect_localised.or(value.experimental_effect),
@@ -96,18 +96,18 @@ impl From<event::LoadoutModuleEngineeringModifier> for Modifier {
 
 impl From<event::LoadoutModule> for ShipModule {
     fn from(value: event::LoadoutModule) -> Self {
-        let (class, rating, name, mount) = Outfitting::metadata(&value.item)
+        let (class, rating, name, mount) = Outfitting::metadata(value.item.as_ref())
             .map(|details| (
                 details.class.parse().unwrap_or(0),
                 details.rating.chars().next().unwrap_or('X'),
                 details.name.to_string(),
                 details.mount.to_string(),
             ))
-            .unwrap_or((0, 'X', value.item.clone(), "".to_string()));
+            .unwrap_or((0, 'X', value.item.into(), "".to_string()));
 
         ShipModule {
-            slot: value.slot.into(),
-            name,
+            slot: value.slot.as_ref().into(),
+            name: name.into(),
             on: value.on,
             priority: value.priority,
             health: value.health,
@@ -117,7 +117,7 @@ impl From<event::LoadoutModule> for ShipModule {
             engineering: value.engineering.map(|e| e.into()),
             class,
             rating,
-            mount,
+            mount: mount.into(),
         }
     }
 }
@@ -143,10 +143,10 @@ pub struct ShipLocker {
 #[derive(Default)]
 pub struct ShipLockerItem {
 
-    pub name: String,
+    pub name: Box<str>,
     pub count: u64,
     pub for_mission: bool,
-    pub locations: Vec<String>
+    pub locations: Vec<Box<str>>
 }
 
 pub enum SlotType {
@@ -199,9 +199,9 @@ pub enum MiscellaneousType {
     CargoHatch,
 }
 
-impl From<String> for SlotType {
+impl From<&str> for SlotType {
 
-    fn from(value: String) -> Self {
+    fn from(value: &str) -> Self {
 
         // Compile regular expressions only once using lazy_static
         use once_cell::sync::Lazy;
@@ -248,7 +248,7 @@ impl From<String> for SlotType {
         }
                 
         // Try to match enum variant name directly
-        match value.as_str() {
+        match value.as_ref() {
             "MainEngines" => SlotType::CoreInternal(CoreInternalType::MainEngines),
             "FrameShiftDrive" => SlotType::CoreInternal(CoreInternalType::FrameShiftDrive),
             "PowerDistributor" => SlotType::CoreInternal(CoreInternalType::PowerDistributor),
@@ -293,10 +293,13 @@ impl From<event::Inventory> for ShipLocker {
             data: map_vec(value.data),
             components: value.components.unwrap_or_default().into_iter().map(|c| {
                 ShipLockerItem {
-                    name: c.name_localised.clone().unwrap_or(crate::journal::format::title_case(&c.name)),
+                    name: c.name_localised.clone().unwrap_or(crate::journal::format::title_case(&c.name).into_boxed_str()).into(),
                     for_mission: c.mission_id.is_some(),
                     count: c.count,
                     locations: lookup::locations_for_material(&c.name_localised.unwrap_or(c.name))
+                        .into_iter()
+                        .map(|s| s.into())
+                        .collect()
                 }
             }).collect(),
         }
@@ -305,11 +308,23 @@ impl From<event::Inventory> for ShipLocker {
 
 impl From<event::MicroResource> for ShipLockerItem {
     fn from(value: event::MicroResource) -> Self {
+        // Extract name_localised to avoid moving it
+        let name_str = if value.name_localised.is_some() {
+            value.name_localised.clone().unwrap()
+        } else {
+            crate::journal::format::title_case(value.name.as_ref().into()).into()
+        };
+
+        let lookup_name = value.name.as_ref();
+
         ShipLockerItem {
-            name: value.name_localised.clone().unwrap_or(crate::journal::format::title_case(&value.name)),
+            name: name_str,
             for_mission: value.mission_id.is_some(),
             count: value.count,
-            locations: lookup::locations_for_item(&value.name_localised.unwrap_or(value.name))
+            locations: lookup::locations_for_item(lookup_name)
+                .into_iter()
+                .map(|s| s.into())
+                .collect()
         }
     }
 }
@@ -317,19 +332,23 @@ impl From<event::MicroResource> for ShipLockerItem {
 impl From<event::Consumable> for ShipLockerItem {
     fn from(value: event::Consumable) -> Self {
         ShipLockerItem {
-            name: value.name_localised.clone().unwrap_or(crate::journal::format::title_case(&value.name)),
+            name: value.name_localised.clone().unwrap_or(crate::journal::format::title_case(&value.name).into()),
             count: value.count,
             for_mission: false,
             locations: lookup::locations_for_item(&value.name_localised.unwrap_or(value.name))
+                .into_iter()
+                .map(|s| s.into())
+                .collect()
         }
     }
 }
 
 fn group_and_sort(items: Vec<event::MicroResource>) -> Vec<event::MicroResource> {
-    let mut grouped_items: HashMap<(String, Option<u64>), event::MicroResource> = HashMap::new();
+    let mut grouped_items: HashMap<(Box<str>, Option<u64>), event::MicroResource> = HashMap::new();
     for item in items {
+        let key = (item.name.clone(), item.mission_id);
         grouped_items
-            .entry((item.name.clone(), item.mission_id))
+            .entry(key)
             .and_modify(|e| e.count += item.count)
             .or_insert(item);
     }
@@ -368,7 +387,7 @@ impl From<event::Loadout> for ShipLoadout {
         }
 
         ShipLoadout {
-            ship_type: ship_type.map(|s| s.name.to_string()).unwrap_or(value.ship),
+            ship_type: ship_type.map(|s| s.name).unwrap_or(value.ship.as_ref()).into(),
             ship_name: value.ship_name,
             ship_ident: value.ship_ident,
             hull_value: value.hull_value.unwrap_or_default(),

@@ -79,7 +79,7 @@ fn module_details(module: &state::ShipModule, size: u8) -> Row<'_, Message> {
                     column![].width(6),
                     column![text(module.rating).size(24).color(ORANGE)],
                     column![text(module.class).size(24).color(ORANGE)].padding([0, 6]),
-                    column![text(&module.name).size(24).color(ORANGE)].padding([0, 6]),
+                    column![text(module.name.as_ref()).size(24).color(ORANGE)].padding([0, 6]),
                     engineering_levels(&module),
                 ],
                 row![].height(Fill),
@@ -103,7 +103,7 @@ fn mount_type_icon(module: &state::ShipModule, size: u8) -> Column<'_, Message> 
         if size == 0 {
             row![]
         } else {
-            match module.mount.as_str() {
+            match module.mount.as_ref() {
                 "Fixed" => row![image(Handle::from_bytes(FIXED_PNG))],
                 "Gimballed" => row![image(Handle::from_bytes(GIMBALLED_PNG))],
                 "Turreted" => row![image(Handle::from_bytes(TURRET_PNG))],
@@ -136,10 +136,10 @@ fn engineering_details(module: &state::ShipModule) -> Column<'_, Message> {
     if let Some(engineering) = &module.engineering {
         column![
             row![
-                column![text(&engineering.blueprint_name).size(14).color(ORANGE)],
+                column![text(engineering.blueprint_name.as_ref()).size(14).color(ORANGE)],
                 column![].width(12),
                 if let Some(experimental) = &engineering.experimental_effect {
-                    column![text(experimental).size(14).color(YELLOW)]
+                    column![text(experimental.as_ref()).size(14).color(YELLOW)]
                 } else {
                     column![]
                 }

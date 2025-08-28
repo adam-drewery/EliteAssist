@@ -4,8 +4,8 @@ use serde::Deserialize;
 pub struct Stations {
     pub id: i64,
     pub id64: i64,
-    pub name: String,
-    pub url: String,
+    pub name: Box<str>,
+    pub url: Box<str>,
     pub stations: Vec<Station>,
 }
 
@@ -15,16 +15,16 @@ pub struct Station {
     #[serde(rename = "marketId")]
     pub market_id: i64,
     #[serde(rename = "type")]
-    pub r#type: String,
-    pub name: String,
+    pub r#type: Box<str>,
+    pub name: Box<str>,
     pub body: Option<Body>,
     #[serde(rename = "distanceToArrival")]
     pub distance_to_arrival: f32,
-    pub allegiance: String,
-    pub government: String,
-    pub economy: String,
+    pub allegiance: Box<str>,
+    pub government: Box<str>,
+    pub economy: Box<str>,
     #[serde(rename = "secondEconomy")]
-    pub second_economy: Option<String>,
+    pub second_economy: Option<Box<str>>,
     #[serde(rename = "haveMarket")]
     pub have_market: bool,
     #[serde(rename = "haveShipyard")]
@@ -32,7 +32,7 @@ pub struct Station {
     #[serde(rename = "haveOutfitting")]
     pub have_outfitting: bool,
     #[serde(rename = "otherServices")]
-    pub other_services: Vec<String>,
+    pub other_services: Vec<Box<str>>,
     #[serde(rename = "controllingFaction")]
     pub controlling_faction: Option<ControllingFaction>,
     #[serde(rename = "updateTime")]
@@ -41,10 +41,10 @@ pub struct Station {
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct UpdateTime {
-    pub information: String,
-    pub market: Option<String>,
-    pub shipyard: Option<String>,
-    pub outfitting: Option<String>,
+    pub information: Box<str>,
+    pub market: Option<Box<str>>,
+    pub shipyard: Option<Box<str>>,
+    pub outfitting: Option<Box<str>>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -52,13 +52,13 @@ pub struct ControllingFaction {
 
     // is null when it's actually an engineer controlling the place.
     pub id: Option<u64>,
-    pub name: String,
+    pub name: Box<str>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Body {
     pub id: i64,
-    pub name: String,
+    pub name: Box<str>,
     pub latitude: Option<f64>,
     pub longitude: Option<f64>,
 }

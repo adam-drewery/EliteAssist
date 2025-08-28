@@ -26,7 +26,7 @@ fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a,
             groups
                 .iter()
                 .flat_map(|group| {
-                    let mut rows = vec![row![text(&group.name).size(16).color(GRAY)].padding(2)];
+                    let mut rows = vec![row![text(group.name.as_ref()).size(16).color(GRAY)].padding(2)];
 
                     let mut sorted_materials = group.materials.to_vec();
                     sorted_materials.sort_by_key(|item| item.rarity);
@@ -50,15 +50,15 @@ fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a,
                                         .color(YELLOW)
                                         .font(EUROSTILE)
                                         .width(36),
-                                    text(item.name)
+                                    text(item.name.to_string())
                                         .font(EUROSTILE)
                                         .size(16),
                                 ]
                                 .padding(2),
                                 column(
                                     item.locations
-                                        .into_iter()
-                                        .map(|loc| row![text(loc).size(16).font(EUROSTILE)].into())
+                                        .iter()
+                                        .map(|loc| row![text(loc.to_string()).size(16).font(EUROSTILE)].into())
                                         .collect::<Vec<Element<Message>>>()
                             ),
                             Position::FollowCursor

@@ -14,7 +14,7 @@ pub struct Rank {
 
 #[derive(Default)]
 pub struct CrimeStats {
-    pub legal_state: String,
+    pub legal_state: Box<str>,
     pub active_fine: bool,
     pub wanted: bool,
 }

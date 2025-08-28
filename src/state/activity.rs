@@ -3,17 +3,17 @@ use crate::journal::format::prettify_date;
 use thousands::Separable;
 
 pub struct GameEventLog {
-    pub time_display: String,
-    pub verb: String,
-    pub noun: String,
+    pub time_display: Box<str>,
+    pub verb: Box<str>,
+    pub noun: Box<str>,
 }
 
 impl From<event::Embark> for GameEventLog {
     fn from(value: event::Embark) -> Self {
         GameEventLog {
-            time_display: prettify_date(&value.timestamp),
-            verb: "Embarked".to_owned(),
-            noun: join_location_parts(&value.star_system, &value.body, &value.station_name),
+            time_display: prettify_date(&value.timestamp).into(),
+            verb: "Embarked".into(),
+            noun: join_location_parts(&value.star_system, &value.body, value.station_name.as_deref()),
         }
     }
 }
@@ -22,15 +22,15 @@ impl From<event::Disembark> for GameEventLog {
     fn from(value: event::Disembark) -> Self {
         GameEventLog {
             time_display: prettify_date(&value.timestamp),
-            verb: "Disembarked".to_owned(),
-            noun: join_location_parts(&value.star_system, &value.body, &value.station_name),
+            verb: "Disembarked".into(),
+            noun: join_location_parts(&value.star_system, &value.body, value.station_name.as_deref()),
         }
     }
 }
 
 impl From<event::StartJump> for GameEventLog {
     fn from(value: event::StartJump) -> Self {
-        match value.jump_type.as_str() {
+        match value.jump_type.as_ref() {
             "Supercruise" => GameEventLog {
                 time_display: prettify_date(&value.timestamp),
                 verb: "".into(),
@@ -43,7 +43,7 @@ impl From<event::StartJump> for GameEventLog {
                     "{} ({})",
                     value.star_system.unwrap_or_default(),
                     value.star_class.unwrap_or_default()
-                ),
+                ).into(),
             },
             _ => panic!("Unknown jump type"),
         }
@@ -56,7 +56,7 @@ impl From<event::CrewAssign> for GameEventLog {
         GameEventLog {
             time_display: prettify_date(&value.timestamp),
             verb: "Assigned".into(),
-            noun: format!("{} as {}", value.name, value.role),
+            noun: format!("{} as {}", value.name, value.role).into(),
         }
     }
 }
@@ -66,7 +66,7 @@ impl From<event::CrewMemberRoleChange> for GameEventLog {
         GameEventLog {
             time_display: prettify_date(&value.timestamp),
             verb: "Assigned role".into(),
-            noun: format!("{} to {}", value.role, value.crew),
+            noun: format!("{} to {}", value.role, value.crew).into(),
         }
     }
 }
@@ -106,7 +106,7 @@ impl From<event::NpcCrewPaidWage> for GameEventLog {
         GameEventLog {
             time_display: prettify_date(&value.timestamp),
             verb: "Paid".into(),
-            noun: format!("{} to {}", value.amount.separate_with_commas(), value.npc_crew_name),
+            noun: format!("{} to {}", value.amount.separate_with_commas(), value.npc_crew_name).into(),
         }
     }
 }
@@ -117,7 +117,7 @@ impl From<event::FighterRebuilt> for GameEventLog {
         GameEventLog {
             time_display: prettify_date(&value.timestamp),
             verb: "Rebuilt".into(),
-            noun: format!("Fighter {}", value.id.to_string()),
+            noun: format!("Fighter {}", value.id.to_string()).into(),
         }
     }
 }
@@ -127,7 +127,7 @@ impl From<event::DockFighter> for GameEventLog {
         GameEventLog {
             time_display: prettify_date(&value.timestamp),
             verb: "Docked".into(),
-            noun: format!("Fighter {}", value.id.to_string()),
+            noun: format!("Fighter {}", value.id.to_string()).into(),
         }
     }
 }
@@ -137,7 +137,7 @@ impl From<event::CrewLaunchFighter> for GameEventLog {
         GameEventLog {
             time_display: prettify_date(&value.timestamp),
             verb: "Launched".into(),
-            noun: format!("Fighter by {}", value.crew),
+            noun: format!("Fighter by {}", value.crew).into(),
         }
     }
 }
@@ -147,7 +147,7 @@ impl From<event::LaunchFighter> for GameEventLog {
         GameEventLog {
             time_display: prettify_date(&value.timestamp),
             verb: "Launched".into(),
-            noun: format!("Fighter {}", value.id.to_string()),
+            noun: format!("Fighter {}", value.id.to_string()).into(),
         }
     }
 }
@@ -168,58 +168,55 @@ impl From<event::RestockVehicle> for GameEventLog {
         GameEventLog {
             time_display: prettify_date(&value.timestamp),
             verb: "Restocked vehicles for".into(),
-            noun: format!("{}CR", value.cost.to_string().separate_with_commas()),
+            noun: format!("{}CR", value.cost.to_string().separate_with_commas()).into(),
         }
     }
 }
 
-fn join_location_parts(system: &String, body: &String, station: &Option<String>) -> String {
+fn join_location_parts(system: &str, body: &str, station: Option<&str>) -> Box<str> {
     let mut parts = Vec::new();
 
     if !system.is_empty() {
-        parts.push(system.as_str());
+        parts.push(system);
     }
     if !body.is_empty() {
-        parts.push(body.as_str());
+        parts.push(body);
     }
     if let Some(station) = station {
         if !station.is_empty() && !Some(station.to_string()).eq(&Some(body.to_string())) {
-            parts.push(station.as_str());
+            parts.push(station);
         }
     }
-    parts.join(" | ")
+    parts.join(" | ").as_str().into()
 }
 pub fn log_ship_equipment_purchase(e: event::ShipMaintenance, item: &str) -> GameEventLog {
     GameEventLog {
         time_display: prettify_date(&e.timestamp),
-        verb: format!("Bought {} for", item),
-        noun: format!("{}CR", e.cost.to_string().separate_with_commas()),
+        verb: format!("Bought {} for", item).into(),
+        noun: format!("{}CR", e.cost.to_string().separate_with_commas()).into(),
     }
 }
 
 pub fn log_crew_member(e: event::CrewMember, verb: &str) -> GameEventLog {
     GameEventLog {
         time_display: prettify_date(&e.timestamp),
-        verb: format!("Crew {}", verb),
+        verb: format!("Crew {}", verb).into(),
         noun: format!(
             "{} {}",
             e.crew,
-            if e.telepresence.is_some_and(|x| x) {
-                "remotely"
-            } else {
-                "to crew"
-            }
-        ),
+            if e.telepresence.is_some_and(|x| x) { "remotely" } 
+            else { "to crew" }
+        ).into(),
     }
 }
 
 pub fn log_damage(e: event::Damage, verb: &str, noun: &str) -> GameEventLog {
     GameEventLog {
         time_display: prettify_date(&e.timestamp),
-        verb: verb.to_string(),
+        verb: verb.into(),
         noun: match e.id {
-            None => noun.to_string(),
-            Some(id) => format!("{} {}", noun, id),
+            None => noun.into(),
+            Some(id) => format!("{} {}", noun, id).into(),
         },
     }
 }

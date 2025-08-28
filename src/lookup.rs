@@ -41,11 +41,11 @@ pub static CATEGORY_NAMES: Map<&'static str, &'static str> = phf_map! {
     "7" => "Diverse Utility Elements"
 };
 
-pub fn locations_for_material(name: &str) -> Vec<String> {
+pub fn locations_for_material(name: &str) -> Vec<&str> {
     get_generated_items(&MATERIAL_LOCATIONS_MAP, MATERIAL_LOCATION_LISTS, name)
 }
 
-pub fn locations_for_item(name: &str) -> Vec<String> {
+pub fn locations_for_item(name: &str) -> Vec<&str> {
     get_generated_items(&ITEM_LOCATIONS_MAP, ITEM_LOCATION_LISTS, name)
 }
 
@@ -124,11 +124,11 @@ pub fn ship_image_bytes(name: &str) -> Option<&'static [u8]> {
     SHIP_IMAGES.get(name).copied()
 }
 
-fn get_generated_items(map: &Map<&'static str, usize>, lists: &[&[&str]], name: &str) -> Vec<String> {
+fn get_generated_items<'a>(map: &Map<&'static str, usize>, lists: &[&[&'a str]], name: &str) -> Vec<&'a str> {
     let key = name.to_lowercase();
     if let Some(&idx) = map.get(&key) {
         if let Some(slice) = lists.get(idx) {
-            return slice.iter().map(|s| s.to_string()).collect();
+            return slice.iter().map(|s| *s).collect::<Vec<&str>>();
         }
     }
     Vec::new()

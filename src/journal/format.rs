@@ -35,8 +35,8 @@ pub mod optional_date {
     }
 }
 
-pub fn prettify_date(date: &DateTime<Utc>) -> String {
-    date.to_rfc2822().trim_end_matches("+0000").to_string()
+pub fn prettify_date(date: &DateTime<Utc>) -> Box<str> {
+    date.to_rfc2822().trim_end_matches("+0000").into()
 }
 
 /// Converts the first character of a string to uppercase, leaving the rest unchanged.
@@ -54,7 +54,7 @@ pub fn title_case(s: &str) -> String {
     let mut chars = s.chars();
     match chars.next() {
         None => String::new(),
-        Some(first_char) => first_char.to_uppercase().collect::<String>() + chars.as_str()
+        Some(first_char) => first_char.to_uppercase().to_string() + chars.as_str(),
     }
 }
 

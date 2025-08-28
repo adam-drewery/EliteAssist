@@ -34,20 +34,20 @@ fn messages_column(state: &State) -> Column<'_, Message> {
                     .map(|item| {
 
                         row![
-                            text(&item.from)
+                            text(item.from.as_ref())
                                 .size(16)
                                 .color(name_color(&item.channel))
                                 .height(16)
                                 .align_x(Right)
                                 .wrapping(Wrapping::None),
                             column![
-                                text(&item.text).color(WHITE).font(EUROSTILE).size(16)
+                                text(item.text.as_ref()).color(WHITE).font(EUROSTILE).size(16)
                             ]
                             .padding([0, 8])
                             .width(Fill)
                             .align_x(Left),
                             column![
-                                text(&item.time_display)
+                                text(item.time_display.as_ref())
                                     .size(12)
                                     .color(GRAY)
                                     .width(192)
@@ -76,7 +76,7 @@ fn journal_column(state: &State) -> Column<'_, Message> {
                 .map(|item| {
                     row![
                         column![
-                            text(&item.verb)
+                            text(item.verb.as_ref())
                                 .color(ORANGE)
                                 .size(16)
                                 .font(EUROSTILE)
@@ -85,7 +85,7 @@ fn journal_column(state: &State) -> Column<'_, Message> {
                         .width(192)
                         .align_x(Right),
 
-                        text(&item.noun)
+                        text(item.noun.as_ref())
                             .size(16)
                             .color(WHITE)
                             .width(Fill)
@@ -95,7 +95,7 @@ fn journal_column(state: &State) -> Column<'_, Message> {
                             .font(EUROSTILE),
 
                         column![
-                            text(&item.time_display)
+                            text(item.time_display.as_ref())
                                 .size(12)
                                 .color(GRAY)
                                 .width(192)

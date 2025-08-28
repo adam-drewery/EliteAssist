@@ -3,16 +3,16 @@ use chrono::{DateTime, Utc};
 
 pub struct Mission {
 
-    pub faction: String,
-    pub name: String,
-    pub commodity: Option<String>,
+    pub faction: Box<str>,
+    pub name: Box<str>,
+    pub commodity: Option<Box<str>>,
     pub count: Option<u64>,
-    pub destination_system: Option<String>,
-    pub destination_settlement: Option<String>,
+    pub destination_system: Option<Box<str>>,
+    pub destination_settlement: Option<Box<str>>,
     pub expiry: Option<DateTime<Utc>>,
     pub wing: bool,
-    pub influence: String,
-    pub reputation: String,
+    pub influence: Box<str>,
+    pub reputation: Box<str>,
     pub reward: Option<u64>,
     pub mission_id: u64,
 }

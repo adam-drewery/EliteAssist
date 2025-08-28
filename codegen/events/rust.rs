@@ -116,7 +116,7 @@ fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, sch
                 if &property.1.format.clone().unwrap_or_default() == "date-time" {
                     "DateTime<Utc>".to_string()
                 } else {
-                    "String".to_string()
+                    "Box<str>".to_string()
                 }
             }
             "integer" => "u64".to_string(),
@@ -141,7 +141,7 @@ fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, sch
                     Some(items) => match items {
                         SchemaItems::Single(obj) => {
                             let sub_type_name = match obj.r#type.as_str() {
-                                "string" => "String",
+                                "string" => "Box<str>",
                                 "integer" => "u64",
                                 "number" => "f64",
                                 "boolean" => "bool",
