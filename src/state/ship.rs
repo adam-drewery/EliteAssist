@@ -164,8 +164,14 @@ impl From<&str> for SlotType {
 
         // Compile regular expressions only once using lazy_static
         use once_cell::sync::Lazy;
+        static SLOT_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"Slot(\d+)_Size(\d+)").unwrap());
         static NUMBERED_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"(Military|Decal|ShipName|ShipID|Bobble)(\d+)").unwrap());
         static HARDPOINT_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"(Tiny|Small|Medium|Large|Huge)Hardpoint(\d+)").unwrap());
+
+        // Handle optional slots like "Slot01_Size8"
+        if let Some(_) = SLOT_REGEX.captures(&value) {
+            return SlotType::OptionalInternal;
+        }
 
         // Handle numbered slots like "Military02", "Decal01", etc
         if let Some(captures) = NUMBERED_REGEX.captures(&value) {
