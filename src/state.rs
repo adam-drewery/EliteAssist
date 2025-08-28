@@ -30,6 +30,7 @@ use iced::widget::pane_grid;
 use iced::window;
 use serde::Deserialize;
 use std::collections::HashMap;
+use chrono::Utc;
 use log::warn;
 use thousands::Separable;
 
@@ -195,11 +196,20 @@ impl State {
             }
 
             Message::JournalLoaded => {
+
                 self.journal_loaded = true;
                 if self.overview_panes.is_none() {
                     pane::load(self)
                 }
 
+                // some missions could have expired while we were away.
+                let expired_mission_ids: Vec<_> = self.missions.iter()
+                    .filter(|m| m.expiry.map_or(false, |e| e < Utc::now()))
+                    .map(|m| m.mission_id)
+                    .collect();
+
+                self.missions.retain(|m| !expired_mission_ids.contains(&m.mission_id));
+                
                 return query::system(
                     self.current_system.as_ref(),
                     self.ship_loadout.max_jump_range);
