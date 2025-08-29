@@ -1,16 +1,16 @@
-use crate::gui::Message;
-use crate::state::{State, pane};
+use crate::gui::{pane, Message};
 use crate::theme::{GRAY, ORANGE, style};
 use iced::widget::{Column, Row, button, checkbox, column, row, scrollable, text, text_input, container, svg};
 use iced::{Element, Fill};
 use iced::widget::svg::Handle;
 use crate::image;
+use crate::state::State;
 
 pub fn settings(state: &State) -> Row<'_, Message> {
     let screens_list: Column<'_, Message> = {
         let mut items: Vec<Element<'_, Message>> = Vec::new();
-        for (idx, screen) in state.custom_screens.iter().enumerate() {
-            let is_selected = idx == state.selected_custom_screen;
+        for (idx, screen) in state.layout.custom_screens.iter().enumerate() {
+            let is_selected = idx == state.layout.selected_custom_screen;
             items.push(
                 row![
                     button(text(screen.name.as_ref()))
@@ -38,15 +38,15 @@ pub fn settings(state: &State) -> Row<'_, Message> {
 
     // Right side: rename + pane toggles for selected
     let right_side: Column<'_, Message> = {
-        let current_name = state
+        let current_name = state.layout
             .custom_screens
-            .get(state.selected_custom_screen)
+            .get(state.layout.selected_custom_screen)
             .map(|s| s.name.as_ref())
             .unwrap_or("");
 
         let mut pane_items: Vec<Element<'_, Message>> = Vec::new();
         for p in pane::Type::all().iter() {
-            let checked = p.is_enabled(state);
+            let checked = p.is_enabled(&state.layout);
             let p2 = p.clone();
             pane_items.push(
                 checkbox(p.title(), checked)

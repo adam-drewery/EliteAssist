@@ -1,6 +1,6 @@
 mod layout;
-mod panel;
-mod screen;
+pub mod pane;
+pub mod screen;
 mod components;
 
 use crate::font::EUROSTILE;
@@ -10,11 +10,11 @@ use crate::gui::screen::market;
 use crate::gui::screen::materials;
 use crate::gui::screen::messages;
 use crate::gui::screen::overview;
-use crate::gui::screen::ship_locker;
 use crate::gui::screen::settings;
+use crate::gui::screen::ship_locker;
 use crate::image::LOADING_PNG;
 use crate::journal::event::Event;
-use crate::state::{pane, Screen, State};
+use crate::state::{Screen, State};
 use crate::theme::{style, ORANGE};
 use crate::{ardent, centered_column, centered_row, edsm};
 use chrono::Utc;
@@ -38,7 +38,6 @@ pub enum Message {
     PaneResized(pane_grid::ResizeEvent),
 
     // Settings and custom screens
-    ShowSettingsMenu(bool),
     TogglePane(pane::Type, bool),
     AddCustomScreen,
     RemoveCustomScreen,

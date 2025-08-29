@@ -1,17 +1,17 @@
-use crate::gui::Message;
-use crate::state::{pane, State};
+use crate::gui::{pane, Message};
 use crate::theme::style;
 use iced::widget::pane_grid;
 use iced::widget::{column, row, text, Column, Row};
 use iced::Fill;
-use crate::gui::panel::modules::ship_modules;
-use crate::gui::panel::navigation::{location, route};
-use crate::gui::panel::personal::{claims, loadout, messages, missions, ranks};
-use crate::gui::panel::ship::ship_details;
+use crate::gui::pane::modules::ship_modules;
+use crate::gui::pane::navigation::{location, route};
+use crate::gui::pane::personal::{claims, loadout, messages, missions, ranks};
+use crate::gui::pane::ship::ship_details;
+use crate::state::State;
 
 pub fn overview(state: &State) -> Row<'_, Message> {
-    if let Some(panes) = &state.overview_panes {
-        // Build a PaneGrid that contains all overview panel
+    if let Some(panes) = &state.layout.overview_panes {
+        // Build a PaneGrid that contains all overview pane
         let grid = pane_grid::PaneGrid::new(panes, |_, kind, _| {
             let (title, content): (&str, Column<'_, Message>) = match kind {
 

@@ -1,15 +1,15 @@
 use crate::gui::Message;
-use crate::state::{pane, Screen, State};
+use crate::image::gui::{COLLAPSE, EXPAND, SETTINGS};
+use crate::state::{Screen, State};
 use crate::theme::{style, GRAY, ORANGE, WHITE};
 use iced::widget::button::{Status, Style};
-use iced::widget::{button, checkbox, column, row, svg, Column, Row};
+use iced::widget::{button, column, row, svg, Column, Row};
 use iced::{Fill, Right, Theme};
 use std::mem::discriminant;
-use crate::image::gui::{COLLAPSE, EXPAND, SETTINGS};
 
 pub fn navigation_bar(state: &State) -> Row<'_, Message> {
     // Right-side fullscreen toggle and settings button
-    let fullscreen_icon = if state.fullscreen { COLLAPSE } else { EXPAND };
+    let fullscreen_icon = if state.layout.fullscreen { COLLAPSE } else { EXPAND };
     let fullscreen_button = button(
         svg(svg::Handle::from_memory(fullscreen_icon)).width(16).height(16).style(style::icon_button)
     )
@@ -22,29 +22,10 @@ pub fn navigation_bar(state: &State) -> Row<'_, Message> {
         .on_press(Message::NavigateTo(Screen::Settings))
         .style(default_style);
 
-    let settings_menu: Column<'_, Message> = if state.show_settings_menu {
-        // Build a list of checkboxes for each available panel
-        let mut items: Vec<iced::Element<'_, Message>> = Vec::new();
-        for pane in pane::Type::all().iter() {
-            let checked = pane.is_enabled(state);
-            let p = pane.clone();
-            let cb = checkbox(pane.title(), checked)
-                .on_toggle(move |v| Message::TogglePane(p.clone(), v));
-            
-            items.push(cb.into());
-            items.push(column![].width(16).into());
-        }
-        column![row(items)]
-            .padding(6)
-            .spacing(4)
-    } else {
-        column![]
-    };
-
     // Left: dynamic buttons for custom screens
     let mut custom_buttons: Vec<iced::Element<'_, Message>> = Vec::new();
-    for (idx, scr) in state.custom_screens.iter().enumerate() {
-        let is_selected = matches!(state.active_screen, Screen::Commander) && state.selected_custom_screen == idx;
+    for (idx, scr) in state.layout.custom_screens.iter().enumerate() {
+        let is_selected = matches!(state.active_screen, Screen::Commander) && state.layout.selected_custom_screen == idx;
         let style_fn = if is_selected { selected_style } else { default_style };
         custom_buttons.push(
             column![button(scr.name.as_ref()).on_press(Message::NavigateToCustomScreen(idx)).style(style_fn)].padding(5).into()
@@ -61,7 +42,7 @@ pub fn navigation_bar(state: &State) -> Row<'_, Message> {
 
         // right-side buttons
         column![fullscreen_button].align_x(Right).padding([0, 4]),
-        column![settings_menu, settings_button].align_x(Right).padding([0, 4])
+        column![settings_button].align_x(Right).padding([0, 4])
     ]
 }
 

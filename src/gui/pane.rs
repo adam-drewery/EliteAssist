@@ -1,8 +1,14 @@
 use iced::widget::pane_grid;
-use iced::widget::pane_grid::DragEvent;
+use iced::widget::pane_grid::{DragEvent, ResizeEvent};
 use serde::{Deserialize, Serialize};
 use crate::settings::Settings;
-use crate::state::State;
+use crate::state;
+use crate::state::Layout;
+
+pub mod navigation;
+pub mod personal;
+pub mod ship;
+pub mod modules;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Type {
@@ -59,17 +65,17 @@ impl Type {
         ]
     }
 
-    pub fn is_enabled(&self, state: &State) -> bool {
-        match &state.enabled_panes {
+    pub fn is_enabled(&self, layout: &state::Layout) -> bool {
+        match &layout.enabled_panes {
             Some(v) => v.contains(self),
             None => Type::default_enabled_vec().contains(self),
         }
     }
 
-    pub fn toggle(self, state: &mut State, enabled: bool) {
+    pub fn toggle(self, layout: &mut state::Layout, enabled: bool) {
 
         // Start from the current enabled set (or all panels by default)
-        let mut list: Vec<Type> = state
+        let mut list: Vec<Type> = layout
             .enabled_panes
             .clone()
             .unwrap_or_else(|| Type::default_enabled_vec());
@@ -83,7 +89,7 @@ impl Type {
             }
         } else {
 
-            // Prevent disabling the last remaining panel
+            // Prevent disabling the last remaining pane
             if was_enabled && list.len() > 1 {
                 list.retain(|p| p != &self);
             }
@@ -96,19 +102,19 @@ impl Type {
         let did_enable = enabled && !was_enabled;
         let did_disable = !enabled && was_enabled && list.len() < before_len;
 
-        state.enabled_panes = Some(list.clone());
+        layout.enabled_panes = Some(list.clone());
 
         // Mutate the current layout instead of rebuilding to preserve existing splits
-        if let Some(panes) = &mut state.overview_panes {
+        if let Some(panes) = &mut layout.overview_panes {
             if did_enable {
 
-                // Insert the newly enabled panel by splitting an existing anchor pane
+                // Insert the newly enabled pane by splitting an existing anchor pane
                 if let Some((&anchor, _)) = panes.panes.iter().next() {
                     let _ = panes.split(pane_grid::Axis::Horizontal, anchor, self.clone());
                 }
             } else if did_disable {
 
-                // Close the pane containing this panel, preserving another layout
+                // Close the pane containing this pane, preserving another layout
                 if let Some(p) = find_with(panes, &self) {
                     let _ = panes.close(p);
                 }
@@ -116,8 +122,8 @@ impl Type {
         }
 
         // Persist settings after visibility/layout changes
-        state.sync_selected_custom_screen_from_live();
-        Settings::save_from_state(state).unwrap_or_else(|e|
+        layout.sync_selected_custom_screen_from_live();
+        Settings::save_from_state(layout).unwrap_or_else(|e|
             log::error!("Failed to save settings: {}", e));
     }
 
@@ -150,7 +156,6 @@ pub fn defaults() -> pane_grid::State<Type> {
 pub fn find_with(panes: &pane_grid::State<Type>, target: &Type) -> Option<pane_grid::Pane> {
 
     // The iced::pane_grid::State exposes a `panes` field that can be iterated
-    // We iterate by reference to avoid moving the internal state
     for (pane, content) in &panes.panes {
         if content == target {
             return Some(*pane);
@@ -159,13 +164,13 @@ pub fn find_with(panes: &pane_grid::State<Type>, target: &Type) -> Option<pane_g
     None
 }
 
-pub fn load(state: &mut State) {
+pub fn load(layout: &mut state::Layout) {
 
     // Start from the default layout to preserve the intended split structure
     let mut panes = defaults();
 
     // If some panels are disabled, close them while keeping the rest of the layout
-    if let Some(enabled) = &state.enabled_panes {
+    if let Some(enabled) = &layout.enabled_panes {
         let enabled_set: std::collections::HashSet<_> = enabled.iter().cloned().collect();
 
         // Collect panes to close first to avoid borrowing issues
@@ -178,23 +183,33 @@ pub fn load(state: &mut State) {
             let _ = panes.close(p);
         }
     }
-    state.overview_panes = Some(panes);
+    layout.overview_panes = Some(panes);
 
     // Persist the initialized layout so a settings file exists even before any manual changes
-    let _ = Settings::save_from_state(state);
+    let _ = Settings::save_from_state(layout);
 }
 
-pub fn dragged(state: &mut State, event: DragEvent) {
-    if let Some(panes) = &mut state.overview_panes {
+pub fn dragged(layout: &mut state::Layout, event: DragEvent) {
+    if let Some(panes) = &mut layout.overview_panes {
         match event {
             DragEvent::Canceled { .. } => {}
             DragEvent::Picked { .. } => {}
             DragEvent::Dropped { pane, target } => {
                 panes.drop(pane, target);
                 // Sync into selected custom screen before saving
-                state.sync_selected_custom_screen_from_live();
-                let _ = Settings::save_from_state(state);
+                layout.sync_selected_custom_screen_from_live();
+                let _ = Settings::save_from_state(layout);
             }
         }
+    }
+}
+
+pub(crate) fn resized(layout: &mut Layout, event: ResizeEvent) {
+    if let Some(panes) = &mut layout.overview_panes {
+        panes.resize(event.split, event.ratio);
+
+        // Sync the layout into the selected custom screen before saving
+        layout.sync_selected_custom_screen_from_live();
+        let _ = Settings::save_from_state(&layout);
     }
 }

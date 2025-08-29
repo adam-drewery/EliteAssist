@@ -184,20 +184,19 @@ fn stream_hotkeys() -> impl Stream<Item=Message> {
         }
 
         let rx = GlobalHotKeyEvent::receiver();
-        loop {
-            // Poll for events without blocking the async runtime
-            match rx.try_recv() {
-                Ok(event) => {
-                    // Only respond to key down (Pressed) events
-                    if event.state == HotKeyState::Pressed {
-                        if sender.send(Message::NextTab).await.is_err() { break; }
+
+        tokio::task::spawn_blocking(move || {
+            loop {
+                match rx.recv() {
+                    Ok(event) => {
+                        if event.state == HotKeyState::Pressed {
+                            if sender.blocking_send(Message::NextTab).is_err() { break; }
+                        }
                     }
-                }
-                Err(_) => {
-                    tokio::time::sleep(std::time::Duration::from_millis(20)).await;
+                    Err(_) => { break; }
                 }
             }
-        }
+        }).await.ok();
     });
 
     ReceiverStream::new(receiver)
