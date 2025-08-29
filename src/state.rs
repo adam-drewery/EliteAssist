@@ -85,7 +85,7 @@ impl Default for State {
     fn default() -> Self {
 
         // Start with basic defaults for all fields
-        let mut state = Self {
+        let state = Self {
             commander_name: String::new().into(),
             credits: String::new().into(),
             current_system: String::new().into(),
