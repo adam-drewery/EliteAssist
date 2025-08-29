@@ -113,16 +113,8 @@ impl Default for State {
             first_message_timestamp: 0,
             latest_message_timestamp: 0,
             latest_message_timestamp_formatted: String::new().into(),
-            layout: Layout {
-                overview_panes: None,
-                fullscreen: false,
-                enabled_panes: None,
-                custom_screens: Vec::new(),
-                selected_custom_screen: 0,
-            }
+            layout: Layout::from_settings()
         };
-
-        state.layout = Layout::from_settings();
 
         state
     }

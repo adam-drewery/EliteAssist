@@ -72,6 +72,28 @@ impl Layout {
             pane::load(&mut layout);
         }
 
+        // First run (no settings): create a default custom screen so it appears in the nav bar
+        if layout.custom_screens.is_empty() {
+            // Derive a layout node and visible set from the current live panes
+            let (layout_node_opt, visible_opt) = if let Some(panes) = &layout.overview_panes {
+                let node = crate::settings::state_to_node(panes);
+                let visible = layout
+                    .enabled_panes
+                    .clone()
+                    .unwrap_or_else(|| crate::settings::layout_leaf_panes(&node));
+                (Some(node), Some(visible))
+            } else {
+                (None, Some(pane::Type::default_enabled_vec()))
+            };
+
+            layout.custom_screens.push(crate::settings::CustomScreen {
+                name: "Overview".into(),
+                layout: layout_node_opt,
+                visible: visible_opt,
+            });
+            layout.selected_custom_screen = 0;
+        }
+
         layout
     }
 }
