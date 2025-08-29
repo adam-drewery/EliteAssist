@@ -322,6 +322,59 @@ impl State {
                 }
             },
 
+            Message::NextTab => {
+                // Determine total tabs in navigation bar: custom screens + Materials + Ship Locker + Market + Log
+                let custom_count = self.custom_screens.len();
+                let fixed_count = 4usize; // Materials, Ship Locker, Market, Messages(Log)
+                let total = custom_count + fixed_count;
+                if total == 0 { return Task::none(); }
+
+                // Map current state to index
+                let current_index = match self.active_screen {
+                    Screen::Commander => {
+                        if custom_count == 0 { custom_count } else { self.selected_custom_screen.min(custom_count.saturating_sub(1)) }
+                    }
+                    Screen::Materials => custom_count,
+                    Screen::ShipLocker => custom_count + 1,
+                    Screen::Market => custom_count + 2,
+                    Screen::Messages => custom_count + 3,
+                    Screen::Settings => 0, // Not part of nav order; jump back to start
+                };
+
+                let next_index = (current_index + 1) % total;
+
+                if next_index < custom_count {
+                    // Switch to Commander with selected custom screen
+                    let idx = next_index;
+                    if !self.custom_screens.is_empty() {
+                        self.selected_custom_screen = idx;
+                        if let Some(sel) = self.custom_screens.get(self.selected_custom_screen) {
+                            if let Some(layout) = &sel.layout {
+                                self.overview_panes = Some(crate::settings::build_panes_from_layout(layout));
+                                self.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| crate::settings::layout_leaf_panes(layout)));
+                            } else {
+                                self.overview_panes = None;
+                                self.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| pane::Type::default_enabled_vec()));
+                            }
+                        }
+                        self.active_screen = Screen::Commander;
+                        let _ = crate::settings::Settings::save_from_state(self);
+                    } else {
+                        // No custom screens; skip to first fixed tab
+                        self.active_screen = Screen::Materials;
+                    }
+                } else {
+                    // Fixed tabs
+                    let fixed_idx = next_index - custom_count;
+                    self.active_screen = match fixed_idx {
+                        0 => Screen::Materials,
+                        1 => Screen::ShipLocker,
+                        2 => Screen::Market,
+                        _ => Screen::Messages,
+                    };
+                }
+            }
+
             Message::ToggleFullscreen => {
                 // Request the latest window Id and handle in a follow-up message
                 return window::get_latest().map(Message::ToggleFullscreenWithId);

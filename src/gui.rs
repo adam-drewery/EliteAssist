@@ -45,6 +45,9 @@ pub enum Message {
     SelectCustomScreen(usize),
     RenameCustomScreen(Box<str>),
 
+    // Global hotkeys
+    NextTab,
+
     // Window controls
     ToggleFullscreen,
     ToggleFullscreenWithId(Option<iced::window::Id>),

@@ -11,6 +11,9 @@ mod test;
 #[cfg(not(feature = "mock_events"))]
 use log::error;
 
+#[cfg(not(feature = "mock_events"))]
+use global_hotkey::{GlobalHotKeyEvent, GlobalHotKeyManager, hotkey::{HotKey, Modifiers, Code}, HotKeyState};
+
 /// Derives the active subscriptions from the current State.
 /// Note: Iced calls this function on every update with the latest State,
 /// so after the JournalLoaded message is received (state.journal_loaded = true),
@@ -19,7 +22,10 @@ use log::error;
 #[cfg(not(feature = "mock_events"))]
 pub fn subscription(state: &State) -> Subscription<Message> {
     if !state.journal_loaded {
-        Subscription::run(stream_history)
+        Subscription::batch(vec![
+            Subscription::run(stream_history),
+            Subscription::run(stream_hotkeys),
+        ])
     } else {
         Subscription::batch(vec![
             Subscription::run(stream_journal),
@@ -29,6 +35,7 @@ pub fn subscription(state: &State) -> Subscription<Message> {
             Subscription::run(stream_ship_locker),
             Subscription::run(stream_market),
             Subscription::run(stream_navroute),
+            Subscription::run(stream_hotkeys),
         ])
     }
 }
@@ -160,3 +167,38 @@ fn stream_ship_locker() -> impl Stream<Item=Message> { stream_snapshot("ShipLock
 fn stream_market() -> impl Stream<Item=Message> { stream_snapshot("Market.json") }
 #[cfg(not(feature = "mock_events"))]
 fn stream_navroute() -> impl Stream<Item=Message> { stream_snapshot("NavRoute.json") }
+
+#[cfg(not(feature = "mock_events"))]
+fn stream_hotkeys() -> impl Stream<Item=Message> {
+    let (sender, receiver) = mpsc::channel(16);
+
+    tokio::spawn(async move {
+        // Register CTRL+Tab global hotkey
+        let manager = match GlobalHotKeyManager::new() {
+            Ok(m) => m,
+            Err(e) => { error!("Failed to start hotkey manager: {}", e); return; }
+        };
+        let hotkey = HotKey::new(Some(Modifiers::CONTROL), Code::Tab);
+        if let Err(e) = manager.register(hotkey) {
+            error!("Failed to register CTRL+Tab hotkey: {}", e);
+        }
+
+        let rx = GlobalHotKeyEvent::receiver();
+        loop {
+            // Poll for events without blocking the async runtime
+            match rx.try_recv() {
+                Ok(event) => {
+                    // Only respond to key down (Pressed) events
+                    if event.state == HotKeyState::Pressed {
+                        if sender.send(Message::NextTab).await.is_err() { break; }
+                    }
+                }
+                Err(_) => {
+                    tokio::time::sleep(std::time::Duration::from_millis(20)).await;
+                }
+            }
+        }
+    });
+
+    ReceiverStream::new(receiver)
+}
