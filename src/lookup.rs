@@ -34,13 +34,45 @@ pub static MERCENARY_RANKS: Map<&'static str, &'static str> = phf_map! {
 pub static CATEGORY_NAMES: Map<&'static str, &'static str> = phf_map! {
     "1" => "Light Metals and Metalloids",
     "2" => "Reactive Nonmetals and Transition Metals",
-    "3" => "Chalcogens and Transition Metals",
+    "3" => "Chalcogens and Transition Metals", 
     "4" => "Base Metals and Post-Transition Metals",
     "5" => "Coinage and Industrial Metals",
     "6" => "Heavy Metals and Metalloids",
     "7" => "Diverse Utility Elements"
 };
-
+pub static ENGINEERING_RECIPES: Map<&'static str, &'static str> = phf_map! {
+    "suit_reducedtoolbatteryconsumption" => "Reduced Tool Battery Consumption",
+    "suit_increasedbatterycapacity" => "Improved Battery Capacity",
+    "suit_increasedshieldregen" => "Faster Shield Regen", 
+    "suit_improvedarmourrating" => "Damage Resistance",
+    "suit_increasedo2capacity" => "Increased Air Reserves",
+    "suit_nightvision" => "Night Vision",
+    "suit_improvedradar" => "Enhanced Tracking",
+    "suit_backpackcapacity" => "Extra Backpack Capacity",
+    "suit_increasedammoreserves" => "Extra Ammo Capacity",
+    "suit_improvedjumpassist" => "Improved Jump Assist",
+    "suit_increasedsprintduration" => "Increased Sprint Duration",
+    "suit_adsmovementspeed" => "Combat Movement Speed",
+    "suit_quieterfootsteps" => "Quieter Footsteps",
+    "suit_increasedmeleedamage" => "Added Melee Damage",
+    "weapon_suppression_pressurised" => "Noise Suppressor",
+    "weapon_suppression_unpressurised" => "Audio Masking",
+    "weapon_stability" => "Stability",
+    "weapon_handling" => "Faster Handling",
+    "weapon_reloadspeed" => "Reload Speed",
+    "weapon_clipsize" => "Magazine Size",
+    "weapon_scope" => "Scope",
+    "weapon_backpackreloading" => "Stowed reloading",
+    "weapon_accuracy_kinematic" => "Higher Accuracy: Kinematic Armaments",
+    "weapon_range_kinematic" => "Greater Range: Kinematic Armaments", 
+    "weapon_headshotdamage_kinematic" => "Headshot damage: Kinematic Armaments",
+    "weapon_accuracy_manticore" => "Higher Accuracy: Kinematic Armaments",
+    "weapon_range_manticore" => "Greater Range: Kinematic Armaments",
+    "weapon_headshotdamage_manticore" => "Headshot damage: Kinematic Armaments",
+    "weapon_accuracy_takada" => "Higher Accuracy: Kinematic Armaments",
+    "weapon_range_takada" => "Greater Range: Kinematic Armaments",
+    "weapon_headshotdamage_takada" => "Headshot damage: Kinematic Armaments"
+};
 pub fn locations_for_material(name: &str) -> Vec<&str> {
     get_generated_items(&MATERIAL_LOCATIONS_MAP, MATERIAL_LOCATION_LISTS, name)
 }
@@ -133,3 +165,4 @@ fn get_generated_items<'a>(map: &Map<&'static str, usize>, lists: &[&[&'a str]],
     }
     Vec::new()
 }
+
