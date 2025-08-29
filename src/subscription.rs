@@ -172,8 +172,8 @@ fn stream_navroute() -> impl Stream<Item=Message> { stream_snapshot("NavRoute.js
 fn stream_hotkeys() -> impl Stream<Item=Message> {
     let (sender, receiver) = mpsc::channel(16);
 
-    tokio::spawn(async move {
-        // Register CTRL+Tab global hotkey
+    tokio::task::spawn_blocking(move || {
+        // Register CTRL+Tab global hotkey in a blocking context
         let manager = match GlobalHotKeyManager::new() {
             Ok(m) => m,
             Err(e) => { error!("Failed to start hotkey manager: {}", e); return; }
@@ -185,18 +185,20 @@ fn stream_hotkeys() -> impl Stream<Item=Message> {
 
         let rx = GlobalHotKeyEvent::receiver();
 
-        tokio::task::spawn_blocking(move || {
-            loop {
-                match rx.recv() {
-                    Ok(event) => {
-                        if event.state == HotKeyState::Pressed {
-                            if sender.blocking_send(Message::NextTab).is_err() { break; }
+        loop {
+            match rx.recv() {
+                Ok(event) => {
+                    if event.state == HotKeyState::Pressed {
+                        if sender.blocking_send(Message::NextTab).is_err() {
+                            error!("Failed to send NextTab message");
                         }
                     }
-                    Err(_) => { break; }
+                }
+                Err(e) => {
+                    error!("Global hotkey error: {}", e);
                 }
             }
-        }).await.ok();
+        }
     });
 
     ReceiverStream::new(receiver)
