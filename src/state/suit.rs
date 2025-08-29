@@ -51,7 +51,7 @@ impl From<event::SuitLoadoutModule> for SuitModule {
 impl From<event::SuitLoadout> for SuitLoadout {
     fn from(value: event::SuitLoadout) -> Self {
         SuitLoadout {
-            suit_name: localized_name(value.suit_name_localised.unwrap_or_else(|| value.suit_name)),
+            suit_name: localized_name(value.suit_name_localised.unwrap_or(value.suit_name)),
             suit_mods: value.suit_mods.into_iter().map(|m| m.into()).collect(),
             loadout_name: value.loadout_name,
             modules: value.modules.into_iter().map(|m| m.into()).collect(),

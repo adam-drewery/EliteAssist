@@ -1,7 +1,7 @@
 use iced::widget::pane_grid;
 use iced::widget::pane_grid::{DragEvent, ResizeEvent};
 use serde::{Deserialize, Serialize};
-use crate::settings::Settings;
+use crate::config::Settings;
 use crate::state;
 use crate::state::Layout;
 

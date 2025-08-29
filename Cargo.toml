@@ -45,6 +45,3 @@ chrono = "0.4.41"
 
 [features]
 mock_events = []
-
-[dev-dependencies]
-anyhow = "1.0.99"

@@ -15,10 +15,10 @@ pub use settings::*;
 use crate::gui::pane;
 use crate::state::{Layout, Screen};
 
-fn update_layout_from_custom_screen(layout: &mut Layout, sel: &crate::settings::CustomScreen) {
+fn update_layout_from_custom_screen(layout: &mut Layout, sel: &crate::config::CustomScreen) {
     if let Some(node) = &sel.layout {
-        layout.overview_panes = Some(crate::settings::build_panes_from_layout(node));
-        layout.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| crate::settings::layout_leaf_panes(node)));
+        layout.overview_panes = Some(crate::config::build_panes_from_layout(node));
+        layout.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| crate::config::layout_leaf_panes(node)));
     } else {
         layout.overview_panes = None;
         layout.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| pane::Type::default_enabled_vec()));
@@ -27,23 +27,23 @@ fn update_layout_from_custom_screen(layout: &mut Layout, sel: &crate::settings::
 
 pub fn add_custom(layout: &mut Layout) {
     let (layout_opt, visible_opt) = if let Some(panes) = &layout.overview_panes {
-        let layout_node = crate::settings::state_to_node(panes);
+        let layout_node = crate::config::state_to_node(panes);
         let visible = layout.enabled_panes
             .clone()
-            .unwrap_or_else(|| crate::settings::layout_leaf_panes(&layout_node));
+            .unwrap_or_else(|| crate::config::layout_leaf_panes(&layout_node));
         (Some(layout_node), Some(visible))
     } else {
         (None, Some(layout.enabled_panes.clone().unwrap_or_else(|| pane::Type::default_enabled_vec())))
     };
 
     let name = format!("Screen {}", layout.custom_screens.len() + 1).into();
-    layout.custom_screens.push(crate::settings::CustomScreen {
+    layout.custom_screens.push(crate::config::CustomScreen {
         name,
         layout: layout_opt,
         visible: visible_opt,
     });
     layout.selected_custom_screen = layout.custom_screens.len().saturating_sub(1);
-    crate::settings::Settings::save_from_state(&layout)
+    crate::config::Settings::save_from_state(&layout)
         .unwrap_or_else(|_| error!("Failed to save layout"));
 }
 
@@ -64,7 +64,7 @@ pub fn remove_custom(layout: &mut Layout) {
             update_layout_from_custom_screen(layout, &sel);
         }
 
-        crate::settings::Settings::save_from_state(&layout)
+        crate::config::Settings::save_from_state(&layout)
             .unwrap_or_else(|_| error!("Failed to save layout"));
     }
 }
@@ -76,7 +76,7 @@ pub fn select_custom(layout: &mut Layout, idx: usize) {
         if let Some(sel) = custom_screen {
             update_layout_from_custom_screen(layout, &sel);
         }
-        crate::settings::Settings::save_from_state(&layout)
+        crate::config::Settings::save_from_state(&layout)
             .unwrap_or_else(|_| error!("Failed to save layout"));
     }
 }
@@ -84,7 +84,7 @@ pub fn select_custom(layout: &mut Layout, idx: usize) {
 pub fn rename_custom(layout: &mut Layout, name: Box<str>) {
     if let Some(sel) = layout.custom_screens.get_mut(layout.selected_custom_screen) {
         sel.name = name;
-        crate::settings::Settings::save_from_state(&layout)
+        crate::config::Settings::save_from_state(&layout)
             .unwrap_or_else(|_| error!("Failed to save layout"));
     }
 }
@@ -97,7 +97,7 @@ pub fn navigate_to(layout: &mut Layout, idx: usize) -> Screen {
         if let Some(sel) = custom_screen {
             update_layout_from_custom_screen(layout, &sel);
         }
-        crate::settings::Settings::save_from_state(&layout)
+        crate::config::Settings::save_from_state(&layout)
             .unwrap_or_else(|_| error!("Failed to save layout"));
     }
 
@@ -131,7 +131,7 @@ pub(crate) fn next_tab(layout: &mut Layout, active_screen: &Screen) -> Option<Sc
                 update_layout_from_custom_screen(layout, &sel);
             }
 
-            let _ = crate::settings::Settings::save_from_state(&layout);
+            let _ = crate::config::Settings::save_from_state(&layout);
             Some(Screen::Commander)
         } else {
             Some(Screen::Materials)

@@ -16,7 +16,7 @@ mod edsm;
 mod ardent;
 mod lookup;
 mod query;
-mod settings;
+mod config;
 
 fn main() {
 

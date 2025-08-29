@@ -9,7 +9,7 @@ impl Layout {
         if let Some(sel) = self.custom_screens.get_mut(idx) {
             // Update layout from current overview_panes
             if let Some(panes) = &self.overview_panes {
-                let layout = crate::settings::state_to_node(panes);
+                let layout = crate::config::state_to_node(panes);
                 sel.layout = Some(layout);
             }
             // Update visible panes list from current state
@@ -24,7 +24,7 @@ pub struct Layout {
     pub overview_panes: Option<pane_grid::State<pane::Type>>,
     pub fullscreen: bool,
     pub enabled_panes: Option<Vec<pane::Type>>,
-    pub custom_screens: Vec<crate::settings::CustomScreen>,
+    pub custom_screens: Vec<crate::config::CustomScreen>,
     pub selected_custom_screen: usize,
 }
 
@@ -33,7 +33,7 @@ impl Layout {
         let mut layout = Layout::default();
 
         // Attempt to load persisted settings and apply
-        if let Some(settings) = crate::settings::Settings::load() {
+        if let Some(settings) = crate::config::Settings::load() {
             if let Some(screens) = settings.custom_screens.clone() {
                 // Use multi-screen config
                 layout.custom_screens = screens.clone();
@@ -42,8 +42,8 @@ impl Layout {
 
                 if let Some(sel) = layout.custom_screens.get(layout.selected_custom_screen) {
                     if let Some(node) = &sel.layout {
-                        layout.overview_panes = Some(crate::settings::build_panes_from_layout(node));
-                        layout.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| crate::settings::layout_leaf_panes(node)));
+                        layout.overview_panes = Some(crate::config::build_panes_from_layout(node));
+                        layout.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| crate::config::layout_leaf_panes(node)));
                     } else {
                         layout.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| pane::Type::default_enabled_vec()));
                     }
@@ -51,14 +51,14 @@ impl Layout {
             } else {
                 // Backward compatibility: single overview layout/visible
                 if let Some(node) = &settings.layout {
-                    layout.overview_panes = Some(crate::settings::build_panes_from_layout(node));
-                    layout.enabled_panes = Some(settings.visible.clone().unwrap_or_else(|| crate::settings::layout_leaf_panes(node)));
+                    layout.overview_panes = Some(crate::config::build_panes_from_layout(node));
+                    layout.enabled_panes = Some(settings.visible.clone().unwrap_or_else(|| crate::config::layout_leaf_panes(node)));
                 } else if let Some(visible) = settings.visible.clone() {
                     layout.enabled_panes = Some(visible);
                 }
 
                 // Initialize custom_screens with a single entry named "Overview"
-                layout.custom_screens.push(crate::settings::CustomScreen {
+                layout.custom_screens.push(crate::config::CustomScreen {
                     name: "Overview".into(),
                     layout: settings.layout.clone(),
                     visible: settings.visible.clone(),
@@ -76,17 +76,17 @@ impl Layout {
         if layout.custom_screens.is_empty() {
             // Derive a layout node and visible set from the current live panes
             let (layout_node_opt, visible_opt) = if let Some(panes) = &layout.overview_panes {
-                let node = crate::settings::state_to_node(panes);
+                let node = crate::config::state_to_node(panes);
                 let visible = layout
                     .enabled_panes
                     .clone()
-                    .unwrap_or_else(|| crate::settings::layout_leaf_panes(&node));
+                    .unwrap_or_else(|| crate::config::layout_leaf_panes(&node));
                 (Some(node), Some(visible))
             } else {
                 (None, Some(pane::Type::default_enabled_vec()))
             };
 
-            layout.custom_screens.push(crate::settings::CustomScreen {
+            layout.custom_screens.push(crate::config::CustomScreen {
                 name: "Overview".into(),
                 layout: layout_node_opt,
                 visible: visible_opt,
