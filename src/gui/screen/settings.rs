@@ -51,6 +51,7 @@ pub fn settings(state: &State) -> Row<'_, Message> {
             pane_items.push(
                 checkbox(p.title(), checked)
                     .on_toggle(move |v| Message::TogglePane(p2.clone(), v))
+                    .style(style::checkbox)
                     .into(),
             );
         }

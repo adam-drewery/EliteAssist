@@ -34,8 +34,7 @@ pub mod style {
 
     use crate::theme::{BACKGROUND, DARK_GRAY, GRAY, ORANGE, WHITE};
     use iced::border::radius;
-    use iced::Background::Color;
-    use iced::{Border, Theme};
+    use iced::{Background, Border, Theme};
     use iced::widget;
 
     fn orange_border() -> Border {
@@ -48,7 +47,7 @@ pub mod style {
 
     pub fn header(_theme: &Theme) -> widget::container::Style {
         widget::container::Style {
-            background: Some(Color(ORANGE)),
+            background: Some(Background::Color(ORANGE)),
             text_color: Some(WHITE),
             border: Default::default(),
             shadow: Default::default(),
@@ -103,7 +102,7 @@ pub mod style {
 
     pub fn tooltip(_theme: &Theme) -> widget::container::Style {
         widget::container::Style {
-            background: Some(Color(BACKGROUND)),
+            background: Some(Background::Color(BACKGROUND)),
             text_color: Some(ORANGE),
             border: orange_border(),
             shadow: Default::default(),
@@ -144,6 +143,23 @@ pub mod style {
                     widget::scrollable::Status::Dragged { .. } => ORANGE.into(),
                 }
             },
+        }
+    }
+
+    pub fn checkbox(_theme: &Theme, status: widget::checkbox::Status) -> widget::checkbox::Style {
+        widget::checkbox::Style {
+            background: Background::Color(DARK_GRAY),
+            icon_color: ORANGE.into(),
+            border: Border {
+                color:  match status {
+                    widget::checkbox::Status::Active { .. } => GRAY.into(),
+                    widget::checkbox::Status::Hovered { .. } =>  ORANGE.into(),
+                    widget::checkbox::Status::Disabled { .. } => DARK_GRAY.into(),
+                },
+                width: 1.0,
+                radius: Default::default(),
+            },
+            text_color: None,
         }
     }
 }
