@@ -689,7 +689,7 @@ impl State {
                             self.latest_message_timestamp_formatted = format::prettify_date(&e.timestamp)
                         }
 
-                        if e.channel.as_ref() != "npc" && e.channel.as_ref() != "starsystem" {
+                        if e.channel.as_ref() != "npc" {
                             self.messages.push(e.into());
                         }
                     }

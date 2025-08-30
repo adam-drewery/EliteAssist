@@ -1,40 +1,23 @@
+use log::error;
 use crate::journal::event;
+use crate::lookup;
+use crate::lookup::SuitClass;
 
 #[derive(Default)]
 pub struct SuitLoadout {
-
-    pub suit_name: Box<str>,
-    pub suit_mods: Vec<Box<str>>,
+    pub suit_name: &'static str,
+    pub class: u8,
+    pub suit_mods: Vec<&'static str>,
     pub loadout_name: Box<str>,
     pub modules: Vec<SuitModule>,
 }
 
 #[derive(Default)]
 pub struct SuitModule {
-
     pub slot_name: Box<str>,
     pub module_name: Box<str>,
     pub class: u64,
-    pub weapon_mods: Vec<Box<str>>,
-}
-
-fn localized_name(name: Box<str>) -> Box<str> {
-    if !name.starts_with('$') {
-        return name;
-    }
-    name.trim_end_matches("_Name;")
-        .trim_start_matches('$')
-        .split('_')
-        .map(|s| {
-            let mut chars = s.chars();
-            match chars.next() {
-                Some(c) => c.to_uppercase().chain(chars.flat_map(|c| c.to_lowercase())).collect(),
-                None => String::new(),
-            }
-        })
-        .collect::<Vec<_>>()
-        .join(" ")
-        .into()
+    pub weapon_mods: Vec<&'static str>,
 }
 
 impl From<event::SuitLoadoutModule> for SuitModule {
@@ -43,33 +26,38 @@ impl From<event::SuitLoadoutModule> for SuitModule {
             slot_name: value.slot_name,
             module_name: value.module_name_localised.unwrap_or(value.module_name),
             class: value.class,
-            weapon_mods: value.weapon_mods,
+            weapon_mods: value.weapon_mods.into_iter().map(|m| {
+                *lookup::SUIT_MODULE_NAMES.get(m.as_ref())
+                    .unwrap_or_else(|| {
+                        error!("Error: Missing suit module name: {}", m);
+                        &"Unknown"
+                    })
+            }).collect(),
         }
     }
 }
 
 impl From<event::SuitLoadout> for SuitLoadout {
     fn from(value: event::SuitLoadout) -> Self {
+
+        let suit_class = lookup::SUIT_CLASS_NAMES.get(&value.suit_name)
+            .unwrap_or_else(|| {
+                error!("Error: Missing suit module name: {}", value.suit_name);
+                &SuitClass { name: "Unknown", rank: 0 }
+            });
+
         SuitLoadout {
-            suit_name: localized_name(value.suit_name_localised.unwrap_or(value.suit_name)),
-            suit_mods: value.suit_mods.into_iter().map(|m| m.into()).collect(),
+            suit_name: suit_class.name,
+            class: suit_class.rank,
+            suit_mods: value.suit_mods.into_iter().map(|m| {
+                *lookup::SUIT_MODULE_NAMES.get(m.as_ref())
+                    .unwrap_or_else(|| {
+                        error!("Error: Missing suit module name: {}", m);
+                        &"Unknown"
+                    })
+            }).collect(),
             loadout_name: value.loadout_name,
             modules: value.modules.into_iter().map(|m| m.into()).collect(),
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_localized_name() {
-        assert_eq!(localized_name("$python_PILOT_Name;".into()), "Python Pilot".into());
-        assert_eq!(localized_name("$SIDEWINDER_Name;".into()), "Sidewinder".into());
-        assert_eq!(localized_name("$BIG_COOL_SHIP_Name;".into()), "Big Cool Ship".into());
-        assert_eq!(localized_name("Regular Name".into()), "Regular Name".into());
-        assert_eq!(localized_name("$".into()), "".into());
-        assert_eq!(localized_name("$SINGLE".into()), "Single".into());
     }
 }

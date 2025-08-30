@@ -1,7 +1,17 @@
 use iced::widget::pane_grid;
 use crate::gui::pane;
 
+#[derive(Default)]
+pub struct Layout {
+    pub overview_panes: Option<pane_grid::State<pane::Type>>,
+    pub fullscreen: bool,
+    pub enabled_panes: Option<Vec<pane::Type>>,
+    pub custom_screens: Vec<crate::config::CustomScreen>,
+    pub selected_custom_screen: usize,
+}
+
 impl Layout {
+
     pub fn sync_selected_custom_screen_from_live(&mut self) {
         // Ensure there is at least one custom screen entry
         if self.custom_screens.is_empty() { return; }
@@ -17,18 +27,7 @@ impl Layout {
             sel.visible = Some(visible);
         }
     }
-}
-
-#[derive(Default)]
-pub struct Layout {
-    pub overview_panes: Option<pane_grid::State<pane::Type>>,
-    pub fullscreen: bool,
-    pub enabled_panes: Option<Vec<pane::Type>>,
-    pub custom_screens: Vec<crate::config::CustomScreen>,
-    pub selected_custom_screen: usize,
-}
-
-impl Layout {
+    
     pub fn from_settings() -> Layout {
         let mut layout = Layout::default();
 
