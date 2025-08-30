@@ -12,7 +12,8 @@ pub mod modules;
 pub mod materials;
 pub mod ship_locker;
 pub mod market;
-pub mod log_journal;
+pub mod journal;
+mod messages;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Type {

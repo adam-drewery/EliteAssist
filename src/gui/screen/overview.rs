@@ -1,5 +1,5 @@
 use crate::gui::components::header;
-use crate::gui::pane::log_journal::journal as log_journal_pane;
+use crate::gui::pane::journal::journal as log_journal_pane;
 use crate::gui::pane::market::market as market_pane;
 use crate::gui::pane::materials::materials as materials_pane;
 use crate::gui::pane::modules::ship_modules;
