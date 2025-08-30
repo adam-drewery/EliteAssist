@@ -6,12 +6,8 @@ mod components;
 use crate::font::EUROSTILE;
 use crate::gui::layout::header_bar;
 use crate::gui::layout::navigation_bar;
-use crate::gui::screen::market;
-use crate::gui::screen::materials;
-use crate::gui::screen::messages;
 use crate::gui::screen::overview;
 use crate::gui::screen::settings;
-use crate::gui::screen::ship_locker;
 use crate::image::LOADING_PNG;
 use crate::journal::event::Event;
 use crate::state::{Screen, State};
@@ -82,10 +78,6 @@ fn main_layout(state: &State) -> Element<'_, Message> {
         header_bar(state),
         match state.active_screen {
             Screen::Commander => overview(state),
-            Screen::Materials => materials(state),
-            Screen::ShipLocker => ship_locker(state),
-            Screen::Market => market(state),
-            Screen::Messages => messages(state),
             Screen::Settings => settings(state),
         }
         .height(Fill),

@@ -56,14 +56,6 @@ impl Layout {
                 } else if let Some(visible) = settings.visible.clone() {
                     layout.enabled_panes = Some(visible);
                 }
-
-                // Initialize custom_screens with a single entry named "Overview"
-                layout.custom_screens.push(crate::config::CustomScreen {
-                    name: "Overview".into(),
-                    layout: settings.layout.clone(),
-                    visible: settings.visible.clone(),
-                });
-                layout.selected_custom_screen = 0;
             }
         }
 
@@ -90,6 +82,35 @@ impl Layout {
                 name: "Overview".into(),
                 layout: layout_node_opt,
                 visible: visible_opt,
+            });
+            // Also add a default "Ship Locker" screen as a single pane
+            layout.custom_screens.push(crate::config::CustomScreen {
+                name: "Materials".into(),
+                layout: Some(crate::config::LayoutNode::Pane(pane::Type::Materials)),
+                visible: Some(vec![pane::Type::Materials]),
+            });
+            // Also add a default "Ship Locker" screen as a single pane
+            layout.custom_screens.push(crate::config::CustomScreen {
+                name: "Ship Locker".into(),
+                layout: Some(crate::config::LayoutNode::Pane(pane::Type::ShipLocker)),
+                visible: Some(vec![pane::Type::ShipLocker]),
+            });
+            // Also add a default "Market" screen as a single pane
+            layout.custom_screens.push(crate::config::CustomScreen {
+                name: "Market".into(),
+                layout: Some(crate::config::LayoutNode::Pane(pane::Type::Market)),
+                visible: Some(vec![pane::Type::Market]),
+            });
+            // Also add default Log panes as one combined screen
+            layout.custom_screens.push(crate::config::CustomScreen {
+                name: "Logs".into(),
+                layout: Some(crate::config::LayoutNode::Split {
+                    axis: crate::config::AxisSer::Vertical,
+                    ratio: 0.5,
+                    a: Box::new(crate::config::LayoutNode::Pane(pane::Type::Messages)),
+                    b: Box::new(crate::config::LayoutNode::Pane(pane::Type::LogJournal)),
+                }),
+                visible: Some(vec![pane::Type::Messages, pane::Type::LogJournal]),
             });
             layout.selected_custom_screen = 0;
         }

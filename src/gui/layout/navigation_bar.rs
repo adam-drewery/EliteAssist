@@ -3,9 +3,8 @@ use crate::image::gui::{COLLAPSE, EXPAND, SETTINGS};
 use crate::state::{Screen, State};
 use crate::theme::{style, GRAY, ORANGE, WHITE};
 use iced::widget::button::{Status, Style};
-use iced::widget::{button, column, row, svg, Column, Row};
+use iced::widget::{button, column, row, svg, Row};
 use iced::{Fill, Right, Theme};
-use std::mem::discriminant;
 
 pub fn navigation_bar(state: &State) -> Row<'_, Message> {
     // Right-side fullscreen toggle and settings button
@@ -34,25 +33,12 @@ pub fn navigation_bar(state: &State) -> Row<'_, Message> {
 
     row![
         row(custom_buttons),
-        navigation_button(state, "MATERIALS", Screen::Materials),
-        navigation_button(state, "SHIP LOCKER", Screen::ShipLocker),
-        navigation_button(state, "MARKET", Screen::Market),
-        navigation_button(state, "LOG", Screen::Messages),
         column![].width(Fill),
 
         // right-side buttons
         column![fullscreen_button].align_x(Right).padding([0, 4]),
         column![settings_button].align_x(Right).padding([0, 4])
     ]
-}
-
-fn navigation_button<'a>(state: &State, title: &'a str, screen: Screen) -> Column<'a, Message> {
-
-    let style = if discriminant(&state.active_screen) == discriminant(&screen) { selected_style }
-        else { default_style };
-
-    let click_event = Message::NavigateTo(screen);
-    column![button(title).on_press(click_event).style(style)].padding(5)
 }
 
 fn selected_style(_theme: &Theme, _status: Status) -> Style {

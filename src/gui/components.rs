@@ -12,7 +12,7 @@ pub fn header(title: &str) -> Row<'_, Message> {
 }
 
 pub fn sub_header(title: &str) -> Row<'_, Message> {
-    row![text(title).size(20).color(ORANGE)]
+    row![text(title).size(20).color(ORANGE).width(Fill)]
 }
 
 pub fn details(label: &str, value: impl Into<String>) -> Row<'_, Message> {

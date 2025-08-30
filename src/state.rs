@@ -74,10 +74,6 @@ pub struct State {
 pub enum Screen {
     #[default]
     Commander,
-    ShipLocker,
-    Market,
-    Materials,
-    Messages,
     Settings,
 }
 

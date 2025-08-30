@@ -73,7 +73,7 @@ pub fn settings(state: &State) -> Row<'_, Message> {
                 column![].width(Fill),
                 column![container(screens_list).style(style::bordered).height(Fill).width(Fill).padding(8)].width(240),
                 column![].width(8),
-                column![container(right_side).style(style::bordered).height(Fill).width(Fill).padding(8)].width(Fill),
+                column![container(right_side).style(style::bordered).height(Fill).width(Fill).padding(8)].width(240),
                 column![].width(Fill)
             ],
             row![].width(Fill)

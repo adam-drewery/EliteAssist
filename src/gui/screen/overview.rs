@@ -7,6 +7,10 @@ use crate::gui::pane::modules::ship_modules;
 use crate::gui::pane::navigation::{location, route};
 use crate::gui::pane::personal::{claims, loadout, messages, missions, ranks};
 use crate::gui::pane::ship::ship_details;
+use crate::gui::pane::materials::materials as materials_pane;
+use crate::gui::pane::ship_locker::ship_locker as ship_locker_pane;
+use crate::gui::pane::market::market as market_pane;
+use crate::gui::pane::log_journal::journal as log_journal_pane;
 use crate::state::State;
 
 pub fn overview(state: &State) -> Row<'_, Message> {
@@ -24,6 +28,10 @@ pub fn overview(state: &State) -> Row<'_, Message> {
                 pane::Type::ShipModules => ("Ship Modules", ship_modules(state)),
                 pane::Type::Missions => ("Missions", missions(state)),
                 pane::Type::Claims => ("Claims", claims(state)),
+                pane::Type::Materials => ("Materials", materials_pane(state)),
+                pane::Type::ShipLocker => ("Ship Locker", ship_locker_pane(state)),
+                pane::Type::Market => ("Market", market_pane(state)),
+                pane::Type::LogJournal => ("Journal", log_journal_pane(state)),
             };
 
             pane_grid::Content::new(content)

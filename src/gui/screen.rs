@@ -1,16 +1,8 @@
-mod market;
-mod materials;
-mod messages;
 mod overview;
-mod ship_locker;
 mod settings;
 
 use log::error;
-pub use market::*;
-pub use materials::*;
-pub use messages::*;
 pub use overview::*;
-pub use ship_locker::*;
 pub use settings::*;
 use crate::gui::pane;
 use crate::state::{Layout, Screen};
@@ -106,43 +98,30 @@ pub fn navigate_to(layout: &mut Layout, idx: usize) -> Screen {
 
 pub(crate) fn next_tab(layout: &mut Layout, active_screen: &Screen) -> Option<Screen> {
     let custom_count = layout.custom_screens.len();
-    let fixed_count = 4usize;
-    let total = custom_count + fixed_count;
-    if total == 0 { return None; }
+    
+    if custom_count == 0 { return None; }
 
     let current_index = match active_screen {
         Screen::Commander => {
-            if custom_count == 0 { custom_count } else { layout.selected_custom_screen.min(custom_count.saturating_sub(1)) }
+            if custom_count == 0 { 0 } else { layout.selected_custom_screen.min(custom_count.saturating_sub(1)) }
         }
-        Screen::Materials => custom_count,
-        Screen::ShipLocker => custom_count + 1,
-        Screen::Market => custom_count + 2,
-        Screen::Messages => custom_count + 3,
         Screen::Settings => 0,
     };
 
-    let next_index = (current_index + 1) % total;
+    let next_index = if custom_count == 0 { 0 } else { (current_index + 1) % custom_count };
 
-    if next_index < custom_count {
+    if custom_count > 0 {
         let idx = next_index;
-        if !layout.custom_screens.is_empty() {
-            layout.selected_custom_screen = idx;
-            if let Some(sel) = layout.custom_screens.get(layout.selected_custom_screen).cloned() {
-                update_layout_from_custom_screen(layout, &sel);
-            }
-
-            let _ = crate::config::Settings::save_from_state(&layout);
-            Some(Screen::Commander)
-        } else {
-            Some(Screen::Materials)
+        layout.selected_custom_screen = idx;
+        if let Some(sel) = layout.custom_screens.get(layout.selected_custom_screen).cloned() {
+            update_layout_from_custom_screen(layout, &sel);
         }
+
+        crate::config::Settings::save_from_state(&layout)
+            .unwrap_or_else(|_| error!("Failed to save layout"));
+
+        Some(Screen::Commander)
     } else {
-        let fixed_idx = next_index - custom_count;
-        match fixed_idx {
-            0 => Screen::Materials,
-            1 => Screen::ShipLocker,
-            2 => Screen::Market,
-            _ => Screen::Messages,
-        }.into()
+        None
     }
 }

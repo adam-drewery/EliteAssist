@@ -14,26 +14,28 @@ _A Linux compatible Elite:Dangerous companion for your second monitor_
 
 ## Features
 
-- Overview screen with ship details, location and route data, personal details, outstanding transactions and missions.
-- This screen is customizable- panels can be rearranged, removed or added, and the layout is automatically persisted in a settings file.
+- Fully customizable UI: Add new screens and choose which panels to show on it via the settings menu.
+- Drag and drop panels to rearrange them on a screen.
+- Screens and layout configurations are automatically persisted to a file.
+- CTRL+Tab hotkey for switching between screens while in-game.
+- Fullscreen mode.
+
+- Currently implemented panels include:
+  - Personal equipment loadout.
+  - Ranks and rank progress.
+  - Chat message log.
+  - Game events log.
+  - Ship details.
+  - Ship module loadout.
+  - Route details including scoopable stars.
+  - Location details.
+  - Engineering materials.
+  - Ship locker contents.
+  - Market data (in-progress).
+  - Missions (in-progress).
+  - Outstanding claims (in progress).
 
 ![Main application screen](docs/main_screen.png)
-
-- Details about currently owned engineering materials:
-
-![Materials screen](docs/materials_screen.png)
-
-- Ship locker contents:
-
-![Ship locker screen](docs/ship_locker_screen.png)
-
-- A not-so-useful market details screen:
-
-![Market screen](docs/market_screen.png)
-
-- Historical logs for chat and game events:
-
-![Logs screen](docs/log_screen.png)
 
 ## How to install
 

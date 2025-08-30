@@ -9,6 +9,10 @@ pub mod navigation;
 pub mod personal;
 pub mod ship;
 pub mod modules;
+pub mod materials;
+pub mod ship_locker;
+pub mod market;
+pub mod log_journal;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Type {
@@ -21,11 +25,15 @@ pub enum Type {
     Ranks,
     Missions,
     Claims,
+    Materials,
+    ShipLocker,
+    Market,
+    LogJournal,
 }
 
 impl Type {
 
-    pub const fn all() -> [Type; 9] {
+    pub const fn all() -> [Type; 13] {
         [
             Type::Loadout,
             Type::Messages,
@@ -36,6 +44,10 @@ impl Type {
             Type::Ranks,
             Type::Missions,
             Type::Claims,
+            Type::Materials,
+            Type::ShipLocker,
+            Type::Market,
+            Type::LogJournal,
         ]
     }
 
@@ -50,6 +62,10 @@ impl Type {
             Type::Ranks => "Ranks",
             Type::Missions => "Missions",
             Type::Claims => "Claims",
+            Type::Materials => "Materials",
+            Type::ShipLocker => "Ship Locker",
+            Type::Market => "Market",
+            Type::LogJournal => "Journal",
         }
     }
 

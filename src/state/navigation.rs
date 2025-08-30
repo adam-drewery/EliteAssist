@@ -104,8 +104,8 @@ pub struct Station {
 pub struct StationBody {
     pub id: i64,
     pub name: Box<str>,
-    pub latitude: Option<f64>,
-    pub longitude: Option<f64>,
+    pub latitude: Option<f32>,
+    pub longitude: Option<f32>,
 }
 
 #[derive(Default, Clone, Debug)]
@@ -121,7 +121,7 @@ pub struct Body {
     pub name: Box<str>,
     pub type_field: Box<str>,
     pub sub_type: Box<str>,
-    pub distance_to_arrival: f64,
+    pub distance_to_arrival: f32,
     pub is_main_star: bool,
     pub is_scoopable: bool,
 }

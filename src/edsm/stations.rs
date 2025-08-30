@@ -59,6 +59,6 @@ pub struct ControllingFaction {
 pub struct Body {
     pub id: i64,
     pub name: Box<str>,
-    pub latitude: Option<f64>,
-    pub longitude: Option<f64>,
+    pub latitude: Option<f32>,
+    pub longitude: Option<f32>,
 }
