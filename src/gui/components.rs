@@ -1,15 +1,7 @@
 use crate::gui::Message;
-use crate::theme::style;
 use crate::theme::{GRAY, ORANGE};
-use iced::widget::{column, container, row, text, Column, Row};
+use iced::widget::{column, row, text, Column, Row};
 use iced::{Fill, Right};
-
-pub fn header(title: &str) -> Row<'_, Message> {
-    row![
-        container(text(title).size(24).width(Fill)).style(style::header).padding([0, 8])
-    ]
-    .padding([12, 0])
-}
 
 pub fn sub_header(title: &str) -> Row<'_, Message> {
     row![text(title).size(20).color(ORANGE).width(Fill)]
@@ -47,9 +39,9 @@ pub fn empty_text(label: &str) -> Column<'_, Message> {
 macro_rules! centered_column {
     ($($x:expr),*) => {
         column![
-            row![].height(Fill),
+            row![].height(iced::Fill),
             row![$($x),*],
-            row![].height(Fill),
+            row![].height(iced::Fill),
         ]
     }
 }
@@ -58,9 +50,9 @@ macro_rules! centered_column {
 macro_rules! centered_row {
     ($($x:expr),*) => {
         row![
-            column![].width(Fill),
+            column![].width(iced::Fill),
             column![$($x),*],
-            column![].width(Fill),
+            column![].width(iced::Fill),
         ]
     }
 }

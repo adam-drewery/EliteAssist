@@ -34,6 +34,8 @@ pub fn journal(state: &State) -> Column<'_, Message> {
                                 .wrapping(Wrapping::None)
                                 .font(EUROSTILE),
     
+                            column![].width(Fill),
+                        
                             column![
                                 text(item.time_display.as_ref())
                                     .size(12)

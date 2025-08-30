@@ -1,8 +1,8 @@
-mod overview;
+mod custom;
 mod settings;
 
 use log::error;
-pub use overview::*;
+pub use custom::*;
 pub use settings::*;
 use crate::gui::pane;
 use crate::state::{Layout, Screen};

@@ -4,15 +4,31 @@ use serde::{Deserialize, Serialize};
 use crate::config::Settings;
 use crate::state;
 
-pub mod navigation;
-pub mod personal;
-pub mod ship;
-pub mod modules;
-pub mod materials;
-pub mod ship_locker;
-pub mod market;
-pub mod journal;
+mod navigation;
+mod missions;
+mod ship;
+mod modules;
+mod materials;
+mod ship_locker;
+mod market;
+mod journal;
+mod loadout;
+mod ranks;
 mod messages;
+mod claims;
+
+pub use navigation::*;
+pub use missions::*;
+pub use ship::*;
+pub use modules::*;
+pub use materials::*;
+pub use claims::*;
+pub use messages::*;
+pub use ship_locker::*;
+pub use market::*;
+pub use journal::*;
+pub use loadout::*;
+pub use ranks::*;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Type {

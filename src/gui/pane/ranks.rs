@@ -1,42 +1,12 @@
+use iced::widget::{container, column, row, Column, text, progress_bar};
 use crate::centered_row;
-use crate::font::EUROSTILE;
-use crate::gui::components::*;
 use crate::gui::Message;
 use crate::lookup::fdev_ids::Rank;
 use crate::state::State;
 use crate::theme::{style, GRAY, ORANGE, WHITE};
-use iced::widget::{column, container, progress_bar, row, scrollable, text, Column};
-use iced::{Element, Fill};
-
-pub fn loadout(state: &State) -> Column<'_, Message> {
-    column![
-        sub_header("Suit"),
-        details("Name", state.suit_loadout.suit_name.as_ref()),
-        details("Loadout", state.suit_loadout.loadout_name.as_ref()),
-        column(
-            state.suit_loadout.suit_mods.iter().map(|mod_name| {
-                details("Modification", mod_name.as_ref()).into()
-            })
-        ).padding(8),
-        sub_header("Weapons"),
-        column(
-            state.suit_loadout.modules.iter().map(|module| {
-                column![
-                    details(&module.slot_name, module.module_name.as_ref()),
-                    column(
-                        module.weapon_mods.iter().map(|mod_name| {
-                            details("Modification", mod_name.as_ref()).into()
-                        })
-                    ).padding([0, 16])
-                ].into()
-            })
-        ).padding(8)
-    ]
-    .padding(8)
-}
 
 pub fn ranks(state: &State) -> Column<'_, Message> {
-    column![
+    iced::widget::column![
             row![
                 rank("Combat Rank", state.rank.combat, state.progress.combat, Rank::combat),
                 rank("Explorer Rank", state.rank.explore, state.progress.explore, Rank::exploration)
@@ -78,7 +48,7 @@ fn rank(title: &str, rank: u8, progress: u8, lookup: fn(&str) -> Option<&Rank>) 
         Some(title) => title.name.to_string()
     };
 
-    column![
+    iced::widget::column![
         container(
             column![
                 centered_row![text(title).size(16).color(ORANGE)].padding(4),
@@ -92,7 +62,7 @@ fn rank(title: &str, rank: u8, progress: u8, lookup: fn(&str) -> Option<&Rank>) 
             ]
         ).style(style::bordered)
     ]
-        .padding(4)
+    .padding(4)
 }
 
 fn superpower_rank(title: &str, rank: Option<u8>, progress: Option<u8>, reputation: f64, lookup: Option<fn(&str) -> Option<&Rank>>) -> Column<'_, Message> {
@@ -109,7 +79,7 @@ fn superpower_rank(title: &str, rank: Option<u8>, progress: Option<u8>, reputati
         }
     };
 
-    column![
+    iced::widget::column![
         container(
             column![
                 centered_row![text(title).size(16).color(ORANGE)].padding(4),
@@ -155,69 +125,5 @@ fn superpower_rank(title: &str, rank: Option<u8>, progress: Option<u8>, reputati
             ]
         ).style(style::bordered)
     ]
-        .padding(4)
-}
-
-pub fn messages(state: &State) -> Column<'_, Message> {
-    column![
-        scrollable(column(
-            state
-                .messages
-                .iter()
-                .filter(|item| !item.from.is_empty())
-                .map(|item| {
-                    column![
-                        row![
-                            column![text(item.from.as_ref()).size(16).color(ORANGE)],
-                            column![].width(12),
-                            column![text(item.time_display.as_ref()).size(12).color(GRAY)].padding(3),
-                        ],
-                        row![text(item.text.as_ref()).color(WHITE).font(EUROSTILE).size(16)]
-                    ].width(Fill)
-                })
-                .map(Element::from)
-        ))
-        .anchor_bottom()
-    ]
-    .height(Fill)
-    .padding(8)
-}
-
-
-pub fn claims(state: &State) -> Column<'_, Message> {
-
-    if (state.bounties.len() == 0) && (state.combat_bonds.len() == 0) {
-        return column![
-            empty_text("No Claims"),
-        ].height(Fill)
-    }
-
-    let all_claims = state.bounties.iter().map(|m| {
-        details(&m.0, format!["{} CR", &m.1])
-    }).chain(
-        state.combat_bonds.iter().map(|m| {
-            details(&m.0, format!["{} CR", &m.1])
-        })
-    );
-
-    column![
-        scrollable(column(all_claims.map(Element::from)))
-    ].height(Fill)
-}
-
-pub fn missions(state: &State) -> Column<'_, Message> {
-
-    if state.missions.len() == 0 {
-        return column![
-            empty_text("No Missions"),
-        ]
-    }
-
-    column![
-        scrollable(column(state.missions.iter().map(|m| {
-            column![
-                details(&m.faction, m.name.as_ref())
-            ]
-        }).map(Element::from)))
-    ].height(Fill)
+    .padding(4)
 }
