@@ -4,9 +4,9 @@ use crate::config;
 
 #[derive(Default)]
 pub struct Layout {
-    pub overview_panes: Option<pane_grid::State<pane::Type>>,
     pub fullscreen: bool,
     pub custom_screens: Vec<config::CustomScreen>,
+    pub current_panes: Option<pane_grid::State<pane::Type>>,
     pub selected_custom_screen: usize,
 }
 
@@ -36,7 +36,7 @@ impl Layout {
         let idx = self.selected_custom_screen.min(self.custom_screens.len().saturating_sub(1));
         if let Some(sel) = self.custom_screens.get_mut(idx) {
             // Update layout from current overview_panes
-            if let Some(panes) = &self.overview_panes {
+            if let Some(panes) = &self.current_panes {
                 let layout = config::state_to_node(panes);
                 sel.layout = Some(layout.clone());
                 // Derive visible panes from layout leaves
@@ -58,70 +58,34 @@ impl Layout {
 
                 if let Some(sel) = layout.custom_screens.get(layout.selected_custom_screen) {
                     if let Some(node) = &sel.layout {
-                        layout.overview_panes = Some(config::build_panes_from_layout(node));
+                        layout.current_panes = Some(config::build_panes_from_layout(node));
                     }
                 }
             } else {
                 // Backward compatibility: single overview layout/visible
                 if let Some(node) = &settings.layout {
-                    layout.overview_panes = Some(config::build_panes_from_layout(node));
+                    layout.current_panes = Some(config::build_panes_from_layout(node));
                 }
-
-                // If there were no custom screens, we'll create them below based on current state
             }
         }
 
-        // If no panes were built from a saved layout, build default layout based on current visible set
-        if layout.overview_panes.is_none() {
-            pane::load(&mut layout);
+        // If no panes were built from a saved layout, build default layout using screen defaults
+        if layout.current_panes.is_none() {
+            let node = crate::gui::screen::default::overview_layout();
+            layout.current_panes = Some(config::build_panes_from_layout(&node));
         }
 
-        // First run (no settings): create a default custom screen so it appears in the nav bar
+        // First run (no settings): populate default custom screens via central defaults
         if layout.custom_screens.is_empty() {
-            // Derive a layout node and visible set from the current live panes
-            let (layout_node_opt, visible_opt) = if let Some(panes) = &layout.overview_panes {
-                let node = config::state_to_node(panes);
-                let visible = config::layout_leaf_panes(&node);
-                (Some(node), Some(visible))
-            } else {
-                (None, Some(pane::Type::default_enabled_vec()))
-            };
-
-            layout.custom_screens.push(config::CustomScreen {
-                name: "Overview".into(),
-                layout: layout_node_opt,
-                visible: visible_opt,
-            });
-            // Also add a default "Ship Locker" screen as a single pane
-            layout.custom_screens.push(config::CustomScreen {
-                name: "Materials".into(),
-                layout: Some(config::LayoutNode::Pane(pane::Type::Materials)),
-                visible: Some(vec![pane::Type::Materials]),
-            });
-            // Also add a default "Ship Locker" screen as a single pane
-            layout.custom_screens.push(config::CustomScreen {
-                name: "Ship Locker".into(),
-                layout: Some(config::LayoutNode::Pane(pane::Type::ShipLocker)),
-                visible: Some(vec![pane::Type::ShipLocker]),
-            });
-            // Also add a default "Market" screen as a single pane
-            layout.custom_screens.push(config::CustomScreen {
-                name: "Market".into(),
-                layout: Some(config::LayoutNode::Pane(pane::Type::Market)),
-                visible: Some(vec![pane::Type::Market]),
-            });
-            // Also add default Log panes as one combined screen
-            layout.custom_screens.push(config::CustomScreen {
-                name: "Logs".into(),
-                layout: Some(config::LayoutNode::Split {
-                    axis: config::AxisSer::Vertical,
-                    ratio: 0.5,
-                    a: Box::new(config::LayoutNode::Pane(pane::Type::Messages)),
-                    b: Box::new(config::LayoutNode::Pane(pane::Type::LogJournal)),
-                }),
-                visible: Some(vec![pane::Type::Messages, pane::Type::LogJournal]),
-            });
+            layout.custom_screens = crate::gui::screen::default::default_custom_screens();
             layout.selected_custom_screen = 0;
+
+            // Initialize overview panes from the selected screen's layout
+            if let Some(sel) = layout.custom_screens.get(layout.selected_custom_screen) {
+                if let Some(node) = &sel.layout {
+                    layout.current_panes = Some(config::build_panes_from_layout(node));
+                }
+            }
         }
 
         layout

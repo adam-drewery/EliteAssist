@@ -201,7 +201,7 @@ impl State {
             Message::JournalLoaded => {
 
                 self.journal_loaded = true;
-                if self.layout.overview_panes.is_none() {
+                if self.layout.current_panes.is_none() {
                     pane::load(&mut self.layout)
                 }
 

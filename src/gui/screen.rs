@@ -1,22 +1,22 @@
 mod custom;
 mod settings;
+pub mod default;
 
 use log::error;
 pub use custom::*;
 pub use settings::*;
-use crate::gui::pane;
 use crate::state::{Layout, Screen};
 
 fn update_layout_from_custom_screen(layout: &mut Layout, sel: &crate::config::CustomScreen) {
     if let Some(node) = &sel.layout {
-        layout.overview_panes = Some(crate::config::build_panes_from_layout(node));
+        layout.current_panes = Some(crate::config::build_panes_from_layout(node));
     } else {
-        layout.overview_panes = None;
+        layout.current_panes = None;
     }
 }
 
 pub fn add_custom(layout: &mut Layout) {
-    let (layout_opt, visible_opt) = if let Some(panes) = &layout.overview_panes {
+    let (layout_opt, visible_opt) = if let Some(panes) = &layout.current_panes {
         let layout_node = crate::config::state_to_node(panes);
         let visible = layout.current_visible_vec();
         (Some(layout_node), Some(visible))

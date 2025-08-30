@@ -5,7 +5,7 @@ use iced::widget::{pane_grid, text, row, Column, Row};
 use iced::Fill;
 
 pub fn custom(state: &State) -> Row<'_, Message> {
-    if let Some(panes) = &state.layout.overview_panes {
+    if let Some(panes) = &state.layout.current_panes {
         // Build a PaneGrid that contains all overview pane
         let grid = pane_grid::PaneGrid::new(panes, |_, kind, _| {
             let (title, content): (&str, Column<'_, Message>) = match kind {

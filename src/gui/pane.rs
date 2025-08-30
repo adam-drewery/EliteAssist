@@ -131,7 +131,7 @@ impl Type {
         layout.set_current_visible_vec(list.clone());
 
         // Mutate the current layout instead of rebuilding to preserve existing splits
-        if let Some(panes) = &mut layout.overview_panes {
+        if let Some(panes) = &mut layout.current_panes {
             if did_enable {
 
                 // Insert the newly enabled pane by splitting an existing anchor pane
@@ -155,28 +155,6 @@ impl Type {
 
 }
 
-pub fn defaults() -> pane_grid::State<Type> {
-    let (mut panes, pane_1) = pane_grid::State::new(Type::Loadout);
-
-    let Some((pane_2, split_1)) = panes.split(pane_grid::Axis::Vertical, pane_1, Type::Route) else { return panes; };
-    let Some((pane_3, _split_2)) = panes.split(pane_grid::Axis::Vertical, pane_2, Type::ShipDetails) else { return panes; };
-
-    let Some((_, split_3)) = panes.split(pane_grid::Axis::Horizontal, pane_1, Type::Messages) else { return panes; };
-    let Some((_, split_4)) = panes.split(pane_grid::Axis::Horizontal, pane_1, Type::Ranks) else { return panes; };
-    let Some((_, split_5)) = panes.split(pane_grid::Axis::Horizontal, pane_2, Type::Location) else { return panes; };
-    let Some((_, split_6)) = panes.split(pane_grid::Axis::Horizontal, pane_3, Type::ShipModules) else { return panes; };
-
-    // Set vertical splits so each column takes up 1/3 of the space
-    panes.resize(split_1, 1.0f32 / 3.0f32);
-
-    // Set horizontal splits
-    panes.resize(split_3, 0.66f32);
-    panes.resize(split_4, 0.3f32);
-    panes.resize(split_5, 0.6f32);
-    panes.resize(split_6, 0.3f32);
-
-    panes
-}
 
 // Helper: find the Pane that contains the given PanelType
 pub fn find_with(panes: &pane_grid::State<Type>, target: &Type) -> Option<pane_grid::Pane> {
@@ -191,32 +169,15 @@ pub fn find_with(panes: &pane_grid::State<Type>, target: &Type) -> Option<pane_g
 }
 
 pub fn load(layout: &mut state::Layout) {
-
-    // Start from the default layout to preserve the intended split structure
-    let mut panes = defaults();
-
-    // If some panels are disabled, close them while keeping the rest of the layout
-    let enabled = layout.current_visible_vec();
-    let enabled_set: std::collections::HashSet<_> = enabled.iter().cloned().collect();
-
-    // Collect panes to close first to avoid borrowing issues
-    let to_close: Vec<_> = panes
-        .panes
-        .iter()
-        .filter_map(|(pane, content)| if !enabled_set.contains(content) { Some(*pane) } else { None })
-        .collect();
-    for p in to_close {
-        let _ = panes.close(p);
-    }
-
-    layout.overview_panes = Some(panes);
+    // Initialize with no live panes; default layout is handled by screen::defaults
+    layout.current_panes = None;
 
     // Persist the initialized layout so a settings file exists even before any manual changes
     let _ = Settings::save_from_state(layout);
 }
 
 pub fn dragged(layout: &mut state::Layout, event: DragEvent) {
-    if let Some(panes) = &mut layout.overview_panes {
+    if let Some(panes) = &mut layout.current_panes {
         match event {
             DragEvent::Canceled { .. } => {}
             DragEvent::Picked { .. } => {}
@@ -231,7 +192,7 @@ pub fn dragged(layout: &mut state::Layout, event: DragEvent) {
 }
 
 pub(crate) fn resized(layout: &mut state::Layout, event: ResizeEvent) {
-    if let Some(panes) = &mut layout.overview_panes {
+    if let Some(panes) = &mut layout.current_panes {
         panes.resize(event.split, event.ratio);
 
         // Sync the layout into the selected custom screen before saving
