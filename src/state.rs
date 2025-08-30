@@ -73,7 +73,7 @@ pub struct State {
 #[derive(Clone, Debug, Default, Deserialize)]
 pub enum Screen {
     #[default]
-    Commander,
+    Custom,
     Settings,
 }
 

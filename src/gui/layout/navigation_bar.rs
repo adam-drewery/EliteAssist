@@ -24,7 +24,7 @@ pub fn navigation_bar(state: &State) -> Row<'_, Message> {
     // Left: dynamic buttons for custom screens
     let mut custom_buttons: Vec<iced::Element<'_, Message>> = Vec::new();
     for (idx, scr) in state.layout.custom_screens.iter().enumerate() {
-        let is_selected = matches!(state.active_screen, Screen::Commander) && state.layout.selected_custom_screen == idx;
+        let is_selected = matches!(state.active_screen, Screen::Custom) && state.layout.selected_custom_screen == idx;
         let style_fn = if is_selected { selected_style } else { default_style };
         custom_buttons.push(
             column![button(scr.name.as_ref()).on_press(Message::NavigateToCustomScreen(idx)).style(style_fn)].padding(5).into()

@@ -6,8 +6,6 @@ mod components;
 use crate::font::EUROSTILE;
 use crate::gui::layout::header_bar;
 use crate::gui::layout::navigation_bar;
-use crate::gui::screen::overview;
-use crate::gui::screen::settings;
 use crate::image::LOADING_PNG;
 use crate::journal::event::Event;
 use crate::state::{Screen, State};
@@ -77,8 +75,8 @@ fn main_layout(state: &State) -> Element<'_, Message> {
     column![
         header_bar(state),
         match state.active_screen {
-            Screen::Commander => overview(state),
-            Screen::Settings => settings(state),
+            Screen::Custom => screen::custom(state),
+            Screen::Settings => screen::settings(state),
         }
         .height(Fill),
         navigation_bar(state).align_y(Bottom),

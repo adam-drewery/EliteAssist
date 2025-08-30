@@ -93,7 +93,7 @@ pub fn navigate_to(layout: &mut Layout, idx: usize) -> Screen {
             .unwrap_or_else(|_| error!("Failed to save layout"));
     }
 
-    Screen::Commander
+    Screen::Custom
 }
 
 pub(crate) fn next_tab(layout: &mut Layout, active_screen: &Screen) -> Option<Screen> {
@@ -102,7 +102,7 @@ pub(crate) fn next_tab(layout: &mut Layout, active_screen: &Screen) -> Option<Sc
     if custom_count == 0 { return None; }
 
     let current_index = match active_screen {
-        Screen::Commander => {
+        Screen::Custom => {
             if custom_count == 0 { 0 } else { layout.selected_custom_screen.min(custom_count.saturating_sub(1)) }
         }
         Screen::Settings => 0,
@@ -120,7 +120,7 @@ pub(crate) fn next_tab(layout: &mut Layout, active_screen: &Screen) -> Option<Sc
         crate::config::Settings::save_from_state(&layout)
             .unwrap_or_else(|_| error!("Failed to save layout"));
 
-        Some(Screen::Commander)
+        Some(Screen::Custom)
     } else {
         None
     }

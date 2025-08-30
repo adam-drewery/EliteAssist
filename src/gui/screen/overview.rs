@@ -1,19 +1,19 @@
-use crate::gui::{pane, Message};
-use crate::theme::style;
-use iced::widget::pane_grid;
-use iced::widget::{column, row, text, Column, Row};
-use iced::Fill;
+use crate::gui::components::header;
+use crate::gui::pane::log_journal::journal as log_journal_pane;
+use crate::gui::pane::market::market as market_pane;
+use crate::gui::pane::materials::materials as materials_pane;
 use crate::gui::pane::modules::ship_modules;
 use crate::gui::pane::navigation::{location, route};
 use crate::gui::pane::personal::{claims, loadout, messages, missions, ranks};
 use crate::gui::pane::ship::ship_details;
-use crate::gui::pane::materials::materials as materials_pane;
 use crate::gui::pane::ship_locker::ship_locker as ship_locker_pane;
-use crate::gui::pane::market::market as market_pane;
-use crate::gui::pane::log_journal::journal as log_journal_pane;
+use crate::gui::{pane, Message};
 use crate::state::State;
+use iced::widget::pane_grid;
+use iced::widget::{column, row, Column, Row};
+use iced::Fill;
 
-pub fn overview(state: &State) -> Row<'_, Message> {
+pub fn custom(state: &State) -> Row<'_, Message> {
     if let Some(panes) = &state.layout.overview_panes {
         // Build a PaneGrid that contains all overview pane
         let grid = pane_grid::PaneGrid::new(panes, |_, kind, _| {
@@ -35,13 +35,7 @@ pub fn overview(state: &State) -> Row<'_, Message> {
             };
 
             pane_grid::Content::new(content)
-                .title_bar(
-                    pane_grid::TitleBar::new(
-                        text(title).size(24)
-                    )
-                    .style(style::header)
-                    .padding([0, 8])
-                )
+                .title_bar(pane_grid::TitleBar::new(header(title)))
         })
         .width(Fill)
         .height(Fill)
