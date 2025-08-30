@@ -30,7 +30,6 @@ pub fn ship_details(state: &State) -> Column<'_, Message> {
             ]
         ]
     ]
-    .padding(8)
 }
 
 fn ship_title(ship_loadout: &state::ShipLoadout) -> Row<'_, Message> {

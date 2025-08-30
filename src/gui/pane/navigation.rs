@@ -17,7 +17,6 @@ pub fn location(state: &State) -> Column<'_, Message> {
         ],
         factions(state),
     ]
-    .padding(8)
 }
 
 fn factions(state: &State) -> Column<'_, Message> {
@@ -75,7 +74,7 @@ pub fn route(state: &State) -> Column<'_, Message> {
 
     if state.nav_route.len() == 0 {
         return column![
-            empty_text("No current route")
+            empty_placeholder("No current route")
         ]
     }
 
@@ -92,8 +91,7 @@ pub fn route(state: &State) -> Column<'_, Message> {
 
             if route_step.is_fuel_star() {
                 icons_column = icons_column.push(
-                    row![
-                        image(Handle::from_bytes(FUEL_STAR_PNG)).width(12).height(12)].padding(3)
+                    row![image(Handle::from_bytes(FUEL_STAR_PNG)).width(12).height(12)].padding(3)
                 );
             }
             else {
@@ -118,12 +116,12 @@ pub fn route(state: &State) -> Column<'_, Message> {
                         .padding(8)
                         .width(Fill)
                     ],
-                    column![].width(16) // lil hack to give the scrollbar some space.
+                    column![].width(12) // lil hack to give the scrollbar some space.
                 ]
             );
         }
     }
 
-    column![scrollable(items_column)].height(Fill).padding(8)
+    column![scrollable(items_column).style(style::scrollable)].height(Fill)
 }
 

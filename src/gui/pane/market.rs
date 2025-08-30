@@ -2,7 +2,7 @@ use crate::font::EUROSTILE;
 use crate::gui::components::sub_header;
 use crate::gui::Message;
 use crate::state::{MarketItem, State};
-use crate::theme::{GRAY, ORANGE, WHITE, YELLOW};
+use crate::theme::{style, GRAY, ORANGE, WHITE, YELLOW};
 use iced::widget::scrollable;
 use iced::widget::{column, row, text, Column};
 use iced::{Bottom, Element, Fill, Left};
@@ -51,6 +51,7 @@ pub fn market(state: &State) -> Column<'_, Message> {
 
             rows
         })))
+        .style(style::scrollable)
     ]
 }
 

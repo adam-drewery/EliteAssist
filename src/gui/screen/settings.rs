@@ -31,7 +31,7 @@ pub fn settings(state: &State) -> Row<'_, Message> {
                 column![].width(4),
                 column![button(svg(Handle::from_memory(image::gui::REMOVE)).height(16)).on_press(Message::RemoveCustomScreen)]
             ],
-            scrollable(column(items)).height(Fill)
+            scrollable(column(items)).height(Fill).style(style::scrollable)
         ]
         .spacing(8)
     };
@@ -56,19 +56,18 @@ pub fn settings(state: &State) -> Row<'_, Message> {
         }
 
         column![
-            text("Settings").size(24).color(ORANGE),
-            // text("Rename selected screen:").size(16).color(GRAY),
+            text("Screen Settings").size(24).color(ORANGE),
             text_input("Screen name", current_name)
                 .on_input(|value: String| Message::RenameCustomScreen(value.into())),
             text("Visible panes:").size(16).color(GRAY),
-            scrollable(column(pane_items)).height(Fill)
+            scrollable(column(pane_items)).height(Fill).width(Fill).style(style::scrollable)
         ]
         .spacing(8)
     };
 
     row![
         column![
-            row![].width(Fill),
+            row![].height(128),
             row![
                 column![].width(Fill),
                 column![container(screens_list).style(style::bordered).height(Fill).width(Fill).padding(8)].width(240),
@@ -76,7 +75,7 @@ pub fn settings(state: &State) -> Row<'_, Message> {
                 column![container(right_side).style(style::bordered).height(Fill).width(Fill).padding(8)].width(240),
                 column![].width(Fill)
             ],
-            row![].width(Fill)
+            row![].height(128)
         ]
     ]
 }

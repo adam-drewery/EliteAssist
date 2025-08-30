@@ -34,9 +34,8 @@ pub fn ship_modules(state: &State) -> Column<'_, Message> {
                 column![].width(12)
             ]
         )
+        .style(style::scrollable)
     ]
-        .padding(8)
-        .height(Fill)
 }
 
 fn module_group<'a>(title: &'a str, icon_bytes: &'static [u8], modules: &'a Vec<state::ShipModule>) -> Column<'a, Message> {
@@ -128,8 +127,8 @@ fn engineering_levels(module: &state::ShipModule) -> Column<'_, Message> {
     } else {
         column![]
     }
-        .padding(4)
-        .height(30)
+    .padding(4)
+    .height(30)
 }
 
 fn engineering_details(module: &state::ShipModule) -> Column<'_, Message> {

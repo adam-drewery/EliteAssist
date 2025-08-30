@@ -1,14 +1,15 @@
 use iced::{Element, Fill};
 use iced::widget::{column, scrollable, Column};
-use crate::gui::components::{details, empty_text};
+use crate::gui::components::{details, empty_placeholder};
 use crate::gui::Message;
 use crate::state::State;
+use crate::theme::style;
 
 pub fn claims(state: &State) -> Column<'_, Message> {
 
     if (state.bounties.len() == 0) && (state.combat_bonds.len() == 0) {
         return iced::widget::column![
-            empty_text("No Claims"),
+            empty_placeholder("No Claims"),
         ].height(Fill)
     }
 
@@ -21,6 +22,6 @@ pub fn claims(state: &State) -> Column<'_, Message> {
     );
 
     iced::widget::column![
-        scrollable(column(all_claims.map(Element::from)))
+        scrollable(column(all_claims.map(Element::from))).style(style::scrollable)
     ].height(Fill)
 }

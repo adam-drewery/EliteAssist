@@ -1,7 +1,7 @@
 use crate::font::EUROSTILE;
 use crate::gui::Message;
 use crate::state::State;
-use crate::theme::{GRAY, ORANGE, WHITE};
+use crate::theme::{style, GRAY, ORANGE, WHITE};
 use iced::widget::text::Wrapping;
 use iced::widget::{column, row, scrollable, text, Column};
 use iced::{Fill, Left, Right};
@@ -52,8 +52,7 @@ pub fn journal(state: &State) -> Column<'_, Message> {
             )
         )
         .anchor_bottom()
+        .style(style::scrollable)
     ]
-    .padding(8)
-    .width(Fill)
     .align_x(Left)
 }

@@ -27,5 +27,4 @@ pub fn loadout(state: &State) -> Column<'_, Message> {
             })
         ).padding(8)
     ]
-    .padding(8)
 }

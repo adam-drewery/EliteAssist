@@ -23,7 +23,7 @@ pub fn details(label: &str, value: impl Into<String>) -> Row<'_, Message> {
     ]
 }
 
-pub fn empty_text(label: &str) -> Column<'_, Message> {
+pub fn empty_placeholder(label: &str) -> Column<'_, Message> {
     column![
         row![].height(Fill),
         row![

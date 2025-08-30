@@ -73,6 +73,7 @@ fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a,
                 })
                 .map(iced::Element::from)
         ))
+        .style(style::scrollable)
         .width(Fill)
     ]
 }

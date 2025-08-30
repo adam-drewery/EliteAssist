@@ -3,7 +3,7 @@ use iced::widget::{column, row, scrollable, text, Column};
 use crate::font::EUROSTILE;
 use crate::gui::Message;
 use crate::state::State;
-use crate::theme::{GRAY, ORANGE, WHITE};
+use crate::theme::{style, GRAY, ORANGE, WHITE};
 
 pub fn messages(state: &State) -> Column<'_, Message> {
     iced::widget::column![
@@ -24,8 +24,7 @@ pub fn messages(state: &State) -> Column<'_, Message> {
                 })
                 .map(Element::from)
         ))
+        .style(style::scrollable)
         .anchor_bottom()
     ]
-    .height(Fill)
-    .padding(8)
 }

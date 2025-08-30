@@ -39,7 +39,7 @@ pub fn ranks(state: &State) -> Column<'_, Message> {
                     state.reputation.empire,
                     Some(Rank::empire))
             ],
-        ].padding(8)
+        ]
 }
 
 fn rank(title: &str, rank: u8, progress: u8, lookup: fn(&str) -> Option<&Rank>) -> Column<'_, Message> {

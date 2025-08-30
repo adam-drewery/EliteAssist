@@ -1,9 +1,8 @@
 use crate::gui::{pane, Message};
 use crate::state::State;
-use iced::widget::{pane_grid, text};
-use iced::widget::{column, row, Column, Row};
-use iced::Fill;
 use crate::theme::style;
+use iced::widget::{pane_grid, text, row, Column, Row};
+use iced::Fill;
 
 pub fn custom(state: &State) -> Row<'_, Message> {
     if let Some(panes) = &state.layout.overview_panes {
@@ -26,7 +25,7 @@ pub fn custom(state: &State) -> Row<'_, Message> {
                 pane::Type::LogJournal => ("Journal", pane::journal(state)),
             };
 
-            pane_grid::Content::new(content)
+            pane_grid::Content::new(content.padding([8, 0]))
                 .title_bar(
                     pane_grid::TitleBar::new(
                         text(title).size(24)
@@ -43,21 +42,6 @@ pub fn custom(state: &State) -> Row<'_, Message> {
 
         row![grid].width(Fill)
     } else {
-        // Fallback to the previous static layout until the panes are initialized
-        row![
-            column![
-                pane::loadout(state),
-                pane::ranks(state),
-                pane::messages(state)
-            ],
-            column![
-                pane::route(state),
-                pane::location(state)
-            ],
-            column![
-                pane::ship_details(state),
-                pane::ship_modules(state)
-            ]
-        ]
+        row![]
     }
 }

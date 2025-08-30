@@ -16,7 +16,6 @@ pub fn ship_locker(state: &State) -> Column<'_, Message> {
             locker_item_list("Data", &state.ship_locker.data),
             locker_item_list("Consumables", &state.ship_locker.consumables),
         ]
-        .height(Fill)
     ]
 }
 
@@ -55,6 +54,7 @@ fn locker_item_list<'a>(title: &'a str, items: &'a [ShipLockerItem]) -> Column<'
                 })
                 .map(iced::Element::from)
         ))
+        .style(style::scrollable)
         .width(Fill)
     ]
     .align_x(Left)
