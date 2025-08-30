@@ -17,7 +17,7 @@ pub fn messages(state: &State) -> Column<'_, Message> {
                         row![
                             column![text(item.from.as_ref()).size(16).color(ORANGE)],
                             column![].width(Fill),
-                            column![text(item.time_display.as_ref()).size(12).color(GRAY)].padding(3),
+                            column![text(item.time_display.as_ref()).size(12).color(GRAY)].padding([0, 8]),
                         ],
                         row![text(item.text.as_ref()).color(WHITE).font(EUROSTILE).size(16)]
                     ].width(Fill)
