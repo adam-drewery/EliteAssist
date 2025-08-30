@@ -26,7 +26,8 @@ pub static SUIT_CLASS_NAMES: Map<&'static str, SuitClass> = phf_map! {
     "utilitysuit_class2" => SuitClass {name: "Maverick", rank: 2},
     "utilitysuit_class3" => SuitClass {name: "Maverick", rank: 3},
     "utilitysuit_class4" => SuitClass {name: "Maverick", rank: 4},
-    "utilitysuit_class5" => SuitClass {name: "Maverick", rank: 5}
+    "utilitysuit_class5" => SuitClass {name: "Maverick", rank: 5},
+    "flightsuit" => SuitClass {name: "Flight Suit", rank: 0},
 };
 
 // Hard-coded rank maps for Exobiologist and Mercenary (Odyssey). No idea why they're not included in fdev-ids.
@@ -65,12 +66,12 @@ pub static CATEGORY_NAMES: Map<&'static str, &'static str> = phf_map! {
 };
 pub static SUIT_MODULE_NAMES: Map<&'static str, &'static str> = phf_map! {
     "suit_reducedtoolbatteryconsumption" => "Reduced Tool Battery Consumption",
-    "suit_increasedbatterycapacity" => "Improved Battery Capacity",
+    "suit_increasedbatterycapacity" => "Improved Battery Capacity", 
     "suit_increasedshieldregen" => "Faster Shield Regen",
     "suit_improvedarmourrating" => "Damage Resistance",
     "suit_increasedo2capacity" => "Increased Air Reserves",
     "suit_nightvision" => "Night Vision",
-    "suit_improvedradar" => "Enhanced Tracking",
+    "suit_improvedradar" => "Enhanced Tracking", 
     "suit_backpackcapacity" => "Extra Backpack Capacity",
     "suit_increasedammoreserves" => "Extra Ammo Capacity",
     "suit_improvedjumpassist" => "Improved Jump Assist",
@@ -86,11 +87,14 @@ pub static SUIT_MODULE_NAMES: Map<&'static str, &'static str> = phf_map! {
     "weapon_clipsize" => "Magazine Size",
     "weapon_scope" => "Scope",
     "weapon_backpackreloading" => "Stowed reloading",
+    "weapon_accuracy" => "Higher Accuracy: Kinematic Armaments",
+    "weapon_range" => "Greater Range: Kinematic Armaments", 
+    "weapon_headshotdamage" => "Headshot damage: Kinematic Armaments",
     "weapon_accuracy_kinematic" => "Higher Accuracy: Kinematic Armaments",
     "weapon_range_kinematic" => "Greater Range: Kinematic Armaments",
     "weapon_headshotdamage_kinematic" => "Headshot damage: Kinematic Armaments",
     "weapon_accuracy_manticore" => "Higher Accuracy: Kinematic Armaments",
-    "weapon_range_manticore" => "Greater Range: Kinematic Armaments",
+    "weapon_range_manticore" => "Greater Range: Kinematic Armaments", 
     "weapon_headshotdamage_manticore" => "Headshot damage: Kinematic Armaments",
     "weapon_accuracy_takada" => "Higher Accuracy: Kinematic Armaments",
     "weapon_range_takada" => "Greater Range: Kinematic Armaments",

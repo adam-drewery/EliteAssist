@@ -64,9 +64,9 @@ impl Settings {
     pub fn save_from_state(layout: &state::Layout) -> std::io::Result<()> {
         // Determine current live layout and visible panes
         let (current_layout, current_visible) = if let Some(panes) = &layout.overview_panes {
-            (Some(state_to_node(panes)), layout.enabled_panes.clone().or_else(|| Some(layout_leaf_panes(&state_to_node(panes)))))
+            (Some(state_to_node(panes)), Some(layout.current_visible_vec()))
         } else {
-            (None, layout.enabled_panes.clone().or_else(|| Some(pane::Type::default_enabled_vec())))
+            (None, Some(layout.current_visible_vec()))
         };
 
         // Build multi-screen payload if available in state

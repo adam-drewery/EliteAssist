@@ -10,22 +10,18 @@ use crate::state::{Layout, Screen};
 fn update_layout_from_custom_screen(layout: &mut Layout, sel: &crate::config::CustomScreen) {
     if let Some(node) = &sel.layout {
         layout.overview_panes = Some(crate::config::build_panes_from_layout(node));
-        layout.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| crate::config::layout_leaf_panes(node)));
     } else {
         layout.overview_panes = None;
-        layout.enabled_panes = Some(sel.visible.clone().unwrap_or_else(|| pane::Type::default_enabled_vec()));
     }
 }
 
 pub fn add_custom(layout: &mut Layout) {
     let (layout_opt, visible_opt) = if let Some(panes) = &layout.overview_panes {
         let layout_node = crate::config::state_to_node(panes);
-        let visible = layout.enabled_panes
-            .clone()
-            .unwrap_or_else(|| crate::config::layout_leaf_panes(&layout_node));
+        let visible = layout.current_visible_vec();
         (Some(layout_node), Some(visible))
     } else {
-        (None, Some(layout.enabled_panes.clone().unwrap_or_else(|| pane::Type::default_enabled_vec())))
+        (None, Some(layout.current_visible_vec()))
     };
 
     let name = format!("Screen {}", layout.custom_screens.len() + 1).into();

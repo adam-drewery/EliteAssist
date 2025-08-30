@@ -98,19 +98,13 @@ impl Type {
     }
 
     pub fn is_enabled(&self, layout: &state::Layout) -> bool {
-        match &layout.enabled_panes {
-            Some(v) => v.contains(self),
-            None => Type::default_enabled_vec().contains(self),
-        }
+        layout.current_visible_vec().contains(self)
     }
 
     pub fn toggle(self, layout: &mut state::Layout, enabled: bool) {
 
-        // Start from the current enabled set (or all panels by default)
-        let mut list: Vec<Type> = layout
-            .enabled_panes
-            .clone()
-            .unwrap_or_else(|| Type::default_enabled_vec());
+        // Start from the current visible set
+        let mut list: Vec<Type> = layout.current_visible_vec();
 
         let was_enabled = list.contains(&self);
         let before_len = list.len();
@@ -134,7 +128,7 @@ impl Type {
         let did_enable = enabled && !was_enabled;
         let did_disable = !enabled && was_enabled && list.len() < before_len;
 
-        layout.enabled_panes = Some(list.clone());
+        layout.set_current_visible_vec(list.clone());
 
         // Mutate the current layout instead of rebuilding to preserve existing splits
         if let Some(panes) = &mut layout.overview_panes {
@@ -202,19 +196,19 @@ pub fn load(layout: &mut state::Layout) {
     let mut panes = defaults();
 
     // If some panels are disabled, close them while keeping the rest of the layout
-    if let Some(enabled) = &layout.enabled_panes {
-        let enabled_set: std::collections::HashSet<_> = enabled.iter().cloned().collect();
+    let enabled = layout.current_visible_vec();
+    let enabled_set: std::collections::HashSet<_> = enabled.iter().cloned().collect();
 
-        // Collect panes to close first to avoid borrowing issues
-        let to_close: Vec<_> = panes
-            .panes
-            .iter()
-            .filter_map(|(pane, content)| if !enabled_set.contains(content) { Some(*pane) } else { None })
-            .collect();
-        for p in to_close {
-            let _ = panes.close(p);
-        }
+    // Collect panes to close first to avoid borrowing issues
+    let to_close: Vec<_> = panes
+        .panes
+        .iter()
+        .filter_map(|(pane, content)| if !enabled_set.contains(content) { Some(*pane) } else { None })
+        .collect();
+    for p in to_close {
+        let _ = panes.close(p);
     }
+
     layout.overview_panes = Some(panes);
 
     // Persist the initialized layout so a settings file exists even before any manual changes
