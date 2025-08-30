@@ -3,7 +3,6 @@ use iced::widget::pane_grid::{DragEvent, ResizeEvent};
 use serde::{Deserialize, Serialize};
 use crate::config::Settings;
 use crate::state;
-use crate::state::Layout;
 
 pub mod navigation;
 pub mod personal;
@@ -221,7 +220,7 @@ pub fn dragged(layout: &mut state::Layout, event: DragEvent) {
     }
 }
 
-pub(crate) fn resized(layout: &mut Layout, event: ResizeEvent) {
+pub(crate) fn resized(layout: &mut state::Layout, event: ResizeEvent) {
     if let Some(panes) = &mut layout.overview_panes {
         panes.resize(event.split, event.ratio);
 
