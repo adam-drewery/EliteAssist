@@ -14,14 +14,13 @@ impl crate::gui::pane::PaneType for LocationPane {
     fn title(&self) -> &'static str { "Location" }
     
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
-        column![row![system(state), powerplay(state)], factions(state),].into()
+        column![row![system(state), powerplay(state)], factions(state)].into()
     }
 }
 
 fn factions(state: &State) -> Column<'_, Message> {
-    if state.location.factions.is_empty() {
-        return column![];
-    }
+    
+    if state.location.factions.is_empty() { return column![]; }
 
     let mut result = column![sub_header("Factions")];
 
@@ -51,9 +50,8 @@ fn factions(state: &State) -> Column<'_, Message> {
 }
 
 fn powerplay(state: &State) -> Column<'_, Message> {
-    if state.location.powerplay_state.is_none() {
-        return column![];
-    }
+    
+    if state.location.powerplay_state.is_none() { return column![]; }
 
     column![
         sub_header("Powerplay"),

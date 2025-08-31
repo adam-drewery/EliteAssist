@@ -15,7 +15,7 @@ impl crate::gui::pane::PaneType for ClaimsPane {
 
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         if (state.bounties.len() == 0) && (state.combat_bonds.len() == 0) {
-            return iced::widget::column![empty_placeholder("No Claims"),]
+            return iced::widget::column![empty_placeholder("No Claims")]
                 .height(Fill)
                 .into();
         }

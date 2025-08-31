@@ -14,6 +14,7 @@ impl crate::gui::pane::PaneType for RoutePane {
     fn title(&self) -> &'static str { "Route" }
 
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
+        
         if state.nav_route.len() == 0 {
             return iced::widget::column![empty_placeholder("No current route")].into();
         }
