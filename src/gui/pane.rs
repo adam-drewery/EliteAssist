@@ -30,6 +30,7 @@ pub use market::*;
 pub use journal::*;
 pub use loadout::*;
 pub use ranks::*;
+pub use route::*;
 use crate::gui::Message;
 use crate::state::State;
 

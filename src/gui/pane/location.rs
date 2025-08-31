@@ -1,11 +1,9 @@
 use crate::font::EUROSTILE;
 use crate::gui::components::*;
 use crate::gui::Message;
-use crate::image::FUEL_STAR_PNG;
 use crate::state::State;
-use crate::theme::{style, GRAY, RED};
-use iced::widget::image::Handle;
-use iced::widget::{column, container, image, row, scrollable, text, Column};
+use crate::theme::GRAY;
+use iced::widget::{column, row, text, Column};
 use iced::{Element, Fill};
 use thousands::Separable;
 
