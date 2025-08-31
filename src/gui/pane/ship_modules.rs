@@ -7,6 +7,7 @@ use crate::theme::{style, GRAY, ORANGE, YELLOW};
 use iced::widget::image::Handle;
 use iced::widget::{column, container, image, row, scrollable, text, Column, Row};
 use iced::{Center, Element, Fill, Right};
+use thousands::Separable;
 
 pub struct ShipModulesPane;
 
@@ -86,13 +87,14 @@ fn module_details(module: &state::ShipModule, size: u8) -> Row<'_, Message> {
                     engineering_levels(&module),
                 ],
                 row![].height(Fill),
-                engineering_details(&module)
+                engineering_details(&module),
+                module_runtime_details(&module)
             ]
             .width(Fill),
             mount_type_icon(module, size)
         ])
         .style(style::bordered)
-        .height(48)
+        .height(64)
         .padding(0.5)
         .width(Fill),
     ]
@@ -137,20 +139,63 @@ fn engineering_levels(module: &state::ShipModule) -> Column<'_, Message> {
 
 fn engineering_details(module: &state::ShipModule) -> Column<'_, Message> {
     if let Some(engineering) = &module.engineering {
-        column![row![
-            column![
-                text(engineering.blueprint_name.as_ref())
-                    .size(14)
-                    .color(ORANGE)
+        let modifiers_brief = if engineering.modifiers.is_empty() {
+            String::new()
+        } else {
+            engineering
+                .modifiers
+                .iter()
+                .map(|m| format!(
+                    "{}: {} (orig {}), {}",
+                    m.label.as_ref(),
+                    m.value,
+                    m.original_value,
+                    if m.less_is_good == 1 { "-" } else { "+" }
+                ))
+                .collect::<Vec<String>>()
+                .join(" | ")
+        };
+
+        column![
+            row![
+                column![
+                    text(engineering.blueprint_name.as_ref())
+                        .size(14)
+                        .color(ORANGE)
+                ],
+                column![].width(12),
+                if let Some(experimental) = &engineering.experimental_effect {
+                    column![text(experimental.as_ref()).size(14).color(YELLOW)]
+                } else {
+                    column![]
+                }
             ],
-            column![].width(12),
-            if let Some(experimental) = &engineering.experimental_effect {
-                column![text(experimental.as_ref()).size(14).color(YELLOW)]
+            row![
+                column![text(format!("Engineer: {}", engineering.engineer)).size(12).color(GRAY)],
+                column![].width(12),
+                column![text(format!("Quality: {:.2}", engineering.quality)).size(12).color(GRAY)],
+            ],
+            if !modifiers_brief.is_empty() {
+                row![column![text(modifiers_brief).size(12).color(GRAY)]]
             } else {
-                column![]
+                row![]
             }
-        ]]
+        ]
     } else {
         column![]
     }
+}
+
+fn module_runtime_details(module: &state::ShipModule) -> Column<'_, Message> {
+    let mut info = Vec::new();
+    info.push(format!("On: {}", if module.on { "Yes" } else { "No" }));
+    info.push(format!("Priority: {}", module.priority));
+    info.push(format!("Health: {:.0}%", module.health * 100.0));
+    if let Some(value) = module.value {
+        info.push(format!("Value: CR {}", value.to_string().separate_with_commas()));
+    }
+    if let Some(c) = module.ammo_in_clip { info.push(format!("Clip: {}", c)); }
+    if let Some(h) = module.ammo_in_hopper { info.push(format!("Hopper: {}", h)); }
+
+    column![row![column![text(info.join("  |  ")).size(12).color(GRAY)]]]
 }

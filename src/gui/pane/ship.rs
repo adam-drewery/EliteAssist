@@ -54,6 +54,14 @@ impl crate::gui::pane::PaneType for ShipDetailsPane {
                     details(
                         "Unladen Mass",
                         format!("{:.2} T", state.ship_loadout.unladen_mass)
+                    ),
+                    details(
+                        "Hull Value",
+                        format!("CR {}", state.ship_loadout.hull_value.to_string().separate_with_commas())
+                    ),
+                    details(
+                        "Modules Value",
+                        format!("CR {}", state.ship_loadout.modules_value.to_string().separate_with_commas())
                     )
                 ]
             ]

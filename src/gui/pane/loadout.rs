@@ -13,6 +13,7 @@ impl crate::gui::pane::PaneType for LoadoutPane {
         iced::widget::column![
             sub_header("Suit"),
             details("Name", state.suit_loadout.suit_name),
+            details("Class", state.suit_loadout.class.to_string()),
             details("Loadout", state.suit_loadout.loadout_name.as_ref()),
             column(
                 state
@@ -26,6 +27,7 @@ impl crate::gui::pane::PaneType for LoadoutPane {
             column(state.suit_loadout.modules.iter().map(|module| {
                 column![
                     details(&module.slot_name, module.module_name.as_ref()),
+                    details("Class", module.class.to_string()),
                     column(
                         module
                             .weapon_mods
