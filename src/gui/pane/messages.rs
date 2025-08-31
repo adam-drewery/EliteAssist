@@ -8,12 +8,9 @@ use iced::{Element, Fill};
 pub struct MessagesPane;
 
 impl crate::gui::pane::PaneType for MessagesPane {
-    fn id(&self) -> &'static str {
-        "messages"
-    }
-    fn title(&self) -> &'static str {
-        "Messages"
-    }
+
+    fn title(&self) -> &'static str { "Messages" }
+    
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         iced::widget::column![
             scrollable(column(

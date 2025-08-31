@@ -18,10 +18,11 @@ fn update_layout_from_custom_screen(layout: &mut Layout, sel: &crate::config::Cu
 pub fn add_custom(layout: &mut Layout) {
     let (layout_opt, visible_opt) = if let Some(panes) = &layout.current_panes {
         let layout_node = crate::config::state_to_node(panes);
-        let visible = layout.current_visible_vec();
-        (Some(layout_node), Some(visible))
+        let visible_titles: Vec<Box<str>> = layout.current_visible_vec().iter().map(|p| p.as_ref().title().into()).collect();
+        (Some(layout_node), Some(visible_titles))
     } else {
-        (None, Some(layout.current_visible_vec()))
+        let visible_titles: Vec<Box<str>> = layout.current_visible_vec().iter().map(|p| p.as_ref().title().into()).collect();
+        (None, Some(visible_titles))
     };
 
     let name = format!("Screen {}", layout.custom_screens.len() + 1).into();

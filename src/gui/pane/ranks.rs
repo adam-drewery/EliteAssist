@@ -1,3 +1,4 @@
+use iced::Element;
 use crate::centered_row;
 use crate::gui::Message;
 use crate::lookup::fdev_ids::Rank;
@@ -8,13 +9,10 @@ use iced::widget::{column, container, progress_bar, row, text, Column};
 pub struct RanksPane;
 
 impl crate::gui::pane::PaneType for RanksPane {
-    fn id(&self) -> &'static str {
-        "ranks"
-    }
-    fn title(&self) -> &'static str {
-        "Ranks"
-    }
-    fn render<'a>(&self, state: &'a State) -> iced::Element<'a, Message> {
+
+    fn title(&self) -> &'static str { "Ranks" }
+
+    fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         iced::widget::column![
             row![
                 rank(

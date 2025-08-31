@@ -1,7 +1,7 @@
-use std::fs;
-use std::path::Path;
 use iced::widget::pane_grid;
 use serde::{Deserialize, Serialize};
+use std::fs;
+use std::path::Path;
 
 use crate::gui::pane;
 use crate::state;
@@ -18,11 +18,11 @@ const SETTINGS_FILE: &str = "EliteAssist.config.json";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Settings {
-    // Back-compat fields for single-screen configuration
+
     pub layout: Option<LayoutNode>,
-    pub visible: Option<Vec<Box<str>>>, // explicit visible list; if None, derive from layout leaves
-    pub custom_screens: Option<Vec<CustomScreen>>, // When present, overrides layout/visible
-    pub selected_screen: Option<usize>,            // Index into custom_screens
+    pub visible: Option<Vec<Box<str>>>,
+    pub custom_screens: Option<Vec<CustomScreen>>,
+    pub selected_screen: Option<usize>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -80,7 +80,9 @@ impl Settings {
             let selected_idx = layout.selected_custom_screen.min(screens_clone.len().saturating_sub(1));
             if let Some(sel) = screens_clone.get_mut(selected_idx) {
                 sel.layout = current_layout.clone();
-                sel.visible = current_visible.clone();
+                if let Some(v) = &current_visible {
+                    sel.visible = Some(v.iter().map(|p| p.as_ref().title().into()).collect());
+                }
             }
             custom_screens_opt = Some(screens_clone);
             selected_screen_opt = Some(selected_idx);
@@ -88,7 +90,7 @@ impl Settings {
 
         // For backward compatibility, mirror the selected screen into top-level fields
         let layout_bc = current_layout;
-        let visible_bc = current_visible;
+        let visible_bc = current_visible.map(|v| v.iter().map(|p| p.as_ref().title().into()).collect());
 
         let settings = Settings {
             layout: layout_bc,
@@ -111,7 +113,7 @@ impl Settings {
 
 pub fn to_configuration(node: &LayoutNode) -> pane_grid::Configuration<Box<dyn pane::PaneType>> {
     match node {
-        LayoutNode::Pane(id) => pane_grid::Configuration::Pane(pane::make(id)),
+        LayoutNode::Pane(id) => pane_grid::Configuration::Pane(pane::from_title(id.as_ref())),
         LayoutNode::Split { axis, ratio, a, b } => pane_grid::Configuration::Split {
             axis: axis.clone().into(),
             ratio: *ratio,
@@ -126,7 +128,7 @@ pub fn build_panes_from_layout(layout: &LayoutNode) -> pane_grid::State<Box<dyn 
 }
 
 pub fn layout_leaf_panes(layout: &LayoutNode) -> Vec<Box<str>> {
-    let mut v = Vec::new();
+    let mut v: Vec<Box<str>> = Vec::new();
     fn walk(n: &LayoutNode, v: &mut Vec<Box<str>>) {
         match n {
             LayoutNode::Pane(p) => v.push(p.clone()),
@@ -152,10 +154,10 @@ pub fn state_to_node(state: &pane_grid::State<Box<dyn pane::PaneType>>) -> Layou
             },
             pane_grid::Node::Pane(p) => {
                 if let Some(t) = state.panes.get(p) {
-                    LayoutNode::Pane(t.id().into())
+                    LayoutNode::Pane(t.title().into())
                 } else {
                     // Fallback: if missing, use a default pane
-                    LayoutNode::Pane("loadout".into())
+                    LayoutNode::Pane("Loadout".into())
                 }
             }
         }

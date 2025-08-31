@@ -4,18 +4,15 @@ use crate::state::State;
 use crate::theme::{style, GRAY, ORANGE, WHITE};
 use iced::widget::text::Wrapping;
 use iced::widget::{column, row, scrollable, text};
-use iced::{Fill, Left, Right};
+use iced::{Element, Fill, Left, Right};
 
 pub struct LogJournalPane;
 
 impl crate::gui::pane::PaneType for LogJournalPane {
-    fn id(&self) -> &'static str {
-        "log_journal"
-    }
-    fn title(&self) -> &'static str {
-        "Journal"
-    }
-    fn render<'a>(&self, state: &'a State) -> iced::Element<'a, Message> {
+
+    fn title(&self) -> &'static str { "Journal" }
+
+    fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         column![
             scrollable(column(
                 state

@@ -5,18 +5,15 @@ use crate::theme::style;
 use crate::theme::{BLUE, ORANGE, YELLOW};
 use iced::widget::tooltip::Position;
 use iced::widget::{column, row, scrollable, text, tooltip, Column};
-use iced::{Color, Fill, Left};
+use iced::{Color, Element, Fill, Left};
 
 pub struct ShipLockerPane;
 
 impl crate::gui::pane::PaneType for ShipLockerPane {
-    fn id(&self) -> &'static str {
-        "ship_locker"
-    }
-    fn title(&self) -> &'static str {
-        "Ship Locker"
-    }
-    fn render<'a>(&self, state: &'a State) -> iced::Element<'a, Message> {
+
+    fn title(&self) -> &'static str { "Ship Locker" }
+
+    fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         column![row![
             locker_item_list("Items", &state.ship_locker.items),
             locker_item_list("Components", &state.ship_locker.components),
@@ -55,7 +52,7 @@ fn locker_item_list<'a>(title: &'a str, items: &'a [ShipLockerItem]) -> Column<'
                                     item.locations
                                         .iter()
                                         .map(|loc| row![text(loc.as_ref()).size(16)].into())
-                                        .collect::<Vec<iced::Element<Message>>>()
+                                        .collect::<Vec<Element<Message>>>()
                                 ),
                                 Position::FollowCursor,
                             )

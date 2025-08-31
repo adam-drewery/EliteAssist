@@ -8,12 +8,9 @@ use iced::Element;
 pub struct MissionsPane;
 
 impl crate::gui::pane::PaneType for MissionsPane {
-    fn id(&self) -> &'static str {
-        "missions"
-    }
-    fn title(&self) -> &'static str {
-        "Missions"
-    }
+
+    fn title(&self) -> &'static str { "Missions" }
+    
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         if state.missions.len() == 0 {
             return column![empty_placeholder("No Missions")].into();

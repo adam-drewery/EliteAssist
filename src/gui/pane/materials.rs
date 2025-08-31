@@ -7,18 +7,15 @@ use crate::theme::*;
 use iced::widget::svg::Handle;
 use iced::widget::tooltip::Position;
 use iced::widget::{column, row, scrollable, svg, text, tooltip, Column};
-use iced::Fill;
+use iced::{Element, Fill};
 
 pub struct MaterialsPane;
 
 impl crate::gui::pane::PaneType for MaterialsPane {
-    fn id(&self) -> &'static str {
-        "materials"
-    }
-    fn title(&self) -> &'static str {
-        "Materials"
-    }
-    fn render<'a>(&self, state: &'a State) -> iced::Element<'a, Message> {
+
+    fn title(&self) -> &'static str { "Materials" }
+    
+    fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         column![
             row![
                 materials_list("Raw", &state.materials.raw),
@@ -73,7 +70,7 @@ fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a,
                                             text(loc.to_string()).size(16).font(EUROSTILE)
                                         ]
                                         .into())
-                                        .collect::<Vec<iced::Element<Message>>>()
+                                        .collect::<Vec<Element<Message>>>()
                                 ),
                                 Position::FollowCursor
                             )

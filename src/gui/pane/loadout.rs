@@ -6,12 +6,9 @@ use iced::widget::column;
 pub struct LoadoutPane;
 
 impl crate::gui::pane::PaneType for LoadoutPane {
-    fn id(&self) -> &'static str {
-        "loadout"
-    }
-    fn title(&self) -> &'static str {
-        "Loadout"
-    }
+
+    fn title(&self) -> &'static str { "Loadout" }
+    
     fn render<'a>(&self, state: &'a State) -> iced::Element<'a, Message> {
         iced::widget::column![
             sub_header("Suit"),

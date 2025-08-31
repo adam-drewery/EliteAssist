@@ -6,19 +6,16 @@ use crate::state::State;
 use crate::theme::{style, GRAY, RED};
 use iced::widget::image::Handle;
 use iced::widget::{column, container, image, row, scrollable, text, Column};
-use iced::Fill;
+use iced::{Element, Fill};
 use thousands::Separable;
 
 pub struct LocationPane;
 
 impl crate::gui::pane::PaneType for LocationPane {
-    fn id(&self) -> &'static str {
-        "location"
-    }
-    fn title(&self) -> &'static str {
-        "Location"
-    }
-    fn render<'a>(&self, state: &'a State) -> iced::Element<'a, Message> {
+    
+    fn title(&self) -> &'static str { "Location" }
+    
+    fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         column![row![system(state), powerplay(state)], factions(state),].into()
     }
 }
@@ -117,13 +114,10 @@ fn system(state: &State) -> Column<'_, Message> {
 pub struct RoutePane;
 
 impl crate::gui::pane::PaneType for RoutePane {
-    fn id(&self) -> &'static str {
-        "route"
-    }
-    fn title(&self) -> &'static str {
-        "Route"
-    }
-    fn render<'a>(&self, state: &'a State) -> iced::Element<'a, Message> {
+    
+    fn title(&self) -> &'static str { "Route" }
+    
+    fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         if state.nav_route.len() == 0 {
             return column![empty_placeholder("No current route")].into();
         }

@@ -4,18 +4,14 @@ use crate::state::State;
 use crate::theme::style;
 use iced::widget::{column, scrollable};
 use iced::{Element, Fill};
+use serde::{Deserialize, Serialize};
 
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct ClaimsPane;
 
 impl crate::gui::pane::PaneType for ClaimsPane {
 
-    fn id(&self) -> &'static str {
-        "claims"
-    }
-
-    fn title(&self) -> &'static str {
-        "Claims"
-    }
+    fn title(&self) -> &'static str { "Claims" }
 
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         if (state.bounties.len() == 0) && (state.combat_bonds.len() == 0) {

@@ -154,8 +154,8 @@ impl State {
                 pane::resized(&mut self.layout, event);
             }
 
-            Message::TogglePane(pane_id, enabled) => {
-                crate::gui::pane::toggle(&pane_id, &mut self.layout, enabled);
+            Message::TogglePane(pane_title, enabled) => {
+                pane::toggle(pane_title.as_ref(), &mut self.layout, enabled);
             },
 
             Message::AddCustomScreen => {

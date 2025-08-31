@@ -10,13 +10,10 @@ use iced::{Bottom, Element, Fill, Left};
 pub struct MarketPane;
 
 impl crate::gui::pane::PaneType for MarketPane {
-    fn id(&self) -> &'static str {
-        "market"
-    }
-    fn title(&self) -> &'static str {
-        "Market"
-    }
-    fn render<'a>(&self, state: &'a State) -> iced::Element<'a, Message> {
+
+    fn title(&self) -> &'static str { "Market" }
+
+    fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         column![
             row![
                 sub_header("Name"),

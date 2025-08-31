@@ -1,21 +1,18 @@
 use iced::widget::pane_grid;
 
 use crate::config;
-use crate::gui::pane;
+use crate::gui::pane::{LoadoutPane, LocationPane, LogJournalPane, MarketPane, MaterialsPane, MessagesPane, PaneType, RanksPane, RoutePane, ShipDetailsPane, ShipLockerPane, ShipModulesPane};
 
 /// Builds the default "Overview" layout as a serializable LayoutNode.
-///
-/// The structure mirrors the previous pane::defaults() layout by constructing
-/// a temporary pane_grid::State and converting it to a LayoutNode.
 pub fn overview_layout() -> config::LayoutNode {
-    let (mut panes, pane_1) = pane_grid::State::new(pane::make("loadout"));
+    let (mut panes, pane_1) = pane_grid::State::<Box<dyn PaneType>>::new(Box::new(LoadoutPane));
 
-    if let Some((pane_2, split_1)) = panes.split(pane_grid::Axis::Vertical, pane_1, pane::make("route")) {
-        if let Some((pane_3, _split_2)) = panes.split(pane_grid::Axis::Vertical, pane_2, pane::make("ship_details")) {
-            if let Some((_, split_3)) = panes.split(pane_grid::Axis::Horizontal, pane_1, pane::make("messages")) {
-                if let Some((_, split_4)) = panes.split(pane_grid::Axis::Horizontal, pane_1, pane::make("ranks")) {
-                    if let Some((_, split_5)) = panes.split(pane_grid::Axis::Horizontal, pane_2, pane::make("location")) {
-                        if let Some((_, split_6)) = panes.split(pane_grid::Axis::Horizontal, pane_3, pane::make("ship_modules")) {
+    if let Some((pane_2, split_1)) = panes.split(pane_grid::Axis::Vertical, pane_1, Box::new(RoutePane)) {
+        if let Some((pane_3, _split_2)) = panes.split(pane_grid::Axis::Vertical, pane_2, Box::new(ShipDetailsPane)) {
+            if let Some((_, split_3)) = panes.split(pane_grid::Axis::Horizontal, pane_1, Box::new(MessagesPane)) {
+                if let Some((_, split_4)) = panes.split(pane_grid::Axis::Horizontal, pane_1, Box::new(RanksPane)) {
+                    if let Some((_, split_5)) = panes.split(pane_grid::Axis::Horizontal, pane_2, Box::new(LocationPane)) {
+                        if let Some((_, split_6)) = panes.split(pane_grid::Axis::Horizontal, pane_3, Box::new(ShipModulesPane)) {
                             // Set vertical split so each column is ~1/3 of the width
                             panes.resize(split_1, 1.0 / 3.0);
                             // Set horizontal splits within columns
@@ -33,7 +30,7 @@ pub fn overview_layout() -> config::LayoutNode {
     config::state_to_node(&panes)
 }
 
-/// Builds the full set of default custom screens shown on first run.
+/// Builds the full set of default custom screens shown on the first run.
 pub fn default_custom_screens() -> Vec<config::CustomScreen> {
     // Overview screen from the central layout
     let overview_node = overview_layout();
@@ -49,34 +46,34 @@ pub fn default_custom_screens() -> Vec<config::CustomScreen> {
     // Materials screen
     screens.push(config::CustomScreen {
         name: "Materials".into(),
-        layout: Some(config::LayoutNode::Pane("materials".into())),
-        visible: Some(vec!["materials".into()]),
+        layout: Some(config::LayoutNode::Pane(MaterialsPane.title().into())),
+        visible: Some(vec![MaterialsPane.title().into()]),
     });
 
     // Ship Locker screen
     screens.push(config::CustomScreen {
         name: "Ship Locker".into(),
-        layout: Some(config::LayoutNode::Pane("ship_locker".into())),
-        visible: Some(vec!["ship_locker".into()]),
+        layout: Some(config::LayoutNode::Pane(ShipLockerPane.title().into())),
+        visible: Some(vec![ShipLockerPane.title().into()]),
     });
 
     // Market screen
     screens.push(config::CustomScreen {
         name: "Market".into(),
-        layout: Some(config::LayoutNode::Pane("market".into())),
-        visible: Some(vec!["market".into()]),
+        layout: Some(config::LayoutNode::Pane(MarketPane.title().into())),
+        visible: Some(vec![MarketPane.title().into()]),
     });
 
     // Logs screen: Messages over Journal
     screens.push(config::CustomScreen {
         name: "Logs".into(),
         layout: Some(config::LayoutNode::Split {
-            axis: crate::config::AxisSer::Vertical,
+            axis: config::AxisSer::Vertical,
             ratio: 0.5,
-            a: Box::new(config::LayoutNode::Pane("messages".into())),
-            b: Box::new(config::LayoutNode::Pane("log_journal".into())),
+            a: Box::new(config::LayoutNode::Pane(MessagesPane.title().into())),
+            b: Box::new(config::LayoutNode::Pane(LogJournalPane.title().into())),
         }),
-        visible: Some(vec!["messages".into(), "log_journal".into()]),
+        visible: Some(vec![MessagesPane.title().into(), LogJournalPane.title().into()]),
     });
 
     screens

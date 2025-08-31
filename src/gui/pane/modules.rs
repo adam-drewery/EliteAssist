@@ -6,18 +6,15 @@ use crate::state::State;
 use crate::theme::{style, GRAY, ORANGE, YELLOW};
 use iced::widget::image::Handle;
 use iced::widget::{column, container, image, row, scrollable, text, Column, Row};
-use iced::{Center, Fill, Right};
+use iced::{Center, Element, Fill, Right};
 
 pub struct ShipModulesPane;
 
 impl crate::gui::pane::PaneType for ShipModulesPane {
-    fn id(&self) -> &'static str {
-        "ship_modules"
-    }
-    fn title(&self) -> &'static str {
-        "Ship Modules"
-    }
-    fn render<'a>(&self, state: &'a State) -> iced::Element<'a, Message> {
+
+    fn title(&self) -> &'static str { "Ship Modules" }
+    
+    fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         column![
             scrollable(row![
                 column![
@@ -43,7 +40,7 @@ impl crate::gui::pane::PaneType for ShipModulesPane {
 }
 
 fn module_group<'a>(
-    title: &'a str,
+    title: &'static str,
     icon_bytes: &'static [u8],
     modules: &'a Vec<state::ShipModule>,
 ) -> Column<'a, Message> {

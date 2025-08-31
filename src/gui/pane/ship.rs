@@ -6,18 +6,15 @@ use crate::theme::ORANGE;
 use crate::{lookup, state};
 use iced::widget::image::Handle;
 use iced::widget::{column, image, row, text, Row};
-use iced::{Fill, Left, Right, Top};
+use iced::{Element, Fill, Left, Right, Top};
 use thousands::Separable;
 
 pub struct ShipDetailsPane;
 impl crate::gui::pane::PaneType for ShipDetailsPane {
-    fn id(&self) -> &'static str {
-        "ship_details"
-    }
-    fn title(&self) -> &'static str {
-        "Ship"
-    }
-    fn render<'a>(&self, state: &'a State) -> iced::Element<'a, Message> {
+    
+    fn title(&self) -> &'static str { "Ship" }
+    
+    fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         let ship_image_bytes =
             lookup::ship_image_bytes(state.ship_loadout.ship_type.as_ref()).unwrap_or_default();
         let ship_image = Handle::from_bytes(ship_image_bytes);
