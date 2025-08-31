@@ -45,12 +45,12 @@ pub fn settings(state: &State) -> Row<'_, Message> {
             .unwrap_or("");
 
         let mut pane_items: Vec<Element<'_, Message>> = Vec::new();
-        for p in pane::Type::all().iter() {
-            let checked = p.is_enabled(&state.layout);
-            let p2 = p.clone();
+        for id in pane::all_ids().iter() {
+            let checked = pane::is_enabled(id, &state.layout);
+            let id_copy: &'static str = id;
             pane_items.push(
-                checkbox(p.title(), checked)
-                    .on_toggle(move |v| Message::TogglePane(p2.clone(), v))
+                checkbox(pane::make(id).title(), checked)
+                    .on_toggle(move |v| Message::TogglePane(id_copy.into(), v))
                     .style(style::checkbox)
                     .into(),
             );

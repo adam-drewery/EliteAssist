@@ -32,7 +32,7 @@ pub enum Message {
     PaneResized(pane_grid::ResizeEvent),
 
     // Settings and custom screens
-    TogglePane(pane::Type, bool),
+    TogglePane(Box<str>, bool),
     AddCustomScreen,
     RemoveCustomScreen,
     SelectCustomScreen(usize),

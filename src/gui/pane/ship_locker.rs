@@ -7,16 +7,24 @@ use iced::widget::tooltip::Position;
 use iced::widget::{column, row, scrollable, text, tooltip, Column};
 use iced::{Color, Fill, Left};
 
-// Ship Locker pane: four columns of lists inside a single pane
-pub fn ship_locker(state: &State) -> Column<'_, Message> {
-    column![
-        row![
+pub struct ShipLockerPane;
+
+impl crate::gui::pane::PaneType for ShipLockerPane {
+    fn id(&self) -> &'static str {
+        "ship_locker"
+    }
+    fn title(&self) -> &'static str {
+        "Ship Locker"
+    }
+    fn render<'a>(&self, state: &'a State) -> iced::Element<'a, Message> {
+        column![row![
             locker_item_list("Items", &state.ship_locker.items),
             locker_item_list("Components", &state.ship_locker.components),
             locker_item_list("Data", &state.ship_locker.data),
             locker_item_list("Consumables", &state.ship_locker.consumables),
-        ]
-    ]
+        ]]
+        .into()
+    }
 }
 
 fn locker_item_list<'a>(title: &'a str, items: &'a [ShipLockerItem]) -> Column<'a, Message> {
@@ -30,7 +38,10 @@ fn locker_item_list<'a>(title: &'a str, items: &'a [ShipLockerItem]) -> Column<'
 
                     let content = row![
                         text(item.count).size(16).color(YELLOW).width(36),
-                        text(item.name.as_ref()).color(color).size(16).font(EUROSTILE),
+                        text(item.name.as_ref())
+                            .color(color)
+                            .size(16)
+                            .font(EUROSTILE),
                     ]
                     .padding(2);
 

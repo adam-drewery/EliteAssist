@@ -1,6 +1,6 @@
+use iced::Element;
 use iced::widget::pane_grid;
 use iced::widget::pane_grid::{DragEvent, ResizeEvent};
-use serde::{Deserialize, Serialize};
 use crate::config::Settings;
 use crate::state;
 
@@ -29,139 +29,121 @@ pub use market::*;
 pub use journal::*;
 pub use loadout::*;
 pub use ranks::*;
+use crate::gui::Message;
+use crate::state::State;
 
-#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
-pub enum Type {
-    Loadout,
-    Messages,
-    Route,
-    Location,
-    ShipDetails,
-    ShipModules,
-    Ranks,
-    Missions,
-    Claims,
-    Materials,
-    ShipLocker,
-    Market,
-    LogJournal,
-}
-
-impl Type {
-
-    pub const fn all() -> [Type; 13] {
-        [
-            Type::Loadout,
-            Type::Messages,
-            Type::Route,
-            Type::Location,
-            Type::ShipDetails,
-            Type::ShipModules,
-            Type::Ranks,
-            Type::Missions,
-            Type::Claims,
-            Type::Materials,
-            Type::ShipLocker,
-            Type::Market,
-            Type::LogJournal,
-        ]
-    }
-
-    pub fn title(&self) -> &'static str {
-        match self {
-            Type::Loadout => "Loadout",
-            Type::Messages => "Messages",
-            Type::Route => "Route",
-            Type::Location => "Location",
-            Type::ShipDetails => "Ship",
-            Type::ShipModules => "Ship Modules",
-            Type::Ranks => "Ranks",
-            Type::Missions => "Missions",
-            Type::Claims => "Claims",
-            Type::Materials => "Materials",
-            Type::ShipLocker => "Ship Locker",
-            Type::Market => "Market",
-            Type::LogJournal => "Journal",
-        }
-    }
-
-    pub fn default_enabled_vec() -> Vec<Type> {
-        vec![
-            Type::Loadout,
-            Type::Messages,
-            Type::Route,
-            Type::Location,
-            Type::ShipDetails,
-            Type::ShipModules,
-            Type::Ranks,
-        ]
-    }
-
-    pub fn is_enabled(&self, layout: &state::Layout) -> bool {
-        layout.current_visible_vec().contains(self)
-    }
-
-    pub fn toggle(self, layout: &mut state::Layout, enabled: bool) {
-
-        // Start from the current visible set
-        let mut list: Vec<Type> = layout.current_visible_vec();
-
-        let was_enabled = list.contains(&self);
-        let before_len = list.len();
-
-        if enabled {
-            if !was_enabled {
-                list.push(self.clone());
-            }
-        } else {
-
-            // Prevent disabling the last remaining pane
-            if was_enabled && list.len() > 1 {
-                list.retain(|p| p != &self);
-            }
-        }
-
-        // Keep deterministic order according to PanelType::all()
-        let order = Type::all();
-        list.sort_by_key(|p| order.iter().position(|q| q == p).unwrap_or(usize::MAX));
-
-        let did_enable = enabled && !was_enabled;
-        let did_disable = !enabled && was_enabled && list.len() < before_len;
-
-        layout.set_current_visible_vec(list.clone());
-
-        // Mutate the current layout instead of rebuilding to preserve existing splits
-        if let Some(panes) = &mut layout.current_panes {
-            if did_enable {
-
-                // Insert the newly enabled pane by splitting an existing anchor pane
-                if let Some((&anchor, _)) = panes.panes.iter().next() {
-                    let _ = panes.split(pane_grid::Axis::Horizontal, anchor, self.clone());
-                }
-            } else if did_disable {
-
-                // Close the pane containing this pane, preserving another layout
-                if let Some(p) = find_with(panes, &self) {
-                    let _ = panes.close(p);
-                }
-            }
-        }
-
-        // Persist settings after visibility/layout changes
-        layout.sync_selected_custom_screen_from_live();
-        Settings::save_from_state(layout).unwrap_or_else(|e|
-            log::error!("Failed to save settings: {}", e));
-    }
-
+pub trait PaneType: Send + Sync {
+    fn id(&self) -> &'static str;
+    fn title(&self) -> &'static str;
+    fn render<'a>(&self, state: &'a State) -> Element<'a, Message>;
 }
 
 
-// Helper: find the Pane that contains the given PanelType
-pub fn find_with(panes: &pane_grid::State<Type>, target: &Type) -> Option<pane_grid::Pane> {
+pub fn all_ids() -> Vec<&'static str> {
+    vec![
+        "loadout",
+        "messages",
+        "route",
+        "location",
+        "ship_details",
+        "ship_modules",
+        "ranks",
+        "missions",
+        "claims",
+        "materials",
+        "ship_locker",
+        "market",
+        "log_journal",
+    ]
+}
 
-    // The iced::pane_grid::State exposes a `panes` field that can be iterated
+pub fn default_enabled_ids() -> Vec<&'static str> {
+    vec![
+        "loadout",
+        "messages",
+        "route",
+        "location",
+        "ship_details",
+        "ship_modules",
+        "ranks",
+    ]
+}
+
+pub fn make(id: &str) -> Box<dyn PaneType> {
+    match id {
+        "loadout" => Box::new(LoadoutPane),
+        "messages" => Box::new(MessagesPane),
+        "route" => Box::new(RoutePane),
+        "location" => Box::new(LocationPane),
+        "ship_details" => Box::new(ShipDetailsPane),
+        "ship_modules" => Box::new(ShipModulesPane),
+        "ranks" => Box::new(RanksPane),
+        "missions" => Box::new(MissionsPane),
+        "claims" => Box::new(ClaimsPane),
+        "materials" => Box::new(MaterialsPane),
+        "ship_locker" => Box::new(ShipLockerPane),
+        "market" => Box::new(MarketPane),
+        "log_journal" => Box::new(LogJournalPane),
+        _ => Box::new(LoadoutPane),
+    }
+}
+
+pub fn is_enabled(id: &str, layout: &state::Layout) -> bool {
+    layout.current_visible_vec().iter().any(|p| p.as_ref() == id)
+}
+
+pub fn toggle(id: &str, layout: &mut state::Layout, enabled: bool) {
+    // Start from the current visible set
+    let mut list: Vec<Box<str>> = layout.current_visible_vec();
+
+    let was_enabled = list.iter().any(|p| p.as_ref() == id);
+    let before_len = list.len();
+
+    if enabled {
+        if !was_enabled {
+            list.push(id.into());
+        }
+    } else {
+        // Prevent disabling the last remaining pane
+        if was_enabled && list.len() > 1 {
+            list.retain(|p| p.as_ref() != id);
+        }
+    }
+
+    // Keep deterministic order according to all_ids()
+    let order = all_ids();
+    list.sort_by_key(|p| order.iter().position(|q| q == &p.as_ref()).unwrap_or(usize::MAX));
+
+    let did_enable = enabled && !was_enabled;
+    let did_disable = !enabled && was_enabled && list.len() < before_len;
+
+    layout.set_current_visible_vec(list.clone());
+
+    // Mutate the current layout instead of rebuilding to preserve existing splits
+    if let Some(panes) = &mut layout.current_panes {
+        if did_enable {
+            // Insert the newly enabled pane by splitting an existing anchor pane
+            if let Some((&anchor, _)) = panes.panes.iter().next() {
+                let _ = panes.split(pane_grid::Axis::Horizontal, anchor, make(id));
+            }
+        } else if did_disable {
+            // Close the pane containing this pane, preserving another layout
+            if let Some(p) = find_with(panes, id) {
+                let _ = panes.close(p);
+            }
+        }
+    }
+
+    // Persist settings after visibility/layout changes
+    layout.sync_selected_custom_screen_from_live();
+    Settings::save_from_state(layout).unwrap_or_else(|e|
+        log::error!("Failed to save settings: {}", e));
+}
+
+// Helper: find the Pane that contains the given pane id
+pub fn find_with(panes: &pane_grid::State<Box<dyn PaneType>>, target_id: &str) -> Option<pane_grid::Pane> {
     for (pane, content) in &panes.panes {
-        if content == target {
+        if content.id() == target_id {
             return Some(*pane);
         }
     }

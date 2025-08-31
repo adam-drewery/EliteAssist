@@ -1,3 +1,4 @@
+use crate::font::EUROSTILE;
 use crate::gui::components::sub_header;
 use crate::gui::Message;
 use crate::image::engineering::*;
@@ -7,18 +8,27 @@ use iced::widget::svg::Handle;
 use iced::widget::tooltip::Position;
 use iced::widget::{column, row, scrollable, svg, text, tooltip, Column};
 use iced::Fill;
-use crate::font::EUROSTILE;
 
-// Materials pane: three columns of materials lists (Raw, Manufactured, Encoded)
-pub fn materials(state: &State) -> Column<'_, Message> {
-    column![
-        row![
-            materials_list("Raw", &state.materials.raw),
-            materials_list("Manufactured", &state.materials.manufactured),
-            materials_list("Encoded", &state.materials.encoded),
+pub struct MaterialsPane;
+
+impl crate::gui::pane::PaneType for MaterialsPane {
+    fn id(&self) -> &'static str {
+        "materials"
+    }
+    fn title(&self) -> &'static str {
+        "Materials"
+    }
+    fn render<'a>(&self, state: &'a State) -> iced::Element<'a, Message> {
+        column![
+            row![
+                materials_list("Raw", &state.materials.raw),
+                materials_list("Manufactured", &state.materials.manufactured),
+                materials_list("Encoded", &state.materials.encoded),
+            ]
+            .height(Fill)
         ]
-        .height(Fill)
-    ]
+        .into()
+    }
 }
 
 fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a, Message> {
@@ -28,7 +38,8 @@ fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a,
             groups
                 .iter()
                 .flat_map(|group| {
-                    let mut rows = vec![row![text(group.name.as_ref()).size(16).color(GRAY)].padding(2)];
+                    let mut rows =
+                        vec![row![text(group.name.as_ref()).size(16).color(GRAY)].padding(2)];
 
                     let mut sorted_materials = group.materials.to_vec();
                     sorted_materials.sort_by_key(|item| item.rarity);
@@ -52,20 +63,21 @@ fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a,
                                         .color(YELLOW)
                                         .font(EUROSTILE)
                                         .width(36),
-                                    text(item.name.to_string())
-                                        .font(EUROSTILE)
-                                        .size(16),
+                                    text(item.name.to_string()).font(EUROSTILE).size(16),
                                 ]
                                 .padding(2),
                                 column(
                                     item.locations
                                         .iter()
-                                        .map(|loc| row![text(loc.to_string()).size(16).font(EUROSTILE)].into())
+                                        .map(|loc| row![
+                                            text(loc.to_string()).size(16).font(EUROSTILE)
+                                        ]
+                                        .into())
                                         .collect::<Vec<iced::Element<Message>>>()
-                            ),
-                            Position::FollowCursor
+                                ),
+                                Position::FollowCursor
                             )
-                        .style(style::tooltip)
+                            .style(style::tooltip)
                         ]
                     }));
 

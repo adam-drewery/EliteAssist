@@ -6,23 +6,25 @@ use crate::config;
 pub struct Layout {
     pub fullscreen: bool,
     pub custom_screens: Vec<config::CustomScreen>,
-    pub current_panes: Option<pane_grid::State<pane::Type>>,
+    pub current_panes: Option<pane_grid::State<Box<dyn pane::PaneType>>>,
     pub selected_custom_screen: usize,
 }
 
 impl Layout {
 
-    pub fn current_visible_vec(&self) -> Vec<pane::Type> {
-        if self.custom_screens.is_empty() { return pane::Type::default_enabled_vec(); }
+    pub fn current_visible_vec(&self) -> Vec<Box<str>> {
+        if self.custom_screens.is_empty() {
+            return pane::default_enabled_ids().into_iter().map(|s| s.into()).collect();
+        }
         let idx = self.selected_custom_screen.min(self.custom_screens.len().saturating_sub(1));
         if let Some(sel) = self.custom_screens.get(idx) {
             if let Some(v) = &sel.visible { return v.clone(); }
             if let Some(node) = &sel.layout { return config::layout_leaf_panes(node); }
         }
-        pane::Type::default_enabled_vec()
+        pane::default_enabled_ids().into_iter().map(|s| s.into()).collect()
     }
 
-    pub fn set_current_visible_vec(&mut self, v: Vec<pane::Type>) {
+    pub fn set_current_visible_vec(&mut self, v: Vec<Box<str>>) {
         if self.custom_screens.is_empty() { return; }
         let idx = self.selected_custom_screen.min(self.custom_screens.len().saturating_sub(1));
         if let Some(sel) = self.custom_screens.get_mut(idx) {

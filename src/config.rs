@@ -10,7 +10,7 @@ use crate::state;
 pub struct CustomScreen {
     pub name: Box<str>,
     pub layout: Option<LayoutNode>,
-    pub visible: Option<Vec<pane::Type>>, // if None, derive from layout leaves
+    pub visible: Option<Vec<Box<str>>>, // if None, derive from layout leaves
 }
 
 /// File name for persisted settings
@@ -20,7 +20,7 @@ const SETTINGS_FILE: &str = "EliteAssist.config.json";
 pub struct Settings {
     // Back-compat fields for single-screen configuration
     pub layout: Option<LayoutNode>,
-    pub visible: Option<Vec<pane::Type>>, // explicit visible list; if None, derive from layout leaves
+    pub visible: Option<Vec<Box<str>>>, // explicit visible list; if None, derive from layout leaves
     pub custom_screens: Option<Vec<CustomScreen>>, // When present, overrides layout/visible
     pub selected_screen: Option<usize>,            // Index into custom_screens
 }
@@ -57,7 +57,7 @@ pub enum LayoutNode {
         a: Box<LayoutNode>,
         b: Box<LayoutNode>,
     },
-    Pane(pane::Type),
+    Pane(Box<str>),
 }
 
 impl Settings {
@@ -109,9 +109,9 @@ impl Settings {
     }
 }
 
-pub fn to_configuration(node: &LayoutNode) -> pane_grid::Configuration<pane::Type> {
+pub fn to_configuration(node: &LayoutNode) -> pane_grid::Configuration<Box<dyn pane::PaneType>> {
     match node {
-        LayoutNode::Pane(p) => pane_grid::Configuration::Pane(p.clone()),
+        LayoutNode::Pane(id) => pane_grid::Configuration::Pane(pane::make(id)),
         LayoutNode::Split { axis, ratio, a, b } => pane_grid::Configuration::Split {
             axis: axis.clone().into(),
             ratio: *ratio,
@@ -121,13 +121,13 @@ pub fn to_configuration(node: &LayoutNode) -> pane_grid::Configuration<pane::Typ
     }
 }
 
-pub fn build_panes_from_layout(layout: &LayoutNode) -> pane_grid::State<pane::Type> {
+pub fn build_panes_from_layout(layout: &LayoutNode) -> pane_grid::State<Box<dyn pane::PaneType>> {
     pane_grid::State::with_configuration(to_configuration(layout))
 }
 
-pub fn layout_leaf_panes(layout: &LayoutNode) -> Vec<pane::Type> {
+pub fn layout_leaf_panes(layout: &LayoutNode) -> Vec<Box<str>> {
     let mut v = Vec::new();
-    fn walk(n: &LayoutNode, v: &mut Vec<pane::Type>) {
+    fn walk(n: &LayoutNode, v: &mut Vec<Box<str>>) {
         match n {
             LayoutNode::Pane(p) => v.push(p.clone()),
             LayoutNode::Split { a, b, .. } => {
@@ -140,9 +140,9 @@ pub fn layout_leaf_panes(layout: &LayoutNode) -> Vec<pane::Type> {
     v
 }
 
-pub fn state_to_node(state: &pane_grid::State<pane::Type>) -> LayoutNode {
-    // Traverse the Node tree and map panes to their PanelType via state.panes
-    fn walk(node: &pane_grid::Node, state: &pane_grid::State<pane::Type>) -> LayoutNode {
+pub fn state_to_node(state: &pane_grid::State<Box<dyn pane::PaneType>>) -> LayoutNode {
+    // Traverse the Node tree and map panes to their IDs via state.panes
+    fn walk(node: &pane_grid::Node, state: &pane_grid::State<Box<dyn pane::PaneType>>) -> LayoutNode {
         match node {
             pane_grid::Node::Split { axis, ratio, a, b, .. } => LayoutNode::Split {
                 axis: axis.clone().into(),
@@ -152,10 +152,10 @@ pub fn state_to_node(state: &pane_grid::State<pane::Type>) -> LayoutNode {
             },
             pane_grid::Node::Pane(p) => {
                 if let Some(t) = state.panes.get(p) {
-                    LayoutNode::Pane(t.clone())
+                    LayoutNode::Pane(t.id().into())
                 } else {
                     // Fallback: if missing, use a default pane
-                    LayoutNode::Pane(pane::Type::Loadout)
+                    LayoutNode::Pane("loadout".into())
                 }
             }
         }

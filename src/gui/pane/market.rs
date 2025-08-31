@@ -4,55 +4,65 @@ use crate::gui::Message;
 use crate::state::{MarketItem, State};
 use crate::theme::{style, GRAY, ORANGE, WHITE, YELLOW};
 use iced::widget::scrollable;
-use iced::widget::{column, row, text, Column};
+use iced::widget::{column, row, text};
 use iced::{Bottom, Element, Fill, Left};
 
-// Market pane: table-like list of market groups/items inside a pane
-pub fn market(state: &State) -> Column<'_, Message> {
-    column![
-        row![
-            sub_header("Name"),
-            sub_header("Buy"),
-            sub_header("Sell"),
-            sub_header("Stock"),
-            sub_header("Demand"),
-            sub_header("Producer"),
-            sub_header("Consumer"),
+pub struct MarketPane;
+
+impl crate::gui::pane::PaneType for MarketPane {
+    fn id(&self) -> &'static str {
+        "market"
+    }
+    fn title(&self) -> &'static str {
+        "Market"
+    }
+    fn render<'a>(&self, state: &'a State) -> iced::Element<'a, Message> {
+        column![
+            row![
+                sub_header("Name"),
+                sub_header("Buy"),
+                sub_header("Sell"),
+                sub_header("Stock"),
+                sub_header("Demand"),
+                sub_header("Producer"),
+                sub_header("Consumer"),
+            ]
+            .spacing(20)
+            .padding(2)
+            .width(Fill),
+            scrollable(column(state.market.groups.iter().flat_map(|group| {
+                let mut rows: Vec<Element<Message>> = vec![
+                    text(group.name.as_ref())
+                        .size(20)
+                        .color(GRAY)
+                        .align_x(Left)
+                        .align_y(Bottom)
+                        .height(32)
+                        .into(),
+                ];
+
+                rows.extend(group.items.iter().map(|item| {
+                    row![
+                        name_cell(item),
+                        cell(item.buy_price),
+                        cell(item.sell_price),
+                        cell(item.stock),
+                        cell(item.demand),
+                        cell(item.producer),
+                        cell(item.consumer),
+                    ]
+                    .spacing(20)
+                    .padding(2)
+                    .width(Fill)
+                    .into()
+                }));
+
+                rows
+            })))
+            .style(style::scrollable)
         ]
-        .spacing(20)
-        .padding(2)
-        .width(Fill),
-        scrollable(column(state.market.groups.iter().flat_map(|group| {
-            let mut rows: Vec<Element<Message>> = vec![
-                text(group.name.as_ref())
-                    .size(20)
-                    .color(GRAY)
-                    .align_x(Left)
-                    .align_y(Bottom)
-                    .height(32)
-                    .into(),
-            ];
-
-            rows.extend(group.items.iter().map(|item| {
-                row![
-                    name_cell(item),
-                    cell(item.buy_price),
-                    cell(item.sell_price),
-                    cell(item.stock),
-                    cell(item.demand),
-                    cell(item.producer),
-                    cell(item.consumer),
-                ]
-                .spacing(20)
-                .padding(2)
-                .width(Fill)
-                .into()
-            }));
-
-            rows
-        })))
-        .style(style::scrollable)
-    ]
+        .into()
+    }
 }
 
 fn cell<'a>(value: impl text::IntoFragment<'a>) -> Element<'a, Message> {
