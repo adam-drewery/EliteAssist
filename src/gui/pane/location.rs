@@ -2,8 +2,8 @@ use crate::font::EUROSTILE;
 use crate::gui::components::*;
 use crate::gui::Message;
 use crate::state::State;
-use crate::theme::GRAY;
-use iced::widget::{column, row, text, Column};
+use crate::theme::{style, GRAY};
+use iced::widget::{column, row, text, scrollable, Column};
 use iced::{Element, Fill};
 use thousands::Separable;
 
@@ -15,14 +15,17 @@ impl crate::gui::pane::PaneType for LocationPane {
     
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         column![
-            row![system(state), powerplay(state)],
-            station_summary(state),
-            factions(state),
-            station_economies(state),
-            stations(state),
-            bodies(state),
-            nearby_systems(state),
-            activity(state)
+            scrollable(column![
+                row![system(state), powerplay(state)],
+                station_summary(state),
+                factions(state),
+                station_economies(state),
+                stations(state),
+                bodies(state),
+                nearby_systems(state),
+                activity(state)
+            ])
+            .style(style::scrollable)
         ]
         .into()
     }

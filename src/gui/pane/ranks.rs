@@ -4,7 +4,7 @@ use crate::gui::Message;
 use crate::lookup::fdev_ids::Rank;
 use crate::state::State;
 use crate::theme::{style, GRAY, ORANGE, WHITE};
-use iced::widget::{column, container, progress_bar, row, text, Column};
+use iced::widget::{column, container, progress_bar, row, text, scrollable, Column};
 
 pub struct RanksPane;
 
@@ -13,7 +13,7 @@ impl crate::gui::pane::PaneType for RanksPane {
     fn title(&self) -> &'static str { "Ranks" }
 
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
-        iced::widget::column![
+        let content = column![
             row![
                 rank(
                     "Combat Rank",
@@ -68,6 +68,16 @@ impl crate::gui::pane::PaneType for RanksPane {
                     Some(Rank::empire)
                 )
             ],
+        ];
+
+        let content = row![
+            content,
+            column![].width(16)
+        ];
+
+        column![
+            scrollable(content)
+                .style(style::scrollable)
         ]
         .into()
     }

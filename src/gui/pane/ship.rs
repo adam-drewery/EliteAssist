@@ -3,9 +3,10 @@ use crate::gui::Message;
 use crate::state::State;
 use crate::theme::GRAY;
 use crate::theme::ORANGE;
+use crate::theme::style;
 use crate::{lookup, state};
 use iced::widget::image::Handle;
-use iced::widget::{column, image, row, text, Row};
+use iced::widget::{column, image, row, scrollable, text, Row};
 use iced::{Element, Fill, Left, Right, Top};
 use thousands::Separable;
 
@@ -20,51 +21,54 @@ impl crate::gui::pane::PaneType for ShipDetailsPane {
         let ship_image = Handle::from_bytes(ship_image_bytes);
 
         column![
-            ship_title(&state.ship_loadout),
-            row![
-                column![image(ship_image).height(160).width(160)].padding(8),
-                column![
-                    details(
-                        "Rebuy",
-                        format!(
-                            "CR {}",
-                            state.ship_loadout.rebuy.to_string().separate_with_commas()
+            scrollable(column![
+                ship_title(&state.ship_loadout),
+                row![
+                    column![image(ship_image).height(160).width(160)].padding(8),
+                    column![
+                        details(
+                            "Rebuy",
+                            format!(
+                                "CR {}",
+                                state.ship_loadout.rebuy.to_string().separate_with_commas()
+                            )
+                        ),
+                        details(
+                            "Cargo Capacity",
+                            format!("{} T", state.ship_loadout.cargo_capacity)
+                        ),
+                        details(
+                            "Hull Health",
+                            format!("{}%", state.ship_loadout.hull_health * 100.0)
+                        ),
+                        details(
+                            "Fuel Capacity (Main)",
+                            format!("{} T", state.ship_loadout.fuel_capacity.main)
+                        ),
+                        details(
+                            "Fuel Capacity (Reserve)",
+                            format!("{} T", state.ship_loadout.fuel_capacity.reserve)
+                        ),
+                        details(
+                            "Max Jump Range",
+                            format!("{:.2} ly", state.ship_loadout.max_jump_range)
+                        ),
+                        details(
+                            "Unladen Mass",
+                            format!("{:.2} T", state.ship_loadout.unladen_mass)
+                        ),
+                        details(
+                            "Hull Value",
+                            format!("CR {}", state.ship_loadout.hull_value.to_string().separate_with_commas())
+                        ),
+                        details(
+                            "Modules Value",
+                            format!("CR {}", state.ship_loadout.modules_value.to_string().separate_with_commas())
                         )
-                    ),
-                    details(
-                        "Cargo Capacity",
-                        format!("{} T", state.ship_loadout.cargo_capacity)
-                    ),
-                    details(
-                        "Hull Health",
-                        format!("{}%", state.ship_loadout.hull_health * 100.0)
-                    ),
-                    details(
-                        "Fuel Capacity (Main)",
-                        format!("{} T", state.ship_loadout.fuel_capacity.main)
-                    ),
-                    details(
-                        "Fuel Capacity (Reserve)",
-                        format!("{} T", state.ship_loadout.fuel_capacity.reserve)
-                    ),
-                    details(
-                        "Max Jump Range",
-                        format!("{:.2} ly", state.ship_loadout.max_jump_range)
-                    ),
-                    details(
-                        "Unladen Mass",
-                        format!("{:.2} T", state.ship_loadout.unladen_mass)
-                    ),
-                    details(
-                        "Hull Value",
-                        format!("CR {}", state.ship_loadout.hull_value.to_string().separate_with_commas())
-                    ),
-                    details(
-                        "Modules Value",
-                        format!("CR {}", state.ship_loadout.modules_value.to_string().separate_with_commas())
-                    )
+                    ]
                 ]
-            ]
+            ])
+            .style(style::scrollable)
         ]
         .into()
     }

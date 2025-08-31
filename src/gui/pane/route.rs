@@ -16,10 +16,10 @@ impl crate::gui::pane::PaneType for RoutePane {
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         
         if state.nav_route.len() == 0 {
-            return iced::widget::column![empty_placeholder("No current route")].into();
+            return column![empty_placeholder("No current route")].into();
         }
 
-        let mut items_column = iced::widget::column![];
+        let mut items_column = column![];
 
         for i in 0..state.nav_route.len() {
             let route_step = &state.nav_route[i];
@@ -27,7 +27,7 @@ impl crate::gui::pane::PaneType for RoutePane {
                 let prev_step = &state.nav_route[i - 1];
                 let distance = &prev_step.distance_to(&route_step);
 
-                let mut icons_column = iced::widget::column![];
+                let mut icons_column = column![];
                 let mut star_type_text = text(route_step.star_class.as_ref());
 
                 if route_step.is_fuel_star() {
@@ -65,7 +65,7 @@ impl crate::gui::pane::PaneType for RoutePane {
             }
         }
 
-        iced::widget::column![scrollable(items_column).style(style::scrollable)]
+        column![scrollable(items_column).style(style::scrollable)]
             .height(Fill)
             .into()
     }
