@@ -4,10 +4,10 @@ use iced::widget::pane_grid::{DragEvent, ResizeEvent};
 use crate::config::Settings;
 use crate::state;
 
-mod navigation;
+mod location;
 mod missions;
 mod ship;
-mod modules;
+mod ship_modules;
 mod materials;
 mod ship_locker;
 mod market;
@@ -16,11 +16,12 @@ mod loadout;
 mod ranks;
 mod messages;
 mod claims;
+mod route;
 
-pub use navigation::*;
+pub use location::*;
 pub use missions::*;
 pub use ship::*;
-pub use modules::*;
+pub use ship_modules::*;
 pub use materials::*;
 pub use claims::*;
 pub use messages::*;
