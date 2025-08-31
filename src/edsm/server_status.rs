@@ -4,12 +4,12 @@ use serde::Deserialize;
 pub struct EliteServerStatus {
 
     #[serde(rename = "lastUpdate")]
-    pub last_update: String,
+    pub last_update: Box<str>,
 
     #[serde(rename = "type")]
-    pub r#type: String,
+    pub r#type: Box<str>,
 
-    pub message: String,
+    pub message: Box<str>,
 
-    pub status: i64,
+    pub status: u8,
 }

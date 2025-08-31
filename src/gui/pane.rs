@@ -17,6 +17,7 @@ mod ranks;
 mod messages;
 mod claims;
 mod route;
+mod powerplay;
 
 pub use location::*;
 pub use missions::*;
@@ -31,6 +32,7 @@ pub use journal::*;
 pub use loadout::*;
 pub use ranks::*;
 pub use route::*;
+pub use powerplay::*;
 use crate::gui::Message;
 use crate::state::State;
 
@@ -69,6 +71,7 @@ define_panes! {
     ShipDetailsPane,
     ShipModulesPane,
     RanksPane,
+    PowerplayPane,
     MissionsPane,
     ClaimsPane,
     MaterialsPane,

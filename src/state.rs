@@ -9,6 +9,7 @@ mod personal;
 mod ship;
 mod suit;
 mod gui;
+mod powerplay;
 
 pub use activity::*;
 pub use engineering::*;
@@ -21,6 +22,7 @@ pub use personal::*;
 pub use ship::*;
 pub use suit::*;
 pub use gui::*;
+pub use powerplay::*;
 
 use crate::gui::{screen, Message};
 use crate::journal;
@@ -34,6 +36,7 @@ use std::collections::HashMap;
 use chrono::Utc;
 use log::warn;
 use thousands::Separable;
+use crate::edsm::EliteServerStatus;
 
 pub struct State {
     pub commander_name: Box<str>,
@@ -55,11 +58,12 @@ pub struct State {
     pub engineers: Vec<Engineer>,
     pub nav_route: Vec<NavRouteStep>,
     pub missions: Vec<Mission>,
-    pub combat_bonds: HashMap<Box<str>, i64>,
-    pub bounties: HashMap<Box<str>, i64>,
-    pub discoveries: HashMap<Box<str>, i64>,
+    pub combat_bonds: HashMap<Box<str>, u32>,
+    pub bounties: HashMap<Box<str>, u32>,
+    pub discoveries: HashMap<Box<str>, u32>,
     pub progress: Rank,
-
+    pub powerplay: Powerplay,
+    pub edsm_server_status: Option<StatusDetails>,
     pub journal_loaded: bool,
     pub first_message_timestamp: i64,
     pub latest_message_timestamp: i64,
@@ -68,7 +72,19 @@ pub struct State {
     pub layout: Layout
 }
 
+pub struct StatusDetails {
+    pub message: Box<str>,
+    pub status: Box<str>,
+}
 
+impl From<EliteServerStatus> for StatusDetails {
+    fn from(status: EliteServerStatus) -> Self {
+        Self {
+            message: status.message,
+            status: status.r#type,
+        }
+    }
+}
 
 #[derive(Clone, Debug, Default, Deserialize)]
 pub enum Screen {
@@ -105,6 +121,8 @@ impl Default for State {
             bounties: HashMap::new(),
             discoveries: HashMap::new(),
             progress: Default::default(),
+            powerplay: Default::default(),
+            edsm_server_status: None,
             journal_loaded: false,
             first_message_timestamp: 0,
             latest_message_timestamp: 0,
@@ -144,6 +162,10 @@ impl State {
 
             Message::DeathsQueried(deaths) => {
                 self.location.deaths = Some(deaths.into());
+            }
+
+            Message::EdsmServerStatus(status) => {
+                self.edsm_server_status = Some(status.into());
             }
 
             Message::PaneDragged(event) => {
@@ -273,16 +295,16 @@ impl State {
                     Event::FactionKillBond(e) => {
                         self.combat_bonds
                             .entry(e.awarding_faction.clone())
-                            .and_modify(|v| *v = v.saturating_add(e.reward as i64))
-                            .or_insert(e.reward as i64);
+                            .and_modify(|v| *v = v.saturating_add(e.reward as u32))
+                            .or_insert(e.reward as u32);
                     }
 
                     Event::Bounty(e) => {
                         for bounty in e.rewards.unwrap_or_default() {
                             self.bounties
                                 .entry(bounty.faction.clone())
-                                .and_modify(|v| *v = v.saturating_add(bounty.reward as i64))
-                                .or_insert(bounty.reward as i64);
+                                .and_modify(|v| *v = v.saturating_add(bounty.reward as u32))
+                                .or_insert(bounty.reward as u32);
                         }
                     }
 
@@ -351,7 +373,7 @@ impl State {
                         if let Some(faction) = e.faction {
                             let result = target
                                 .entry(faction.clone())
-                                .and_modify(|b| *b = b.saturating_sub(e.amount as i64))
+                                .and_modify(|b| *b = b.saturating_sub(e.amount as u32))
                                 .or_default();
 
                             if *result <= 0 {
@@ -361,7 +383,7 @@ impl State {
                             for voucher in vouchers {
                                 let result = target
                                     .entry(voucher.faction.clone())
-                                    .and_modify(|b| *b = b.saturating_sub(e.amount as i64))
+                                    .and_modify(|b| *b = b.saturating_sub(e.amount as u32))
                                     .or_default();
 
                                 if *result <= 0 {
@@ -633,18 +655,35 @@ impl State {
                     Event::Reputation(e) => self.reputation = e.into(),
 
                     // POWERPLAY
-                    Event::Powerplay(_) => {}
-                    Event::PowerplayJoin(_) => {}
-                    Event::PowerplayMerits(_) => {}
-                    Event::PowerplayRank(_) => {}
+                    Event::Powerplay(e) => {
+                        self.powerplay.power = Some(e.power);
+                        self.powerplay.rank = Some(e.rank as u8);
+                        self.powerplay.merits = e.merits;
+                        self.powerplay.time_pledged = e.time_pledged;
+                    }
+                    Event::PowerplayJoin(e) => {
+                        self.powerplay.power = Some(e.power);
+                    }
+                    Event::PowerplayMerits(e) => {
+                        self.powerplay.merits = e.total_merits;
+                    }
+                    Event::PowerplayRank(e) => {
+                        self.powerplay.rank = Some(e.rank as u8);
+                    }
                     Event::PowerplayFastTrack(_) => {}
                     Event::PowerplayCollect(_) => {}
                     Event::PowerplayVoucher(_) => {}
                     Event::PowerplayVote(_) => {}
-                    Event::PowerplayDefect(_) => {}
+                    Event::PowerplayDefect(e) => {
+                        self.powerplay.power = Some(e.to_power);
+                    }
                     Event::PowerplayDeliver(_) => {}
-                    Event::PowerplaySalary(_) => {}
-                    Event::PowerplayLeave(_) => {}
+                    Event::PowerplaySalary(e) => {
+                        self.powerplay.last_salary = Some(e.amount);
+                    }
+                    Event::PowerplayLeave(_) => {
+                        self.powerplay = Default::default();
+                    }
 
                     // SCAN
                     Event::Scan(_) => {}

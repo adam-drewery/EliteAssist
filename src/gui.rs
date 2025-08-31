@@ -27,6 +27,9 @@ pub enum Message {
     TrafficQueried(edsm::Traffic),
     DeathsQueried(edsm::Deaths),
     
+    // EDSM status updates
+    EdsmServerStatus(edsm::EliteServerStatus),
+    
     // Pane grid interactions on the Overview screen
     PaneDragged(pane_grid::DragEvent),
     PaneResized(pane_grid::ResizeEvent),
