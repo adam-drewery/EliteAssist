@@ -43,7 +43,7 @@ fn stream_edsm_server_status() -> impl iced::futures::Stream<Item = Message> {
         use crate::edsm::EdsmClient;
         use log::error;
         let client = EdsmClient::default();
-        let mut interval = tokio::time::interval(Duration::from_secs(10));
+        let mut interval = tokio::time::interval(Duration::from_secs(30));
         loop {
             interval.tick().await;
             match client.get_elite_server_status().await {

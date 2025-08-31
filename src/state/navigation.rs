@@ -77,7 +77,6 @@ pub struct SystemFaction {
 #[derive(Default, Clone, Debug)]
 pub struct FactionState {
     pub state: Box<str>,
-    pub trend: u64,
 }
 
 #[derive(Default, Clone, Debug)]
@@ -202,8 +201,8 @@ impl From<event::FSDJump> for CurrentLocation {
                 allegiance: f.allegiance,
                 happiness: f.happiness,
                 my_reputation: f.my_reputation,
-                recovering_states: f.recovering_states.unwrap_or_default().into_iter().map(|s| FactionState { state: s.state, trend: s.trend }).collect(),
-                active_states: f.active_states.unwrap_or_default().into_iter().map(|s| FactionState { state: s.state, trend: 0 }).collect(),
+                recovering_states: f.recovering_states.unwrap_or_default().into_iter().map(|s| FactionState { state: s.state }).collect(),
+                active_states: f.active_states.unwrap_or_default().into_iter().map(|s| FactionState { state: s.state }).collect(),
             }).collect(),
             system_faction: value.system_faction.map(|f| SystemFaction { name: f.name, faction_state: f.faction_state }),
             ..Default::default()
@@ -251,8 +250,8 @@ impl From<event::Location> for CurrentLocation {
                 allegiance: faction.allegiance,
                 happiness: faction.happiness_localised.unwrap_or_default(),
                 my_reputation: faction.my_reputation,
-                recovering_states: faction.recovering_states.unwrap_or_default().into_iter().map(|state| FactionState { state: state.state, trend: state.trend }).collect(),
-                active_states: faction.active_states.unwrap_or_default().into_iter().map(|state| FactionState { state: state.state, trend: 0 }).collect(),
+                recovering_states: faction.recovering_states.unwrap_or_default().into_iter().map(|state| FactionState { state: state.state }).collect(),
+                active_states: faction.active_states.unwrap_or_default().into_iter().map(|state| FactionState { state: state.state }).collect(),
             }).collect(),
             system_faction: value.system_faction.map(|sf| SystemFaction { name: sf.name, faction_state: sf.faction_state }),
             ..Default::default()

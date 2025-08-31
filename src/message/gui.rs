@@ -5,6 +5,7 @@ use crate::state::*;
 use iced::widget::pane_grid;
 use iced::window;
 use iced::Task;
+use crate::message::Gui::*;
 
 #[derive(Clone, Debug)]
 pub enum Gui {
@@ -33,52 +34,41 @@ pub enum Gui {
 impl Gui {
     pub fn update(self, state: &mut State) -> Task<Message> {
         match self {
-            Gui::NavigateTo(screen) => state.active_screen = screen,
+            
+            NavigateTo(screen) => state.active_screen = screen,
 
-            Gui::PaneDragged(event) => {
-                pane::dragged(&mut state.layout, event);
-            }
+            PaneDragged(event) => pane::dragged(&mut state.layout, event),
 
-            Gui::PaneResized(event) => {
-                pane::resized(&mut state.layout, event);
-            }
+            PaneResized(event) => pane::resized(&mut state.layout, event),
 
-            Gui::TogglePane(pane_title, enabled) => {
-                pane::toggle(pane_title.as_ref(), &mut state.layout, enabled);
-            }
+            AddCustomScreen => screen::add_custom(&mut state.layout),
 
-            Gui::AddCustomScreen => {
-                screen::add_custom(&mut state.layout);
-            }
+            RemoveCustomScreen => screen::remove_custom(&mut state.layout),
 
-            Gui::RemoveCustomScreen => {
-                screen::remove_custom(&mut state.layout);
-            }
+            SelectCustomScreen(idx) => screen::select_custom(&mut state.layout, idx),
 
-            Gui::SelectCustomScreen(idx) => {
-                screen::select_custom(&mut state.layout, idx);
-            }
+            RenameCustomScreen(name) => screen::rename_custom(&mut state.layout, name),
 
-            Gui::RenameCustomScreen(name) => {
-                screen::rename_custom(&mut state.layout, name);
-            }
-
-            Gui::NavigateToCustomScreen(idx) => {
+            NavigateToCustomScreen(idx) => {
                 state.active_screen = screen::navigate_to(&mut state.layout, idx);
             }
 
-            Gui::NextTab => {
+            NextTab => {
                 if let Some(screen) = screen::next_tab(&mut state.layout, &state.active_screen) {
                     state.active_screen = screen;
                 }
             }
 
-            Gui::ToggleFullscreen => {
+            TogglePane(pane_title, enabled) => {
+                pane::toggle(pane_title.as_ref(), &mut state.layout, enabled);
+            }
+            
+            ToggleFullscreen => {
                 return window::get_latest()
-                    .map(|id| Message::Gui(Gui::ToggleFullscreenWithId(id)));
+                    .map(|id| Message::Gui(ToggleFullscreenWithId(id)));
             }
 
-            Gui::ToggleFullscreenWithId(id_opt) => {
+            ToggleFullscreenWithId(id_opt) => {
                 if let Some(id) = id_opt {
                     let mode = if state.layout.fullscreen {
                         window::Mode::Windowed

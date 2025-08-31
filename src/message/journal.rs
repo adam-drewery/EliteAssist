@@ -5,67 +5,67 @@ use crate::query;
 use iced::Task;
 use log::warn;
 use thousands::Separable;
+use crate::journal::Event::*;
 use crate::message::Message;
 
 impl journal::Event {
     pub fn update(self, state: &mut State) -> Task<Message> {
-        use journal::Event;
 
         match self {
             // BACKPACK
-            Event::Backpack(_) => {}
-            Event::BackpackChange(_) => {}
-            Event::DropItems(_) => {}
-            Event::CollectItems(_) => {}
-            Event::UseConsumable(_) => {}
+            Backpack(_) => {}
+            BackpackChange(_) => {}
+            DropItems(_) => {}
+            CollectItems(_) => {}
+            UseConsumable(_) => {}
 
             // CARGO
-            Event::Cargo(_) => {}
-            Event::CargoTransfer(_) => {}
-            Event::CargoDepot(_) => {}
-            Event::CollectCargo(_) => {}
-            Event::EjectCargo(_) => {}
+            Cargo(_) => {}
+            CargoTransfer(_) => {}
+            CargoDepot(_) => {}
+            CollectCargo(_) => {}
+            EjectCargo(_) => {}
 
             // CARRIER
-            Event::CarrierLocation(_) => {}
-            Event::CarrierJump(_) => {}
-            Event::CarrierBuy(_) => {}
-            Event::CarrierStats(_) => {}
-            Event::CarrierJumpRequest(_) => {}
-            Event::CarrierDecommission(_) => {}
-            Event::CarrierCancelDecommission(_) => {}
-            Event::CarrierBankTransfer(_) => {}
-            Event::CarrierDepositFuel(_) => {}
-            Event::CarrierCrewServices(_) => {}
-            Event::CarrierFinance(_) => {}
-            Event::CarrierShipPack(_) => {}
-            Event::CarrierModulePack(_) => {}
-            Event::CarrierTradeOrder(_) => {}
-            Event::CarrierDockingPermission(_) => {}
-            Event::CarrierNameChange(_) => {}
-            Event::CarrierJumpCancelled(_) => {}
-            Event::FCMaterials(_) => {}
+            CarrierLocation(_) => {}
+            CarrierJump(_) => {}
+            CarrierBuy(_) => {}
+            CarrierStats(_) => {}
+            CarrierJumpRequest(_) => {}
+            CarrierDecommission(_) => {}
+            CarrierCancelDecommission(_) => {}
+            CarrierBankTransfer(_) => {}
+            CarrierDepositFuel(_) => {}
+            CarrierCrewServices(_) => {}
+            CarrierFinance(_) => {}
+            CarrierShipPack(_) => {}
+            CarrierModulePack(_) => {}
+            CarrierTradeOrder(_) => {}
+            CarrierDockingPermission(_) => {}
+            CarrierNameChange(_) => {}
+            CarrierJumpCancelled(_) => {}
+            FCMaterials(_) => {}
 
             // COLONISATION
-            Event::ColonisationBeaconDeployed(_) => {}
-            Event::ColonisationConstructionDepot(_) => {}
-            Event::ColonisationContribution(_) => {}
-            Event::ColonisationSystemClaim(_) => {}
-            Event::ColonisationSystemClaimRelease(_) => {}
+            ColonisationBeaconDeployed(_) => {}
+            ColonisationConstructionDepot(_) => {}
+            ColonisationContribution(_) => {}
+            ColonisationSystemClaim(_) => {}
+            ColonisationSystemClaimRelease(_) => {}
 
             // COMBAT
-            Event::CapShipBond(_) => {}
-            Event::UnderAttack(_) => {}
-            Event::PVPKill(_) => {}
+            CapShipBond(_) => {}
+            UnderAttack(_) => {}
+            PVPKill(_) => {}
 
-            Event::FactionKillBond(e) => {
+            FactionKillBond(e) => {
                 state.combat_bonds
                     .entry(e.awarding_faction.clone())
                     .and_modify(|v| *v = v.saturating_add(e.reward as u32))
                     .or_insert(e.reward as u32);
             }
 
-            Event::Bounty(e) => {
+            Bounty(e) => {
                 for bounty in e.rewards.unwrap_or_default() {
                     state.bounties
                         .entry(bounty.faction.clone())
@@ -75,57 +75,57 @@ impl journal::Event {
             }
 
             // COMMUNITY GOAL
-            Event::CommunityGoalJoin(_) => {}
-            Event::CommunityGoalDiscard(_) => {}
-            Event::CommunityGoalReward(_) => {}
-            Event::CommunityGoal(_) => {}
-            Event::ScientificResearch(_) => {}
+            CommunityGoalJoin(_) => {}
+            CommunityGoalDiscard(_) => {}
+            CommunityGoalReward(_) => {}
+            CommunityGoal(_) => {}
+            ScientificResearch(_) => {}
 
             // CREW
-            Event::QuitACrew(_) => {}
-            Event::JoinACrew(_) => {}
-            Event::CrewFire(_) => {}
-            Event::CrewHire(_) => {}
-            Event::KickCrewMember(_) => {}
+            QuitACrew(_) => {}
+            JoinACrew(_) => {}
+            CrewFire(_) => {}
+            CrewHire(_) => {}
+            KickCrewMember(_) => {}
 
-            Event::CrewAssign(e) => state.logs.push(e.into()),
+            CrewAssign(e) => state.logs.push(e.into()),
 
-            Event::CrewMemberRoleChange(e) => state.logs.push(e.into()),
+            CrewMemberRoleChange(e) => state.logs.push(e.into()),
 
-            Event::CrewLaunchFighter(e) => state.logs.push(e.into()),
+            CrewLaunchFighter(e) => state.logs.push(e.into()),
 
-            Event::ChangeCrewRole(e) => state.logs.push(e.into()),
+            ChangeCrewRole(e) => state.logs.push(e.into()),
 
-            Event::EndCrewSession(e) => state.logs.push(e.into()),
+            EndCrewSession(e) => state.logs.push(e.into()),
 
-            Event::NpcCrewRank(e) => state.logs.push(e.into()),
+            NpcCrewRank(e) => state.logs.push(e.into()),
 
-            Event::CrewMemberJoins(e) => state.logs.push(log_crew_member(e, "joined")),
+            CrewMemberJoins(e) => state.logs.push(log_crew_member(e, "joined")),
 
-            Event::CrewMemberQuits(e) => state.logs.push(log_crew_member(e, "quit")),
+            CrewMemberQuits(e) => state.logs.push(log_crew_member(e, "quit")),
 
-            Event::NpcCrewPaidWage(e) => {
+            NpcCrewPaidWage(e) => {
                 if e.amount != 0 {
                     state.logs.push(e.into())
                 }
             }
 
             // CRIME
-            Event::ClearImpound(_) => {}
-            Event::CommitCrime(_) => {}
-            Event::CrimeVictim(_) => {}
-            Event::PayBounties(_) => {}
-            Event::PayFines(_) => {}
-            Event::HoloscreenHacked(_) => {}
+            ClearImpound(_) => {}
+            CommitCrime(_) => {}
+            CrimeVictim(_) => {}
+            PayBounties(_) => {}
+            PayFines(_) => {}
+            HoloscreenHacked(_) => {}
 
             // DATA MARKET
-            Event::SellExplorationData(_) => {}
-            Event::BuyExplorationData(_) => {}
-            Event::BuyTradeData(_) => {}
-            Event::SellOrganicData(_) => {}
-            Event::MultiSellExplorationData(_) => {}
+            SellExplorationData(_) => {}
+            BuyExplorationData(_) => {}
+            BuyTradeData(_) => {}
+            SellOrganicData(_) => {}
+            MultiSellExplorationData(_) => {}
 
-            Event::RedeemVoucher(e) => {
+            RedeemVoucher(e) => {
                 let target = match e.r#type.as_ref() {
                     "CombatBond" => &mut state.combat_bonds,
                     "bounty" => &mut state.bounties,
@@ -160,51 +160,51 @@ impl journal::Event {
             }
 
             // ENGINEERING
-            Event::EngineerLegacyConvert(_) => {}
-            Event::EngineerContribution(_) => {}
-            Event::EngineerCraft(_) => {}
+            EngineerLegacyConvert(_) => {}
+            EngineerContribution(_) => {}
+            EngineerCraft(_) => {}
 
-            Event::EngineerProgress(e) => state.engineers = e.into(),
+            EngineerProgress(e) => state.engineers = e.into(),
 
             // ENVIRONMENT
-            Event::JetConeDamage(_) => {}
-            Event::CockpitBreached(_) => {}
-            Event::HeatWarning(_) => {}
-            Event::HeatDamage(_) => {}
-            Event::ShipTargeted(_) => {}
-            Event::HullDamage(_) => {}
-            Event::SelfDestruct(_) => {}
-            Event::SystemsShutdown(_) => {}
-            Event::ShieldState(_) => {}
-            Event::LaunchDrone(_) => {}
-            Event::DatalinkVoucher(_) => {}
+            JetConeDamage(_) => {}
+            CockpitBreached(_) => {}
+            HeatWarning(_) => {}
+            HeatDamage(_) => {}
+            ShipTargeted(_) => {}
+            HullDamage(_) => {}
+            SelfDestruct(_) => {}
+            SystemsShutdown(_) => {}
+            ShieldState(_) => {}
+            LaunchDrone(_) => {}
+            DatalinkVoucher(_) => {}
 
             // FIGHTER
-            Event::VehicleSwitch(e) => state.logs.push(e.into()),
+            VehicleSwitch(e) => state.logs.push(e.into()),
 
-            Event::LaunchFighter(e) => state.logs.push(e.into()),
+            LaunchFighter(e) => state.logs.push(e.into()),
 
-            Event::FighterRebuilt(e) => state.logs.push(e.into()),
+            FighterRebuilt(e) => state.logs.push(e.into()),
 
-            Event::DockFighter(e) => state.logs.push(e.into()),
+            DockFighter(e) => state.logs.push(e.into()),
 
-            Event::FighterDestroyed(e) => {
+            FighterDestroyed(e) => {
                 state.logs.push(log_damage(e, "Destroyed", "Fighter"))
             }
 
             // FSD
-            Event::Interdiction(_) => {}
-            Event::Interdicted(_) => {}
-            Event::EscapeInterdiction(_) => {}
-            Event::SupercruiseEntry(_) => {}
-            Event::SupercruiseExit(_) => {}
-            Event::SupercruiseDestinationDrop(_) => {}
+            Interdiction(_) => {}
+            Interdicted(_) => {}
+            EscapeInterdiction(_) => {}
+            SupercruiseEntry(_) => {}
+            SupercruiseExit(_) => {}
+            SupercruiseDestinationDrop(_) => {}
 
-            Event::FSDTarget(_) => {}
+            FSDTarget(_) => {}
 
-            Event::StartJump(e) => state.logs.push(e.into()),
+            StartJump(e) => state.logs.push(e.into()),
 
-            Event::FSDJump(e) => {
+            FSDJump(e) => {
                 // trim the new system from the start of our nav route if it matches.
                 if !state.nav_route.is_empty() {
                     if let Some(first) = state.nav_route.first() {
@@ -226,28 +226,28 @@ impl journal::Event {
             }
 
             // FUEL
-            Event::FuelScoop(_) => {}
-            Event::ReservoirReplenished(_) => {}
+            FuelScoop(_) => {}
+            ReservoirReplenished(_) => {}
 
             // MARKET
-            Event::MarketBuy(_) => {}
-            Event::MarketSell(_) => {}
-            Event::TechnologyBroker(_) => {}
+            MarketBuy(_) => {}
+            MarketSell(_) => {}
+            TechnologyBroker(_) => {}
 
-            Event::Market(e) => {
+            Market(e) => {
                 if !e.items.is_none() {
                     state.market = e.into();
                 }
             }
 
             // MATERIALS
-            Event::MaterialDiscarded(_) => {}
-            Event::MaterialCollected(_) => {}
-            Event::MaterialDiscovered(_) => {}
-            Event::MaterialTrade(_) => {}
-            Event::Synthesis(_) => {}
+            MaterialDiscarded(_) => {}
+            MaterialCollected(_) => {}
+            MaterialDiscovered(_) => {}
+            MaterialTrade(_) => {}
+            Synthesis(_) => {}
 
-            Event::Materials(e) => {
+            Materials(e) => {
                 let is_empty = e.encoded.is_empty()
                     && e.manufactured.is_empty()
                     && e.raw.is_empty();
@@ -258,54 +258,54 @@ impl journal::Event {
             }
 
             // MICRO RESOURCES
-            Event::RequestPowerMicroResources(_) => {}
-            Event::TransferMicroResources(_) => {}
-            Event::DeliverPowerMicroResources(_) => {}
-            Event::SellMicroResources(_) => {}
-            Event::TradeMicroResources(_) => {}
-            Event::BuyMicroResources(_) => {}
+            RequestPowerMicroResources(_) => {}
+            TransferMicroResources(_) => {}
+            DeliverPowerMicroResources(_) => {}
+            SellMicroResources(_) => {}
+            TradeMicroResources(_) => {}
+            BuyMicroResources(_) => {}
 
             // MINING
-            Event::ProspectedAsteroid(_) => {}
-            Event::AsteroidCracked(_) => {}
-            Event::MiningRefined(_) => {}
+            ProspectedAsteroid(_) => {}
+            AsteroidCracked(_) => {}
+            MiningRefined(_) => {}
 
             // MISSIONS
-            Event::Missions(_) => { /* this doesn't give us all the info we need */ }
-            Event::MissionRedirected(_) => {}
+            Missions(_) => { /* this doesn't give us all the info we need */ }
+            MissionRedirected(_) => {}
 
-            Event::MissionAccepted(e) => {
+            MissionAccepted(e) => {
                 state.missions.push(e.into());
             }
 
-            Event::MissionFailed(e) => {
+            MissionFailed(e) => {
                 state.missions.retain(|m| m.mission_id != e.mission_id);
             }
 
-            Event::MissionAbandoned(e) => {
+            MissionAbandoned(e) => {
                 state.missions.retain(|m| m.mission_id != e.mission_id);
             }
 
-            Event::MissionCompleted(e) => {
+            MissionCompleted(e) => {
                 state.missions.retain(|m| m.mission_id != e.mission_id);
             }
 
             // NAVIGATION
-            Event::ApproachBody(_) => {}
-            Event::LeaveBody(_) => {}
-            Event::ApproachSettlement(_) => {}
-            Event::DockingRequested(_) => {}
-            Event::DockingGranted(_) => {}
-            Event::DockingTimeout(_) => {}
-            Event::DockingDenied(_) => {}
-            Event::DockingCancelled(_) => {}
-            Event::USSDrop(_) => {}
-            Event::Touchdown(_) => {}
-            Event::Liftoff(_) => {}
-            Event::Undocked(_) => {}
-            Event::JetConeBoost(_) => {}
+            ApproachBody(_) => {}
+            LeaveBody(_) => {}
+            ApproachSettlement(_) => {}
+            DockingRequested(_) => {}
+            DockingGranted(_) => {}
+            DockingTimeout(_) => {}
+            DockingDenied(_) => {}
+            DockingCancelled(_) => {}
+            USSDrop(_) => {}
+            Touchdown(_) => {}
+            Liftoff(_) => {}
+            Undocked(_) => {}
+            JetConeBoost(_) => {}
 
-            Event::NavRoute(e) => {
+            NavRoute(e) => {
                 let route: Vec<NavRouteStep> = e.into();
 
                 // The journal file gives us blank NavRoute events when we plot one. Kinda weird.
@@ -314,21 +314,21 @@ impl journal::Event {
                 }
             }
 
-            Event::NavRouteClear(_) => {
+            NavRouteClear(_) => {
                 state.nav_route.clear();
             }
 
-            Event::Disembark(e) => {
+            Disembark(e) => {
                 state.current_body = e.body.clone();
                 state.logs.push(e.into());
             }
 
-            Event::Embark(e) => {
+            Embark(e) => {
                 state.current_body = e.body.clone();
                 state.logs.push(e.into());
             }
 
-            Event::Docked(e) => {
+            Docked(e) => {
                 if let Some(active_fine) = e.active_fine {
                     state.crime.active_fine = active_fine;
                 }
@@ -337,7 +337,7 @@ impl journal::Event {
                 }
             }
 
-            Event::Location(e) => {
+            Location(e) => {
                 state.current_system = e.star_system.clone();
 
                 if e.body_type.as_ref() != "Star" {
@@ -348,28 +348,28 @@ impl journal::Event {
             }
 
             // OUTFITTING
-            Event::Outfitting(_) => {}
-            Event::ModuleInfo(_) => {}
-            Event::ModuleBuyAndStore(_) => {}
-            Event::ModuleSell(_) => {}
-            Event::ModuleStore(_) => {}
-            Event::ModuleRetrieve(_) => {}
-            Event::MassModuleStore(_) => {}
-            Event::ModuleSwap(_) => {}
-            Event::ModuleBuy(_) => {}
-            Event::ModuleSellRemote(_) => {}
-            Event::FetchRemoteModule(_) => {}
-            Event::StoredModules(_) => {}
+            Outfitting(_) => {}
+            ModuleInfo(_) => {}
+            ModuleBuyAndStore(_) => {}
+            ModuleSell(_) => {}
+            ModuleStore(_) => {}
+            ModuleRetrieve(_) => {}
+            MassModuleStore(_) => {}
+            ModuleSwap(_) => {}
+            ModuleBuy(_) => {}
+            ModuleSellRemote(_) => {}
+            FetchRemoteModule(_) => {}
+            StoredModules(_) => {}
 
-            Event::Loadout(e) => state.ship_loadout = e.into(),
+            Loadout(e) => state.ship_loadout = e.into(),
 
             // PASSENGERS
-            Event::Passengers(_) => {}
-            Event::SearchAndRescue(_) => {}
+            Passengers(_) => {}
+            SearchAndRescue(_) => {}
 
             // PERSONAL
-            Event::Statistics(_) => {}
-            Event::Promotion(promotion) => {
+            Statistics(_) => {}
+            Promotion(promotion) => {
                 // CQC isn't handled here because we can't rank up in that outside of CQC mode.
 
                 if let Some(combat) = promotion.combat {
@@ -394,11 +394,11 @@ impl journal::Event {
                 }
             }
 
-            Event::Commander(commander) => {
+            Commander(commander) => {
                 state.commander_name = ("CMDR ".to_string() + commander.name.as_ref()).into();
             }
 
-            Event::Status(e) => {
+            Status(e) => {
                 if let Some(balance) = e.balance {
                     state.credits = (balance.separate_with_commas() + " CR").into();
                 }
@@ -411,77 +411,77 @@ impl journal::Event {
                 }
             }
 
-            Event::Rank(e) => state.rank = e.into(),
+            Rank(e) => state.rank = e.into(),
 
-            Event::Progress(e) => state.progress = e.into(),
+            Progress(e) => state.progress = e.into(),
 
-            Event::Reputation(e) => state.reputation = e.into(),
+            Reputation(e) => state.reputation = e.into(),
 
             // POWERPLAY
-            Event::Powerplay(e) => {
+            Powerplay(e) => {
                 state.powerplay.power = Some(e.power);
                 state.powerplay.rank = Some(e.rank as u8);
                 state.powerplay.merits = e.merits;
                 state.powerplay.time_pledged = e.time_pledged;
             }
-            Event::PowerplayJoin(e) => {
+            PowerplayJoin(e) => {
                 state.powerplay.power = Some(e.power);
             }
-            Event::PowerplayMerits(e) => {
+            PowerplayMerits(e) => {
                 state.powerplay.merits = e.total_merits;
             }
-            Event::PowerplayRank(e) => {
+            PowerplayRank(e) => {
                 state.powerplay.rank = Some(e.rank as u8);
             }
-            Event::PowerplayFastTrack(_) => {}
-            Event::PowerplayCollect(_) => {}
-            Event::PowerplayVoucher(_) => {}
-            Event::PowerplayVote(_) => {}
-            Event::PowerplayDefect(e) => {
+            PowerplayFastTrack(_) => {}
+            PowerplayCollect(_) => {}
+            PowerplayVoucher(_) => {}
+            PowerplayVote(_) => {}
+            PowerplayDefect(e) => {
                 state.powerplay.power = Some(e.to_power);
             }
-            Event::PowerplayDeliver(_) => {}
-            Event::PowerplaySalary(e) => {
+            PowerplayDeliver(_) => {}
+            PowerplaySalary(e) => {
                 state.powerplay.last_salary = Some(e.amount);
             }
-            Event::PowerplayLeave(_) => {
+            PowerplayLeave(_) => {
                 state.powerplay = Default::default();
             }
 
             // SCAN
-            Event::Scan(_) => {}
-            Event::ScanBaryCentre(_) => {}
-            Event::ScanOrganic(_) => {}
-            Event::Scanned(_) => {}
-            Event::CodexEntry(_) => {}
-            Event::DatalinkScan(_) => {}
-            Event::NavBeaconScan(_) => {}
-            Event::DiscoveryScan(_) => {}
-            Event::DataScanned(_) => {}
-            Event::FSSBodySignals(_) => {}
-            Event::FSSDiscoveryScan(_) => {}
-            Event::FSSAllBodiesFound(_) => {}
-            Event::FSSSignalDiscovered(_) => {}
-            Event::SAASignalsFound(_) => {}
-            Event::SAAScanComplete(_) => {}
+            Scan(_) => {}
+            ScanBaryCentre(_) => {}
+            ScanOrganic(_) => {}
+            Scanned(_) => {}
+            CodexEntry(_) => {}
+            DatalinkScan(_) => {}
+            NavBeaconScan(_) => {}
+            DiscoveryScan(_) => {}
+            DataScanned(_) => {}
+            FSSBodySignals(_) => {}
+            FSSDiscoveryScan(_) => {}
+            FSSAllBodiesFound(_) => {}
+            FSSSignalDiscovered(_) => {}
+            SAASignalsFound(_) => {}
+            SAAScanComplete(_) => {}
 
             // SESSION
-            Event::Continued(_) => {}
-            Event::NewCommander(_) => {}
-            Event::Friends(_) => {}
-            Event::ClearSavedGame(_) => {}
-            Event::Screenshot(_) => {}
-            Event::Fileheader(_) => {}
-            Event::SendText(_) => {}
-            Event::Died(_) => {}
-            Event::Resurrect(_) => {}
-            Event::Music(_) => {}
+            Continued(_) => {}
+            NewCommander(_) => {}
+            Friends(_) => {}
+            ClearSavedGame(_) => {}
+            Screenshot(_) => {}
+            Fileheader(_) => {}
+            SendText(_) => {}
+            Died(_) => {}
+            Resurrect(_) => {}
+            Music(_) => {}
 
-            Event::LoadGame(_) => {
+            LoadGame(_) => {
                 state.nav_route.clear();
             }
 
-            Event::ReceiveText(e) => {
+            ReceiveText(e) => {
                 if state.first_message_timestamp == 0 {
                     state.first_message_timestamp = e.timestamp.timestamp();
                 }
@@ -495,14 +495,14 @@ impl journal::Event {
                 }
             }
 
-            Event::Shutdown(_) => {
+            Shutdown(_) => {
                 state.nav_route.clear();
             }
 
             // SHIP LOCKER
-            Event::ShipLockerMaterials(_) => {}
+            ShipLockerMaterials(_) => {}
 
-            Event::ShipLocker(e) => {
+            ShipLocker(e) => {
                 let is_empty = e.items.is_none()
                     && e.components.is_none()
                     && e.consumables.is_none()
@@ -514,84 +514,84 @@ impl journal::Event {
             }
 
             // SHIP MAINTENANCE
-            Event::RefuelAll(_) => {}
-            Event::RefuelPartial(_) => {}
-            Event::RepairAll(_) => {}
-            Event::Repair(_) => {}
-            Event::Resupply(_) => {}
-            Event::BuyDrones(_) => {}
-            Event::RepairDrone(_) => {}
-            Event::SellDrones(_) => {}
-            Event::RebootRepair(_) => {}
-            Event::AfmuRepairs(_) => {}
+            RefuelAll(_) => {}
+            RefuelPartial(_) => {}
+            RepairAll(_) => {}
+            Repair(_) => {}
+            Resupply(_) => {}
+            BuyDrones(_) => {}
+            RepairDrone(_) => {}
+            SellDrones(_) => {}
+            RebootRepair(_) => {}
+            AfmuRepairs(_) => {}
 
-            Event::RestockVehicle(e) => state.logs.push(e.into()),
+            RestockVehicle(e) => state.logs.push(e.into()),
 
             // SHIPYARD
-            Event::Shipyard(_) => {}
-            Event::ShipyardNew(_) => {}
-            Event::ShipyardRedeem(_) => {}
-            Event::ShipyardBuy(_) => {}
-            Event::ShipRedeemed(_) => {}
-            Event::ShipyardSwap(_) => {}
-            Event::ShipyardSell(_) => {}
-            Event::ShipyardTransfer(_) => {}
-            Event::SellShipOnRebuy(_) => {}
-            Event::StoredShips(_) => {}
-            Event::SetUserShipName(_) => {}
-            Event::ShipyardBankDeposit(_) => {}
+            Shipyard(_) => {}
+            ShipyardNew(_) => {}
+            ShipyardRedeem(_) => {}
+            ShipyardBuy(_) => {}
+            ShipRedeemed(_) => {}
+            ShipyardSwap(_) => {}
+            ShipyardSell(_) => {}
+            ShipyardTransfer(_) => {}
+            SellShipOnRebuy(_) => {}
+            StoredShips(_) => {}
+            SetUserShipName(_) => {}
+            ShipyardBankDeposit(_) => {}
 
             // SQUADRON
-            Event::SquadronStartup(_) => {}
-            Event::SquadronCreated(_) => {}
-            Event::SquadronDemotion(_) => {}
-            Event::SquadronPromotion(_) => {}
-            Event::DisbandedSquadron(_) => {}
-            Event::InvitedToSquadron(_) => {}
-            Event::AppliedToSquadron(_) => {}
-            Event::JoinedSquadron(_) => {}
-            Event::KickedFromSquadron(_) => {}
-            Event::LeftSquadron(_) => {}
-            Event::SharedBookmarkToSquadron(_) => {}
+            SquadronStartup(_) => {}
+            SquadronCreated(_) => {}
+            SquadronDemotion(_) => {}
+            SquadronPromotion(_) => {}
+            DisbandedSquadron(_) => {}
+            InvitedToSquadron(_) => {}
+            AppliedToSquadron(_) => {}
+            JoinedSquadron(_) => {}
+            KickedFromSquadron(_) => {}
+            LeftSquadron(_) => {}
+            SharedBookmarkToSquadron(_) => {}
 
             // SRV
-            Event::DockSRV(_) => {}
-            Event::LaunchSRV(_) => {}
-            Event::SRVDestroyed(_) => {}
+            DockSRV(_) => {}
+            LaunchSRV(_) => {}
+            SRVDestroyed(_) => {}
 
             // SUIT LOADOUT
-            Event::BuySuit(_) => {}
-            Event::SellSuit(_) => {}
-            Event::UpgradeSuit(_) => {}
-            Event::CreateSuitLoadout(_) => {}
-            Event::RenameSuitLoadout(_) => {}
-            Event::DeleteSuitLoadout(_) => {}
-            Event::SwitchSuitLoadout(_) => {}
+            BuySuit(_) => {}
+            SellSuit(_) => {}
+            UpgradeSuit(_) => {}
+            CreateSuitLoadout(_) => {}
+            RenameSuitLoadout(_) => {}
+            DeleteSuitLoadout(_) => {}
+            SwitchSuitLoadout(_) => {}
 
-            Event::SuitLoadout(e) => state.suit_loadout = e.into(),
+            SuitLoadout(e) => state.suit_loadout = e.into(),
 
             // TAXI
-            Event::BookTaxi(_) => {}
-            Event::CancelTaxi(_) => {}
-            Event::BookDropship(_) => {}
-            Event::CancelDropship(_) => {}
-            Event::DropshipDeploy(_) => {}
+            BookTaxi(_) => {}
+            CancelTaxi(_) => {}
+            BookDropship(_) => {}
+            CancelDropship(_) => {}
+            DropshipDeploy(_) => {}
 
             // WEAPON
-            Event::BuyWeapon(_) => {}
-            Event::SellWeapon(_) => {}
-            Event::UpgradeWeapon(_) => {}
-            Event::LoadoutRemoveModule(_) => {}
-            Event::LoadoutEquipModule(_) => {}
+            BuyWeapon(_) => {}
+            SellWeapon(_) => {}
+            UpgradeWeapon(_) => {}
+            LoadoutRemoveModule(_) => {}
+            LoadoutEquipModule(_) => {}
 
-            Event::BuyAmmo(e) => state.logs.push(log_ship_equipment_purchase(e, "ammo")),
+            BuyAmmo(e) => state.logs.push(log_ship_equipment_purchase(e, "ammo")),
 
             // WING
-            Event::WingAdd(_) => {}
-            Event::WingInvite(_) => {}
-            Event::WingJoin(_) => {}
-            Event::WingLeave(_) => {}
-            Event::ShipLockerBackpack(_) => {}
+            WingAdd(_) => {}
+            WingInvite(_) => {}
+            WingJoin(_) => {}
+            WingLeave(_) => {}
+            ShipLockerBackpack(_) => {}
         }
 
         Task::none()
