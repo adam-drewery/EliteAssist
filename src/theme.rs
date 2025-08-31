@@ -133,7 +133,7 @@ pub mod style {
 
     fn rail(status: widget::scrollable::Status) -> widget::scrollable::Rail {
         widget::scrollable::Rail {
-            background: None,
+            background: Background::Color(BACKGROUND).into(),
             border: orange_border(),
             scroller: widget::scrollable::Scroller {
                 border: orange_border(),

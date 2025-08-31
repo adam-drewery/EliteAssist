@@ -1,5 +1,5 @@
 use crate::font::EUROSTILE;
-use crate::gui::Message;
+use crate::gui::{pane, Message};
 use crate::state::{ShipLockerItem, State};
 use crate::theme::style;
 use crate::theme::{BLUE, ORANGE, YELLOW};
@@ -7,9 +7,9 @@ use iced::widget::tooltip::Position;
 use iced::widget::{column, row, scrollable, text, tooltip, Column};
 use iced::{Color, Element, Fill, Left};
 
-pub struct ShipLockerPane;
+pub struct ShipLocker;
 
-impl crate::gui::pane::PaneType for ShipLockerPane {
+impl pane::Type for ShipLocker {
 
     fn title(&self) -> &'static str { "Ship Locker" }
 

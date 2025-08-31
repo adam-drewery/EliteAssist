@@ -111,7 +111,7 @@ impl Settings {
     }
 }
 
-pub fn to_configuration(node: &LayoutNode) -> pane_grid::Configuration<Box<dyn pane::PaneType>> {
+pub fn to_configuration(node: &LayoutNode) -> pane_grid::Configuration<Box<dyn pane::Type>> {
     match node {
         LayoutNode::Pane(id) => pane_grid::Configuration::Pane(pane::from_title(id.as_ref())),
         LayoutNode::Split { axis, ratio, a, b } => pane_grid::Configuration::Split {
@@ -123,7 +123,7 @@ pub fn to_configuration(node: &LayoutNode) -> pane_grid::Configuration<Box<dyn p
     }
 }
 
-pub fn build_panes_from_layout(layout: &LayoutNode) -> pane_grid::State<Box<dyn pane::PaneType>> {
+pub fn build_panes_from_layout(layout: &LayoutNode) -> pane_grid::State<Box<dyn pane::Type>> {
     pane_grid::State::with_configuration(to_configuration(layout))
 }
 
@@ -142,9 +142,9 @@ pub fn layout_leaf_panes(layout: &LayoutNode) -> Vec<Box<str>> {
     v
 }
 
-pub fn state_to_node(state: &pane_grid::State<Box<dyn pane::PaneType>>) -> LayoutNode {
+pub fn state_to_node(state: &pane_grid::State<Box<dyn pane::Type>>) -> LayoutNode {
     // Traverse the Node tree and map panes to their IDs via state.panes
-    fn walk(node: &pane_grid::Node, state: &pane_grid::State<Box<dyn pane::PaneType>>) -> LayoutNode {
+    fn walk(node: &pane_grid::Node, state: &pane_grid::State<Box<dyn pane::Type>>) -> LayoutNode {
         match node {
             pane_grid::Node::Split { axis, ratio, a, b, .. } => LayoutNode::Split {
                 axis: axis.clone().into(),

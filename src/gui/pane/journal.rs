@@ -1,14 +1,14 @@
 use crate::font::EUROSTILE;
-use crate::gui::Message;
+use crate::gui::{pane, Message};
 use crate::state::State;
 use crate::theme::{style, GRAY, ORANGE, WHITE};
 use iced::widget::text::Wrapping;
 use iced::widget::{column, row, scrollable, text};
 use iced::{Element, Fill, Left, Right};
 
-pub struct LogJournalPane;
+pub struct LogJournal;
 
-impl crate::gui::pane::PaneType for LogJournalPane {
+impl pane::Type for LogJournal {
 
     fn title(&self) -> &'static str { "Journal" }
 

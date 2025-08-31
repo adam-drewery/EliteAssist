@@ -1,5 +1,5 @@
 use crate::gui::components::{details, empty_placeholder};
-use crate::gui::Message;
+use crate::gui::{pane, Message};
 use crate::state::State;
 use crate::theme::style;
 use iced::widget::{column, scrollable};
@@ -7,9 +7,9 @@ use iced::{Element, Fill};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct ClaimsPane;
+pub struct Claims;
 
-impl crate::gui::pane::PaneType for ClaimsPane {
+impl pane::Type for Claims {
 
     fn title(&self) -> &'static str { "Claims" }
 

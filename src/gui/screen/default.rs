@@ -1,18 +1,19 @@
 use iced::widget::pane_grid;
 
 use crate::config;
-use crate::gui::pane::{LoadoutPane, LocationPane, LogJournalPane, MarketPane, MaterialsPane, MessagesPane, PaneType, RanksPane, RoutePane, ShipDetailsPane, ShipLockerPane, ShipModulesPane};
+use crate::gui::pane;
+use crate::gui::pane::*;
 
 /// Builds the default "Overview" layout as a serializable LayoutNode.
 pub fn overview_layout() -> config::LayoutNode {
-    let (mut panes, pane_1) = pane_grid::State::<Box<dyn PaneType>>::new(Box::new(LoadoutPane));
+    let (mut panes, pane_1) = pane_grid::State::<Box<dyn pane::Type>>::new(Box::new(Loadout));
 
-    if let Some((pane_2, split_1)) = panes.split(pane_grid::Axis::Vertical, pane_1, Box::new(RoutePane)) {
-        if let Some((pane_3, _split_2)) = panes.split(pane_grid::Axis::Vertical, pane_2, Box::new(ShipDetailsPane)) {
-            if let Some((_, split_3)) = panes.split(pane_grid::Axis::Horizontal, pane_1, Box::new(MessagesPane)) {
-                if let Some((_, split_4)) = panes.split(pane_grid::Axis::Horizontal, pane_1, Box::new(RanksPane)) {
-                    if let Some((_, split_5)) = panes.split(pane_grid::Axis::Horizontal, pane_2, Box::new(LocationPane)) {
-                        if let Some((_, split_6)) = panes.split(pane_grid::Axis::Horizontal, pane_3, Box::new(ShipModulesPane)) {
+    if let Some((pane_2, split_1)) = panes.split(pane_grid::Axis::Vertical, pane_1, Box::new(Route)) {
+        if let Some((pane_3, _split_2)) = panes.split(pane_grid::Axis::Vertical, pane_2, Box::new(ShipDetails)) {
+            if let Some((_, split_3)) = panes.split(pane_grid::Axis::Horizontal, pane_1, Box::new(Messages)) {
+                if let Some((_, split_4)) = panes.split(pane_grid::Axis::Horizontal, pane_1, Box::new(Ranks)) {
+                    if let Some((_, split_5)) = panes.split(pane_grid::Axis::Horizontal, pane_2, Box::new(Location)) {
+                        if let Some((_, split_6)) = panes.split(pane_grid::Axis::Horizontal, pane_3, Box::new(ShipModules)) {
                             // Set vertical split so each column is ~1/3 of the width
                             panes.resize(split_1, 1.0 / 3.0);
                             // Set horizontal splits within columns
@@ -46,22 +47,22 @@ pub fn default_custom_screens() -> Vec<config::CustomScreen> {
     // Materials screen
     screens.push(config::CustomScreen {
         name: "Materials".into(),
-        layout: Some(config::LayoutNode::Pane(MaterialsPane.title().into())),
-        visible: Some(vec![MaterialsPane.title().into()]),
+        layout: Some(config::LayoutNode::Pane(Materials.title().into())),
+        visible: Some(vec![Materials.title().into()]),
     });
 
     // Ship Locker screen
     screens.push(config::CustomScreen {
         name: "Ship Locker".into(),
-        layout: Some(config::LayoutNode::Pane(ShipLockerPane.title().into())),
-        visible: Some(vec![ShipLockerPane.title().into()]),
+        layout: Some(config::LayoutNode::Pane(ShipLocker.title().into())),
+        visible: Some(vec![ShipLocker.title().into()]),
     });
 
     // Market screen
     screens.push(config::CustomScreen {
         name: "Market".into(),
-        layout: Some(config::LayoutNode::Pane(MarketPane.title().into())),
-        visible: Some(vec![MarketPane.title().into()]),
+        layout: Some(config::LayoutNode::Pane(Market.title().into())),
+        visible: Some(vec![Market.title().into()]),
     });
 
     // Logs screen: Messages over Journal
@@ -70,10 +71,10 @@ pub fn default_custom_screens() -> Vec<config::CustomScreen> {
         layout: Some(config::LayoutNode::Split {
             axis: config::AxisSer::Vertical,
             ratio: 0.5,
-            a: Box::new(config::LayoutNode::Pane(MessagesPane.title().into())),
-            b: Box::new(config::LayoutNode::Pane(LogJournalPane.title().into())),
+            a: Box::new(config::LayoutNode::Pane(Messages.title().into())),
+            b: Box::new(config::LayoutNode::Pane(LogJournal.title().into())),
         }),
-        visible: Some(vec![MessagesPane.title().into(), LogJournalPane.title().into()]),
+        visible: Some(vec![Messages.title().into(), LogJournal.title().into()]),
     });
 
     screens

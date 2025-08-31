@@ -1,13 +1,13 @@
 use crate::font::EUROSTILE;
-use crate::gui::Message;
+use crate::gui::{pane, Message};
 use crate::state::{Channel, State};
 use crate::theme::{style, GRAY, ORANGE, WHITE, YELLOW};
 use iced::widget::{column, row, scrollable, text};
 use iced::{Element, Fill};
 
-pub struct MessagesPane;
+pub struct Messages;
 
-impl crate::gui::pane::PaneType for MessagesPane {
+impl pane::Type for Messages {
 
     fn title(&self) -> &'static str { "Messages" }
     

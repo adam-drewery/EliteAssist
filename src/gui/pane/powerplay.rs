@@ -2,15 +2,14 @@ use iced::widget::{column, scrollable};
 use iced::Element;
 
 use crate::gui::components::{details, empty_placeholder};
-use crate::gui::pane::PaneType;
-use crate::gui::Message;
+use crate::gui::{pane, Message};
 use crate::state::State;
 use crate::theme::style;
 use thousands::Separable;
 
-pub struct PowerplayPane;
+pub struct Powerplay;
 
-impl PaneType for PowerplayPane {
+impl pane::Type for Powerplay {
 
     fn title(&self) -> &'static str { "Powerplay" }
 

@@ -1,14 +1,14 @@
 use iced::Element;
 use crate::centered_row;
-use crate::gui::Message;
+use crate::gui::{pane, Message};
 use crate::lookup::fdev_ids::Rank;
 use crate::state::State;
 use crate::theme::{style, GRAY, ORANGE, WHITE};
 use iced::widget::{column, container, progress_bar, row, text, scrollable, Column};
 
-pub struct RanksPane;
+pub struct Ranks;
 
-impl crate::gui::pane::PaneType for RanksPane {
+impl pane::Type for Ranks {
 
     fn title(&self) -> &'static str { "Ranks" }
 

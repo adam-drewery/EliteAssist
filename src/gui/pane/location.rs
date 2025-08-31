@@ -1,15 +1,15 @@
 use crate::font::EUROSTILE;
 use crate::gui::components::*;
-use crate::gui::Message;
+use crate::gui::{pane, Message};
 use crate::state::State;
 use crate::theme::{style, GRAY};
 use iced::widget::{column, row, text, scrollable, Column};
 use iced::{Element, Fill};
 use thousands::Separable;
 
-pub struct LocationPane;
+pub struct Location;
 
-impl crate::gui::pane::PaneType for LocationPane {
+impl pane::Type for Location {
     
     fn title(&self) -> &'static str { "Location" }
     

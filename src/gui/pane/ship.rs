@@ -1,5 +1,5 @@
 use crate::gui::components::details;
-use crate::gui::Message;
+use crate::gui::{pane, Message};
 use crate::state::State;
 use crate::theme::GRAY;
 use crate::theme::ORANGE;
@@ -10,8 +10,8 @@ use iced::widget::{column, image, row, scrollable, text, Row};
 use iced::{Element, Fill, Left, Right, Top};
 use thousands::Separable;
 
-pub struct ShipDetailsPane;
-impl crate::gui::pane::PaneType for ShipDetailsPane {
+pub struct ShipDetails;
+impl pane::Type for ShipDetails {
     
     fn title(&self) -> &'static str { "Ship" }
     

@@ -36,7 +36,7 @@ pub use powerplay::*;
 use crate::gui::Message;
 use crate::state::State;
 
-pub trait PaneType: Send + Sync {
+pub trait Type: Send + Sync {
     fn title(&self) -> &'static str;
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message>;
 }
@@ -44,14 +44,14 @@ pub trait PaneType: Send + Sync {
 macro_rules! define_panes {
     ($($pane_type:ident),* $(,)?) => {
         // Generate all_ids function
-        pub fn all() -> Vec<&'static dyn PaneType> {
+        pub fn all() -> Vec<&'static dyn Type> {
             vec![
                 $(&$pane_type,)*
             ]
         }
 
         // Generate pane_from_title function
-        pub fn from_title(title: &str) -> Box<dyn PaneType> {
+        pub fn from_title(title: &str) -> Box<dyn Type> {
             match title {
                 $(
                     t if t == $pane_type.title() => Box::new($pane_type),
@@ -64,35 +64,35 @@ macro_rules! define_panes {
 
 // Define all the panes in one place
 define_panes! {
-    LoadoutPane,
-    MessagesPane,
-    RoutePane,
-    LocationPane,
-    ShipDetailsPane,
-    ShipModulesPane,
-    RanksPane,
-    PowerplayPane,
-    MissionsPane,
-    ClaimsPane,
-    MaterialsPane,
-    ShipLockerPane,
-    MarketPane,
-    LogJournalPane,
+    Loadout,
+    Messages,
+    Route,
+    Location,
+    ShipDetails,
+    ShipModules,
+    Ranks,
+    Powerplay,
+    Missions,
+    Claims,
+    Materials,
+    ShipLocker,
+    Market,
+    LogJournal,
 }
 
-pub fn defaults() -> Vec<&'static dyn PaneType> {
+pub fn defaults() -> Vec<&'static dyn Type> {
     vec![
-        &LoadoutPane,
-        &MessagesPane,
-        &RoutePane,
-        &LocationPane,
-        &ShipDetailsPane,
-        &ShipModulesPane,
-        &RanksPane,
+        &Loadout,
+        &Messages,
+        &Route,
+        &Location,
+        &ShipDetails,
+        &ShipModules,
+        &Ranks,
     ]
 }
 
-pub fn is_enabled(id: &dyn PaneType, layout: &state::Layout) -> bool {
+pub fn is_enabled(id: &dyn Type, layout: &state::Layout) -> bool {
     layout
         .current_visible_vec()
         .iter()
@@ -101,7 +101,7 @@ pub fn is_enabled(id: &dyn PaneType, layout: &state::Layout) -> bool {
 
 pub fn toggle(title: &str, layout: &mut state::Layout, enabled: bool) {
     // Start from the current visible set
-    let mut list: Vec<Box<dyn PaneType>> = layout.current_visible_vec();
+    let mut list: Vec<Box<dyn Type>> = layout.current_visible_vec();
 
     let was_enabled = list.iter().any(|p| p.as_ref().title() == title);
     let before_len = list.len();
@@ -148,7 +148,7 @@ pub fn toggle(title: &str, layout: &mut state::Layout, enabled: bool) {
 }
 
 // Helper: find the Pane that contains the given pane id
-pub fn find_with(panes: &pane_grid::State<Box<dyn PaneType>>, target_id: Box<dyn PaneType>) -> Option<pane_grid::Pane> {
+pub fn find_with(panes: &pane_grid::State<Box<dyn Type>>, target_id: Box<dyn Type>) -> Option<pane_grid::Pane> {
     for (pane, content) in &panes.panes {
         if content.title() == target_id.title() {
             return Some(*pane);

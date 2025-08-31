@@ -1,6 +1,6 @@
 use crate::font::EUROSTILE;
 use crate::gui::components::sub_header;
-use crate::gui::Message;
+use crate::gui::{pane, Message};
 use crate::image::engineering::*;
 use crate::state::{MaterialGroup, State};
 use crate::theme::*;
@@ -9,9 +9,9 @@ use iced::widget::tooltip::Position;
 use iced::widget::{column, row, scrollable, svg, text, tooltip, Column};
 use iced::{Element, Fill};
 
-pub struct MaterialsPane;
+pub struct Materials;
 
-impl crate::gui::pane::PaneType for MaterialsPane {
+impl pane::Type for Materials {
 
     fn title(&self) -> &'static str { "Materials" }
     

@@ -1,19 +1,19 @@
 use iced::widget::pane_grid;
 use crate::gui::pane;
 use crate::config;
-use crate::gui::pane::PaneType;
+use crate::gui::pane::Type;
 
 #[derive(Default)]
 pub struct Layout {
     pub fullscreen: bool,
     pub custom_screens: Vec<config::CustomScreen>,
-    pub current_panes: Option<pane_grid::State<Box<dyn PaneType>>>,
+    pub current_panes: Option<pane_grid::State<Box<dyn Type>>>,
     pub selected_custom_screen: usize,
 }
 
 impl Layout {
 
-    pub fn current_visible_vec(&self) -> Vec<Box<dyn PaneType>> {
+    pub fn current_visible_vec(&self) -> Vec<Box<dyn Type>> {
         if self.custom_screens.is_empty() {
             return pane::defaults()
                 .into_iter()
@@ -36,7 +36,7 @@ impl Layout {
             .collect()
     }
 
-    pub fn set_current_visible_vec(&mut self, v: Vec<Box<dyn PaneType>>) {
+    pub fn set_current_visible_vec(&mut self, v: Vec<Box<dyn Type>>) {
         if self.custom_screens.is_empty() { return; }
         let idx = self.selected_custom_screen.min(self.custom_screens.len().saturating_sub(1));
         if let Some(sel) = self.custom_screens.get_mut(idx) {

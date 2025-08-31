@@ -1,15 +1,15 @@
 use crate::font::EUROSTILE;
 use crate::gui::components::sub_header;
-use crate::gui::Message;
+use crate::gui::{pane, Message};
 use crate::state::{MarketItem, State};
 use crate::theme::{style, GRAY, ORANGE, WHITE, YELLOW};
 use iced::widget::scrollable;
 use iced::widget::{column, row, text};
 use iced::{Bottom, Element, Fill, Left};
 
-pub struct MarketPane;
+pub struct Market;
 
-impl crate::gui::pane::PaneType for MarketPane {
+impl pane::Type for Market {
 
     fn title(&self) -> &'static str { "Market" }
 

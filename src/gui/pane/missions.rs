@@ -1,14 +1,14 @@
 use crate::gui::components::*;
-use crate::gui::Message;
+use crate::gui::{pane, Message};
 use crate::state::State;
 use crate::theme::style;
 use iced::widget::{column, scrollable};
 use iced::Element;
 use thousands::Separable;
 
-pub struct MissionsPane;
+pub struct Missions;
 
-impl crate::gui::pane::PaneType for MissionsPane {
+impl pane::Type for Missions {
 
     fn title(&self) -> &'static str { "Missions" }
     

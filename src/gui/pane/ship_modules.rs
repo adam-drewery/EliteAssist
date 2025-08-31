@@ -1,4 +1,4 @@
-use crate::gui::Message;
+use crate::gui::{pane, Message};
 use crate::image::engineering::ENGINEER_ICON_PNG;
 use crate::image::ship_modules::*;
 use crate::state;
@@ -9,9 +9,9 @@ use iced::widget::{column, container, image, row, scrollable, text, Column, Row}
 use iced::{Center, Element, Fill, Right};
 use thousands::Separable;
 
-pub struct ShipModulesPane;
+pub struct ShipModules;
 
-impl crate::gui::pane::PaneType for ShipModulesPane {
+impl pane::Type for ShipModules {
 
     fn title(&self) -> &'static str { "Ship Modules" }
     

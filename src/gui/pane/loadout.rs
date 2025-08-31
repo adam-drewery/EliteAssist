@@ -1,12 +1,12 @@
 use crate::gui::components::{details, sub_header};
-use crate::gui::Message;
+use crate::gui::{pane, Message};
 use crate::state::State;
 use crate::theme::style;
 use iced::widget::{column, scrollable};
 
-pub struct LoadoutPane;
+pub struct Loadout;
 
-impl crate::gui::pane::PaneType for LoadoutPane {
+impl pane::Type for Loadout {
 
     fn title(&self) -> &'static str { "Loadout" }
     

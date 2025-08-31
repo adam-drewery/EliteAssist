@@ -1,25 +1,22 @@
 use crate::gui::Message;
+use crate::message::Gui::{PaneDragged, PaneResized};
 use crate::state::State;
 use crate::theme::style;
-use iced::widget::{container, pane_grid, text, row, Row};
+use iced::widget::{container, pane_grid, row, text, Row};
 use iced::Fill;
-use crate::message::Gui::{PaneDragged, PaneResized};
 
 pub fn custom(state: &State) -> Row<'_, Message> {
     if let Some(panes) = &state.layout.current_panes {
-        // Build a PaneGrid that contains all overview pane
+        // Build a PaneGrid that contains all overview panes
         let grid = pane_grid::PaneGrid::new(panes, |_, pane_obj, _| {
             let title = pane_obj.title();
             let content = pane_obj.render(state);
 
-            pane_grid::Content::new(container(content).padding([8, 0]))
-                .title_bar(
-                    pane_grid::TitleBar::new(
-                        text(title).size(24)
-                    )
-                        .style(style::header)
-                        .padding([0, 8])
-                )
+            pane_grid::Content::new(container(content).padding([8, 0])).title_bar(
+                pane_grid::TitleBar::new(text(title).size(24))
+                    .style(style::header)
+                    .padding([0, 8]),
+            )
         })
         .width(Fill)
         .height(Fill)

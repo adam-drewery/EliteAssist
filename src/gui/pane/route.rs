@@ -2,14 +2,14 @@ use iced::{Element, Fill};
 use iced::widget::{image, column, row, text, container, scrollable};
 use iced::widget::image::Handle;
 use crate::gui::components::empty_placeholder;
-use crate::gui::Message;
+use crate::gui::{pane, Message};
 use crate::image::FUEL_STAR_PNG;
 use crate::state::State;
 use crate::theme::{style, RED};
 
-pub struct RoutePane;
+pub struct Route;
 
-impl crate::gui::pane::PaneType for RoutePane {
+impl pane::Type for Route {
 
     fn title(&self) -> &'static str { "Route" }
 

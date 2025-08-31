@@ -10,7 +10,7 @@ pub fn sub_header(title: &str) -> Row<'_, Message> {
 pub fn details(label: &str, value: impl Into<String>) -> Row<'_, Message> {
 
     let value = value.into();
-    if value == "" { return row![] }
+    if value == "" { return row![] } // todo: option
 
     row![
         column![text(label).color(GRAY).size(16)]
