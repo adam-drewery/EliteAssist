@@ -1,5 +1,4 @@
 //!
-use crate::gui::Message;
 use log::{error, info};
 use notify::{Config, RecommendedWatcher, RecursiveMode, Watcher};
 use std::fs::{File, OpenOptions};
@@ -9,6 +8,7 @@ use std::time::SystemTime;
 use tokio::sync::mpsc;
 use thiserror::Error;
 pub(crate) use crate::journal::event::Event;
+use crate::message::Message;
 
 pub mod event;
 pub mod format;

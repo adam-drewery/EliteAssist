@@ -5,6 +5,7 @@ use iced::{Element, Fill};
 use iced::widget::svg::Handle;
 use crate::gui::pane::PaneType;
 use crate::image;
+use crate::message::Gui;
 use crate::state::State;
 
 pub fn settings(state: &State) -> Row<'_, Message> {
@@ -15,7 +16,7 @@ pub fn settings(state: &State) -> Row<'_, Message> {
             items.push(
                 row![
                     button(text(screen.name.as_ref()))
-                        .on_press(Message::SelectCustomScreen(idx))
+                        .on_press(Message::Gui(Gui::SelectCustomScreen(idx)))
                         .style(if is_selected { style::selected_button } else { style::button })
                         .width(Fill),
                 ]
@@ -28,9 +29,9 @@ pub fn settings(state: &State) -> Row<'_, Message> {
             row![
                 column![text("Screens").size(24).color(ORANGE)],
                 column![].width(Fill),
-                column![button(svg(Handle::from_memory(image::gui::ADD)).height(16)).on_press(Message::AddCustomScreen)],
+                column![button(svg(Handle::from_memory(image::gui::ADD)).height(16)).on_press(Message::Gui(Gui::AddCustomScreen))],
                 column![].width(4),
-                column![button(svg(Handle::from_memory(image::gui::REMOVE)).height(16)).on_press(Message::RemoveCustomScreen)]
+                column![button(svg(Handle::from_memory(image::gui::REMOVE)).height(16)).on_press(Message::Gui(Gui::RemoveCustomScreen))]
             ],
             scrollable(column(items)).height(Fill).style(style::scrollable)
         ]
@@ -51,7 +52,7 @@ pub fn settings(state: &State) -> Row<'_, Message> {
             let id_copy: &'static dyn PaneType = *id;
             pane_items.push(
                 checkbox(id.title(), checked)
-                    .on_toggle(move |v| Message::TogglePane(id_copy.title().into(), v))
+                    .on_toggle(move |v| Message::Gui(Gui::TogglePane(id_copy.title().into(), v)))
                     .style(style::checkbox)
                     .into(),
             );
@@ -60,7 +61,7 @@ pub fn settings(state: &State) -> Row<'_, Message> {
         column![
             text("Screen Settings").size(24).color(ORANGE),
             text_input("Screen name", current_name)
-                .on_input(|value: String| Message::RenameCustomScreen(value.into())),
+                .on_input(|value: String| Message::Gui(Gui::RenameCustomScreen(value.into()))),
             text("Visible panes:").size(16).color(GRAY),
             scrollable(column(pane_items)).height(Fill).width(Fill).style(style::scrollable)
         ]

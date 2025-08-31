@@ -1,7 +1,7 @@
 use serde::Deserialize;
 
 #[derive(Clone, Debug, Deserialize)]
-pub struct EliteServerStatus {
+pub struct ServerStatus {
 
     #[serde(rename = "lastUpdate")]
     pub last_update: Box<str>,

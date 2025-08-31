@@ -5,6 +5,7 @@ use crate::theme::{style, GRAY, ORANGE, WHITE};
 use iced::widget::button::{Status, Style};
 use iced::widget::{button, column, row, svg, text, Row};
 use iced::{Color, Fill, Right, Theme};
+use crate::message::Gui;
 
 pub fn navigation_bar(state: &State) -> Row<'_, Message> {
 
@@ -12,13 +13,13 @@ pub fn navigation_bar(state: &State) -> Row<'_, Message> {
     let fullscreen_button = button(
         svg(svg::Handle::from_memory(fullscreen_icon)).width(16).height(16).style(style::icon_button)
     )
-        .on_press(Message::ToggleFullscreen)
+        .on_press(Message::Gui(Gui::ToggleFullscreen))
         .style(default_style);
 
     let settings_button = button(
         svg(svg::Handle::from_memory(SETTINGS)).width(16).height(16).style(style::icon_button)
     )
-        .on_press(Message::NavigateTo(Screen::Settings))
+        .on_press(Message::Gui(Gui::NavigateTo(Screen::Settings)))
         .style(default_style);
 
     let mut custom_buttons: Vec<iced::Element<'_, Message>> = Vec::new();
@@ -26,7 +27,7 @@ pub fn navigation_bar(state: &State) -> Row<'_, Message> {
         let is_selected = matches!(state.active_screen, Screen::Custom) && state.layout.selected_custom_screen == idx;
         let style_fn = if is_selected { selected_style } else { default_style };
         custom_buttons.push(
-            column![button(scr.name.as_ref()).on_press(Message::NavigateToCustomScreen(idx)).style(style_fn)].padding(5).into()
+            column![button(scr.name.as_ref()).on_press(Message::Gui(Gui::NavigateToCustomScreen(idx))).style(style_fn)].padding(5).into()
         );
     }
 

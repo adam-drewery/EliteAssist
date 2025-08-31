@@ -1,6 +1,6 @@
-use crate::gui::Message;
 use crate::state::State;
 use iced::Subscription;
+use crate::message::{Message, Query};
 
 #[cfg(test)]
 mod test;
@@ -48,7 +48,7 @@ fn stream_edsm_server_status() -> impl iced::futures::Stream<Item = Message> {
             interval.tick().await;
             match client.get_elite_server_status().await {
                 Ok(status) => {
-                    if sender.send(Message::EdsmServerStatus(status)).await.is_err() { break; }
+                    if sender.send(Message::Query(Query::EdsmServerStatus(status))).await.is_err() { break; }
                 }
                 Err(e) => {
                     error!("EDSM status poll failed: {}", e);

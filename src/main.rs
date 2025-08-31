@@ -17,6 +17,7 @@ mod ardent;
 mod lookup;
 mod query;
 mod config;
+mod message;
 
 fn main() {
 

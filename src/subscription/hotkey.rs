@@ -4,7 +4,7 @@ use iced::futures::Stream;
 use log::error;
 use tokio::sync::mpsc;
 use tokio_stream::wrappers::ReceiverStream;
-use crate::gui::Message;
+use crate::message::{Message, Gui};
 
 #[cfg(not(feature = "mock_events"))]
 pub fn stream() -> impl Stream<Item=Message> {
@@ -30,7 +30,7 @@ pub fn stream() -> impl Stream<Item=Message> {
             match rx.recv_timeout(Duration::from_millis(200)) {
                 Ok(event) => {
                     if event.state == HotKeyState::Pressed {
-                        if sender.blocking_send(Message::NextTab).is_err() { break; }
+                        if sender.blocking_send(Message::Gui(Gui::NextTab)).is_err() { break; }
                     }
                 }
                 Err(err) => {

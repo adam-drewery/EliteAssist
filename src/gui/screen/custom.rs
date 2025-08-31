@@ -3,6 +3,7 @@ use crate::state::State;
 use crate::theme::style;
 use iced::widget::{container, pane_grid, text, row, Row};
 use iced::Fill;
+use crate::message::Gui;
 
 pub fn custom(state: &State) -> Row<'_, Message> {
     if let Some(panes) = &state.layout.current_panes {
@@ -23,8 +24,8 @@ pub fn custom(state: &State) -> Row<'_, Message> {
         .width(Fill)
         .height(Fill)
         .spacing(8)
-        .on_drag(|e| Message::PaneDragged(e))
-        .on_resize(10, |e| Message::PaneResized(e));
+        .on_drag(|e| Message::Gui(Gui::PaneDragged(e)))
+        .on_resize(10, |e| Message::Gui(Gui::PaneResized(e)));
 
         row![grid].width(Fill)
     } else {

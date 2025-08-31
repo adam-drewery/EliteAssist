@@ -1,9 +1,9 @@
 use iced::Task;
 use log::{info, warn};
 use crate::ardent::ArdentClient;
-use crate::gui::Message;
 use crate::edsm::EdsmClient;
 use std::sync::LazyLock;
+use crate::message::{Message, Query};
 
 pub fn system(star_system: &str, radius: f32) -> Task<Message> {
     static EDSM: LazyLock<EdsmClient> = LazyLock::new(|| EdsmClient::default());
@@ -16,7 +16,7 @@ pub fn system(star_system: &str, radius: f32) -> Task<Message> {
                 let name = star_system.to_string();
                 Task::perform(async move {
                     match EDSM.$method(name.as_ref()).await {
-                        Ok(v) => Message::$Msg(v),
+                        Ok(v) => Message::Query(Query::$Msg(v)),
                         Err(error) => { warn!("Failed to fetch {}: {}", $label, error); Message::Empty }
                     }
                 }, |m| m)
@@ -25,7 +25,7 @@ pub fn system(star_system: &str, radius: f32) -> Task<Message> {
                 let name = star_system.to_string();
                 Task::perform(async move {
                     match EDSM.$method(name.as_ref(), $arg).await {
-                        Ok(v) => Message::$Msg(v),
+                        Ok(v) => Message::Query(Query::$Msg(v)),
                         Err(error) => { warn!("Failed to fetch {}: {}", $label, error); Message::Empty }
                     }
                 }, |m| m)
@@ -42,7 +42,7 @@ pub fn system(star_system: &str, radius: f32) -> Task<Message> {
             Task::perform(async move {
                 let nearby_systems = ARDENT.get_nearby_systems(&star_system, Some(radius))
                     .await
-                    .map(|systems| Message::NearbySystemsQueried(systems))
+                    .map(|systems| Message::Query(Query::NearbySystemsQueried(systems)))
                     .unwrap_or_else(|error| {
                         warn!("Failed to fetch nearby systems: {}", error);
                         Message::Empty

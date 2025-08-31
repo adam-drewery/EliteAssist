@@ -2,10 +2,8 @@ use iced::futures::Stream;
 use log::error;
 use tokio::sync::mpsc;
 use tokio_stream::wrappers::ReceiverStream;
-use crate::gui::Message;
+use crate::message::Message;
 
-/// Emits historical journal and snapshot messages followed by `Message::JournalLoaded`, then terminates.
-/// This stream is only subscribed when `state.journal_loaded == false`.
 pub fn stream_history() -> impl Stream<Item=Message> {
     let (sender, receiver) = mpsc::channel(64);
 

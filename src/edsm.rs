@@ -105,7 +105,7 @@ impl EdsmClient {
     // ========================= api-status-v1 =========================
 
     /// GET https://www.edsm.net/api-status-v1/elite-server
-    pub async fn get_elite_server_status(&self) -> Result<EliteServerStatus, EdsmError> {
+    pub async fn get_elite_server_status(&self) -> Result<ServerStatus, EdsmError> {
         self.get_json("api-status-v1/elite-server", &[]).await
     }
 

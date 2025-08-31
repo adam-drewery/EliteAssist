@@ -7,50 +7,13 @@ use crate::font::EUROSTILE;
 use crate::gui::layout::header_bar;
 use crate::gui::layout::navigation_bar;
 use crate::image::LOADING_PNG;
-use crate::journal::event::Event;
+use crate::message::Message;
 use crate::state::{Screen, State};
 use crate::theme::{style, ORANGE};
-use crate::{ardent, centered_column, centered_row, edsm};
+use crate::{centered_column, centered_row};
 use chrono::Utc;
-use iced::widget::{column, pane_grid, progress_bar, row, svg, text};
+use iced::widget::{column, progress_bar, row, svg, text};
 use iced::{Bottom, Center, Element, Fill, Task};
-
-#[derive(Clone, Debug)]
-pub enum Message {
-    NavigateTo(Screen),
-    NavigateToCustomScreen(usize),
-    JournalEvent(Event),
-    
-    StationsQueried(edsm::Stations),
-    NearbySystemsQueried(Vec<ardent::NearbySystem>),
-    BodiesQueried(edsm::Bodies),
-    TrafficQueried(edsm::Traffic),
-    DeathsQueried(edsm::Deaths),
-    
-    // EDSM status updates
-    EdsmServerStatus(edsm::EliteServerStatus),
-    
-    // Pane grid interactions on the Overview screen
-    PaneDragged(pane_grid::DragEvent),
-    PaneResized(pane_grid::ResizeEvent),
-
-    // Settings and custom screens
-    TogglePane(Box<str>, bool),
-    AddCustomScreen,
-    RemoveCustomScreen,
-    SelectCustomScreen(usize),
-    RenameCustomScreen(Box<str>),
-
-    // Global hotkeys
-    NextTab,
-
-    // Window controls
-    ToggleFullscreen,
-    ToggleFullscreenWithId(Option<iced::window::Id>),
-
-    JournalLoaded,
-    Empty,
-}
 
 pub struct Gui;
 
@@ -70,7 +33,7 @@ impl Gui {
     }
 
     pub fn update(state: &mut State, message: Message) -> Task<Message> {
-        state.update_from(message)
+        message.update(state)
     }
 }
 
