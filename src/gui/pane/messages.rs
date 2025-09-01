@@ -46,7 +46,8 @@ impl pane::Type for Messages {
                     .map(Element::from)
             ))
             .style(style::scrollable)
-            .anchor_bottom()
+            .anchor_bottom(),
+            column![].width(12)
         ]
         .into()
     }
