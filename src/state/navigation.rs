@@ -4,6 +4,7 @@ use crate::journal::event;
 #[derive(Default, Clone, Debug)]
 pub struct NavRouteStep {
 
+    pub system_address: u64,
     pub star_system: Box<str>,
     pub star_pos: Vec<f64>,
     pub star_class: Box<str>,
@@ -21,7 +22,7 @@ pub struct CurrentLocation {
     pub station_economies: Vec<StationEconomy>,
     pub taxi: Option<bool>,
     pub multicrew: Option<bool>,
-    pub star_system: Box<str>,
+    pub system_name: Box<str>,
     pub system_address: u64,
     pub star_pos: Vec<f64>,
     pub system_allegiance: Box<str>,
@@ -31,7 +32,7 @@ pub struct CurrentLocation {
     pub system_security: Box<str>,
     pub system_faction: Option<SystemFaction>,
     pub population: u64,
-    pub body: Box<str>,
+    pub body_name: Box<str>,
     pub body_id: u64,
     pub body_type: Box<str>,
     pub controlling_power: Option<Box<str>>,
@@ -174,7 +175,7 @@ impl From<event::FSDJump> for CurrentLocation {
             station_economies: vec![],
             taxi: value.taxi,
             multicrew: value.multicrew,
-            star_system: value.star_system,
+            system_name: value.star_system,
             system_address: value.system_address,
             star_pos: value.star_pos,
             system_allegiance: value.system_allegiance,
@@ -183,7 +184,7 @@ impl From<event::FSDJump> for CurrentLocation {
             system_government: value.system_government_localised.unwrap_or(value.system_government),
             system_security: value.system_security_localised.unwrap_or(value.system_security),
             population: value.population,
-            body: value.body,
+            body_name: value.body,
             body_id: value.body_id,
             body_type: value.body_type,
             powers: value.powers.clone(),
@@ -223,7 +224,7 @@ impl From<event::Location> for CurrentLocation {
             station_economies: value.station_economies.unwrap_or_default().into_iter().map(|economy| StationEconomy { name: economy.name_localised.unwrap_or_default(), proportion: economy.proportion }).collect(),
             taxi: value.taxi,
             multicrew: value.multicrew,
-            star_system: value.star_system,
+            system_name: value.star_system,
             system_address: value.system_address,
             star_pos: value.star_pos,
             system_allegiance: value.system_allegiance,
@@ -232,7 +233,7 @@ impl From<event::Location> for CurrentLocation {
             system_government: value.system_government_localised.unwrap_or(value.system_government),
             system_security: value.system_security_localised.unwrap_or(value.system_security),
             population: value.population,
-            body: value.body,
+            body_name: value.body,
             body_id: value.body_id,
             body_type: value.body_type,
             controlling_power: value.controlling_power,
@@ -265,6 +266,7 @@ impl From<event::NavRoute> for Vec<NavRouteStep> {
             Some(route) => route
                 .into_iter()
                 .map(|step| NavRouteStep {
+                    system_address: step.system_address,
                     star_system: step.star_system,
                     star_pos: step.star_pos,
                     star_class: step.star_class,

@@ -49,9 +49,10 @@ fn journal_loaded(state: &mut State) ->  Task<Message> {
         .map(|m| m.mission_id)
         .collect();
 
+    state.trim_nav_route(state.location.system_address);
     state.missions.retain(|m| !expired_mission_ids.contains(&m.mission_id));
 
     query_api::system(
-        state.current_system.as_ref(),
+        state.location.system_name.as_ref(),
         state.ship_loadout.max_jump_range)
 }

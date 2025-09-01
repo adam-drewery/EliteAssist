@@ -11,6 +11,7 @@ mod suit;
 mod layout;
 mod powerplay;
 mod server_status;
+mod fss;
 
 pub use activity::*;
 pub use engineering::*;
@@ -24,16 +25,16 @@ pub use personal::*;
 pub use powerplay::*;
 pub use ship::*;
 pub use suit::*;
+pub use fss::*;
 
 use crate::state::server_status::StatusDetails;
 use serde::Deserialize;
 use std::collections::HashMap;
+use log::info;
 
 pub struct State {
     pub commander_name: Box<str>,
     pub credits: Box<str>,
-    pub current_system: Box<str>,
-    pub current_body: Box<str>,
     pub location: CurrentLocation,
     pub ship_locker: ShipLocker,
     pub ship_loadout: ShipLoadout,
@@ -60,7 +61,8 @@ pub struct State {
     pub latest_message_timestamp: i64,
     pub latest_message_timestamp_formatted: Box<str>,
 
-    pub layout: Layout
+    pub layout: Layout,
+    pub fss: FssState,
 }
 
 #[derive(Clone, Debug, Default, Deserialize)]
@@ -77,8 +79,6 @@ impl Default for State {
         let state = Self {
             commander_name: String::new().into(),
             credits: String::new().into(),
-            current_system: String::new().into(),
-            current_body: String::new().into(),
             location: Default::default(),
             ship_locker: Default::default(),
             ship_loadout: Default::default(),
@@ -104,9 +104,24 @@ impl Default for State {
             first_message_timestamp: 0,
             latest_message_timestamp: 0,
             latest_message_timestamp_formatted: String::new().into(),
-            layout: Layout::from_settings()
+            layout: Layout::from_settings(),
+            fss: Default::default(),
         };
 
         state
+    }
+}
+
+impl State {
+    pub fn trim_nav_route(&mut self, address_inclusive_to_trim: u64) {
+        if !self.nav_route.is_empty() {
+            if let Some(pos) = self.nav_route
+                .iter()
+                .position(|step| step.system_address == address_inclusive_to_trim)
+            {
+                info!("DEBUG: trimming nav route to: {} AND {}", address_inclusive_to_trim, pos);
+                self.nav_route.drain(0..=pos);
+            }
+        }
     }
 }

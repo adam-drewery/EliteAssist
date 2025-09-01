@@ -205,22 +205,16 @@ impl journal::Event {
             StartJump(e) => state.logs.push(e.into()),
 
             FSDJump(e) => {
-                // trim the new system from the start of our nav route if it matches.
-                if !state.nav_route.is_empty() {
-                    if let Some(first) = state.nav_route.first() {
-                        if first.star_system == e.star_system {
-                            state.nav_route.remove(0);
-                        }
-                    }
-                }
+                // trim matching systems from the start of our nav route 
+                state.trim_nav_route(e.system_address);
 
-                state.current_system = e.star_system.clone();
-                state.current_body = String::new().into();
+                state.location.body_name = String::new().into();
                 state.location = e.into();
+                state.fss = Default::default();
 
                 if state.journal_loaded {
                     return query::system(
-                        state.current_system.as_ref(),
+                        state.location.system_name.as_ref(),
                         state.ship_loadout.max_jump_range);
                 }
             }
@@ -274,21 +268,13 @@ impl journal::Event {
             Missions(_) => { /* this doesn't give us all the info we need */ }
             MissionRedirected(_) => {}
 
-            MissionAccepted(e) => {
-                state.missions.push(e.into());
-            }
+            MissionAccepted(e) => state.missions.push(e.into()),
 
-            MissionFailed(e) => {
-                state.missions.retain(|m| m.mission_id != e.mission_id);
-            }
+            MissionFailed(e) => state.missions.retain(|m| m.mission_id != e.mission_id),
 
-            MissionAbandoned(e) => {
-                state.missions.retain(|m| m.mission_id != e.mission_id);
-            }
+            MissionAbandoned(e) => state.missions.retain(|m| m.mission_id != e.mission_id),
 
-            MissionCompleted(e) => {
-                state.missions.retain(|m| m.mission_id != e.mission_id);
-            }
+            MissionCompleted(e) => state.missions.retain(|m| m.mission_id != e.mission_id),
 
             // NAVIGATION
             ApproachBody(_) => {}
@@ -319,12 +305,12 @@ impl journal::Event {
             }
 
             Disembark(e) => {
-                state.current_body = e.body.clone();
+                state.location.body_name = e.body.clone();
                 state.logs.push(e.into());
             }
 
             Embark(e) => {
-                state.current_body = e.body.clone();
+                state.location.body_name = e.body.clone();
                 state.logs.push(e.into());
             }
 
@@ -338,10 +324,10 @@ impl journal::Event {
             }
 
             Location(e) => {
-                state.current_system = e.star_system.clone();
+                state.location.system_name = e.star_system.clone();
 
                 if e.body_type.as_ref() != "Star" {
-                    state.current_body = e.body.clone();
+                    state.location.body_name = e.body.clone();
                 }
 
                 state.location = e.into();
@@ -407,7 +393,7 @@ impl journal::Event {
                 }
 
                 if e.body_name.is_some() {
-                    state.current_body = e.body_name.unwrap()
+                    state.location.body_name = e.body_name.unwrap()
                 }
             }
 
@@ -449,7 +435,9 @@ impl journal::Event {
             }
 
             // SCAN
-            Scan(_) => {}
+            Scan(e) => {
+                state.fss.last_scan = Some(e.into());
+            }
             ScanBaryCentre(_) => {}
             ScanOrganic(_) => {}
             Scanned(_) => {}
@@ -458,10 +446,20 @@ impl journal::Event {
             NavBeaconScan(_) => {}
             DiscoveryScan(_) => {}
             DataScanned(_) => {}
-            FSSBodySignals(_) => {}
-            FSSDiscoveryScan(_) => {}
-            FSSAllBodiesFound(_) => {}
-            FSSSignalDiscovered(_) => {}
+            FSSBodySignals(e) => {
+                let body_id = e.body_id;
+                let bs: BodySignals = e.into();
+                state.fss.body_signals.insert(body_id, bs);
+            }
+            FSSDiscoveryScan(e) => {
+                state.fss.discovery = Some(e.into());
+            }
+            FSSAllBodiesFound(e) => {
+                state.fss.all_bodies_found = Some(e.into());
+            }
+            FSSSignalDiscovered(e) => {
+                state.fss.system_signals.push(e.into());
+            }
             SAASignalsFound(_) => {}
             SAAScanComplete(_) => {}
 
@@ -495,12 +493,10 @@ impl journal::Event {
                 }
             }
 
-            Shutdown(_) => {
-                state.nav_route.clear();
-            }
+            Shutdown(_) => {}
 
             // SHIP LOCKER
-            ShipLockerMaterials(_) => {}
+            ShipLockerMaterials(_) => warn!("Ship locker materials is supposed to be discontinued."),
 
             ShipLocker(e) => {
                 let is_empty = e.items.is_none()
@@ -566,7 +562,8 @@ impl journal::Event {
             CreateSuitLoadout(_) => {}
             RenameSuitLoadout(_) => {}
             DeleteSuitLoadout(_) => {}
-            SwitchSuitLoadout(_) => {}
+
+            SwitchSuitLoadout(e) => state.suit_loadout = e.into(),
 
             SuitLoadout(e) => state.suit_loadout = e.into(),
 

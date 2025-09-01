@@ -13,8 +13,8 @@ pub fn header_bar(state: &State) -> Row<'_, Message> {
         .width(Fill)
         .align_x(Left),
         column![
-            text(state.current_system.as_ref()).size(30),
-            text(state.current_body.as_ref()).size(30),
+            text(state.location.system_name.as_ref()).size(30),
+            text(state.location.body_name.as_ref()).size(30),
         ]
         .width(Fill)
         .align_x(Right),

@@ -18,6 +18,7 @@ mod messages;
 mod claims;
 mod route;
 mod powerplay;
+mod system_scanner;
 
 pub use location::*;
 pub use missions::*;
@@ -33,6 +34,7 @@ pub use loadout::*;
 pub use ranks::*;
 pub use route::*;
 pub use powerplay::*;
+pub use system_scanner::*;
 use crate::gui::Message;
 use crate::state::State;
 
@@ -78,6 +80,7 @@ define_panes! {
     ShipLocker,
     Market,
     LogJournal,
+    SystemScanner,
 }
 
 pub fn defaults() -> Vec<&'static dyn Type> {

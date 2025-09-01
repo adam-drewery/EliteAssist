@@ -160,7 +160,7 @@ fn system(state: &State) -> Column<'_, Message> {
 
     column![
         sub_header("System"),
-        details("Name", state.location.star_system.as_ref()),
+        details("Name", state.location.system_name.as_ref()),
         details("Address", state.location.system_address.to_string()),
         details("Government", state.location.system_government.as_ref()),
         details("Economy", state.location.system_economy.as_ref()),
@@ -218,7 +218,7 @@ fn station_summary(state: &State) -> Column<'_, Message> {
         details("Station Economy", state.location.station_economy.clone().unwrap_or_default()),
         details("Taxi", state.location.taxi.map(|b| if b { "Yes" } else { "No" }).unwrap_or_default()),
         details("Multicrew", state.location.multicrew.map(|b| if b { "Yes" } else { "No" }).unwrap_or_default()),
-        details("Body", state.location.body.as_ref()),
+        details("Body", state.location.body_name.as_ref()),
         details("Body ID", state.location.body_id.to_string()),
         details("Body Type", state.location.body_type.as_ref()),
         details("Coordinates", coords),

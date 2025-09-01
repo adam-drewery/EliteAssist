@@ -8,7 +8,7 @@ pub struct Bodies {
     pub name: Box<str>,
     pub url: Box<str>,
     #[serde(rename = "bodyCount")]
-    pub body_count: i32,
+    pub body_count: Option<i32>,
     pub bodies: Vec<Body>,
 }
 
@@ -19,7 +19,7 @@ pub struct Body {
     #[serde(rename = "bodyId")]
     pub body_id: i32,
     pub name: Box<str>,
-    pub discovery: Discovery,
+    pub discovery: Option<Discovery>,
     #[serde(rename = "type")]
     pub body_type: Box<str>,
     #[serde(rename = "subType")]
