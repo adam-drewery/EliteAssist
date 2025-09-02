@@ -18,6 +18,12 @@ pub enum Message {
     Query(Query),
     JournalEvent(Event),
     JournalLoaded,
+
+    // Auth flow
+    AuthStarted,
+    AuthSucceeded,
+    AuthFailed(Box<str>),
+
     Empty,
 }
 
@@ -32,6 +38,10 @@ impl Message {
             Message::JournalEvent(event) => event.update(state),
 
             Message::JournalLoaded => journal_loaded(state),
+
+            Message::AuthStarted => { state.auth_in_progress = true; Task::none() },
+            Message::AuthSucceeded => { state.auth_in_progress = false; state.capi_enabled = true; Task::none() },
+            Message::AuthFailed(err) => { state.auth_in_progress = false; state.auth_error = Some(err); Task::none() },
 
             Message::Empty => Task::none(),
         }

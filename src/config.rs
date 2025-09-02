@@ -18,11 +18,15 @@ const SETTINGS_FILE: &str = "EliteAssist.config.json";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Settings {
-
     pub layout: Option<LayoutNode>,
     pub visible: Option<Vec<Box<str>>>,
     pub custom_screens: Option<Vec<CustomScreen>>,
     pub selected_screen: Option<usize>,
+
+    // Companion API auth
+    pub capi_access_token: Option<Box<str>>,
+    pub capi_refresh_token: Option<Box<str>>,
+    pub capi_expires_at: Option<i64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -60,8 +64,25 @@ pub enum LayoutNode {
     Pane(Box<str>),
 }
 
+impl Default for Settings {
+    fn default() -> Self {
+        Settings {
+            layout: None,
+            visible: None,
+            custom_screens: None,
+            selected_screen: None,
+            capi_access_token: None,
+            capi_refresh_token: None,
+            capi_expires_at: None,
+        }
+    }
+}
+
 impl Settings {
     pub fn save_from_state(layout: &state::Layout) -> std::io::Result<()> {
+        // Load existing to preserve CAPI tokens (and other fields we do not override here)
+        let mut existing = Settings::load().unwrap_or_default();
+
         // Determine current live layout and visible panes
         let (current_layout, current_visible) = if let Some(panes) = &layout.current_panes {
             (Some(state_to_node(panes)), Some(layout.current_visible_vec()))
@@ -74,7 +95,6 @@ impl Settings {
         let mut selected_screen_opt = None;
 
         // If state tracks custom screens, persist them
-        // Pull from state if available
         if !layout.custom_screens.is_empty() {
             let mut screens_clone = layout.custom_screens.clone();
             let selected_idx = layout.selected_custom_screen.min(screens_clone.len().saturating_sub(1));
@@ -88,16 +108,21 @@ impl Settings {
             selected_screen_opt = Some(selected_idx);
         }
 
-        // For backward compatibility, mirror the selected screen into top-level fields
-        let layout_bc = current_layout;
-        let visible_bc = current_visible.map(|v| v.iter().map(|p| p.as_ref().title().into()).collect());
+        // Mirror the selected screen into top-level fields for compatibility
+        existing.layout = current_layout;
+        existing.visible = current_visible.map(|v| v.iter().map(|p| p.as_ref().title().into()).collect());
+        existing.custom_screens = custom_screens_opt;
+        existing.selected_screen = selected_screen_opt;
 
-        let settings = Settings {
-            layout: layout_bc,
-            visible: visible_bc,
-            custom_screens: custom_screens_opt,
-            selected_screen: selected_screen_opt,
-        };
+        let json = serde_json::to_string_pretty(&existing).unwrap_or_else(|_| "{}".into());
+        fs::write(SETTINGS_FILE, json)
+    }
+
+    pub fn save_tokens(access_token: &str, refresh_token: &str, expires_at: i64) -> std::io::Result<()> {
+        let mut settings = Settings::load().unwrap_or_default();
+        settings.capi_access_token = Some(access_token.into());
+        settings.capi_refresh_token = Some(refresh_token.into());
+        settings.capi_expires_at = Some(expires_at);
         let json = serde_json::to_string_pretty(&settings).unwrap_or_else(|_| "{}".into());
         fs::write(SETTINGS_FILE, json)
     }

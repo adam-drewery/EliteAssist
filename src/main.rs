@@ -18,6 +18,7 @@ mod lookup;
 mod query;
 mod config;
 mod message;
+mod capi;
 
 fn main() {
 

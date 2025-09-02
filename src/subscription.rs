@@ -1,4 +1,4 @@
-use crate::state::State;
+use crate::state::{State, DataSource};
 use iced::Subscription;
 use crate::message::{Message, Query};
 
@@ -11,23 +11,45 @@ mod journal;
 
 #[cfg(not(feature = "mock_events"))]
 pub fn subscription(state: &State) -> Subscription<Message> {
-    if !state.journal_loaded {
-        Subscription::batch(vec![
-            Subscription::run(journal::stream_history),
-            Subscription::run(stream_edsm_server_status),
-        ])
-    } else {
-        Subscription::batch(vec![
-            Subscription::run(journal::stream_journal),
-            Subscription::run(journal::stream_status),
-            Subscription::run(journal::stream_backpack),
-            Subscription::run(journal::stream_cargo),
-            Subscription::run(journal::stream_ship_locker),
-            Subscription::run(journal::stream_market),
-            Subscription::run(journal::stream_navroute),
-            Subscription::run(hotkey::stream),
-            Subscription::run(stream_edsm_server_status),
-        ])
+    match state.data_source {
+        DataSource::Unselected => Subscription::run(stream_edsm_server_status),
+        DataSource::Local => {
+            if !state.journal_loaded {
+                Subscription::batch(vec![
+                    Subscription::run(journal::stream_history),
+                    Subscription::run(stream_edsm_server_status),
+                ])
+            } else {
+                Subscription::batch(vec![
+                    Subscription::run(journal::stream_journal),
+                    Subscription::run(journal::stream_status),
+                    Subscription::run(journal::stream_backpack),
+                    Subscription::run(journal::stream_cargo),
+                    Subscription::run(journal::stream_ship_locker),
+                    Subscription::run(journal::stream_market),
+                    Subscription::run(journal::stream_navroute),
+                    Subscription::run(hotkey::stream),
+                    Subscription::run(stream_edsm_server_status),
+                ])
+            }
+        }
+        DataSource::Capi => {
+            if !state.journal_loaded {
+                if state.capi_enabled {
+                    Subscription::batch(vec![
+                        Subscription::run(journal::stream_capi_history),
+                        Subscription::run(stream_edsm_server_status),
+                    ])
+                } else {
+                    Subscription::run(stream_edsm_server_status)
+                }
+            } else {
+                Subscription::batch(vec![
+                    Subscription::run(hotkey::stream),
+                    Subscription::run(stream_edsm_server_status),
+                ])
+            }
+        }
     }
 }
 

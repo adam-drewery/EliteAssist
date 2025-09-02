@@ -12,6 +12,9 @@ pub enum Gui {
     NavigateTo(Screen),
     NavigateToCustomScreen(usize),
 
+    // Data source selection
+    ChooseDataSource(DataSource),
+
     // Pane grid interactions on the Overview screen
     PaneDragged(pane_grid::DragEvent),
     PaneResized(pane_grid::ResizeEvent),
@@ -36,6 +39,29 @@ impl Gui {
         match self {
             
             NavigateTo(screen) => state.active_screen = screen,
+
+            ChooseDataSource(source) => {
+                state.data_source = source.clone();
+                match source {
+                    DataSource::Local => { /* No async work; journal history loader will start via subscriptions */ }
+                    DataSource::Capi => {
+                        if state.capi_enabled {
+                            // Already authenticated; nothing else to do
+                        } else {
+                            // Kick off OAuth flow
+                            let start = Task::perform(async { Message::AuthStarted }, |m| m);
+                            let task = Task::perform(async move {
+                                match crate::capi::start_oauth_flow().await {
+                                    Ok(msg) => msg,
+                                    Err(e) => Message::AuthFailed(format!("{}", e).into()),
+                                }
+                            }, |m| m);
+                            return Task::batch(vec![start, task]);
+                        }
+                    }
+                    DataSource::Unselected => {}
+                }
+            }
 
             PaneDragged(event) => pane::dragged(&mut state.layout, event),
 

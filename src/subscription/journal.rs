@@ -81,3 +81,25 @@ pub fn stream_ship_locker() -> impl Stream<Item=Message> { stream_snapshot("Ship
 pub fn stream_market() -> impl Stream<Item=Message> { stream_snapshot("Market.json") }
 
 pub fn stream_navroute() -> impl Stream<Item=Message> { stream_snapshot("NavRoute.json") }
+
+pub fn stream_capi_history() -> impl Stream<Item=Message> {
+    let (sender, receiver) = mpsc::channel(64);
+
+    tokio::spawn(async move {
+        let client = crate::capi::CapiClient::default();
+        match client.get_journal().await {
+            Ok(events) => {
+                for ev in events.into_iter() {
+                    if sender.send(Message::JournalEvent(ev)).await.is_err() { return; }
+                }
+                let _ = sender.send(Message::JournalLoaded).await;
+            }
+            Err(e) => {
+                error!("Failed to load CAPI journal: {}", e);
+                let _ = sender.send(Message::AuthFailed(format!("{}", e).into())).await;
+            }
+        }
+    });
+
+    ReceiverStream::new(receiver)
+}

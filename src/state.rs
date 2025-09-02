@@ -31,6 +31,7 @@ use crate::state::server_status::StatusDetails;
 use serde::Deserialize;
 use std::collections::HashMap;
 use log::info;
+use crate::config::Settings;
 
 pub struct State {
     pub commander_name: Box<str>,
@@ -63,6 +64,12 @@ pub struct State {
 
     pub layout: Layout,
     pub fss: FssState,
+
+    // Data source selection
+    pub data_source: DataSource,
+    pub capi_enabled: bool,
+    pub auth_in_progress: bool,
+    pub auth_error: Option<Box<str>>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize)]
@@ -72,8 +79,18 @@ pub enum Screen {
     Settings,
 }
 
+#[derive(Clone, Debug, Default, Deserialize)]
+pub enum DataSource {
+    #[default]
+    Unselected,
+    Local,
+    Capi,
+}
+
 impl Default for State {
     fn default() -> Self {
+        let settings = Settings::load();
+        let has_token = settings.as_ref().and_then(|s| s.capi_access_token.clone()).is_some();
 
         // Start with basic defaults for all fields
         let state = Self {
@@ -106,6 +123,10 @@ impl Default for State {
             latest_message_timestamp_formatted: String::new().into(),
             layout: Layout::from_settings(),
             fss: Default::default(),
+            data_source: DataSource::Unselected,
+            capi_enabled: has_token,
+            auth_in_progress: false,
+            auth_error: None,
         };
 
         state
