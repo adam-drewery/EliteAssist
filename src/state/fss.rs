@@ -13,7 +13,6 @@ pub struct FssState {
 #[derive(Default, Clone, Debug)]
 pub struct FssDiscovery {
     pub system_name: Box<str>,
-    pub system_address: u64,
     pub progress: f32,
     pub body_count: u32,
     pub non_body_count: u32,
@@ -23,7 +22,6 @@ impl From<event::FSSDiscoveryScan> for FssDiscovery {
     fn from(value: event::FSSDiscoveryScan) -> Self {
         Self {
             system_name: value.system_name,
-            system_address: value.system_address,
             progress: value.progress as f32,
             body_count: value.body_count as u32,
             non_body_count: value.non_body_count as u32,
@@ -34,7 +32,6 @@ impl From<event::FSSDiscoveryScan> for FssDiscovery {
 #[derive(Default, Clone, Debug)]
 pub struct FssAllBodiesFound {
     pub system_name: Box<str>,
-    pub system_address: u64,
     pub count: u32,
 }
 
@@ -42,7 +39,6 @@ impl From<event::FSSAllBodiesFound> for FssAllBodiesFound {
     fn from(value: event::FSSAllBodiesFound) -> Self {
         Self {
             system_name: value.system_name,
-            system_address: value.system_address,
             count: value.count as u32,
         }
     }

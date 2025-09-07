@@ -14,23 +14,22 @@ mod server_status;
 mod fss;
 
 pub use activity::*;
+pub use chat_message::*;
 pub use engineering::*;
+pub use fss::*;
 pub use layout::*;
 pub use market::*;
 pub use material::*;
-pub use chat_message::*;
 pub use mission::*;
 pub use navigation::*;
 pub use personal::*;
 pub use powerplay::*;
 pub use ship::*;
 pub use suit::*;
-pub use fss::*;
 
 use crate::state::server_status::StatusDetails;
 use serde::Deserialize;
 use std::collections::HashMap;
-use log::info;
 
 pub struct State {
     pub commander_name: Box<str>,
@@ -119,7 +118,6 @@ impl State {
                 .iter()
                 .position(|step| step.system_address == address_inclusive_to_trim)
             {
-                info!("DEBUG: trimming nav route to: {} AND {}", address_inclusive_to_trim, pos);
                 self.nav_route.drain(0..=pos);
             }
         }

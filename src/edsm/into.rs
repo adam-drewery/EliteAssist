@@ -3,7 +3,7 @@ use crate::{edsm, state};
 // ------------------------------ Stations ------------------------------
 impl Into<Vec<state::Station>> for edsm::Stations {
     fn into(self) -> Vec<state::Station> {
-        self.stations.into_iter().map(Into::into).collect()
+        self.stations.unwrap_or_default().into_iter().map(Into::into).collect()
     }
 }
 
@@ -55,7 +55,7 @@ impl Into<state::LastUpdated> for edsm::UpdateTime {
 // ------------------------------ Bodies ------------------------------
 impl Into<Vec<state::Body>> for edsm::Bodies {
     fn into(self) -> Vec<state::Body> {
-        self.bodies.into_iter().map(Into::into).collect()
+        self.bodies.unwrap_or_default().into_iter().map(Into::into).collect()
     }
 }
 
@@ -80,9 +80,9 @@ impl Into<state::Counts> for edsm::Counts {
 }
 
 impl Into<state::Counts> for edsm::Traffic {
-    fn into(self) -> state::Counts { self.traffic.into() }
+    fn into(self) -> state::Counts { self.traffic.unwrap_or_default().into() }
 }
 
 impl Into<state::Counts> for edsm::Deaths {
-    fn into(self) -> state::Counts { self.deaths.into() }
+    fn into(self) -> state::Counts { self.deaths.unwrap_or_default().into() }
 }

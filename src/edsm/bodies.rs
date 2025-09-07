@@ -3,13 +3,13 @@ use std::collections::HashMap;
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Bodies {
-    pub id: i64,
-    pub id64: i64,
-    pub name: Box<str>,
-    pub url: Box<str>,
+    pub id: Option<i64>,
+    pub id64: Option<i64>,
+    pub name: Option<Box<str>>,
+    pub url: Option<Box<str>>,
     #[serde(rename = "bodyCount")]
-    pub body_count: Option<i32>,
-    pub bodies: Vec<Body>,
+    pub body_count: Option<Option<i32>>,
+    pub bodies: Option<Vec<Body>>,
 }
 
 #[derive(Clone, Debug, Deserialize)]

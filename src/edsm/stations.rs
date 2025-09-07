@@ -2,11 +2,11 @@ use serde::Deserialize;
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Stations {
-    pub id: i64,
-    pub id64: i64,
-    pub name: Box<str>,
-    pub url: Box<str>,
-    pub stations: Vec<Station>,
+    pub id: Option<i64>,
+    pub id64: Option<i64>,
+    pub name: Option<Box<str>>,
+    pub url: Option<Box<str>>,
+    pub stations: Option<Vec<Station>>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
