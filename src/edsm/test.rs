@@ -26,11 +26,11 @@ async fn test_get_system() {
 async fn test_get_bodies() {
     let client = EdsmClient::default();
     let bodies = client.get_bodies("Sol").await.unwrap();
-
-    println!("Sol bodies count: {}", bodies.bodies.len());
-    assert!(!bodies.bodies.is_empty());
+    let bodies = bodies.bodies.unwrap();
+    println!("Sol bodies count: {}", bodies.len());
+    assert!(!bodies.is_empty());
     // Sol should have many bodies including Earth
-    let earth = bodies.bodies.iter().find(|b| b.name.as_ref() == "Earth").unwrap();
+    let earth = bodies.iter().find(|b| b.name.as_ref() == "Earth").unwrap();
     assert_eq!(earth.name.as_ref(), "Earth");
     assert_eq!(earth.body_type.as_ref(), "Planet");
 
@@ -39,11 +39,12 @@ async fn test_get_bodies() {
 #[tokio::test]
 async fn test_get_stations() {
     let client = EdsmClient::default();
-    let stations = client.get_stations("Sol").await.unwrap();
-    println!("Sol stations count: {}", stations.stations.len());
-    assert_eq!(stations.name.as_ref(), "Sol");
-    if !stations.stations.is_empty() {
-        let first_station = &stations.stations[0];
+    let result = client.get_stations("Sol").await.unwrap();
+    let stations = result.stations.unwrap();
+    println!("Sol stations count: {}", stations.len());
+    assert_eq!(result.name.unwrap().as_ref(), "Sol");
+    if !stations.is_empty() {
+        let first_station = &stations[0];
         assert!(!first_station.name.is_empty());
     }
 }
@@ -83,27 +84,29 @@ async fn test_get_factions() {
 #[tokio::test]
 async fn test_get_traffic() {
     let client = EdsmClient::default();
-    let traffic = client.get_traffic("Sol").await.unwrap();
+    let result = client.get_traffic("Sol").await.unwrap();
+    let traffic = result.traffic.unwrap();
     println!("Sol traffic - Day: {}, Week: {}, Total: {}",
-             traffic.traffic.day,
-             traffic.traffic.week,
-             traffic.traffic.total);
+             traffic.day,
+             traffic.week,
+             traffic.total);
     // Traffic counts should be reasonable
-    assert!(traffic.traffic.total >= traffic.traffic.week);
-    assert!(traffic.traffic.week >= traffic.traffic.day);
+    assert!(traffic.total >= traffic.week);
+    assert!(traffic.week >= traffic.day);
 }
 
 #[tokio::test]
 async fn test_get_deaths() {
     let client = EdsmClient::default();
-    let deaths = client.get_deaths("Sol").await.unwrap();
+    let result = client.get_deaths("Sol").await.unwrap();
+    let deaths = result.deaths.unwrap();
     println!("Sol deaths - Day: {}, Week: {}, Total: {}",
-             deaths.deaths.day,
-             deaths.deaths.week,
-             deaths.deaths.total);
+             deaths.day,
+             deaths.week,
+             deaths.total);
     // Death counts should be reasonable
-    assert!(deaths.deaths.total >= deaths.deaths.week);
-    assert!(deaths.deaths.week >= deaths.deaths.day);
+    assert!(deaths.total >= deaths.week);
+    assert!(deaths.week >= deaths.day);
 
 }
 
