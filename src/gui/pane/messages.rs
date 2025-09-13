@@ -25,6 +25,7 @@ impl pane::Type for Messages {
                             Channel::Squadron => YELLOW,
                             Channel::SquadLeaders => YELLOW,
                             Channel::Npc => WHITE,
+                            Channel::Wing => BLUE,
                         };
 
                         column![
