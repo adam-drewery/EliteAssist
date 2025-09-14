@@ -1,7 +1,7 @@
 use crate::font::EUROSTILE;
 use crate::gui::{pane, Message};
 use crate::state::{Channel, State};
-use crate::theme::{style, GRAY, ORANGE, WHITE, YELLOW};
+use crate::theme::{style, GRAY, ORANGE, WHITE, YELLOW, BLUE};
 use iced::widget::{column, row, scrollable, text};
 use iced::{Element, Fill};
 
