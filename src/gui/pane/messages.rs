@@ -21,6 +21,7 @@ impl pane::Type for Messages {
                     .map(|item| {
                         let name_color = match item.channel {
                             Channel::Local => ORANGE,
+                            Channel::Player => BLUE,
                             Channel::StarSystem => ORANGE,
                             Channel::Squadron => YELLOW,
                             Channel::SquadLeaders => YELLOW,
