@@ -21,10 +21,12 @@ pub enum Kind {
 pub enum Channel {
     Local,
     Npc,
+    Player,
     StarSystem,
     Squadron,
     SquadLeaders,
-    Unknown,
+    Wing,
+    Unknown
 }
 
 impl From<event::ReceiveText> for ChatMessage {
@@ -37,10 +39,12 @@ impl From<event::ReceiveText> for ChatMessage {
             channel: match value.channel.as_ref() {
                 "local" => Channel::Local,
                 "npc" => Channel::Npc,
+                "player" => Channel::Player,
                 "starsystem" => Channel::StarSystem,
                 "squadron" => Channel::Squadron,
                 "squadleaders" => Channel::SquadLeaders,
-                _ => { 
+                "wing" => Channel::Wing,
+                _ => {
                     warn!("Unknown message channel: {}", value.channel);
                     Channel::Unknown
                 },
