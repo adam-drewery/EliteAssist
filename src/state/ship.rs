@@ -193,7 +193,10 @@ impl From<&str> for SlotType {
                 "Medium" => 2,
                 "Large" => 3,
                 "Huge" => 4,
-                _ => panic!("Unknown hardpoint size: {}", value)
+                _ => { 
+                    warn!("Unknown hardpoint size: {}", value);
+                    0
+                }
             };
             return SlotType::Hardpoints { size };
         }

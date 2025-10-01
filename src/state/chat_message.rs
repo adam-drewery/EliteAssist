@@ -1,3 +1,4 @@
+use log::warn;
 use crate::journal::event;
 use crate::journal::format::prettify_date;
 use once_cell::sync::Lazy;
@@ -22,7 +23,8 @@ pub enum Channel {
     Npc,
     StarSystem,
     Squadron,
-    SquadLeaders
+    SquadLeaders,
+    Unknown,
 }
 
 impl From<event::ReceiveText> for ChatMessage {
@@ -38,7 +40,10 @@ impl From<event::ReceiveText> for ChatMessage {
                 "starsystem" => Channel::StarSystem,
                 "squadron" => Channel::Squadron,
                 "squadleaders" => Channel::SquadLeaders,
-                _ => panic!("Unknown message channel: {}", value.channel),
+                _ => { 
+                    warn!("Unknown message channel: {}", value.channel);
+                    Channel::Unknown
+                },
             },
         }
     }

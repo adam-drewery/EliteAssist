@@ -1,7 +1,7 @@
 use crate::font::EUROSTILE;
 use crate::gui::{pane, Message};
 use crate::state::{Channel, State};
-use crate::theme::{style, GRAY, ORANGE, WHITE, YELLOW};
+use crate::theme::{style, GRAY, ORANGE, RED, WHITE, YELLOW};
 use iced::widget::{column, row, scrollable, text};
 use iced::{Element, Fill};
 
@@ -25,6 +25,7 @@ impl pane::Type for Messages {
                             Channel::Squadron => YELLOW,
                             Channel::SquadLeaders => YELLOW,
                             Channel::Npc => WHITE,
+                            Channel::Unknown => RED
                         };
 
                         column![

@@ -8,6 +8,7 @@ use iced::widget::svg::Handle;
 use iced::widget::tooltip::Position;
 use iced::widget::{column, row, scrollable, svg, text, tooltip, Column};
 use iced::{Element, Fill};
+use log::warn;
 
 pub struct Materials;
 
@@ -48,7 +49,10 @@ fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a,
                             3 => Handle::from_memory(GRADE_3_SVG),
                             4 => Handle::from_memory(GRADE_4_SVG),
                             5 => Handle::from_memory(GRADE_5_SVG),
-                            _ => panic!("Invalid rarity: {}", item.rarity),
+                            _ => {
+                                warn!("Invalid rarity: {}", item.rarity);
+                                Handle::from_memory(GRADE_5_SVG)
+                            },
                         };
 
                         row![
