@@ -9,6 +9,7 @@ use tokio::sync::mpsc;
 use thiserror::Error;
 pub(crate) use crate::journal::event::Event;
 use crate::message::Message;
+use rfd::FileDialog;
 
 pub mod event;
 pub mod format;
@@ -109,6 +110,7 @@ impl FileDetails {
 pub struct JournalWatcher {
     reader: Option<BufReader<File>>,
     current_journal_path: PathBuf,
+    base_dir: PathBuf,
     watcher_tx: mpsc::Sender<()>,
     watcher_rx: mpsc::Receiver<()>,
     journal_files: Vec<PathBuf>,
@@ -124,32 +126,74 @@ pub struct JournalWatcher {
 ///
 /// The function uses the user's home/profile directory per OS and appends the expected relative location.
 pub fn get_journal_directory() -> Result<PathBuf, JournalError> {
-    // Determine the Elite Dangerous journal directory consistently by using the
-    // user's home/profile directory for each OS and appending the expected
-    // relative location.
-    //
-    // - Linux (Steam/Proton): $HOME + proton prefix + Windows-like Saved Games path
-    // - Windows: %USERPROFILE% + Saved Games\\Frontier Developments\\Elite Dangerous
-    #[cfg(target_os = "windows")]
-    {
-        const JOURNAL_DIRECTORY: &str = "Saved Games\\Frontier Developments\\Elite Dangerous\\";
-        let user_profile = std::env::var("USERPROFILE").map_err(|_| JournalError::HomeDirectoryNotFound)?;
-        Ok(Path::new(&user_profile).join(JOURNAL_DIRECTORY))
+    // Prefer user-configured directory if available
+    if let Some(settings) = crate::config::Settings::load() {
+        if let Some(dir) = settings.journal_dir {
+            return Ok(PathBuf::from(dir.as_ref()));
+        }
+    }
+    // Fallback to OS default
+    Ok(crate::config::default_journal_dir())
+}
+
+/// Resolve a journal directory that contains journal files, prompting the user if necessary.
+///
+/// Behavior:
+/// - Start with the configured directory if present, else the OS default path.
+/// - If the directory contains at least one `.log` file, return it.
+/// - Otherwise, show a folder picker (rfd::AsyncFileDialog) and loop until the user selects
+///   a directory that contains journal `.log` files.
+/// - Persist the chosen directory into Settings.
+pub async fn resolve_or_prompt_for_journal_dir() -> PathBuf {
+    // Start with configured or default directory
+    let start_dir = get_journal_directory().unwrap_or_else(|_| crate::config::default_journal_dir());
+
+    // Helper to check if a directory appears to contain journal files
+    let mut check_dir = |dir: &Path| -> bool {
+        match get_journal_paths(dir) {
+            Ok(files) => !files.is_empty(),
+            Err(_) => false,
+        }
+    };
+
+    if check_dir(&start_dir) {
+        return start_dir;
     }
 
-    #[cfg(not(target_os = "windows"))]
-    {
-        const JOURNAL_DIRECTORY: &str = ".steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/";
-        let home = std::env::var("HOME").map_err(|_| JournalError::HomeDirectoryNotFound)?;
-        Ok(Path::new(&home).join(JOURNAL_DIRECTORY))
+    loop {
+        // Show a folder picker dialog (blocking) on a dedicated thread to avoid blocking the runtime
+        let selected = tokio::task::spawn_blocking(|| {
+            FileDialog::new()
+                .set_title("Select Elite Dangerous Journal Directory")
+                .pick_folder()
+        })
+        .await
+        .ok()
+        .flatten();
+
+        if let Some(path) = selected {
+            if check_dir(&path) {
+                // Save selection to settings and return
+                let _ = crate::config::Settings::save_journal_dir(&path);
+                return path;
+            } else {
+                // Invalid selection; loop again
+                continue;
+            }
+        }
+        // User canceled — keep prompting until a valid directory is chosen
     }
 }
 
 impl JournalWatcher {
-    ///
+    /// Create a watcher using the effective directory (user-config or OS default)
     pub fn new() -> Result<Self, JournalError> {
         let dir_path = get_journal_directory()?;
+        Self::new_with_dir(dir_path)
+    }
 
+    /// Create a watcher targeting a specific base directory
+    pub fn new_with_dir(dir_path: PathBuf) -> Result<Self, JournalError> {
         // Get journal files (empty is OK)
         let journal_files = get_journal_paths(dir_path.as_path())?;
 
@@ -162,7 +206,7 @@ impl JournalWatcher {
             reader.seek(SeekFrom::End(0))?;
             (Some(reader), path, idx)
         } else {
-            info!("No journal files were found. Waiting for files to be created...");
+            info!("No journal files were found in {}.", dir_path.display());
             (None, dir_path.clone(), 0)
         };
 
@@ -171,6 +215,7 @@ impl JournalWatcher {
         let watcher = Self {
             reader,
             current_journal_path,
+            base_dir: dir_path,
             watcher_tx,
             watcher_rx,
             journal_files,
@@ -199,7 +244,7 @@ impl JournalWatcher {
     ///   the directory watcher
     fn spawn_watcher(&self) -> Result<(), JournalError> {
         let tx = self.watcher_tx.clone();
-        let target_dir = get_journal_directory()?;
+        let target_dir = self.base_dir.clone();
         spawn_dir_watcher(tx, target_dir);
         Ok(())
     }
@@ -238,8 +283,7 @@ impl JournalWatcher {
             self.watcher_rx.recv().await.ok_or(JournalError::Channel)?;
 
             // Check for new or updated journal files
-            let journal_dir = get_journal_directory()?;
-            let dir_path = journal_dir.as_path();
+            let dir_path = self.base_dir.as_path();
             let journal_files = get_journal_paths(dir_path)?;
             if !journal_files.is_empty() {
                 let increased = journal_files.len() > self.journal_files.len();
@@ -487,6 +531,11 @@ impl HistoryLoader {
     ///
     pub fn new() -> Result<Self, JournalError> {
         Ok(Self { dir: get_journal_directory()? })
+    }
+
+    /// Create a history loader for a specific directory
+    pub fn with_dir(dir: PathBuf) -> Self {
+        Self { dir }
     }
 
     /// Reads all journal events from files located in the directory specified by `self.dir`.

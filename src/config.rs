@@ -23,6 +23,8 @@ pub struct Settings {
     pub visible: Option<Vec<Box<str>>>,
     pub custom_screens: Option<Vec<CustomScreen>>,
     pub selected_screen: Option<usize>,
+    /// Optional user-selected journal directory; when None, OS default is used
+    pub journal_dir: Option<Box<str>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -92,11 +94,22 @@ impl Settings {
         let layout_bc = current_layout;
         let visible_bc = current_visible.map(|v| v.iter().map(|p| p.as_ref().title().into()).collect());
 
+        // Preserve non-layout settings from existing file if present
+        let existing = Settings::load();
+        let journal_dir = existing
+            .as_ref()
+            .and_then(|s| s.journal_dir.clone())
+            .or_else(|| {
+                let d = default_journal_dir();
+                if d.as_os_str().is_empty() { None } else { Some(d.to_string_lossy().into()) }
+            });
+
         let settings = Settings {
             layout: layout_bc,
             visible: visible_bc,
             custom_screens: custom_screens_opt,
             selected_screen: selected_screen_opt,
+            journal_dir,
         };
         let json = serde_json::to_string_pretty(&settings).unwrap_or_else(|_| "{}".into());
         fs::write(SETTINGS_FILE, json)
@@ -109,6 +122,39 @@ impl Settings {
         let data = fs::read_to_string(SETTINGS_FILE).ok()?;
         serde_json::from_str(&data).ok()
     }
+
+    /// Save only the journal directory while preserving other settings.
+    pub fn save_journal_dir<P: AsRef<Path>>(path: P) -> std::io::Result<()> {
+        let mut s = Settings::load().unwrap_or(Settings {
+            layout: None,
+            visible: None,
+            custom_screens: None,
+            selected_screen: None,
+            journal_dir: None,
+        });
+        s.journal_dir = Some(path.as_ref().to_string_lossy().into());
+        let json = serde_json::to_string_pretty(&s).unwrap_or_else(|_| "{}".into());
+        fs::write(SETTINGS_FILE, json)
+    }
+}
+
+/// Returns the OS-specific default Elite Dangerous journal directory.
+pub fn default_journal_dir() -> std::path::PathBuf {
+    #[cfg(target_os = "windows")]
+    {
+        const JOURNAL_DIRECTORY: &str = "Saved Games\\Frontier Developments\\Elite Dangerous\\";
+        if let Ok(user_profile) = std::env::var("USERPROFILE") {
+            return std::path::Path::new(&user_profile).join(JOURNAL_DIRECTORY);
+        }
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        const JOURNAL_DIRECTORY: &str = ".steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/";
+        if let Ok(home) = std::env::var("HOME") {
+            return std::path::Path::new(&home).join(JOURNAL_DIRECTORY);
+        }
+    }
+    std::path::PathBuf::new()
 }
 
 pub fn to_configuration(node: &LayoutNode) -> pane_grid::Configuration<Box<dyn pane::Type>> {

@@ -8,11 +8,10 @@ pub fn stream_history() -> impl Stream<Item=Message> {
     let (sender, receiver) = mpsc::channel(64);
 
     tokio::spawn(async move {
-        use crate::journal::HistoryLoader;
-        let loader = match HistoryLoader::new() {
-            Ok(l) => l,
-            Err(e) => { error!("Failed to start history loader: {}", e); return; }
-        };
+        use crate::journal::{HistoryLoader, resolve_or_prompt_for_journal_dir};
+        // Resolve or prompt the user for a directory containing journal files
+        let dir = resolve_or_prompt_for_journal_dir().await;
+        let loader = HistoryLoader::with_dir(dir);
         match loader.load_messages() {
             Ok(messages) => {
                 for msg in messages.into_iter() {
