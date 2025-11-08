@@ -9,7 +9,6 @@ use tokio::sync::mpsc;
 use thiserror::Error;
 pub(crate) use crate::journal::event::Event;
 use crate::message::Message;
-use rfd::FileDialog;
 
 pub mod event;
 pub mod format;
@@ -30,10 +29,7 @@ pub enum JournalError {
     Channel,
 
     #[error("Directory not found: {0}")]
-    DirectoryNotFound(String),
-
-    #[error("Failed to get home directory")]
-    HomeDirectoryNotFound,
+    DirectoryNotFound(String)
 }
 
 
@@ -126,7 +122,7 @@ pub struct JournalWatcher {
 ///
 /// The function uses the user's home/profile directory per OS and appends the expected relative location.
 pub fn get_journal_directory() -> Result<PathBuf, JournalError> {
-    // Prefer user-configured directory if available
+    // Prefer a user-configured directory if available
     if let Some(settings) = crate::config::Settings::load() {
         if let Some(dir) = settings.journal_dir {
             return Ok(PathBuf::from(dir.as_ref()));
@@ -134,55 +130,6 @@ pub fn get_journal_directory() -> Result<PathBuf, JournalError> {
     }
     // Fallback to OS default
     Ok(crate::config::default_journal_dir())
-}
-
-/// Resolve a journal directory that contains journal files, prompting the user if necessary.
-///
-/// Behavior:
-/// - Start with the configured directory if present, else the OS default path.
-/// - If the directory contains at least one `.log` file, return it.
-/// - Otherwise, show a folder picker (rfd::AsyncFileDialog) and loop until the user selects
-///   a directory that contains journal `.log` files.
-/// - Persist the chosen directory into Settings.
-pub async fn resolve_or_prompt_for_journal_dir() -> PathBuf {
-    // Start with configured or default directory
-    let start_dir = get_journal_directory().unwrap_or_else(|_| crate::config::default_journal_dir());
-
-    // Helper to check if a directory appears to contain journal files
-    let mut check_dir = |dir: &Path| -> bool {
-        match get_journal_paths(dir) {
-            Ok(files) => !files.is_empty(),
-            Err(_) => false,
-        }
-    };
-
-    if check_dir(&start_dir) {
-        return start_dir;
-    }
-
-    loop {
-        // Show a folder picker dialog (blocking) on a dedicated thread to avoid blocking the runtime
-        let selected = tokio::task::spawn_blocking(|| {
-            FileDialog::new()
-                .set_title("Select Elite Dangerous Journal Directory")
-                .pick_folder()
-        })
-        .await
-        .ok()
-        .flatten();
-
-        if let Some(path) = selected {
-            if check_dir(&path) {
-                // Save selection to settings and return
-                let _ = crate::config::Settings::save_journal_dir(&path);
-                return path;
-            } else {
-                // Invalid selection; loop again
-                continue;
-            }
-        }
-        // User canceled — keep prompting until a valid directory is chosen
-    }
 }
 
 impl JournalWatcher {
@@ -316,7 +263,7 @@ impl JournalWatcher {
 }
 
 ///
-fn get_journal_paths(dir: &Path) -> Result<Vec<PathBuf>, JournalError> {
+pub fn get_journal_paths(dir: &Path) -> Result<Vec<PathBuf>, JournalError> {
     // Check if a directory exists; let the caller decide what to do if it doesn't
     if !dir.exists() {
         return Err(JournalError::DirectoryNotFound(dir.display().to_string()));
@@ -528,11 +475,7 @@ pub struct HistoryLoader {
 }
 
 impl HistoryLoader {
-    ///
-    pub fn new() -> Result<Self, JournalError> {
-        Ok(Self { dir: get_journal_directory()? })
-    }
-
+    
     /// Create a history loader for a specific directory
     pub fn with_dir(dir: PathBuf) -> Self {
         Self { dir }

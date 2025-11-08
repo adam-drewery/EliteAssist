@@ -8,18 +8,52 @@ pub fn stream_history() -> impl Stream<Item=Message> {
     let (sender, receiver) = mpsc::channel(64);
 
     tokio::spawn(async move {
-        use crate::journal::{HistoryLoader, resolve_or_prompt_for_journal_dir};
-        // Resolve or prompt the user for a directory containing journal files
-        let dir = resolve_or_prompt_for_journal_dir().await;
-        let loader = HistoryLoader::with_dir(dir);
-        match loader.load_messages() {
-            Ok(messages) => {
-                for msg in messages.into_iter() {
-                    if sender.send(msg).await.is_err() { break; }
-                }
+        use crate::journal::{HistoryLoader, get_journal_directory};
+        use tokio::time::{sleep, Duration};
+
+        // Poll periodically until a valid directory with at least one .log file is available
+        loop {
+            let dir = match get_journal_directory() {
+                Ok(d) => d,
+                Err(e) => { error!("Failed to get journal directory: {}", e); sleep(Duration::from_millis(750)).await; continue; }
+            };
+
+            // Check for at least one .log file
+            let has_logs = if dir.exists() {
+                std::fs::read_dir(&dir)
+                    .ok()
+                    .map(|iter| {
+                        for entry in iter.flatten() {
+                            let p = entry.path();
+                            if p.extension().and_then(|e| e.to_str()).map(|e| e.eq_ignore_ascii_case("log")).unwrap_or(false) {
+                                return true;
+                            }
+                        }
+                        false
+                    })
+                    .unwrap_or(false)
+            } else { false };
+
+            if !has_logs {
+                // Keep the waiting screen visible; try again shortly
+                sleep(Duration::from_millis(750)).await;
+                continue;
             }
-            Err(e) => {
-                error!("Failed to load historical messages: {}", e);
+
+            // We have logs: load and emit messages, then exit the task
+            let loader = HistoryLoader::with_dir(dir);
+            match loader.load_messages() {
+                Ok(messages) => {
+                    for msg in messages.into_iter() {
+                        if sender.send(msg).await.is_err() { break; }
+                    }
+                    break;
+                }
+                Err(e) => {
+                    error!("Failed to load historical messages: {}", e);
+                    // Wait a bit before retrying to avoid tight loop on persistent error
+                    sleep(Duration::from_millis(750)).await;
+                }
             }
         }
     });

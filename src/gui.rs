@@ -3,7 +3,6 @@ pub mod pane;
 pub mod screen;
 mod components;
 
-use crate::font::EUROSTILE;
 use crate::gui::layout::header_bar;
 use crate::gui::layout::navigation_bar;
 use crate::image::LOADING_PNG;
@@ -12,7 +11,7 @@ use crate::state::{Screen, State};
 use crate::theme::{style, ORANGE};
 use crate::{centered_column, centered_row};
 use chrono::Utc;
-use iced::widget::{column, progress_bar, row, svg, text};
+use iced::widget::{button, column, progress_bar, row, svg, text};
 use iced::{Bottom, Center, Element, Fill, Task};
 
 pub struct Gui;
@@ -20,8 +19,11 @@ pub struct Gui;
 impl Gui {
 
     pub fn view(state: &State) -> Element<'_, Message> {
+        // Determine if any journal .log files exist in the currently configured/default directory
+        let dir = crate::journal::get_journal_directory().unwrap_or_else(|_| crate::config::default_journal_dir());
+        let has_logs = crate::journal::get_journal_paths(&dir).map(|v| !v.is_empty()).unwrap_or(false);
 
-        if state.commander_name.is_empty() {
+        if !has_logs {
             waiting_spinner()
         }
         else if !state.journal_loaded {
@@ -53,14 +55,20 @@ fn main_layout(state: &State) -> Element<'_, Message> {
 }
 
 fn waiting_spinner<'a>() -> Element<'a, Message> {
+        let configured_dir = crate::journal::get_journal_directory()
+            .unwrap_or_else(|_| crate::config::default_journal_dir());
+
         column![
                 row![].height(Fill),
                 row![
                     column![].width(Fill),
                     column![
                         svg(svg::Handle::from_memory(LOADING_PNG)).width(128).height(128),
-                        text("Waiting for Journal Files...").color(ORANGE).size(32),
-                        text("todo: make the loading spinner animated").font(EUROSTILE).color(ORANGE).size(12),
+                        text("The game logs directory is not found at:").color(ORANGE).size(16),
+                        text(configured_dir.display().to_string()).color(ORANGE).size(16),
+                        text("Please specify the directory manually").color(ORANGE).size(16),
+                        button(text("Choose directory"))
+                            .on_press(Message::Gui(crate::message::Gui::ChooseJournalDir))
                     ].align_x(Center),
                     column![].width(Fill)
                 ],

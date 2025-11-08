@@ -29,6 +29,10 @@ pub enum Gui {
     // Window controls
     ToggleFullscreen,
     ToggleFullscreenWithId(Option<window::Id>),
+
+    // Journal directory selection
+    ChooseJournalDir,
+    JournalDirChosen(Option<std::path::PathBuf>),
 }
 
 impl Gui {
@@ -77,6 +81,44 @@ impl Gui {
                     };
                     state.layout.fullscreen = !state.layout.fullscreen;
                     return window::change_mode(id, mode).map(|_: ()| Message::Empty);
+                }
+            }
+
+            ChooseJournalDir => {
+                use rfd::FileDialog;
+                return Task::perform(async move {
+                    let selected = tokio::task::spawn_blocking(|| {
+                        FileDialog::new()
+                            .set_title("Select Elite Dangerous Journal Directory")
+                            .pick_folder()
+                    })
+                    .await
+                    .ok()
+                    .flatten();
+                    Message::Gui(JournalDirChosen(selected))
+                }, |m| m);
+            }
+
+            JournalDirChosen(opt_path) => {
+                if let Some(path) = opt_path {
+                    // Validate it contains at least one .log file
+                    let valid = std::fs::read_dir(&path)
+                        .ok()
+                        .and_then(|iter| {
+                            for entry in iter.flatten() {
+                                let p = entry.path();
+                                if p.extension().and_then(|e| e.to_str()).map(|e| e.eq_ignore_ascii_case("log")).unwrap_or(false) {
+                                    return Some(true);
+                                }
+                            }
+                            Some(false)
+                        })
+                        .unwrap_or(false);
+
+                    if valid {
+                        let _ = crate::config::Settings::save_journal_dir(&path);
+                        // Cause subscriptions to refresh next cycle; nothing else needed
+                    }
                 }
             }
         }

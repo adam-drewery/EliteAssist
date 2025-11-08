@@ -73,7 +73,6 @@ pub struct SignalCount {
 
 #[derive(Default, Clone, Debug)]
 pub struct BodySignals {
-    pub body_id: u64,
     pub body_name: Box<str>,
     pub signals: Vec<SignalCount>,
 }
@@ -87,7 +86,7 @@ impl From<event::FSSBodySignals> for BodySignals {
             } else { sig.r#type };
             signals.push(SignalCount { kind, count: sig.count as u32 });
         }
-        Self { body_id: value.body_id as u64, body_name: value.body_name, signals }
+        Self { body_name: value.body_name, signals }
     }
 }
 
