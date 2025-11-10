@@ -19,6 +19,7 @@ mod claims;
 mod route;
 mod powerplay;
 mod system_scanner;
+mod fss_signals;
 
 pub use location::*;
 pub use missions::*;

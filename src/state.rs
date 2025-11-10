@@ -61,7 +61,7 @@ pub struct State {
     pub latest_message_timestamp_formatted: Box<str>,
 
     pub layout: Layout,
-    pub fss: FssState,
+    pub fss: Fss,
 }
 
 #[derive(Clone, Debug, Default, Deserialize)]

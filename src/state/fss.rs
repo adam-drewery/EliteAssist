@@ -1,27 +1,29 @@
 use std::collections::HashMap;
+use crate::edsm;
 use crate::journal::event;
 
+// todo:
+// FSSBodySignals: when we scan a body and find bio/geo signals
+// FSSDiscoveryScan: when we do a honk
+
+
 #[derive(Default, Clone, Debug)]
-pub struct FssState {
-    pub discovery: Option<FssDiscovery>,
-    pub all_bodies_found: Option<FssAllBodiesFound>,
-    pub last_scan: Option<ScanSummary>,
-    pub body_signals: HashMap<u64, BodySignals>,
-    pub system_signals: Vec<SystemSignal>,
+pub struct Fss {
+    pub progress: Option<ScanProgress>,
+    pub bodies: HashMap<u64, ScannedBody>,
+    pub signals: Vec<Signal>,
 }
 
 #[derive(Default, Clone, Debug)]
-pub struct FssDiscovery {
-    pub system_name: Box<str>,
+pub struct ScanProgress {
     pub progress: f32,
     pub body_count: u32,
     pub non_body_count: u32,
 }
 
-impl From<event::FSSDiscoveryScan> for FssDiscovery {
+impl From<event::FSSDiscoveryScan> for ScanProgress {
     fn from(value: event::FSSDiscoveryScan) -> Self {
         Self {
-            system_name: value.system_name,
             progress: value.progress as f32,
             body_count: value.body_count as u32,
             non_body_count: value.non_body_count as u32,
@@ -29,39 +31,37 @@ impl From<event::FSSDiscoveryScan> for FssDiscovery {
     }
 }
 
-#[derive(Default, Clone, Debug)]
-pub struct FssAllBodiesFound {
-    pub system_name: Box<str>,
-    pub count: u32,
-}
+impl ScannedBody {
 
-impl From<event::FSSAllBodiesFound> for FssAllBodiesFound {
-    fn from(value: event::FSSAllBodiesFound) -> Self {
-        Self {
-            system_name: value.system_name,
-            count: value.count as u32,
+    // todo: not u64 plz
+    pub fn get_parent_id(event: &event::Scan) -> Option<u64> {
+        if let Some(parents) = &event.parents {
+            // ignore rings, they're annoying.
+            let planet_ids: Vec<u64> = parents.iter().filter_map(|p| p.planet).collect();
+            let star_ids: Vec<u64> = parents.iter().filter_map(|p| p.star).collect();
+
+            if planet_ids.len() > 0 { Some(planet_ids[0]) }
+            else if star_ids.len() > 0 { Some(star_ids[0]) }
+            else { None }
+
+
         }
+        else { None }
     }
-}
 
-#[derive(Default, Clone, Debug)]
-pub struct ScanSummary {
-    pub body_name: Box<str>,
-    pub body_id: u64,
-    pub terraform_state: Option<Box<str>>,
-    pub was_discovered: bool,
-    pub was_mapped: bool,
-}
+    pub fn update_from_scan(&mut self, event: event::Scan) {
+        self.body_name = event.body_name;
+        self.body_id = event.body_id;
+        self.was_discovered = event.was_discovered;
+        self.was_mapped = event.was_mapped;
+        self.terraform_state = event.terraform_state;
+    }
 
-impl From<event::Scan> for ScanSummary {
-    fn from(value: event::Scan) -> Self {
-        Self {
-            body_name: value.body_name,
-            body_id: value.body_id as u64,
-            terraform_state: value.terraform_state,
-            was_discovered: value.was_discovered,
-            was_mapped: value.was_mapped,
-        }
+    pub fn update_from_query(&mut self, response: edsm::bodies::Body) {
+        self.body_name = response.name;
+        self.body_id = response.id;
+        self.terraform_state = response.terraforming_state;
+        self.was_discovered = response.discovery.is_some();
     }
 }
 
@@ -72,32 +72,61 @@ pub struct SignalCount {
 }
 
 #[derive(Default, Clone, Debug)]
-pub struct BodySignals {
+pub struct ScannedBody {
+    pub body_id: u64,
     pub body_name: Box<str>,
+    pub parent_id: Option<u64>,
     pub signals: Vec<SignalCount>,
+    pub terraform_state: Option<Box<str>>,
+    pub was_discovered: bool,
+    pub was_mapped: bool,
 }
 
-impl From<event::FSSBodySignals> for BodySignals {
-    fn from(value: event::FSSBodySignals) -> Self {
-        let mut signals: Vec<SignalCount> = Vec::new();
-        for sig in value.signals {
-            let kind = if let Some(local) = sig.type_localised {
-                if !local.is_empty() { local } else { sig.r#type }
-            } else { sig.r#type };
-            signals.push(SignalCount { kind, count: sig.count as u32 });
+impl From<event::Scan> for ScannedBody {
+    fn from(value: event::Scan) -> Self {
+        Self {
+            body_name: value.body_name,
+            body_id: value.body_id,
+            terraform_state: value.terraform_state,
+            was_discovered: value.was_discovered,
+            was_mapped: value.was_mapped,
+            signals: Vec::new(),
+            parent_id: None
         }
-        Self { body_name: value.body_name, signals }
+    }
+}
+
+impl From<event::FSSBodySignals> for ScannedBody {
+
+    fn from(value: event::FSSBodySignals) -> Self {
+
+        Self { 
+            body_id: value.body_id,
+            body_name: value.body_name,
+            parent_id: None,
+            signals: value.signals.into_iter().map(|sig| {
+                SignalCount {
+                    count: sig.count as u32,
+                    kind: sig.type_localised
+                        .filter(|s| !s.is_empty())
+                        .unwrap_or(sig.r#type)
+                }
+            }).collect(),
+            terraform_state: None,
+            was_discovered: false,
+            was_mapped: false 
+        }
     }
 }
 
 #[derive(Default, Clone, Debug)]
-pub struct SystemSignal {
+pub struct Signal {
     pub name: Box<str>,
     pub kind: Option<Box<str>>,
     pub is_station: bool,
 }
 
-impl From<event::FSSSignalDiscovered> for SystemSignal {
+impl From<event::FSSSignalDiscovered> for Signal {
     fn from(value: event::FSSSignalDiscovered) -> Self {
         let name = value.signal_name_localised.unwrap_or(value.signal_name);
         Self {

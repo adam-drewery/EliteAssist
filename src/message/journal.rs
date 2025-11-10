@@ -178,6 +178,7 @@ impl journal::Event {
             ShieldState(_) => {}
             LaunchDrone(_) => {}
             DatalinkVoucher(_) => {}
+            Scanned(_) => {}
 
             // FIGHTER
             VehicleSwitch(e) => state.logs.push(e.into()),
@@ -410,56 +411,83 @@ impl journal::Event {
                 state.powerplay.merits = e.merits;
                 state.powerplay.time_pledged = e.time_pledged;
             }
+
             PowerplayJoin(e) => {
                 state.powerplay.power = Some(e.power);
             }
+
             PowerplayMerits(e) => {
                 state.powerplay.merits = e.total_merits;
             }
+
             PowerplayRank(e) => {
                 state.powerplay.rank = Some(e.rank as u8);
             }
+
             PowerplayFastTrack(_) => {}
             PowerplayCollect(_) => {}
             PowerplayVoucher(_) => {}
             PowerplayVote(_) => {}
+
             PowerplayDefect(e) => {
                 state.powerplay.power = Some(e.to_power);
             }
+
             PowerplayDeliver(_) => {}
             PowerplaySalary(e) => {
                 state.powerplay.last_salary = Some(e.amount);
             }
+
             PowerplayLeave(_) => {
                 state.powerplay = Default::default();
             }
 
             // SCAN
-            Scan(e) => {
-                state.fss.last_scan = Some(e.into());
+            Scan(event) => {
+
+                if let Some(progress) = &mut state.fss.progress {
+                    progress.body_count += 1;
+                }
+
+                let body = state.fss.bodies
+                    .entry(event.body_id)
+                    .or_insert_with(|| ScannedBody::default());
+
+                body.parent_id = ScannedBody::get_parent_id(&event);
+                body.terraform_state = event.terraform_state;
+                body.was_discovered = event.was_discovered;
+                body.was_mapped = event.was_mapped;
             }
+
             ScanBaryCentre(_) => {}
             ScanOrganic(_) => {}
-            Scanned(_) => {}
             CodexEntry(_) => {}
             DatalinkScan(_) => {}
             NavBeaconScan(_) => {}
             DiscoveryScan(_) => {}
             DataScanned(_) => {}
+
             FSSBodySignals(e) => {
-                let body_id = e.body_id;
-                let bs: BodySignals = e.into();
-                state.fss.body_signals.insert(body_id, bs);
+                let body = state.fss.bodies.entry(e.body_id).or_default();
+
+                body.signals = e.signals.into_iter().map(|s|{
+                    SignalCount {
+                        kind: s.type_localised.unwrap_or(s.r#type),
+                        count: s.count as u32
+                    }
+                }).collect()
             }
+
             FSSDiscoveryScan(e) => {
-                state.fss.discovery = Some(e.into());
+                state.fss.progress = Some(e.into());
             }
-            FSSAllBodiesFound(e) => {
-                state.fss.all_bodies_found = Some(e.into());
-            }
+
+            FSSAllBodiesFound(_) => {}
+
             FSSSignalDiscovered(e) => {
-                state.fss.system_signals.push(e.into());
+                state.fss.signals.push(e.into());
             }
+
             SAASignalsFound(_) => {}
             SAAScanComplete(_) => {}
 

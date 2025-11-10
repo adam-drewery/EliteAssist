@@ -21,7 +21,6 @@ impl pane::Type for Location {
                 factions(state),
                 station_economies(state),
                 stations(state),
-                bodies(state),
                 nearby_systems(state),
                 activity(state)
             ])
@@ -279,22 +278,6 @@ fn stations(state: &State) -> Column<'_, Message> {
             details("Other Services", services_str),
             details("Controlling Faction", s.controlling_faction.clone().unwrap_or_default()),
             details("Updated", updated),
-        ]);
-    }
-    col
-}
-
-fn bodies(state: &State) -> Column<'_, Message> {
-    if state.location.known_bodies.is_empty() { return column![]; }
-    let mut col = column![sub_header("Bodies")];
-    for b in &state.location.known_bodies {
-        col = col.push(column![
-            sub_header(b.name.as_ref()),
-            details("Type", b.type_field.as_ref()),
-            details("Subtype", b.sub_type.as_ref()),
-            details("Distance to Arrival", format!("{:.1} ls", b.distance_to_arrival)),
-            details("Main Star", if b.is_main_star { "Yes" } else { "No" }),
-            details("Scoopable", if b.is_scoopable { "Yes" } else { "No" }),
         ]);
     }
     col

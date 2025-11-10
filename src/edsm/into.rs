@@ -53,21 +53,22 @@ impl Into<state::LastUpdated> for edsm::UpdateTime {
 }
 
 // ------------------------------ Bodies ------------------------------
-impl Into<Vec<state::Body>> for edsm::Bodies {
-    fn into(self) -> Vec<state::Body> {
+impl Into<Vec<state::ScannedBody>> for edsm::Bodies {
+    fn into(self) -> Vec<state::ScannedBody> {
         self.bodies.unwrap_or_default().into_iter().map(Into::into).collect()
     }
 }
 
-impl Into<state::Body> for edsm::bodies::Body {
-    fn into(self) -> state::Body {
-        state::Body {
-            name: self.name,
-            type_field: self.body_type,
-            sub_type: self.sub_type,
-            distance_to_arrival: self.distance_to_arrival,
-            is_main_star: self.is_main_star.unwrap_or(false),
-            is_scoopable: self.is_scoopable.unwrap_or(false),
+impl Into<state::ScannedBody> for edsm::bodies::Body {
+    fn into(self) -> state::ScannedBody {
+        state::ScannedBody {
+            body_id: self.id,
+            body_name: self.name,
+            parent_id: None,
+            signals: Vec::new(),
+            terraform_state: self.terraforming_state,
+            was_discovered: self.discovery.is_some(),
+            was_mapped: false
         }
     }
 }

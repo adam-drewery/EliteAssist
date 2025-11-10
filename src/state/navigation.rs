@@ -45,7 +45,6 @@ pub struct CurrentLocation {
     pub factions: Vec<Faction>,
     pub stations: Vec<Station>,
     pub nearby_systems: Vec<System>,
-    pub known_bodies: Vec<Body>,
     pub traffic: Option<Counts>,
     pub deaths: Option<Counts>,
 }

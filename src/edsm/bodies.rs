@@ -14,10 +14,10 @@ pub struct Bodies {
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Body {
-    pub id: i64,
-    pub id64: i64,
+    pub id: u64,
+    pub id64: u64,
     #[serde(rename = "bodyId")]
-    pub body_id: i32,
+    pub body_id: u32,
     pub name: Box<str>,
     pub discovery: Option<Discovery>,
     #[serde(rename = "type")]
