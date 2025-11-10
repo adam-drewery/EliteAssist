@@ -15,6 +15,15 @@ macro_rules! struct_name_map {
 
 static STRUCT_NAME_OVERRIDES: OnceLock<HashMap<Vec<&'static str>, &'static str>> = OnceLock::new();
 
+pub static IGNORED_FIELDS: &[&'static str] = &[
+    
+    // sometimes we get two properties with this name... weird.
+    "MissionAccepted.target",
+
+    // this property specifies multiple types in the schema. ignore it since that's just annoying.
+    "StatisticsFleetcarrier.fleetcarrier_distance_travelled"
+];
+
 pub static FIELD_TYPES: phf::Map<&'static str, &'static str> = phf::phf_map! {
     "Rank.cqc" => "u8",
     "Rank.combat" => "u8",

@@ -110,6 +110,13 @@ fn build_struct(scope: &mut codegen::Scope, generated: &mut HashSet<String>, sch
             _ => text::to_snake_case(&property.0)
         };
 
+        // Skip fields explicitly ignored via override list
+        let qualified_key = format!("{}.{}", struct_name, property_name);
+        
+        if r#override::IGNORED_FIELDS.contains(&qualified_key.as_str()) {
+            continue;
+        }
+
         // Generate a type for the field based on the property schema
         let mut type_ = match property.1.r#type.as_str() {
             "string" => {
