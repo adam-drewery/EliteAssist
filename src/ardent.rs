@@ -459,15 +459,21 @@ pub struct MarketCommodityData {
     #[serde(rename = "buyPrice")]
     pub buy_price: u32,
     pub demand: u32,
-    #[serde(rename = "demandBracket")]
-    pub demand_bracket: u32,
+
+    // todo: this returns an empty string when there's no value but it should be an integer
+    // #[serde(rename = "demandBracket")]
+    // pub demand_bracket: u32,
+
     #[serde(rename = "meanPrice")]
     pub mean_price: u32,
     #[serde(rename = "sellPrice")]
     pub sell_price: u32,
     pub stock: u32,
-    #[serde(rename = "stockBracket")]
-    pub stock_bracket: u32,
+
+    // todo: lets assume this has the same bug as the property above (demandBracket)
+    // #[serde(rename = "stockBracket")]
+    // pub stock_bracket: u32,
+
     #[serde(rename = "updatedAt")]
     pub updated_at: Box<str>,
 }
