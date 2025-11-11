@@ -63,7 +63,7 @@ pub enum LayoutNode {
 }
 
 impl Settings {
-    pub fn save_from_state(layout: &state::Layout) -> std::io::Result<()> {
+    pub fn save_from_state(layout: &state::layout::Layout) -> std::io::Result<()> {
         // Determine current live layout and visible panes
         let (current_layout, current_visible) = if let Some(panes) = &layout.current_panes {
             (Some(state_to_node(panes)), Some(layout.current_visible_vec()))

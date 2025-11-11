@@ -2,7 +2,8 @@ use crate::font::EUROSTILE;
 use crate::gui::components::{scroll_list, sub_header};
 use crate::gui::{pane, Message};
 use crate::image::engineering::*;
-use crate::state::{MaterialGroup, State};
+use crate::state;
+use crate::state::State;
 use crate::theme::*;
 use iced::widget::svg::Handle;
 use iced::widget::tooltip::Position;
@@ -28,7 +29,7 @@ impl pane::Type for Materials {
     }
 }
 
-fn materials_list<'a>(title: &'a str, groups: &'a [MaterialGroup]) -> Column<'a, Message> {
+fn materials_list<'a>(title: &'a str, groups: &'a [state::material::Group]) -> Column<'a, Message> {
     column![
         sub_header(title),
         scroll_list(

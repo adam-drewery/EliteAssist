@@ -2,7 +2,8 @@ use crate::bordered_list_item;
 use crate::gui::components::{empty_placeholder, scroll_list};
 use crate::gui::pane;
 use crate::message::Message;
-use crate::state::{ScannedBody, State};
+use crate::state;
+use crate::state::State;
 use crate::theme::{style, ORANGE};
 use iced::widget::{column, container, row, text, Row};
 use iced::{Element, Fill};
@@ -30,7 +31,7 @@ impl pane::Type for BodySignals {
     }
 }
 
-fn body_details(body: &ScannedBody) -> Row<'_, Message> {
+fn body_details(body: &state::fss::Body) -> Row<'_, Message> {
     bordered_list_item![
         column![].width(6),
         column![text(body.body_name.to_string()).size(24).color(ORANGE)],

@@ -1,33 +1,31 @@
-mod activity;
-mod engineering;
-mod market;
-mod material;
-mod chat_message;
-mod mission;
-mod navigation;
-mod personal;
-mod ship;
-mod suit;
-mod layout;
-mod powerplay;
-mod server_status;
-mod fss;
+pub mod history;
+pub mod engineering;
+pub mod market;
+pub mod material;
+pub mod chat;
+pub mod mission;
+pub mod navigation;
+pub mod personal;
+pub mod ship;
+pub mod suit;
+pub mod layout;
+pub mod powerplay;
+pub mod server;
+pub mod fss;
 
-pub use activity::*;
-pub use chat_message::*;
-pub use engineering::*;
-pub use fss::*;
-pub use layout::*;
-pub use market::*;
-pub use material::*;
-pub use mission::*;
-pub use navigation::*;
-pub use personal::*;
-pub use powerplay::*;
-pub use ship::*;
-pub use suit::*;
+use history::*;
+use chat::*;
+use engineering::*;
+use fss::*;
+use layout::*;
+use market::*;
+use material::*;
+use mission::*;
+use navigation::*;
+use personal::*;
+use powerplay::*;
 
-use crate::state::server_status::StatusDetails;
+use crate::state::server::Status;
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -35,13 +33,13 @@ pub struct State {
     pub commander_name: Box<str>,
     pub credits: Box<str>,
     pub location: CurrentLocation,
-    pub ship_locker: ShipLocker,
-    pub ship_loadout: ShipLoadout,
-    pub suit_loadout: SuitLoadout,
+    pub ship_locker: ship::Locker,
+    pub ship_loadout: ship::Loadout,
+    pub suit_loadout: suit::Loadout,
     pub active_screen: Screen,
     pub materials: Materials,
-    pub messages: Vec<ChatMessage>,
-    pub logs: Vec<GameEventLog>,
+    pub messages: Vec<Message>,
+    pub logs: Vec<Event>,
     pub crime: CrimeStats,
     pub market: Market,
     pub rank: Rank,
@@ -54,7 +52,7 @@ pub struct State {
     pub discoveries: HashMap<Box<str>, u32>,
     pub progress: Rank,
     pub powerplay: Powerplay,
-    pub edsm_server_status: Option<StatusDetails>,
+    pub edsm_server_status: Option<Status>,
     pub journal_loaded: bool,
     pub first_message_timestamp: i64,
     pub latest_message_timestamp: i64,

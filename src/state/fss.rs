@@ -10,7 +10,7 @@ use crate::journal::event;
 #[derive(Default, Clone, Debug)]
 pub struct Fss {
     pub progress: Option<ScanProgress>,
-    pub bodies: HashMap<u64, ScannedBody>,
+    pub bodies: HashMap<u64, Body>,
     pub signals: Vec<Signal>,
 }
 
@@ -31,7 +31,7 @@ impl From<event::FSSDiscoveryScan> for ScanProgress {
     }
 }
 
-impl ScannedBody {
+impl Body {
 
     // todo: not u64 plz
     pub fn get_parent_id(event: &event::Scan) -> Option<u64> {
@@ -74,7 +74,7 @@ pub struct SignalCount {
 }
 
 #[derive(Default, Clone, Debug)]
-pub struct ScannedBody {
+pub struct Body {
     pub body_id: u64,
     pub body_name: Box<str>,
     pub planet_class: Option<Box<str>>,
@@ -85,7 +85,7 @@ pub struct ScannedBody {
     pub was_mapped: bool,
 }
 
-impl From<event::Scan> for ScannedBody {
+impl From<event::Scan> for Body {
     fn from(value: event::Scan) -> Self {
         Self {
             body_name: value.body_name,
@@ -100,7 +100,7 @@ impl From<event::Scan> for ScannedBody {
     }
 }
 
-impl From<event::FSSBodySignals> for ScannedBody {
+impl From<event::FSSBodySignals> for Body {
 
     fn from(value: event::FSSBodySignals) -> Self {
 

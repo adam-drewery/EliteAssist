@@ -1,11 +1,12 @@
 use crate::font::EUROSTILE;
 use crate::gui::components::sub_header;
 use crate::gui::{pane, Message};
-use crate::state::{MarketItem, State};
+use crate::state::State;
 use crate::theme::{style, GRAY, ORANGE, WHITE, YELLOW};
 use iced::widget::scrollable;
 use iced::widget::{column, row, text};
 use iced::{Bottom, Element, Fill, Left};
+use crate::state;
 
 pub struct Market;
 
@@ -65,7 +66,7 @@ fn cell<'a>(value: impl text::IntoFragment<'a>) -> Element<'a, Message> {
     text(value).size(16).color(WHITE).width(Fill).into()
 }
 
-fn name_cell(item: &MarketItem) -> Element<'_, Message> {
+fn name_cell(item: &state::market::Item) -> Element<'_, Message> {
     text(item.name.as_ref())
         .size(16)
         .color(if item.rare { YELLOW } else { ORANGE })

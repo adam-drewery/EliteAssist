@@ -5,9 +5,10 @@ pub mod default;
 use log::error;
 pub use custom::*;
 pub use settings::*;
-use crate::state::{Layout, Screen};
+use crate::state;
+use crate::state::Screen;
 
-fn update_layout_from_custom_screen(layout: &mut Layout, sel: &crate::config::CustomScreen) {
+fn update_layout_from_custom_screen(layout: &mut state::layout::Layout, sel: &crate::config::CustomScreen) {
     if let Some(node) = &sel.layout {
         layout.current_panes = Some(crate::config::build_panes_from_layout(node));
     } else {
@@ -15,7 +16,7 @@ fn update_layout_from_custom_screen(layout: &mut Layout, sel: &crate::config::Cu
     }
 }
 
-pub fn add_custom(layout: &mut Layout) {
+pub fn add_custom(layout: &mut state::layout::Layout) {
     let (layout_opt, visible_opt) = if let Some(panes) = &layout.current_panes {
         let layout_node = crate::config::state_to_node(panes);
         let visible_titles: Vec<Box<str>> = layout.current_visible_vec().iter().map(|p| p.as_ref().title().into()).collect();
@@ -36,7 +37,7 @@ pub fn add_custom(layout: &mut Layout) {
         .unwrap_or_else(|_| error!("Failed to save layout"));
 }
 
-pub fn remove_custom(layout: &mut Layout) {
+pub fn remove_custom(layout: &mut state::layout::Layout) {
     if layout.custom_screens.len() > 1 {
         let idx = layout.selected_custom_screen.min(layout.custom_screens.len() - 1);
         layout.custom_screens.remove(idx);
@@ -58,7 +59,7 @@ pub fn remove_custom(layout: &mut Layout) {
     }
 }
 
-pub fn select_custom(layout: &mut Layout, idx: usize) {
+pub fn select_custom(layout: &mut state::layout::Layout, idx: usize) {
     if !layout.custom_screens.is_empty() {
         layout.selected_custom_screen = idx.min(layout.custom_screens.len() - 1);
         let custom_screen = layout.custom_screens.get(layout.selected_custom_screen).cloned();
@@ -70,7 +71,7 @@ pub fn select_custom(layout: &mut Layout, idx: usize) {
     }
 }
 
-pub fn rename_custom(layout: &mut Layout, name: Box<str>) {
+pub fn rename_custom(layout: &mut state::layout::Layout, name: Box<str>) {
     if let Some(sel) = layout.custom_screens.get_mut(layout.selected_custom_screen) {
         sel.name = name;
         crate::config::Settings::save_from_state(&layout)
@@ -78,7 +79,7 @@ pub fn rename_custom(layout: &mut Layout, name: Box<str>) {
     }
 }
 
-pub fn navigate_to(layout: &mut Layout, idx: usize) -> Screen {
+pub fn navigate_to(layout: &mut state::layout::Layout, idx: usize) -> Screen {
     if !layout.custom_screens.is_empty() {
         let max_idx = layout.custom_screens.len().saturating_sub(1);
         layout.selected_custom_screen = idx.min(max_idx);
@@ -93,7 +94,7 @@ pub fn navigate_to(layout: &mut Layout, idx: usize) -> Screen {
     Screen::Custom
 }
 
-pub(crate) fn next_tab(layout: &mut Layout, active_screen: &Screen) -> Option<Screen> {
+pub(crate) fn next_tab(layout: &mut state::layout::Layout, active_screen: &Screen) -> Option<Screen> {
     let custom_count = layout.custom_screens.len();
     
     if custom_count == 0 { return None; }

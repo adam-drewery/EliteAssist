@@ -1,12 +1,13 @@
 use crate::font::EUROSTILE;
 use crate::gui::components::scroll_list;
 use crate::gui::{pane, Message};
-use crate::state::{ShipLockerItem, State};
+use crate::state::State;
 use crate::theme::style;
 use crate::theme::{BLUE, ORANGE, YELLOW};
 use iced::widget::tooltip::Position;
 use iced::widget::{column, row, text, tooltip, Column};
 use iced::{Color, Element, Left};
+use crate::state;
 
 pub struct ShipLocker;
 
@@ -24,7 +25,7 @@ impl pane::Type for ShipLocker {
     }
 }
 
-fn locker_item_list<'a>(title: &'a str, items: &'a [ShipLockerItem]) -> Column<'a, Message> {
+fn locker_item_list<'a>(title: &'a str, items: &'a [state::ship::ShipLockerItem]) -> Column<'a, Message> {
     column![
         text(title).size(20).color(ORANGE),
         scroll_list(

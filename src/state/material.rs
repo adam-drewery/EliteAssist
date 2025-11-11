@@ -4,13 +4,13 @@ use std::collections::HashMap;
 
 #[derive(Clone, Default)]
 pub struct Materials {
-    pub raw: Vec<MaterialGroup>,
-    pub manufactured: Vec<MaterialGroup>,
-    pub encoded: Vec<MaterialGroup>,
+    pub raw: Vec<Group>,
+    pub manufactured: Vec<Group>,
+    pub encoded: Vec<Group>,
 }
 
 #[derive(Clone)]
-pub struct MaterialGroup {
+pub struct Group {
     pub name: Box<str>,
     pub materials: Vec<Material>,
 }

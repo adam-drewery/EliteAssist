@@ -36,7 +36,7 @@ impl pane::Type for ShipModules {
 fn module_group<'a>(
     title: &'static str,
     icon_bytes: &'static [u8],
-    modules: &'a Vec<state::ShipModule>,
+    modules: &'a Vec<state::ship::Module>,
 ) -> Column<'a, Message> {
     if modules.is_empty() {
         return column![];
@@ -46,7 +46,7 @@ fn module_group<'a>(
         module_group_title(title, Handle::from_bytes(icon_bytes)),
         column(modules.iter().map(|module| {
             let size = match module.slot {
-                state::SlotType::Hardpoints { size, .. } => size,
+                state::ship::SlotType::Hardpoints { size, .. } => size,
                 _ => 0,
             };
             module_details(module, size).into()
@@ -62,7 +62,7 @@ fn module_group_title(title: &str, icon: Handle) -> Column<'_, Message> {
     ]]
 }
 
-fn module_details(module: &state::ShipModule, size: u8) -> Row<'_, Message> {
+fn module_details(module: &state::ship::Module, size: u8) -> Row<'_, Message> {
     let mut size_column = column![];
     if size != 0 {
         size_column = size_column.push(text(size).size(24).color(GRAY));
@@ -87,7 +87,7 @@ fn module_details(module: &state::ShipModule, size: u8) -> Row<'_, Message> {
     ]
 }
 
-fn mount_type_icon(module: &state::ShipModule, size: u8) -> Column<'_, Message> {
+fn mount_type_icon(module: &state::ship::Module, size: u8) -> Column<'_, Message> {
     column![
         row![].height(Fill),
         if size == 0 {
@@ -109,7 +109,7 @@ fn mount_type_icon(module: &state::ShipModule, size: u8) -> Column<'_, Message> 
     .align_x(Right)
 }
 
-fn engineering_levels(module: &state::ShipModule) -> Column<'_, Message> {
+fn engineering_levels(module: &state::ship::Module) -> Column<'_, Message> {
     if let Some(engineering) = &module.engineering {
         column![
             row((0..engineering.level).map(|_| image(Handle::from_bytes(ENGINEER_ICON_PNG)).into()))
@@ -122,7 +122,7 @@ fn engineering_levels(module: &state::ShipModule) -> Column<'_, Message> {
     .height(30)
 }
 
-fn engineering_details(module: &state::ShipModule) -> Column<'_, Message> {
+fn engineering_details(module: &state::ship::Module) -> Column<'_, Message> {
     if let Some(engineering) = &module.engineering {
         let modifiers_brief = if engineering.modifiers.is_empty() {
             String::new()
@@ -181,7 +181,7 @@ fn engineering_details(module: &state::ShipModule) -> Column<'_, Message> {
     }
 }
 
-fn module_runtime_details(module: &state::ShipModule) -> Column<'_, Message> {
+fn module_runtime_details(module: &state::ship::Module) -> Column<'_, Message> {
     let mut info = Vec::new();
     info.push(format!("On: {}", if module.on { "Yes" } else { "No" }));
     info.push(format!("Priority: {}", module.priority));

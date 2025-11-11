@@ -3,15 +3,15 @@ use crate::journal::format::title_case;
 
 #[derive(Default)]
 pub struct Market {
-    pub groups: Vec<MarketItemGroup>,
+    pub groups: Vec<ItemGroup>,
 }
 
-pub struct MarketItemGroup {
+pub struct ItemGroup {
     pub name: Box<str>,
-    pub items: Vec<MarketItem>,
+    pub items: Vec<Item>,
 }
 
-pub struct MarketItem {
+pub struct Item {
     pub name: Box<str>,
     pub buy_price: u64,
     pub sell_price: u64,
@@ -40,7 +40,7 @@ impl From<event::Market> for Market {
             groups: {
                 let mut groups: Vec<_> = groups
                     .into_iter()
-                    .map(|(category, items)| MarketItemGroup {
+                    .map(|(category, items)| ItemGroup {
                         name: category.unwrap_or_default(),
                         items,
                     })
@@ -52,9 +52,9 @@ impl From<event::Market> for Market {
     }
 }
 
-impl From<event::MarketItem> for MarketItem {
+impl From<event::MarketItem> for Item {
     fn from(value: event::MarketItem) -> Self {
-        MarketItem {
+        Item {
             name: value.name_localised.unwrap_or(title_case(value.name.as_ref()).into()),
             buy_price: value.buy_price,
             sell_price: value.sell_price,

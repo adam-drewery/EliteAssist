@@ -44,8 +44,8 @@ impl From<event::Rank> for Rank {
 impl From<event::Reputation> for Reputation {
     fn from(value: event::Reputation) -> Self {
         Reputation {
-            empire: value.empire.map(|v| v as f64).unwrap_or_default(),
-            federation: value.federation.map(|v| v as f64).unwrap_or_default(),
+            empire: value.empire.unwrap_or_default(),
+            federation: value.federation.unwrap_or_default(),
             alliance: value.alliance.unwrap_or_default(),
         }
     }

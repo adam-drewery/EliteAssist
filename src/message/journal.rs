@@ -100,9 +100,9 @@ impl journal::Event {
 
             NpcCrewRank(e) => state.logs.push(e.into()),
 
-            CrewMemberJoins(e) => state.logs.push(log_crew_member(e, "joined")),
+            CrewMemberJoins(e) => state.logs.push(history::log_crew_member(e, "joined")),
 
-            CrewMemberQuits(e) => state.logs.push(log_crew_member(e, "quit")),
+            CrewMemberQuits(e) => state.logs.push(history::log_crew_member(e, "quit")),
 
             NpcCrewPaidWage(e) => {
                 if e.amount != 0 {
@@ -190,7 +190,7 @@ impl journal::Event {
             DockFighter(e) => state.logs.push(e.into()),
 
             FighterDestroyed(e) => {
-                state.logs.push(log_damage(e, "Destroyed", "Fighter"))
+                state.logs.push(history::log_damage(e, "Destroyed", "Fighter"))
             }
 
             // FSD
@@ -293,7 +293,7 @@ impl journal::Event {
             JetConeBoost(_) => {}
 
             NavRoute(e) => {
-                let route: Vec<NavRouteStep> = e.into();
+                let route: Vec<navigation::NavRouteStep> = e.into();
 
                 // The journal file gives us blank NavRoute events when we plot one. Kinda weird.
                 if !route.is_empty() {
@@ -451,7 +451,7 @@ impl journal::Event {
 
                 let body = state.fss.bodies
                     .entry(event.body_id)
-                    .or_insert_with(|| ScannedBody::default());
+                    .or_insert_with(|| fss::Body::default());
 
                 body.update_from_scan(event);
 
@@ -469,7 +469,7 @@ impl journal::Event {
                 let body = state.fss.bodies.entry(e.body_id).or_default();
 
                 body.signals = e.signals.into_iter().map(|s|{
-                    SignalCount {
+                    fss::SignalCount {
                         kind: s.type_localised.unwrap_or(s.r#type),
                         count: s.count as u32
                     }
@@ -607,7 +607,7 @@ impl journal::Event {
             LoadoutRemoveModule(_) => {}
             LoadoutEquipModule(_) => {}
 
-            BuyAmmo(e) => state.logs.push(log_ship_equipment_purchase(e, "ammo")),
+            BuyAmmo(e) => state.logs.push(history::log_ship_equipment_purchase(e, "ammo")),
 
             // WING
             WingAdd(_) => {}

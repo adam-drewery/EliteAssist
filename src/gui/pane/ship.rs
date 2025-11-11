@@ -87,7 +87,7 @@ impl pane::Type for ShipDetails {
     }
 }
 
-fn ship_title(ship_loadout: &state::ShipLoadout) -> Row<'_, Message> {
+fn ship_title(ship_loadout: &state::ship::Loadout) -> Row<'_, Message> {
     row![
         column![
             text(ship_loadout.ship_name.as_ref())

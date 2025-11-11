@@ -1,10 +1,11 @@
 use crate::font::EUROSTILE;
 use crate::gui::components::scroll_list;
 use crate::gui::{pane, Message};
-use crate::state::{Channel, State};
+use crate::state::State;
 use crate::theme::{BLUE, GRAY, ORANGE, RED, WHITE, YELLOW};
 use iced::widget::{column, row, text};
 use iced::{Element, Fill};
+use crate::state;
 
 pub struct Messages;
 
@@ -20,14 +21,14 @@ impl pane::Type for Messages {
                     .filter(|item| !item.from.is_empty())
                     .map(|item| {
                         let name_color = match item.channel {
-                            Channel::Local => ORANGE,
-                            Channel::Player => BLUE,
-                            Channel::StarSystem => ORANGE,
-                            Channel::Squadron => YELLOW,
-                            Channel::SquadLeaders => YELLOW,
-                            Channel::Npc => WHITE,
-                            Channel::Wing => BLUE,
-                            Channel::Unknown => RED,
+                            state::chat::Channel::Local => ORANGE,
+                            state::chat::Channel::Player => BLUE,
+                            state::chat::Channel::StarSystem => ORANGE,
+                            state::chat::Channel::Squadron => YELLOW,
+                            state::chat::Channel::SquadLeaders => YELLOW,
+                            state::chat::Channel::Npc => WHITE,
+                            state::chat::Channel::Wing => BLUE,
+                            state::chat::Channel::Unknown => RED,
                         };
 
                         column![

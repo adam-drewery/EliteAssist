@@ -4,7 +4,7 @@ use crate::state::State;
 use crate::theme::{style, GRAY, ORANGE, WHITE};
 use crate::{centered_row, scroll_list};
 use iced::widget::{column, container, progress_bar, row, scrollable, text, Column};
-use iced::Element;
+use iced::{Center, Element};
 
 pub struct Ranks;
 
@@ -101,9 +101,9 @@ fn rank(
         Some(title) => title.name.to_string(),
     };
 
-    iced::widget::column![
+    column![
         container(column![
-            centered_row![text(title).size(16).color(ORANGE)].padding(4),
+            row![text(title).size(16).color(ORANGE)].align_y(Center).padding(4),
             row![
                 progress_bar(0f32..=100f32, progress as f32)
                     .height(8)
@@ -139,7 +139,7 @@ fn superpower_rank(
         },
     };
 
-    iced::widget::column![
+    column![
         container(column![
             centered_row![text(title).size(16).color(ORANGE)].padding(4),
             if progress.is_some() {
