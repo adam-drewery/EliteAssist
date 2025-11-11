@@ -50,6 +50,8 @@ impl ScannedBody {
     }
 
     pub fn update_from_scan(&mut self, event: event::Scan) {
+        self.parent_id = Self::get_parent_id(&event);
+        self.planet_class = event.planet_class;
         self.body_name = event.body_name;
         self.body_id = event.body_id;
         self.was_discovered = event.was_discovered;
@@ -75,6 +77,7 @@ pub struct SignalCount {
 pub struct ScannedBody {
     pub body_id: u64,
     pub body_name: Box<str>,
+    pub planet_class: Option<Box<str>>,
     pub parent_id: Option<u64>,
     pub signals: Vec<SignalCount>,
     pub terraform_state: Option<Box<str>>,
@@ -87,6 +90,7 @@ impl From<event::Scan> for ScannedBody {
         Self {
             body_name: value.body_name,
             body_id: value.body_id,
+            planet_class: value.planet_class.filter(|s| !s.is_empty()),
             terraform_state: value.terraform_state,
             was_discovered: value.was_discovered,
             was_mapped: value.was_mapped,
@@ -103,6 +107,7 @@ impl From<event::FSSBodySignals> for ScannedBody {
         Self { 
             body_id: value.body_id,
             body_name: value.body_name,
+            planet_class: None,
             parent_id: None,
             signals: value.signals.into_iter().map(|sig| {
                 SignalCount {

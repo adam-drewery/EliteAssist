@@ -65,6 +65,7 @@ impl Into<state::ScannedBody> for edsm::bodies::Body {
             body_id: self.id,
             body_name: self.name,
             parent_id: None,
+            planet_class: None,
             signals: Vec::new(),
             terraform_state: self.terraforming_state,
             was_discovered: self.discovery.is_some(),

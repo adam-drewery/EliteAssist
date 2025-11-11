@@ -9,7 +9,7 @@ use crate::image::LOADING_PNG;
 use crate::message::Message;
 use crate::state::{Screen, State};
 use crate::theme::{style, ORANGE};
-use crate::{centered_column, centered_row};
+use crate::centered;
 use chrono::Utc;
 use iced::widget::{button, column, progress_bar, row, svg, text};
 use iced::{Bottom, Center, Element, Fill, Task};
@@ -79,21 +79,19 @@ fn waiting_spinner<'a>() -> Element<'a, Message> {
 }
 
 fn loading_bar(state: &State) -> Element<'_, Message> {
-    centered_column![
-        centered_row![
-            row![
-                progress_bar(
-                    state.first_message_timestamp as f32..=Utc::now().timestamp() as f32,
-                    state.latest_message_timestamp as f32)
-                .width(Fill)
-                .style(style::progress_bar),
-            ],
-            row![
-                column![text("Loading...").color(ORANGE).size(32)],
-                column![].width(Fill),
-                column![text(state.latest_message_timestamp_formatted.as_ref()).color(ORANGE).size(32)]
+    centered![
+        row![
+            progress_bar(
+                state.first_message_timestamp as f32..=Utc::now().timestamp() as f32,
+                state.latest_message_timestamp as f32)
+            .width(Fill)
+            .style(style::progress_bar),
+        ],
+        row![
+            column![text("Loading...").color(ORANGE).size(32)],
+            column![].width(Fill),
+            column![text(state.latest_message_timestamp_formatted.as_ref()).color(ORANGE).size(32)]
 
-            ]
         ]
     ]
     .into()

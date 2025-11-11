@@ -1,8 +1,8 @@
-use iced::{Element, Fill};
-use iced::widget::{column, container, progress_bar, row, scrollable, text};
 use crate::gui::{pane, Message};
 use crate::state::State;
-use crate::theme::{style, GRAY, ORANGE, WHITE};
+use crate::theme::{style, ORANGE, WHITE};
+use iced::widget::{column, container, progress_bar, row, scrollable, text};
+use iced::{Element, Fill};
 
 pub struct SystemScanner;
 

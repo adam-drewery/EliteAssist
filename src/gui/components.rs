@@ -1,7 +1,8 @@
 use crate::gui::Message;
-use crate::theme::{GRAY, ORANGE};
-use iced::widget::{column, row, text, Column, Row};
-use iced::{Fill, Right};
+use crate::theme::{style, GRAY, ORANGE};
+use iced::widget::{column, row, scrollable, text, Column, Row, Scrollable};
+use iced::{Element, Fill, Right};
+use iced::padding::right;
 
 pub fn sub_header(title: &str) -> Row<'_, Message> {
     row![text(title).size(20).color(ORANGE).width(Fill)]
@@ -24,6 +25,7 @@ pub fn details(label: &str, value: impl Into<String>) -> Row<'_, Message> {
 }
 
 pub fn empty_placeholder(label: &str) -> Column<'_, Message> {
+
     column![
         row![].height(Fill),
         row![
@@ -35,13 +37,39 @@ pub fn empty_placeholder(label: &str) -> Column<'_, Message> {
     ]
 }
 
+pub fn scroll_list<'a, T: Into<Element<'a, Message>>>(elements: Vec<T>) -> Scrollable<'a, Message>
+{
+    let elements: Vec<Element<Message>> = elements.into_iter()
+        .map(|e| e.into())
+        .collect();
+
+    scrollable(column(elements)
+        .padding(right(12)))
+        .style(style::scrollable)
+}
+
 #[macro_export]
-macro_rules! centered_column {
+macro_rules! scroll_list {
     ($($x:expr),*) => {
+        scrollable(
+            column![$($x),*]
+                .padding(iced::padding::right(12))
+        )
+        .style(style::scrollable)
+    }
+}
+
+#[macro_export]
+macro_rules! centered {
+        ($($x:expr),*) => {
         column![
             row![].height(iced::Fill),
-            row![$($x),*],
-            row![].height(iced::Fill),
+            row![
+                column![].width(iced::Fill),
+                column![$($x),*],
+                column![].width(iced::Fill)
+            ],
+            row![].height(iced::Fill)
         ]
     }
 }

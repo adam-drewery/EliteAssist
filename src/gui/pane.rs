@@ -19,7 +19,7 @@ mod claims;
 mod route;
 mod powerplay;
 mod system_scanner;
-mod fss_signals;
+mod body_signals;
 
 pub use location::*;
 pub use missions::*;
@@ -36,6 +36,8 @@ pub use ranks::*;
 pub use route::*;
 pub use powerplay::*;
 pub use system_scanner::*;
+pub use body_signals::*;
+
 use crate::gui::Message;
 use crate::state::State;
 
@@ -82,6 +84,7 @@ define_panes! {
     Market,
     LogJournal,
     SystemScanner,
+    BodySignals,
 }
 
 pub fn defaults() -> Vec<&'static dyn Type> {

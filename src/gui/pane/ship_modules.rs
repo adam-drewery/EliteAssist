@@ -1,9 +1,9 @@
 use crate::gui::{pane, Message};
 use crate::image::engineering::ENGINEER_ICON_PNG;
 use crate::image::ship_modules::*;
-use crate::state;
 use crate::state::State;
 use crate::theme::{style, GRAY, ORANGE, YELLOW};
+use crate::{scroll_list, state};
 use iced::widget::image::Handle;
 use iced::widget::{column, container, image, row, scrollable, text, Column, Row};
 use iced::{Center, Element, Fill, Right};
@@ -17,24 +17,20 @@ impl pane::Type for ShipModules {
     
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         column![
-            scrollable(row![
-                column![
-                    module_group("Hardpoints", HARDPOINTS_PNG, &state.ship_loadout.hardpoints),
-                    module_group("Utilities", UTILITIES_PNG, &state.ship_loadout.utilities),
-                    module_group(
-                        "Core Internals",
-                        CORE_INTERNAL_PNG,
-                        &state.ship_loadout.core_internals
-                    ),
-                    module_group(
-                        "Optional Internals",
-                        OPTIONAL_INTERNAL_PNG,
-                        &state.ship_loadout.optional_internals
-                    )
-                ],
-                column![].width(12)
-            ])
-            .style(style::scrollable)
+            scroll_list![
+                module_group("Hardpoints", HARDPOINTS_PNG, &state.ship_loadout.hardpoints),
+                module_group("Utilities", UTILITIES_PNG, &state.ship_loadout.utilities),
+                module_group(
+                    "Core Internals",
+                    CORE_INTERNAL_PNG,
+                    &state.ship_loadout.core_internals
+                ),
+                module_group(
+                    "Optional Internals",
+                    OPTIONAL_INTERNAL_PNG,
+                    &state.ship_loadout.optional_internals
+                )
+            ]
         ]
         .into()
     }

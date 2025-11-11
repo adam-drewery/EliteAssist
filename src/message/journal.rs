@@ -453,10 +453,8 @@ impl journal::Event {
                     .entry(event.body_id)
                     .or_insert_with(|| ScannedBody::default());
 
-                body.parent_id = ScannedBody::get_parent_id(&event);
-                body.terraform_state = event.terraform_state;
-                body.was_discovered = event.was_discovered;
-                body.was_mapped = event.was_mapped;
+                body.update_from_scan(event);
+
             }
 
             ScanBaryCentre(_) => {}

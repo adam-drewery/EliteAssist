@@ -1,8 +1,9 @@
 use crate::font::EUROSTILE;
+use crate::gui::components::scroll_list;
 use crate::gui::{pane, Message};
 use crate::state::{Channel, State};
-use crate::theme::{style, GRAY, ORANGE, RED, WHITE, YELLOW, BLUE};
-use iced::widget::{column, row, scrollable, text};
+use crate::theme::{BLUE, GRAY, ORANGE, RED, WHITE, YELLOW};
+use iced::widget::{column, row, text};
 use iced::{Element, Fill};
 
 pub struct Messages;
@@ -13,7 +14,7 @@ impl pane::Type for Messages {
     
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         iced::widget::column![
-            scrollable(column(
+            scroll_list(
                 state
                     .messages
                     .iter()
@@ -46,11 +47,9 @@ impl pane::Type for Messages {
                         ]
                         .width(Fill)
                     })
-                    .map(Element::from)
-            ))
-            .style(style::scrollable)
-            .anchor_bottom(),
-            column![].width(12)
+                .collect()
+            )
+            .anchor_bottom()
         ]
         .into()
     }

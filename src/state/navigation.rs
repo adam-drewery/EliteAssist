@@ -116,16 +116,6 @@ pub struct LastUpdated {
 }
 
 #[derive(Default, Clone, Debug)]
-pub struct Body {
-    pub name: Box<str>,
-    pub type_field: Box<str>,
-    pub sub_type: Box<str>,
-    pub distance_to_arrival: f32,
-    pub is_main_star: bool,
-    pub is_scoopable: bool,
-}
-
-#[derive(Default, Clone, Debug)]
 pub struct System {
     pub address: u64,
     pub name: Box<str>
