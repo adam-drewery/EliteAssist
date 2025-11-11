@@ -10,7 +10,6 @@ use iced::{Element, Fill, Left, Right};
 pub struct LogJournal;
 
 impl pane::Type for LogJournal {
-
     fn title(&self) -> &'static str { "Journal" }
 
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
@@ -51,7 +50,7 @@ impl pane::Type for LogJournal {
                         ]
                         .padding(2)
                     })
-                .collect()
+                    .collect()
             )
             .anchor_bottom()
         ]

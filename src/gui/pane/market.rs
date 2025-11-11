@@ -10,7 +10,6 @@ use iced::{Bottom, Element, Fill, Left};
 pub struct Market;
 
 impl pane::Type for Market {
-
     fn title(&self) -> &'static str { "Market" }
 
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {

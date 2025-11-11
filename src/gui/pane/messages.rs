@@ -9,9 +9,8 @@ use iced::{Element, Fill};
 pub struct Messages;
 
 impl pane::Type for Messages {
-
     fn title(&self) -> &'static str { "Messages" }
-    
+
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         iced::widget::column![
             scroll_list(
@@ -28,7 +27,7 @@ impl pane::Type for Messages {
                             Channel::SquadLeaders => YELLOW,
                             Channel::Npc => WHITE,
                             Channel::Wing => BLUE,
-                            Channel::Unknown => RED
+                            Channel::Unknown => RED,
                         };
 
                         column![
@@ -47,7 +46,7 @@ impl pane::Type for Messages {
                         ]
                         .width(Fill)
                     })
-                .collect()
+                    .collect()
             )
             .anchor_bottom()
         ]

@@ -45,6 +45,7 @@ pub fn scroll_list<'a, T: Into<Element<'a, Message>>>(elements: Vec<T>) -> Scrol
 
     scrollable(column(elements)
         .padding(right(12)))
+        .width(Fill)
         .style(style::scrollable)
 }
 
@@ -55,7 +56,24 @@ macro_rules! scroll_list {
             column![$($x),*]
                 .padding(iced::padding::right(12))
         )
+        .width(iced::Fill)
         .style(style::scrollable)
+    }
+}
+
+#[macro_export]
+macro_rules! bordered_list_item {
+    ($($x:expr),*) => {
+        row![
+            container(
+                row![$($x),*]
+            )
+            .style(style::bordered)
+            .height(64)
+            .padding(0.5)
+            .width(Fill),
+        ]
+        .padding([4, 8])
     }
 }
 

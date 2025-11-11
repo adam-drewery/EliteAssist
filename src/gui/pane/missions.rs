@@ -9,11 +9,9 @@ use thousands::Separable;
 pub struct Missions;
 
 impl pane::Type for Missions {
-
     fn title(&self) -> &'static str { "Missions" }
-    
+
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
-        
         if state.missions.len() == 0 {
             return column![empty_placeholder("No Missions")].into();
         }
@@ -24,9 +22,7 @@ impl pane::Type for Missions {
                     .missions
                     .iter()
                     .map(|m| {
-                        let mut c = column![
-                            details(&m.faction, m.name.as_ref()),
-                        ];
+                        let mut c = column![details(&m.faction, m.name.as_ref()),];
 
                         if let Some(commodity) = &m.commodity {
                             c = c.push(details("Commodity", commodity.as_ref()));
@@ -47,7 +43,10 @@ impl pane::Type for Missions {
                         c = c.push(details("Influence", m.influence.as_ref()));
                         c = c.push(details("Reputation", m.reputation.as_ref()));
                         if let Some(reward) = m.reward {
-                            c = c.push(details("Reward", format!("CR {}", reward.separate_with_commas())));
+                            c = c.push(details(
+                                "Reward",
+                                format!("CR {}", reward.separate_with_commas()),
+                            ));
                         }
                         c = c.push(details("Mission ID", m.mission_id.to_string()));
 

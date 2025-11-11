@@ -14,27 +14,29 @@ impl pane::Type for SystemScanner {
 
         // Discovery progress
         if let Some(d) = &state.fss.progress {
-            content = content.push(
-                container(column![
-                    row![text("Discovery").size(16).color(ORANGE)].padding(4),
-                    row![
-                        progress_bar(0f32..=1f32, d.progress)
-                            .height(8)
-                            .style(style::progress_bar)
-                    ]
-                    .padding(4),
-                    row![
-                        text(format!(
-                            "System: {}  Bodies: {}  Non-Bodies: {}",
-                            state.location.system_name, d.body_count, d.non_body_count
-                        ))
-                        .size(14)
-                        .color(WHITE)
-                    ]
-                    .padding(4)
-                ])
-                .style(style::bordered)
-            ).padding(4);
+            content = content
+                .push(
+                    container(column![
+                        row![text("Discovery").size(16).color(ORANGE)].padding(4),
+                        row![
+                            progress_bar(0f32..=1f32, d.progress)
+                                .height(8)
+                                .style(style::progress_bar)
+                        ]
+                        .padding(4),
+                        row![
+                            text(format!(
+                                "System: {}  Bodies: {}  Non-Bodies: {}",
+                                state.location.system_name, d.body_count, d.non_body_count
+                            ))
+                            .size(14)
+                            .color(WHITE)
+                        ]
+                        .padding(4)
+                    ])
+                    .style(style::bordered),
+                )
+                .padding(4);
         }
 
         // System signals
@@ -42,23 +44,26 @@ impl pane::Type for SystemScanner {
             let mut items = column![];
             for s in state.fss.signals.iter() {
                 let kind = s.kind.as_deref().unwrap_or("Unknown");
-                items = items.push(
-                    row![text(format!(
+                items = items.push(row![
+                    text(format!(
                         "{} ({}){}",
                         s.name,
                         kind,
                         if s.is_station { " [Station]" } else { "" }
                     ))
                     .size(14)
-                    .color(WHITE)]
-                );
+                    .color(WHITE)
+                ]);
             }
-            content = content.push(
-                container(column![
-                    row![text("Signals in System").size(16).color(ORANGE)].padding(4),
-                    items.padding(4)
-                ]).style(style::bordered)
-            ).padding(4);
+            content = content
+                .push(
+                    container(column![
+                        row![text("Signals in System").size(16).color(ORANGE)].padding(4),
+                        items.padding(4)
+                    ])
+                    .style(style::bordered),
+                )
+                .padding(4);
         }
 
         column![scrollable(content).style(style::scrollable)]
