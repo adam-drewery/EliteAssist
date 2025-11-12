@@ -35,7 +35,7 @@ impl Query {
             BodiesQueried(response) => {
                 if let Some(queried_bodies) = response.bodies {
                     for queried_body in queried_bodies.into_iter() {
-                        let body = state.fss.bodies.entry(queried_body.id).or_default();
+                        let body = state.fss.bodies.entry(queried_body.body_id as u8).or_default();
                             body.update_from_query(queried_body);
                     }
                 }

@@ -19,7 +19,7 @@ impl pane::Type for SystemScanner {
                     container(column![
                         row![text("Discovery").size(16).color(ORANGE)].padding(4),
                         row![
-                            progress_bar(0f32..=1f32, d.progress)
+                            progress_bar(0f32..=1f32, d.progress as f32)
                                 .height(8)
                                 .style(style::progress_bar)
                         ]

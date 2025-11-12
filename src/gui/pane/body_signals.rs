@@ -33,9 +33,15 @@ impl pane::Type for BodySignals {
 
 fn body_details(body: &state::fss::Body) -> Row<'_, Message> {
     bordered_list_item![
-        column![].width(6),
-        column![text(body.body_name.to_string()).size(24).color(ORANGE)],
-        column![text(body.was_mapped).size(24).color(ORANGE)].padding([0, 6]),
-        column![text(body.was_discovered).size(24).color(ORANGE)]
+        column![
+            row![
+                column![text(body.name.to_string()).size(24).color(ORANGE)]
+                .padding([0, 6]),
+            ],
+            row![
+                column![text(body.r#type.clone().unwrap_or_default().to_string()).size(24).color(ORANGE)]
+                .padding([0, 6])
+            ]
+        ]
     ]
 }

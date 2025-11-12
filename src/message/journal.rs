@@ -446,11 +446,11 @@ impl journal::Event {
             Scan(event) => {
 
                 if let Some(progress) = &mut state.fss.progress {
-                    progress.body_count += 1;
+                    progress.progress += 1;
                 }
 
                 let body = state.fss.bodies
-                    .entry(event.body_id)
+                    .entry(event.body_id as u8)
                     .or_insert_with(|| fss::Body::default());
 
                 body.update_from_scan(event);
@@ -466,7 +466,7 @@ impl journal::Event {
             DataScanned(_) => {}
 
             FSSBodySignals(e) => {
-                let body = state.fss.bodies.entry(e.body_id).or_default();
+                let body = state.fss.bodies.entry(e.body_id as u8).or_default();
 
                 body.signals = e.signals.into_iter().map(|s|{
                     fss::SignalCount {

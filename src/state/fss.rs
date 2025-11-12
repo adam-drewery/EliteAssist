@@ -10,23 +10,23 @@ use crate::journal::event;
 #[derive(Default, Clone, Debug)]
 pub struct Fss {
     pub progress: Option<ScanProgress>,
-    pub bodies: HashMap<u64, Body>,
+    pub bodies: HashMap<u8, Body>,
     pub signals: Vec<Signal>,
 }
 
 #[derive(Default, Clone, Debug)]
 pub struct ScanProgress {
-    pub progress: f32,
-    pub body_count: u32,
-    pub non_body_count: u32,
+    pub progress: u8,
+    pub body_count: u8,
+    pub non_body_count: u8,
 }
 
 impl From<event::FSSDiscoveryScan> for ScanProgress {
     fn from(value: event::FSSDiscoveryScan) -> Self {
         Self {
-            progress: value.progress as f32,
-            body_count: value.body_count as u32,
-            non_body_count: value.non_body_count as u32,
+            progress: value.progress as u8,
+            body_count: value.body_count as u8,
+            non_body_count: value.non_body_count as u8,
         }
     }
 }
@@ -51,17 +51,20 @@ impl Body {
 
     pub fn update_from_scan(&mut self, event: event::Scan) {
         self.parent_id = Self::get_parent_id(&event);
-        self.planet_class = event.planet_class;
-        self.body_name = event.body_name;
-        self.body_id = event.body_id;
+        self.name = event.body_name;
+        self.id = event.body_id as u8;
         self.was_discovered = event.was_discovered;
         self.was_mapped = event.was_mapped;
         self.terraform_state = event.terraform_state;
+        self.r#type = event.planet_class
+            .or_else(||
+                event.star_type.map(|s|
+                    format!("{}{:?}", s, event.subclass.unwrap_or_default()).into()));
     }
 
     pub fn update_from_query(&mut self, response: edsm::bodies::Body) {
-        self.body_name = response.name;
-        self.body_id = response.id;
+        self.name = response.name;
+        self.id = response.body_id as u8;
         self.terraform_state = response.terraforming_state;
         self.was_discovered = response.discovery.is_some();
     }
@@ -75,9 +78,9 @@ pub struct SignalCount {
 
 #[derive(Default, Clone, Debug)]
 pub struct Body {
-    pub body_id: u64,
-    pub body_name: Box<str>,
-    pub planet_class: Option<Box<str>>,
+    pub id: u8,
+    pub name: Box<str>,
+    pub r#type: Option<Box<str>>,
     pub parent_id: Option<u64>,
     pub signals: Vec<SignalCount>,
     pub terraform_state: Option<Box<str>>,
@@ -88,9 +91,9 @@ pub struct Body {
 impl From<event::Scan> for Body {
     fn from(value: event::Scan) -> Self {
         Self {
-            body_name: value.body_name,
-            body_id: value.body_id,
-            planet_class: value.planet_class.filter(|s| !s.is_empty()),
+            name: value.body_name,
+            id: value.body_id as u8,
+            r#type: value.planet_class.filter(|s| !s.is_empty()),
             terraform_state: value.terraform_state,
             was_discovered: value.was_discovered,
             was_mapped: value.was_mapped,
@@ -105,9 +108,9 @@ impl From<event::FSSBodySignals> for Body {
     fn from(value: event::FSSBodySignals) -> Self {
 
         Self { 
-            body_id: value.body_id,
-            body_name: value.body_name,
-            planet_class: None,
+            id: value.body_id as u8,
+            name: value.body_name,
+            r#type: None,
             parent_id: None,
             signals: value.signals.into_iter().map(|sig| {
                 SignalCount {

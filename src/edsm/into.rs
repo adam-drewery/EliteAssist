@@ -62,10 +62,10 @@ impl Into<Vec<state::fss::Body>> for edsm::Bodies {
 impl Into<state::fss::Body> for edsm::bodies::Body {
     fn into(self) -> state::fss::Body {
         state::fss::Body {
-            body_id: self.id,
-            body_name: self.name,
+            id: self.body_id as u8,
+            name: self.name,
             parent_id: None,
-            planet_class: None,
+            r#type: None,
             signals: Vec::new(),
             terraform_state: self.terraforming_state,
             was_discovered: self.discovery.is_some(),
