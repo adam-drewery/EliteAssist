@@ -11,20 +11,21 @@ use iced::{Element, Fill};
 pub struct BodySignals;
 
 impl pane::Type for BodySignals {
-
-    fn title(&self) -> &'static str { "Body Signals" }
+    fn title(&self) -> &'static str {
+        "Body Signals"
+    }
 
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
-        if !state.fss.bodies.is_empty() {
-            column![scroll_list(
-                state
-                    .fss
-                    .bodies
-                    .iter()
-                    .map(|body| body_details(body.1))
-                    .collect()
-            )]
-            .into()
+        if let Some(system_scans) = state.system_scans.get(&state.location.system_address) 
+            && !system_scans.bodies.is_empty() {
+                column![scroll_list(
+                    system_scans
+                        .bodies
+                        .iter()
+                        .map(|body| body_details(body.1))
+                        .collect()
+                )]
+                .into()
         } else {
             empty_placeholder("No signals found").into()
         }
@@ -32,17 +33,16 @@ impl pane::Type for BodySignals {
 }
 
 fn body_details(body: &state::fss::Body) -> Row<'_, Message> {
-    bordered_list_item![
-        column![
-            row![
-                column![text(body.name.to_string()).size(16).color(ORANGE)]
-                .padding([0, 6]),
-            ],
-            row![
-                column![text(body.r#type.clone().unwrap_or_default().to_string()).size(16).color(ORANGE)]
-                .padding([0, 6])
+    bordered_list_item![column![
+        row![column![text(body.name.to_string()).size(16).color(ORANGE)].padding([0, 6]),],
+        row![
+            column![
+                text(body.r#type.clone().unwrap_or_default().to_string())
+                    .size(16)
+                    .color(ORANGE)
             ]
+            .padding([0, 6])
         ]
-    ]
+    ]]
     .height(48)
 }

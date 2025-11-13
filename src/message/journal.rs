@@ -211,8 +211,7 @@ impl journal::Event {
 
                 state.location.body_name = String::new().into();
                 state.location = e.into();
-                state.fss = Default::default();
-
+                
                 if state.journal_loaded {
                     return query::system(
                         state.location.system_name.as_ref(),
@@ -444,17 +443,20 @@ impl journal::Event {
 
             // SCAN
             Scan(event) => {
-
-                if let Some(progress) = &mut state.fss.progress {
+                let system_scan = state
+                    .system_scans
+                    .entry(event.system_address)
+                    .or_default();
+                
+                if let Some(progress) = &mut system_scan.progress {
                     progress.progress += 1;
                 }
 
-                let body = state.fss.bodies
+                let body = system_scan.bodies
                     .entry(event.body_id as u8)
-                    .or_insert_with(|| fss::Body::default());
+                    .or_default();
 
                 body.update_from_scan(event);
-
             }
 
             ScanBaryCentre(_) => {}
@@ -466,8 +468,16 @@ impl journal::Event {
             DataScanned(_) => {}
 
             FSSBodySignals(e) => {
-                let body = state.fss.bodies.entry(e.body_id as u8).or_default();
+                let system_scan = state
+                    .system_scans
+                    .entry(e.system_address)
+                    .or_default();
+                
+                let body = system_scan.bodies
+                    .entry(e.body_id as u8)
+                    .or_default();
 
+                body.name = e.body_name;
                 body.signals = e.signals.into_iter().map(|s|{
                     fss::SignalCount {
                         kind: s.type_localised.unwrap_or(s.r#type),
@@ -477,13 +487,23 @@ impl journal::Event {
             }
 
             FSSDiscoveryScan(e) => {
-                state.fss.progress = Some(e.into());
+                let system_scan = state
+                    .system_scans
+                    .entry(e.system_address)
+                    .or_default();
+                
+                system_scan.progress = Some(e.into());
             }
 
             FSSAllBodiesFound(_) => {}
 
             FSSSignalDiscovered(e) => {
-                state.fss.signals.push(e.into());
+                let system_scan = state
+                    .system_scans
+                    .entry(e.system_address)
+                    .or_default();
+                
+                system_scan.signals.push(e.into());
             }
 
             SAASignalsFound(_) => {}

@@ -1,30 +1,29 @@
-pub mod history;
+pub mod chat;
 pub mod engineering;
+pub mod fss;
+pub mod history;
+pub mod layout;
 pub mod market;
 pub mod material;
-pub mod chat;
 pub mod mission;
 pub mod navigation;
 pub mod personal;
-pub mod ship;
-pub mod suit;
-pub mod layout;
 pub mod powerplay;
 pub mod server;
-pub mod fss;
+pub mod ship;
+pub mod suit;
 
-use history::*;
-use chat::*;
-use engineering::*;
-use fss::*;
-use layout::*;
-use market::*;
-use material::*;
-use mission::*;
-use navigation::*;
-use personal::*;
-use powerplay::*;
-
+use crate::state::chat::Message;
+use crate::state::engineering::Engineer;
+use crate::state::fss::Fss;
+use crate::state::history::Event;
+use crate::state::layout::Layout;
+use crate::state::market::Market;
+use crate::state::material::Materials;
+use crate::state::mission::Mission;
+use crate::state::navigation::{CurrentLocation, NavRouteStep};
+use crate::state::personal::{CrimeStats, Rank, Reputation};
+use crate::state::powerplay::Powerplay;
 use crate::state::server::Status;
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -59,7 +58,7 @@ pub struct State {
     pub latest_message_timestamp_formatted: Box<str>,
 
     pub layout: Layout,
-    pub fss: Fss,
+    pub system_scans: HashMap<u64, Fss>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize)]
@@ -71,7 +70,6 @@ pub enum Screen {
 
 impl Default for State {
     fn default() -> Self {
-
         // Start with basic defaults for all fields
         let state = Self {
             commander_name: String::new().into(),
@@ -102,7 +100,7 @@ impl Default for State {
             latest_message_timestamp: 0,
             latest_message_timestamp_formatted: String::new().into(),
             layout: Layout::from_settings(),
-            fss: Default::default(),
+            system_scans: Default::default(),
         };
 
         state
@@ -112,7 +110,8 @@ impl Default for State {
 impl State {
     pub fn trim_nav_route(&mut self, address_inclusive_to_trim: u64) {
         if !self.nav_route.is_empty() {
-            if let Some(pos) = self.nav_route
+            if let Some(pos) = self
+                .nav_route
                 .iter()
                 .position(|step| step.system_address == address_inclusive_to_trim)
             {

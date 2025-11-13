@@ -2,11 +2,6 @@ use std::collections::HashMap;
 use crate::edsm;
 use crate::journal::event;
 
-// todo:
-// FSSBodySignals: when we scan a body and find bio/geo signals
-// FSSDiscoveryScan: when we do a honk
-
-
 #[derive(Default, Clone, Debug)]
 pub struct Fss {
     pub progress: Option<ScanProgress>,
