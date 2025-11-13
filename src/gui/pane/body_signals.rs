@@ -4,7 +4,7 @@ use crate::gui::pane;
 use crate::message::Message;
 use crate::state;
 use crate::state::State;
-use crate::theme::{style, ORANGE};
+use crate::theme::{style, ORANGE, WHITE};
 use iced::widget::{column, container, row, text, Row};
 use iced::{Element, Fill};
 
@@ -16,7 +16,7 @@ impl pane::Type for BodySignals {
     }
 
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
-        if let Some(system_scans) = state.system_scans.get(&state.location.system_address) 
+        if let Some(system_scans) = state.system_scans.get(&state.location.system_address)
             && !system_scans.bodies.is_empty() {
                 column![scroll_list(
                     system_scans
@@ -34,7 +34,7 @@ impl pane::Type for BodySignals {
 
 fn body_details(body: &state::fss::Body) -> Row<'_, Message> {
     bordered_list_item![column![
-        row![column![text(body.name.to_string()).size(16).color(ORANGE)].padding([0, 6]),],
+        row![column![text(body.name.to_string()).size(16).color(WHITE)].padding([0, 6]),],
         row![
             column![
                 text(body.r#type.clone().unwrap_or_default().to_string())
