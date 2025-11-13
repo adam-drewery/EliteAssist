@@ -85,6 +85,7 @@ fn module_details(module: &state::ship::Module, size: u8) -> Row<'_, Message> {
         .width(Fill),
         mount_type_icon(module, size)
     ]
+    .height(64)
 }
 
 fn mount_type_icon(module: &state::ship::Module, size: u8) -> Column<'_, Message> {

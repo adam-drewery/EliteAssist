@@ -196,7 +196,6 @@ macro_rules! bordered_list_item {
                 row![$($x),*]
             )
             .style(style::bordered)
-            .height(64)
             .padding(0.5)
             .width(Fill),
         ]

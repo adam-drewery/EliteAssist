@@ -121,7 +121,7 @@ pub struct JournalWatcher {
 ///   $HOME/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/
 ///
 /// The function uses the user's home/profile directory per OS and appends the expected relative location.
-pub fn get_journal_directory() -> Result<PathBuf, JournalError> {
+pub fn get_directory() -> Result<PathBuf, JournalError> {
     // Prefer a user-configured directory if available
     if let Some(settings) = crate::config::Settings::load() {
         if let Some(dir) = settings.journal_dir {
@@ -135,14 +135,14 @@ pub fn get_journal_directory() -> Result<PathBuf, JournalError> {
 impl JournalWatcher {
     /// Create a watcher using the effective directory (user-config or OS default)
     pub fn new() -> Result<Self, JournalError> {
-        let dir_path = get_journal_directory()?;
+        let dir_path = get_directory()?;
         Self::new_with_dir(dir_path)
     }
 
     /// Create a watcher targeting a specific base directory
     pub fn new_with_dir(dir_path: PathBuf) -> Result<Self, JournalError> {
         // Get journal files (empty is OK)
-        let journal_files = get_journal_paths(dir_path.as_path())?;
+        let journal_files = get_paths(dir_path.as_path())?;
 
         // Initialize reader and current path to tail the newest file
         let (reader, current_journal_path, current_file_index) = if !journal_files.is_empty() {
@@ -231,7 +231,7 @@ impl JournalWatcher {
 
             // Check for new or updated journal files
             let dir_path = self.base_dir.as_path();
-            let journal_files = get_journal_paths(dir_path)?;
+            let journal_files = get_paths(dir_path)?;
             if !journal_files.is_empty() {
                 let increased = journal_files.len() > self.journal_files.len();
                 let had_none = self.reader.is_none();
@@ -263,7 +263,7 @@ impl JournalWatcher {
 }
 
 ///
-pub fn get_journal_paths(dir: &Path) -> Result<Vec<PathBuf>, JournalError> {
+pub fn get_paths(dir: &Path) -> Result<Vec<PathBuf>, JournalError> {
     // Check if a directory exists; let the caller decide what to do if it doesn't
     if !dir.exists() {
         return Err(JournalError::DirectoryNotFound(dir.display().to_string()));
@@ -494,7 +494,7 @@ impl HistoryLoader {
     ///   reading lines, or deserializing a line into
     fn read_all_journal_events(&self) -> Result<Vec<Event>, JournalError> {
         let mut events = Vec::new();
-        let files = get_journal_paths(&self.dir)?;
+        let files = get_paths(&self.dir)?;
         for path in files {
             let file = OpenOptions::new().read(true).open(&path)?;
             let mut reader = BufReader::new(file);
