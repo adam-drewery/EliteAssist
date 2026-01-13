@@ -25,6 +25,7 @@ pub struct Settings {
     pub selected_screen: Option<usize>,
     /// Optional user-selected journal directory; when None, OS default is used
     pub journal_dir: Option<Box<str>>,
+    pub show_messages_days_limit: Option<u16>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -63,7 +64,7 @@ pub enum LayoutNode {
 }
 
 impl Settings {
-    pub fn save_from_state(layout: &state::Layout) -> std::io::Result<()> {
+    pub fn save_from_state(layout: &state::layout::Layout) -> std::io::Result<()> {
         // Determine current live layout and visible panes
         let (current_layout, current_visible) = if let Some(panes) = &layout.current_panes {
             (Some(state_to_node(panes)), Some(layout.current_visible_vec()))
@@ -110,6 +111,7 @@ impl Settings {
             custom_screens: custom_screens_opt,
             selected_screen: selected_screen_opt,
             journal_dir,
+            show_messages_days_limit: Some(layout.show_messages_days_limit),
         };
         let json = serde_json::to_string_pretty(&settings).unwrap_or_else(|_| "{}".into());
         fs::write(SETTINGS_FILE, json)
@@ -131,6 +133,7 @@ impl Settings {
             custom_screens: None,
             selected_screen: None,
             journal_dir: None,
+            show_messages_days_limit: None,
         });
         s.journal_dir = Some(path.as_ref().to_string_lossy().into());
         let json = serde_json::to_string_pretty(&s).unwrap_or_else(|_| "{}".into());

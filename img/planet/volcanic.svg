@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 1000 1000"
+   preserveAspectRatio="xMidYMid meet"
+   version="1.1"
+   id="svg4"
+   sodipodi:docname="planet-volcanic.svg"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs8" />
+  <sodipodi:namedview
+     id="namedview6"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     showguides="false"
+     inkscape:zoom="0.873"
+     inkscape:cx="438.71707"
+     inkscape:cy="483.96334"
+     inkscape:window-width="2211"
+     inkscape:window-height="1541"
+     inkscape:window-x="222"
+     inkscape:window-y="441"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg4" />
+  <path
+     id="path2039"
+     style="fill:#000000;fill-rule:evenodd;stroke-width:86.9416;paint-order:fill markers stroke"
+     d="m 431.84375,128.875 v 93.92969 h 93.92969 V 128.875 Z m 93.92969,93.92969 v 93.92773 h 93.92968 v -93.92773 z m 0,93.92773 h -93.92969 v 93.92969 h 93.92969 z M 371.68164,491.3125 188.32812,955.57812 h 95.83204 L 428.3125,577.74805 h 154.86523 l 144.15235,377.83007 h 95.83008 L 639.80859,491.3125 Z" />
+</svg>

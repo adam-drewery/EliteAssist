@@ -45,7 +45,6 @@ pub struct CurrentLocation {
     pub factions: Vec<Faction>,
     pub stations: Vec<Station>,
     pub nearby_systems: Vec<System>,
-    pub known_bodies: Vec<Body>,
     pub traffic: Option<Counts>,
     pub deaths: Option<Counts>,
 }
@@ -114,16 +113,6 @@ pub struct LastUpdated {
     pub market: Option<Box<str>>,
     pub shipyard: Option<Box<str>>,
     pub outfitting: Option<Box<str>>,
-}
-
-#[derive(Default, Clone, Debug)]
-pub struct Body {
-    pub name: Box<str>,
-    pub type_field: Box<str>,
-    pub sub_type: Box<str>,
-    pub distance_to_arrival: f32,
-    pub is_main_star: bool,
-    pub is_scoopable: bool,
 }
 
 #[derive(Default, Clone, Debug)]

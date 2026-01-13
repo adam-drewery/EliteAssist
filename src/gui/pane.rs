@@ -19,6 +19,7 @@ mod claims;
 mod route;
 mod powerplay;
 mod system_scanner;
+mod body_signals;
 
 pub use location::*;
 pub use missions::*;
@@ -35,6 +36,8 @@ pub use ranks::*;
 pub use route::*;
 pub use powerplay::*;
 pub use system_scanner::*;
+pub use body_signals::*;
+
 use crate::gui::Message;
 use crate::state::State;
 
@@ -81,6 +84,7 @@ define_panes! {
     Market,
     LogJournal,
     SystemScanner,
+    BodySignals,
 }
 
 pub fn defaults() -> Vec<&'static dyn Type> {
@@ -95,14 +99,14 @@ pub fn defaults() -> Vec<&'static dyn Type> {
     ]
 }
 
-pub fn is_enabled(id: &dyn Type, layout: &state::Layout) -> bool {
+pub fn is_enabled(id: &dyn Type, layout: &state::layout::Layout) -> bool {
     layout
         .current_visible_vec()
         .iter()
         .any(|p| p.as_ref().title() == id.title())
 }
 
-pub fn toggle(title: &str, layout: &mut state::Layout, enabled: bool) {
+pub fn toggle(title: &str, layout: &mut state::layout::Layout, enabled: bool) {
     // Start from the current visible set
     let mut list: Vec<Box<dyn Type>> = layout.current_visible_vec();
 
@@ -160,13 +164,13 @@ pub fn find_with(panes: &pane_grid::State<Box<dyn Type>>, target_id: Box<dyn Typ
     None
 }
 
-pub fn load(layout: &mut state::Layout) {
+pub fn load(layout: &mut state::layout::Layout) {
     layout.current_panes = None;
     Settings::save_from_state(layout)
         .unwrap_or_else(|e| log::error!("Failed to save settings: {}", e));
 }
 
-pub fn dragged(layout: &mut state::Layout, event: DragEvent) {
+pub fn dragged(layout: &mut state::layout::Layout, event: DragEvent) {
     if let Some(panes) = &mut layout.current_panes {
         match event {
             DragEvent::Canceled { .. } => {}
@@ -181,7 +185,7 @@ pub fn dragged(layout: &mut state::Layout, event: DragEvent) {
     }
 }
 
-pub(crate) fn resized(layout: &mut state::Layout, event: ResizeEvent) {
+pub(crate) fn resized(layout: &mut state::layout::Layout, event: ResizeEvent) {
     if let Some(panes) = &mut layout.current_panes {
         panes.resize(event.split, event.ratio);
 

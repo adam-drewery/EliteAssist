@@ -8,12 +8,12 @@ pub fn stream_history() -> impl Stream<Item=Message> {
     let (sender, receiver) = mpsc::channel(64);
 
     tokio::spawn(async move {
-        use crate::journal::{HistoryLoader, get_journal_directory};
+        use crate::journal::{HistoryLoader, get_directory};
         use tokio::time::{sleep, Duration};
 
         // Poll periodically until a valid directory with at least one .log file is available
         loop {
-            let dir = match get_journal_directory() {
+            let dir = match get_directory() {
                 Ok(d) => d,
                 Err(e) => { error!("Failed to get journal directory: {}", e); sleep(Duration::from_millis(750)).await; continue; }
             };
@@ -85,8 +85,8 @@ fn stream_snapshot(file_name: &'static str) -> impl Stream<Item=Message> {
     let (sender, receiver) = mpsc::channel(16);
 
     tokio::spawn(async move {
-        use crate::journal::{SnapshotWatcher, get_journal_directory};
-        let dir = match get_journal_directory() {
+        use crate::journal::{SnapshotWatcher, get_directory};
+        let dir = match get_directory() {
             Ok(d) => d,
             Err(e) => { error!("Failed to get journal directory: {}", e); return; }
         };

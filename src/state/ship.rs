@@ -4,7 +4,7 @@ use crate::journal::event;
 use crate::lookup::fdev_ids::Outfitting;
 
 #[derive(Default)]
-pub struct ShipLoadout {
+pub struct Loadout {
 
     pub ship_type: Box<str>,
     pub ship_name: Box<str>,
@@ -17,13 +17,13 @@ pub struct ShipLoadout {
     pub max_jump_range: f32,
     pub fuel_capacity: FuelCapacity,
     pub rebuy: u64,
-    pub hardpoints: Vec<ShipModule>,
-    pub utilities: Vec<ShipModule>,
-    pub core_internals: Vec<ShipModule>,
-    pub optional_internals: Vec<ShipModule>,
+    pub hardpoints: Vec<Module>,
+    pub utilities: Vec<Module>,
+    pub core_internals: Vec<Module>,
+    pub optional_internals: Vec<Module>,
 }
 
-pub struct ShipModule {
+pub struct Module {
 
     pub slot: SlotType,
     pub name: Box<str>,
@@ -94,7 +94,7 @@ impl From<event::LoadoutModuleEngineeringModifier> for Modifier {
     }
 }
 
-impl From<event::LoadoutModule> for ShipModule {
+impl From<event::LoadoutModule> for Module {
     fn from(value: event::LoadoutModule) -> Self {
         let (class, rating, name, mount) = Outfitting::metadata(value.item.as_ref())
             .map(|details| (
@@ -105,7 +105,7 @@ impl From<event::LoadoutModule> for ShipModule {
             ))
             .unwrap_or((0, 'X', value.item.into(), "".to_string()));
 
-        ShipModule {
+        Module {
             slot: value.slot.as_ref().into(),
             name: name.into(),
             on: value.on,
@@ -132,7 +132,7 @@ impl From<event::LoadoutFuelCapacity> for FuelCapacity {
 }
 
 #[derive(Default)]
-pub struct ShipLocker {
+pub struct Locker {
 
     pub items: Vec<ShipLockerItem>,
     pub components: Vec<ShipLockerItem>,
@@ -239,9 +239,9 @@ use crate::lookup::fdev_ids::Shipyard;
 use crate::lookup;
 use std::collections::HashMap;
 
-impl From<event::Inventory> for ShipLocker {
+impl From<event::Inventory> for Locker {
     fn from(value: event::Inventory) -> Self {
-        ShipLocker {
+        Locker {
             items: map_vec(value.items),
             consumables: value.consumables.unwrap_or_default().into_iter().map(|c| c.into()).collect(),
             data: map_vec(value.data),
@@ -318,18 +318,18 @@ fn map_vec(vec: Option<Vec<event::MicroResource>>) -> Vec<ShipLockerItem> {
         .collect()
 }
 
-impl From<event::Loadout> for ShipLoadout {
+impl From<event::Loadout> for Loadout {
     fn from(value: event::Loadout) -> Self {
         let ship_type = Shipyard::metadata(&value.ship);
 
         // Convert and categorize modules by slot type
-        let mut hardpoints: Vec<ShipModule> = Vec::new();
-        let mut utilities: Vec<ShipModule> = Vec::new();
-        let mut core_internals: Vec<ShipModule> = Vec::new();
-        let mut optional_internals: Vec<ShipModule> = Vec::new();
+        let mut hardpoints: Vec<Module> = Vec::new();
+        let mut utilities: Vec<Module> = Vec::new();
+        let mut core_internals: Vec<Module> = Vec::new();
+        let mut optional_internals: Vec<Module> = Vec::new();
 
         for m in value.modules.into_iter() {
-            let module: ShipModule = m.into();
+            let module: Module = m.into();
             match &module.slot {
                 SlotType::Hardpoints { size, .. } => {
                     if *size == 0 { utilities.push(module); } else { hardpoints.push(module); }
@@ -340,7 +340,7 @@ impl From<event::Loadout> for ShipLoadout {
             }
         }
 
-        ShipLoadout {
+        Loadout {
             ship_type: ship_type.map(|s| s.name).unwrap_or(value.ship.as_ref()).into(),
             ship_name: value.ship_name,
             ship_ident: value.ship_ident,

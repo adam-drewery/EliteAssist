@@ -4,25 +4,25 @@ use crate::lookup;
 use crate::lookup::SuitClass;
 
 #[derive(Default)]
-pub struct SuitLoadout {
+pub struct Loadout {
     pub suit_name: &'static str,
     pub class: u8,
     pub suit_mods: Vec<&'static str>,
     pub loadout_name: Box<str>,
-    pub modules: Vec<SuitModule>,
+    pub modules: Vec<Module>,
 }
 
 #[derive(Default)]
-pub struct SuitModule {
+pub struct Module {
     pub slot_name: Box<str>,
     pub module_name: Box<str>,
     pub class: u64,
     pub weapon_mods: Vec<&'static str>,
 }
 
-impl From<event::SuitLoadoutModule> for SuitModule {
+impl From<event::SuitLoadoutModule> for Module {
     fn from(value: event::SuitLoadoutModule) -> Self {
-        SuitModule {
+        Module {
             slot_name: value.slot_name,
             module_name: value.module_name_localised.unwrap_or(value.module_name),
             class: value.class,
@@ -37,7 +37,7 @@ impl From<event::SuitLoadoutModule> for SuitModule {
     }
 }
 
-impl From<event::SuitLoadout> for SuitLoadout {
+impl From<event::SuitLoadout> for Loadout {
     fn from(value: event::SuitLoadout) -> Self {
 
         let suit_class = lookup::SUIT_CLASS_NAMES.get(&value.suit_name)
@@ -46,7 +46,7 @@ impl From<event::SuitLoadout> for SuitLoadout {
                 &SuitClass { name: "Unknown", rank: 0 }
             });
 
-        SuitLoadout {
+        Loadout {
             suit_name: suit_class.name,
             class: suit_class.rank,
             suit_mods: value.suit_mods.into_iter().map(|m| {

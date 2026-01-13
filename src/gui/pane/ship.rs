@@ -1,9 +1,9 @@
 use crate::gui::components::details;
 use crate::gui::{pane, Message};
 use crate::state::State;
+use crate::theme::style;
 use crate::theme::GRAY;
 use crate::theme::ORANGE;
-use crate::theme::style;
 use crate::{lookup, state};
 use iced::widget::image::Handle;
 use iced::widget::{column, image, row, scrollable, text, Row};
@@ -12,9 +12,8 @@ use thousands::Separable;
 
 pub struct ShipDetails;
 impl pane::Type for ShipDetails {
-    
     fn title(&self) -> &'static str { "Ship" }
-    
+
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         let ship_image_bytes =
             lookup::ship_image_bytes(state.ship_loadout.ship_type.as_ref()).unwrap_or_default();
@@ -59,11 +58,25 @@ impl pane::Type for ShipDetails {
                         ),
                         details(
                             "Hull Value",
-                            format!("CR {}", state.ship_loadout.hull_value.to_string().separate_with_commas())
+                            format!(
+                                "CR {}",
+                                state
+                                    .ship_loadout
+                                    .hull_value
+                                    .to_string()
+                                    .separate_with_commas()
+                            )
                         ),
                         details(
                             "Modules Value",
-                            format!("CR {}", state.ship_loadout.modules_value.to_string().separate_with_commas())
+                            format!(
+                                "CR {}",
+                                state
+                                    .ship_loadout
+                                    .modules_value
+                                    .to_string()
+                                    .separate_with_commas()
+                            )
                         )
                     ]
                 ]
@@ -74,7 +87,7 @@ impl pane::Type for ShipDetails {
     }
 }
 
-fn ship_title(ship_loadout: &state::ShipLoadout) -> Row<'_, Message> {
+fn ship_title(ship_loadout: &state::ship::Loadout) -> Row<'_, Message> {
     row![
         column![
             text(ship_loadout.ship_name.as_ref())

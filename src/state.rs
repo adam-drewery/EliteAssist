@@ -1,33 +1,30 @@
-mod activity;
-mod engineering;
-mod market;
-mod material;
-mod chat_message;
-mod mission;
-mod navigation;
-mod personal;
-mod ship;
-mod suit;
-mod layout;
-mod powerplay;
-mod server_status;
-mod fss;
+pub mod chat;
+pub mod engineering;
+pub mod fss;
+pub mod history;
+pub mod layout;
+pub mod market;
+pub mod material;
+pub mod mission;
+pub mod navigation;
+pub mod personal;
+pub mod powerplay;
+pub mod server;
+pub mod ship;
+pub mod suit;
 
-pub use activity::*;
-pub use chat_message::*;
-pub use engineering::*;
-pub use fss::*;
-pub use layout::*;
-pub use market::*;
-pub use material::*;
-pub use mission::*;
-pub use navigation::*;
-pub use personal::*;
-pub use powerplay::*;
-pub use ship::*;
-pub use suit::*;
-
-use crate::state::server_status::StatusDetails;
+use crate::state::chat::Message;
+use crate::state::engineering::Engineer;
+use crate::state::fss::Fss;
+use crate::state::history::EventLog;
+use crate::state::layout::Layout;
+use crate::state::market::Market;
+use crate::state::material::Materials;
+use crate::state::mission::Mission;
+use crate::state::navigation::{CurrentLocation, NavRouteStep};
+use crate::state::personal::{CrimeStats, Rank, Reputation};
+use crate::state::powerplay::Powerplay;
+use crate::state::server::Status;
 use serde::Deserialize;
 use std::collections::HashMap;
 
@@ -35,13 +32,13 @@ pub struct State {
     pub commander_name: Box<str>,
     pub credits: Box<str>,
     pub location: CurrentLocation,
-    pub ship_locker: ShipLocker,
-    pub ship_loadout: ShipLoadout,
-    pub suit_loadout: SuitLoadout,
+    pub ship_locker: ship::Locker,
+    pub ship_loadout: ship::Loadout,
+    pub suit_loadout: suit::Loadout,
     pub active_screen: Screen,
     pub materials: Materials,
-    pub messages: Vec<ChatMessage>,
-    pub logs: Vec<GameEventLog>,
+    pub messages: Vec<Message>,
+    pub logs: Vec<EventLog>,
     pub crime: CrimeStats,
     pub market: Market,
     pub rank: Rank,
@@ -54,14 +51,14 @@ pub struct State {
     pub discoveries: HashMap<Box<str>, u32>,
     pub progress: Rank,
     pub powerplay: Powerplay,
-    pub edsm_server_status: Option<StatusDetails>,
+    pub edsm_server_status: Option<Status>,
     pub journal_loaded: bool,
     pub first_message_timestamp: i64,
     pub latest_message_timestamp: i64,
     pub latest_message_timestamp_formatted: Box<str>,
 
     pub layout: Layout,
-    pub fss: FssState,
+    pub system_scans: HashMap<u64, Fss>,
 }
 
 #[derive(Clone, Debug, Default, Deserialize)]
@@ -73,7 +70,6 @@ pub enum Screen {
 
 impl Default for State {
     fn default() -> Self {
-
         // Start with basic defaults for all fields
         let state = Self {
             commander_name: String::new().into(),
@@ -104,7 +100,7 @@ impl Default for State {
             latest_message_timestamp: 0,
             latest_message_timestamp_formatted: String::new().into(),
             layout: Layout::from_settings(),
-            fss: Default::default(),
+            system_scans: Default::default(),
         };
 
         state
@@ -114,7 +110,8 @@ impl Default for State {
 impl State {
     pub fn trim_nav_route(&mut self, address_inclusive_to_trim: u64) {
         if !self.nav_route.is_empty() {
-            if let Some(pos) = self.nav_route
+            if let Some(pos) = self
+                .nav_route
                 .iter()
                 .position(|step| step.system_address == address_inclusive_to_trim)
             {

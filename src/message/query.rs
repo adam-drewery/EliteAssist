@@ -6,11 +6,11 @@ use crate::message::Query::*;
 
 #[derive(Clone, Debug)]
 pub enum Query {
-    StationsQueried(edsm::Stations),
+    StationsQueried(edsm::stations::Stations),
     NearbySystemsQueried(Vec<ardent::NearbySystem>),
-    BodiesQueried(edsm::Bodies),
-    TrafficQueried(edsm::Traffic),
-    DeathsQueried(edsm::Deaths),
+    BodiesQueried(edsm::bodies::Bodies),
+    TrafficQueried(edsm::traffic::Traffic),
+    DeathsQueried(edsm::deaths::Deaths),
 
     // EDSM status updates
     EdsmServerStatus(edsm::ServerStatus),
@@ -22,8 +22,6 @@ impl Query {
             
             StationsQueried(response) => state.location.stations = response.into(),
             
-            BodiesQueried(bodies) => state.location.known_bodies = bodies.into(),
-            
             TrafficQueried(traffic) => state.location.traffic = Some(traffic.into()),
             
             DeathsQueried(deaths) => state.location.deaths = Some(deaths.into()),
@@ -32,6 +30,17 @@ impl Query {
             
             NearbySystemsQueried(systems) => {
                 state.location.nearby_systems = systems.into_iter().map(|s| s.into()).collect();
+            }
+
+            BodiesQueried(response) => {
+                if let Some(queried_bodies) = response.bodies && let Some (system_id) = response.id64 {
+                    for queried_body in queried_bodies.into_iter() {
+                        let system_scan = state.system_scans.entry(system_id).or_default();
+                        let body = system_scan.bodies.entry(queried_body.body_id as u8).or_default();
+                        body.update_from_query(queried_body);
+                    }
+                }
+                
             }
         }
 

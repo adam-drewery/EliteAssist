@@ -1,23 +1,30 @@
 use crate::font::EUROSTILE;
+use crate::gui::components::scroll_list;
 use crate::gui::{pane, Message};
 use crate::state::State;
-use crate::theme::{style, GRAY, ORANGE, WHITE};
+use crate::theme::{GRAY, ORANGE, WHITE};
 use iced::widget::text::Wrapping;
-use iced::widget::{column, row, scrollable, text};
+use iced::widget::{column, row, text};
 use iced::{Element, Fill, Left, Right};
 
 pub struct LogJournal;
 
 impl pane::Type for LogJournal {
-
     fn title(&self) -> &'static str { "Journal" }
 
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
+        let cutoff = if state.layout.show_messages_days_limit > 0 {
+            chrono::Utc::now().timestamp() - (state.layout.show_messages_days_limit as i64 * 24 * 60 * 60)
+        } else {
+            0
+        };
+
         column![
-            scrollable(column(
+            scroll_list(
                 state
                     .logs
                     .iter()
+                    .filter(|item| item.timestamp >= cutoff)
                     .map(|item| {
                         row![
                             column![
@@ -50,10 +57,9 @@ impl pane::Type for LogJournal {
                         ]
                         .padding(2)
                     })
-                    .map(iced::Element::from)
-            ))
+                    .collect()
+            )
             .anchor_bottom()
-            .style(style::scrollable)
         ]
         .align_x(Left)
         .into()

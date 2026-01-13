@@ -3,16 +3,16 @@ use crate::gui::{pane, Message};
 use crate::state::State;
 use crate::theme::style;
 use iced::widget::{column, scrollable};
+use crate::scroll_list;
 
 pub struct Loadout;
 
 impl pane::Type for Loadout {
-
     fn title(&self) -> &'static str { "Loadout" }
-    
+
     fn render<'a>(&self, state: &'a State) -> iced::Element<'a, Message> {
         column![
-            scrollable(column![
+            scroll_list![
                 sub_header("Suit"),
                 details("Name", state.suit_loadout.suit_name),
                 details("Class", state.suit_loadout.class.to_string()),
@@ -41,8 +41,7 @@ impl pane::Type for Loadout {
                     .into()
                 }))
                 .padding(8)
-            ])
-            .style(style::scrollable)
+            ]
         ]
         .into()
     }

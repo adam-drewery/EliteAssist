@@ -4,7 +4,8 @@ use crate::journal::format::prettify_date;
 use once_cell::sync::Lazy;
 use regex::Regex;
 
-pub struct ChatMessage {
+pub struct Message {
+    pub timestamp: i64,
     pub time_display: Box<str>,
     pub from: Box<str>,
     pub text: Box<str>,
@@ -29,10 +30,11 @@ pub enum Channel {
     Unknown
 }
 
-impl From<event::ReceiveText> for ChatMessage {
+impl From<event::ReceiveText> for Message {
     fn from(value: event::ReceiveText) -> Self {
         let (text, _kind) = sanitize_name(value.from.as_ref());
-        ChatMessage {
+        Message {
+            timestamp: value.timestamp.timestamp(),
             time_display: prettify_date(&value.timestamp),
             text: value.message_localised.unwrap_or(value.message),
             from: text,

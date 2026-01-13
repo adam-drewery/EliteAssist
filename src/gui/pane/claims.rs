@@ -10,7 +10,6 @@ use serde::{Deserialize, Serialize};
 pub struct Claims;
 
 impl pane::Type for Claims {
-
     fn title(&self) -> &'static str { "Claims" }
 
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {

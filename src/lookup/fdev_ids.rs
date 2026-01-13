@@ -90,10 +90,10 @@ impl Rank {
     }
 }
 
-pub fn all_materials() -> state::Materials {
-    let mut raw: HashMap<&str, Vec<state::Material>> = HashMap::new();
-    let mut encoded: HashMap<&str, Vec<state::Material>> = HashMap::new();
-    let mut manufactured: HashMap<&str, Vec<state::Material>> = HashMap::new();
+pub fn all_materials() -> state::material::Materials {
+    let mut raw: HashMap<&str, Vec<state::material::Material>> = HashMap::new();
+    let mut encoded: HashMap<&str, Vec<state::material::Material>> = HashMap::new();
+    let mut manufactured: HashMap<&str, Vec<state::material::Material>> = HashMap::new();
 
     for material in &MATERIAL_DATA {
         let target = match material.r#type {
@@ -109,19 +109,19 @@ pub fn all_materials() -> state::Materials {
             .push(material.into());
     }
 
-    let to_sorted_groups = |map: HashMap<&str, Vec<state::Material>>, name_fn: fn(&str) -> &str| {
+    let to_sorted_groups = |map: HashMap<&str, Vec<state::material::Material>>, name_fn: fn(&str) -> &str| {
         let mut groups: Vec<_> = map
             .into_iter()
             .map(|(name, mut materials)| {
                 materials.sort_by_key(|m| m.name.clone());
-                state::MaterialGroup { name: name_fn(&name).into(), materials }
+                state::material::Group { name: name_fn(&name).into(), materials }
             })
             .collect();
         groups.sort_by_key(|g| g.name.clone());
         groups
     };
 
-    state::Materials {
+    state::material::Materials {
         encoded: to_sorted_groups(encoded, |s| s),
         manufactured: to_sorted_groups(manufactured, |s| s),
         raw: to_sorted_groups(raw, apply_name),
@@ -135,9 +135,9 @@ fn apply_name(input: &str) -> &str {
         .unwrap_or(input)
 }
 
-impl Into<state::Material> for &Material {
-    fn into(self) -> state::Material {
-        state::Material {
+impl Into<state::material::Material> for &Material {
+    fn into(self) -> state::material::Material {
+        state::material::Material {
             count: 0,
             id: self.symbol.to_lowercase().as_str().into(),
             name: self.name.into(),

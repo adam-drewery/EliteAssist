@@ -100,9 +100,9 @@ impl journal::Event {
 
             NpcCrewRank(e) => state.logs.push(e.into()),
 
-            CrewMemberJoins(e) => state.logs.push(log_crew_member(e, "joined")),
+            CrewMemberJoins(e) => state.logs.push(history::log_crew_member(e, "joined")),
 
-            CrewMemberQuits(e) => state.logs.push(log_crew_member(e, "quit")),
+            CrewMemberQuits(e) => state.logs.push(history::log_crew_member(e, "quit")),
 
             NpcCrewPaidWage(e) => {
                 if e.amount != 0 {
@@ -178,6 +178,7 @@ impl journal::Event {
             ShieldState(_) => {}
             LaunchDrone(_) => {}
             DatalinkVoucher(_) => {}
+            Scanned(_) => {}
 
             // FIGHTER
             VehicleSwitch(e) => state.logs.push(e.into()),
@@ -189,7 +190,7 @@ impl journal::Event {
             DockFighter(e) => state.logs.push(e.into()),
 
             FighterDestroyed(e) => {
-                state.logs.push(log_damage(e, "Destroyed", "Fighter"))
+                state.logs.push(history::log_damage(e, "Destroyed", "Fighter"))
             }
 
             // FSD
@@ -210,8 +211,7 @@ impl journal::Event {
 
                 state.location.body_name = String::new().into();
                 state.location = e.into();
-                state.fss = Default::default();
-
+                
                 if state.journal_loaded {
                     return query::system(
                         state.location.system_name.as_ref(),
@@ -292,7 +292,7 @@ impl journal::Event {
             JetConeBoost(_) => {}
 
             NavRoute(e) => {
-                let route: Vec<NavRouteStep> = e.into();
+                let route: Vec<navigation::NavRouteStep> = e.into();
 
                 // The journal file gives us blank NavRoute events when we plot one. Kinda weird.
                 if !route.is_empty() {
@@ -410,56 +410,102 @@ impl journal::Event {
                 state.powerplay.merits = e.merits;
                 state.powerplay.time_pledged = e.time_pledged;
             }
+
             PowerplayJoin(e) => {
                 state.powerplay.power = Some(e.power);
             }
+
             PowerplayMerits(e) => {
                 state.powerplay.merits = e.total_merits;
             }
+
             PowerplayRank(e) => {
                 state.powerplay.rank = Some(e.rank as u8);
             }
+
             PowerplayFastTrack(_) => {}
             PowerplayCollect(_) => {}
             PowerplayVoucher(_) => {}
             PowerplayVote(_) => {}
+
             PowerplayDefect(e) => {
                 state.powerplay.power = Some(e.to_power);
             }
+
             PowerplayDeliver(_) => {}
             PowerplaySalary(e) => {
                 state.powerplay.last_salary = Some(e.amount);
             }
+
             PowerplayLeave(_) => {
                 state.powerplay = Default::default();
             }
 
             // SCAN
-            Scan(e) => {
-                state.fss.last_scan = Some(e.into());
+            Scan(event) => {
+                let system_scan = state
+                    .system_scans
+                    .entry(event.system_address)
+                    .or_default();
+                
+                if let Some(progress) = &mut system_scan.progress {
+                    progress.progress += 1;
+                }
+
+                let body = system_scan.bodies
+                    .entry(event.body_id as u8)
+                    .or_default();
+
+                body.update_from_scan(event);
             }
+
             ScanBaryCentre(_) => {}
             ScanOrganic(_) => {}
-            Scanned(_) => {}
             CodexEntry(_) => {}
             DatalinkScan(_) => {}
             NavBeaconScan(_) => {}
             DiscoveryScan(_) => {}
             DataScanned(_) => {}
+
             FSSBodySignals(e) => {
-                let body_id = e.body_id;
-                let bs: BodySignals = e.into();
-                state.fss.body_signals.insert(body_id, bs);
+                let system_scan = state
+                    .system_scans
+                    .entry(e.system_address)
+                    .or_default();
+                
+                let body = system_scan.bodies
+                    .entry(e.body_id as u8)
+                    .or_default();
+
+                body.name = e.body_name;
+                body.signals = e.signals.into_iter().map(|s|{
+                    fss::SignalCount {
+                        kind: s.type_localised.unwrap_or(s.r#type),
+                        count: s.count as u32
+                    }
+                }).collect()
             }
+
             FSSDiscoveryScan(e) => {
-                state.fss.discovery = Some(e.into());
+                let system_scan = state
+                    .system_scans
+                    .entry(e.system_address)
+                    .or_default();
+                
+                system_scan.progress = Some(e.into());
             }
-            FSSAllBodiesFound(e) => {
-                state.fss.all_bodies_found = Some(e.into());
-            }
+
+            FSSAllBodiesFound(_) => {}
+
             FSSSignalDiscovered(e) => {
-                state.fss.system_signals.push(e.into());
+                let system_scan = state
+                    .system_scans
+                    .entry(e.system_address)
+                    .or_default();
+                
+                system_scan.signals.push(e.into());
             }
+
             SAASignalsFound(_) => {}
             SAAScanComplete(_) => {}
 
@@ -581,7 +627,7 @@ impl journal::Event {
             LoadoutRemoveModule(_) => {}
             LoadoutEquipModule(_) => {}
 
-            BuyAmmo(e) => state.logs.push(log_ship_equipment_purchase(e, "ammo")),
+            BuyAmmo(e) => state.logs.push(history::log_ship_equipment_purchase(e, "ammo")),
 
             // WING
             WingAdd(_) => {}

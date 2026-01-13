@@ -1,83 +1,90 @@
-use iced::Element;
-use crate::centered_row;
 use crate::gui::{pane, Message};
 use crate::lookup::fdev_ids::Rank;
 use crate::state::State;
 use crate::theme::{style, GRAY, ORANGE, WHITE};
-use iced::widget::{column, container, progress_bar, row, text, scrollable, Column};
+use crate::{centered_row, scroll_list};
+use iced::widget::{column, container, progress_bar, row, scrollable, text, Column};
+use iced::{Center, Element};
 
 pub struct Ranks;
 
 impl pane::Type for Ranks {
-
-    fn title(&self) -> &'static str { "Ranks" }
+    fn title(&self) -> &'static str {
+        "Ranks"
+    }
 
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
-        let content = column![
+        scroll_list![
             row![
-                rank(
-                    "Combat Rank",
-                    state.rank.combat,
-                    state.progress.combat,
-                    Rank::combat
-                ),
-                rank(
-                    "Explorer Rank",
-                    state.rank.explore,
-                    state.progress.explore,
-                    Rank::exploration
-                )
-            ],
-            row![
-                rank(
-                    "Trade Rank",
-                    state.rank.trade,
-                    state.progress.trade,
-                    Rank::trading
-                ),
-                rank("CQC Rank", state.rank.cqc, state.progress.cqc, Rank::cqc)
-            ],
-            row![
-                rank(
-                    "Mercenary Rank",
-                    state.rank.soldier,
-                    state.progress.soldier,
-                    Rank::mercenary
-                ),
-                rank(
-                    "Exobiologist Rank",
-                    state.rank.exobiologist,
-                    state.progress.exobiologist,
-                    Rank::exobiologist
-                )
-            ],
-            row![
-                superpower_rank("Alliance", None, None, state.reputation.alliance, None),
-                superpower_rank(
-                    "Federation",
-                    Some(state.rank.federation),
-                    Some(state.progress.federation),
-                    state.reputation.federation,
-                    Some(Rank::federation)
-                ),
-                superpower_rank(
-                    "Empire",
-                    Some(state.rank.empire),
-                    Some(state.progress.empire),
-                    state.reputation.empire,
-                    Some(Rank::empire)
-                )
-            ],
-        ];
-
-        let content = row![
-            content,
-            column![].width(16)
-        ];
-
-        column![
-            scrollable(content)
-                .style(style::scrollable)
+                column![
+                    row![
+                        rank(
+                            "Combat Rank",
+                            state.rank.combat,
+                            state.progress.combat,
+                            Rank::combat
+                        ),
+                        rank(
+                            "Explorer Rank",
+                            state.rank.explore,
+                            state.progress.explore,
+                            Rank::exploration
+                        )
+                    ],
+                    row![
+                        rank(
+                            "Trade Rank",
+                            state.rank.trade,
+                            state.progress.trade,
+                            Rank::trading
+                        ),
+                        rank(
+                            "CQC Rank",
+                            state.rank.cqc,
+                            state.progress.cqc,
+                            Rank::cqc
+                        )
+                    ],
+                    row![
+                        rank(
+                            "Mercenary Rank",
+                            state.rank.soldier,
+                            state.progress.soldier,
+                            Rank::mercenary
+                        ),
+                        rank(
+                            "Exobiologist Rank",
+                            state.rank.exobiologist,
+                            state.progress.exobiologist,
+                            Rank::exobiologist
+                        )
+                    ],
+                    row![
+                        superpower_rank(
+                            "Alliance",
+                            None,
+                            None,
+                            state.reputation.alliance,
+                            None
+                        ),
+                        superpower_rank(
+                            "Federation",
+                            Some(state.rank.federation),
+                            Some(state.progress.federation),
+                            state.reputation.federation,
+                            Some(Rank::federation)
+                        ),
+                        superpower_rank(
+                            "Empire",
+                            Some(state.rank.empire),
+                            Some(state.progress.empire),
+                            state.reputation.empire,
+                            Some(Rank::empire)
+                        )
+                    ]
+                ],
+                column![].width(16)
+            ]
         ]
         .into()
     }
@@ -94,9 +101,9 @@ fn rank(
         Some(title) => title.name.to_string(),
     };
 
-    iced::widget::column![
+    column![
         container(column![
-            centered_row![text(title).size(16).color(ORANGE)].padding(4),
+            row![text(title).size(16).color(ORANGE)].align_y(Center).padding(4),
             row![
                 progress_bar(0f32..=100f32, progress as f32)
                     .height(8)
@@ -132,7 +139,7 @@ fn superpower_rank(
         },
     };
 
-    iced::widget::column![
+    column![
         container(column![
             centered_row![text(title).size(16).color(ORANGE)].padding(4),
             if progress.is_some() {

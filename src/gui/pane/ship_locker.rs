@@ -1,16 +1,17 @@
 use crate::font::EUROSTILE;
+use crate::gui::components::scroll_list;
 use crate::gui::{pane, Message};
-use crate::state::{ShipLockerItem, State};
+use crate::state::State;
 use crate::theme::style;
 use crate::theme::{BLUE, ORANGE, YELLOW};
 use iced::widget::tooltip::Position;
-use iced::widget::{column, row, scrollable, text, tooltip, Column};
-use iced::{Color, Element, Fill, Left};
+use iced::widget::{column, row, text, tooltip, Column};
+use iced::{Color, Element, Left};
+use crate::state;
 
 pub struct ShipLocker;
 
 impl pane::Type for ShipLocker {
-
     fn title(&self) -> &'static str { "Ship Locker" }
 
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
@@ -24,10 +25,10 @@ impl pane::Type for ShipLocker {
     }
 }
 
-fn locker_item_list<'a>(title: &'a str, items: &'a [ShipLockerItem]) -> Column<'a, Message> {
+fn locker_item_list<'a>(title: &'a str, items: &'a [state::ship::ShipLockerItem]) -> Column<'a, Message> {
     column![
         text(title).size(20).color(ORANGE),
-        scrollable(column(
+        scroll_list(
             items
                 .iter()
                 .map(|item| {
@@ -60,10 +61,8 @@ fn locker_item_list<'a>(title: &'a str, items: &'a [ShipLockerItem]) -> Column<'
                         ]
                     }
                 })
-                .map(iced::Element::from)
-        ))
-        .style(style::scrollable)
-        .width(Fill)
+                .collect()
+        )
     ]
     .align_x(Left)
 }

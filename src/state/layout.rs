@@ -9,6 +9,7 @@ pub struct Layout {
     pub custom_screens: Vec<config::CustomScreen>,
     pub current_panes: Option<pane_grid::State<Box<dyn Type>>>,
     pub selected_custom_screen: usize,
+    pub show_messages_days_limit: u16,
 }
 
 impl Layout {
@@ -64,6 +65,7 @@ impl Layout {
 
         // Attempt to load persisted settings and apply
         if let Some(settings) = config::Settings::load() {
+            layout.show_messages_days_limit = settings.show_messages_days_limit.unwrap_or(0);
             if let Some(screens) = settings.custom_screens.clone() {
                 // Use multi-screen config
                 layout.custom_screens = screens.clone();

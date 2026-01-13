@@ -1,15 +1,15 @@
 use crate::{edsm, state};
 
 // ------------------------------ Stations ------------------------------
-impl Into<Vec<state::Station>> for edsm::Stations {
-    fn into(self) -> Vec<state::Station> {
+impl Into<Vec<state::navigation::Station>> for edsm::Stations {
+    fn into(self) -> Vec<state::navigation::Station> {
         self.stations.unwrap_or_default().into_iter().map(Into::into).collect()
     }
 }
 
-impl Into<state::Station> for edsm::Station {
-    fn into(self) -> state::Station {
-        state::Station {
+impl Into<state::navigation::Station> for edsm::Station {
+    fn into(self) -> state::navigation::Station {
+        state::navigation::Station {
             id: self.id,
             market_id: self.market_id,
             type_field: self.r#type,
@@ -30,9 +30,9 @@ impl Into<state::Station> for edsm::Station {
     }
 }
 
-impl Into<state::StationBody> for edsm::stations::Body {
-    fn into(self) -> state::StationBody {
-        state::StationBody {
+impl Into<state::navigation::StationBody> for edsm::stations::Body {
+    fn into(self) -> state::navigation::StationBody {
+        state::navigation::StationBody {
             id: self.id,
             name: self.name,
             latitude: self.latitude,
@@ -41,9 +41,9 @@ impl Into<state::StationBody> for edsm::stations::Body {
     }
 }
 
-impl Into<state::LastUpdated> for edsm::UpdateTime {
-    fn into(self) -> state::LastUpdated {
-        state::LastUpdated {
+impl Into<state::navigation::LastUpdated> for edsm::UpdateTime {
+    fn into(self) -> state::navigation::LastUpdated {
+        state::navigation::LastUpdated {
             information: self.information,
             market: self.market,
             shipyard: self.shipyard,
@@ -53,36 +53,50 @@ impl Into<state::LastUpdated> for edsm::UpdateTime {
 }
 
 // ------------------------------ Bodies ------------------------------
-impl Into<Vec<state::Body>> for edsm::Bodies {
-    fn into(self) -> Vec<state::Body> {
+impl Into<Vec<state::fss::Body>> for edsm::Bodies {
+    fn into(self) -> Vec<state::fss::Body> {
         self.bodies.unwrap_or_default().into_iter().map(Into::into).collect()
     }
 }
 
-impl Into<state::Body> for edsm::bodies::Body {
-    fn into(self) -> state::Body {
-        state::Body {
+impl Into<state::fss::Body> for edsm::bodies::Body {
+    fn into(self) -> state::fss::Body {
+        state::fss::Body {
+            id: self.body_id as u8,
             name: self.name,
-            type_field: self.body_type,
-            sub_type: self.sub_type,
-            distance_to_arrival: self.distance_to_arrival,
-            is_main_star: self.is_main_star.unwrap_or(false),
-            is_scoopable: self.is_scoopable.unwrap_or(false),
+            parent_id: None,
+            r#type: None,
+            signals: Vec::new(),
+            terraformable: self.terraforming_state.as_deref() == Some("Terraformable"),
+            was_discovered: self.discovery.is_some(),
+            was_mapped: false,
+            was_footfalled: false,
+            atmosphere: None,
+            atmosphere_type: None,
+            volcanism: None,
+            is_landable: false,
+            rings: vec![],
+            is_ammonia_world: false,
+            is_water_world: false,
+            is_high_metal_content: false,
+            is_gas_giant: false,
+            is_earthlike: false,
+            has_life: false,
         }
     }
 }
 
 // ------------------------------ Counts ------------------------------
-impl Into<state::Counts> for edsm::Counts {
-    fn into(self) -> state::Counts {
-        state::Counts { day: self.day, week: self.week, total: self.total }
+impl Into<state::navigation::Counts> for edsm::Counts {
+    fn into(self) -> state::navigation::Counts {
+        state::navigation::Counts { day: self.day, week: self.week, total: self.total }
     }
 }
 
-impl Into<state::Counts> for edsm::Traffic {
-    fn into(self) -> state::Counts { self.traffic.unwrap_or_default().into() }
+impl Into<state::navigation::Counts> for edsm::Traffic {
+    fn into(self) -> state::navigation::Counts { self.traffic.unwrap_or_default().into() }
 }
 
-impl Into<state::Counts> for edsm::Deaths {
-    fn into(self) -> state::Counts { self.deaths.unwrap_or_default().into() }
+impl Into<state::navigation::Counts> for edsm::Deaths {
+    fn into(self) -> state::navigation::Counts { self.deaths.unwrap_or_default().into() }
 }

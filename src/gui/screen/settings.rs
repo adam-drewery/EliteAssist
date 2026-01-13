@@ -11,9 +11,10 @@ use iced::widget::{
     text,
     text_input,
     container,
-    svg
+    svg,
+    slider
 };
-use iced::{Element, Fill};
+use iced::{Element, Fill, Center};
 use iced::widget::svg::Handle;
 use crate::gui::pane::Type;
 use crate::image;
@@ -22,7 +23,8 @@ use crate::message::Gui::{
     RemoveCustomScreen,
     RenameCustomScreen,
     SelectCustomScreen,
-    TogglePane
+    TogglePane,
+    UpdateMessageLimit
 };
 use crate::state::State;
 
@@ -86,17 +88,36 @@ pub fn settings(state: &State) -> Row<'_, Message> {
         .spacing(8)
     };
 
+    let display_text: String = if state.layout.show_messages_days_limit == 0 { "Unlimited".into() } else { format!("Last {} days", state.layout.show_messages_days_limit) };
+
     row![
         column![
-            row![].height(128),
+            row![].height(64),
             row![
                 column![].width(Fill),
-                column![container(screens_list).style(style::bordered).height(Fill).width(Fill).padding(8)].width(240),
+                column![container(screens_list).style(style::bordered).height(Fill).width(240).padding(8)],
                 column![].width(8),
-                column![container(right_side).style(style::bordered).height(Fill).width(Fill).padding(8)].width(240),
+                column![container(right_side).style(style::bordered).height(Fill).width(240).padding(8)],
                 column![].width(Fill)
-            ],
-            row![].height(128)
+            ].height(Fill),
+            row![
+                column![].width(Fill),
+                column![
+                    row![text("Show messages from:").size(16).color(GRAY)],
+                    row![
+                        text(display_text)
+                            .size(14)
+                            .color(ORANGE),
+                        slider(
+                            0.0..=1000.0,
+                            state.layout.show_messages_days_limit as f64,
+                            |v| Message::Gui(UpdateMessageLimit(v as u16))
+                        ).step(1.0).style(style::slider),
+                    ].spacing(8).align_y(Center)
+                ].width(488),
+                column![].width(Fill)
+            ].padding(16),
+            row![].height(64)
         ]
     ]
 }
