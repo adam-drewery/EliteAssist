@@ -213,9 +213,8 @@ impl JournalWatcher {
     /// - The directory containing
     pub async fn next(&mut self) -> Result<Message, JournalError> {
         loop {
-            // Check if we have a reader
+            // Check if we have a reader and try to read from it first
             if let Some(reader) = &mut self.reader {
-                // Try to read the next line from the current file
                 let mut buffer = String::new();
                 let bytes_read = reader.read_line(&mut buffer)?;
                 if bytes_read > 0 {
@@ -228,6 +227,10 @@ impl JournalWatcher {
 
             // Wait for filesystem notification
             self.watcher_rx.recv().await.ok_or(JournalError::Channel)?;
+
+            // Small delay to allow the filesystem to finish writing and debounce multiple events
+            tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+            while self.watcher_rx.try_recv().is_ok() {}
 
             // Check for new or updated journal files
             let dir_path = self.base_dir.as_path();
@@ -285,6 +288,10 @@ pub fn get_paths(dir: &Path) -> Result<Vec<PathBuf>, JournalError> {
             if is_log { Some(path) } else { None }
         })
         .collect();
+
+    if files.is_empty() {
+        return Ok(files);
+    }
 
     // Sort files by modified time; if metadata lookup fails for a file, push it to the start
     files.sort_by_key(|path| {
@@ -440,7 +447,11 @@ impl SnapshotWatcher {
     ///
     pub async fn next(&mut self) -> Result<Message, JournalError> {
         loop {
-            self.watcher_rx.recv().await.ok_or(JournalError::Channel)?;
+            // Small debounce delay: if multiple updates happen quickly, wait a bit
+            tokio::time::sleep(std::time::Duration::from_millis(50)).await;
+            // Drain any pending signals to avoid immediate re-triggering
+            while self.watcher_rx.try_recv().is_ok() {}
+
             if let Some(event) = check_snapshot_file(&mut self.file)? {
                 return Ok(Message::JournalEvent(event));
             }
