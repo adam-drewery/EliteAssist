@@ -1,6 +1,6 @@
 use crate::state::*;
 use crate::journal;
-use crate::journal::format;
+use crate::journal::{format, Event};
 use crate::query;
 use iced::Task;
 use log::warn;
@@ -81,6 +81,9 @@ impl journal::Event {
             CommunityGoal(_) => {}
             ScientificResearch(_) => {}
 
+            // CONSTRUCTION
+            CompleteConstruction(_) => {}
+
             // CREW
             QuitACrew(_) => {}
             JoinACrew(_) => {}
@@ -149,13 +152,15 @@ impl journal::Event {
                     for voucher in vouchers {
                         let result = target
                             .entry(voucher.faction.clone())
-                            .and_modify(|b| *b = b.saturating_sub(e.amount as u32))
+                            .and_modify(|b| *b = b.saturating_sub(voucher.amount as u32))
                             .or_default();
 
                         if *result <= 0 {
                             target.remove(&voucher.faction);
                         }
                     }
+                // } else { // todo: figure out what to do when there are no factions.
+                //     target.clear();
                 }
             }
 
@@ -517,7 +522,11 @@ impl journal::Event {
             Screenshot(_) => {}
             Fileheader(_) => {}
             SendText(_) => {}
-            Died(_) => {}
+            Died(_) => {
+                state.missions.clear();
+                state.bounties.clear(); // todo: even bounties with no factions? gotta investigate this.
+                state.combat_bonds.clear();
+            }
             Resurrect(_) => {}
             Music(_) => {}
 
@@ -595,6 +604,9 @@ impl journal::Event {
             KickedFromSquadron(_) => {}
             LeftSquadron(_) => {}
             SharedBookmarkToSquadron(_) => {}
+            SquadronApplicationApproved(_) => {}
+            SquadronApplicationRejected(_) => {}
+            CancelledSquadronApplication(_) => {}
 
             // SRV
             DockSRV(_) => {}
@@ -635,6 +647,7 @@ impl journal::Event {
             WingJoin(_) => {}
             WingLeave(_) => {}
             ShipLockerBackpack(_) => {}
+
         }
 
         Task::none()
