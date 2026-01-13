@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 1000 1000"
+   preserveAspectRatio="xMidYMid meet"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="planet-lander.svg"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs10" />
+  <sodipodi:namedview
+     id="namedview8"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="0.873"
+     inkscape:cx="327.60596"
+     inkscape:cy="500"
+     inkscape:window-width="2066"
+     inkscape:window-height="1389"
+     inkscape:window-x="710"
+     inkscape:window-y="480"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg6" />
+  <path
+     id="path4262"
+     style="stroke-width:670.542;paint-order:fill markers stroke"
+     d="m 645.3087,260.34946 c -103.79866,-0.0913 -195.20179,0.0568 -292.97677,0.0508 L 46.029,445.404 251.33766,627.5188 196.15191,756.52123 H 46.029 l 3.73e-4,98.79804 c 298.323667,0.0287 632.058587,-0.0495 905.581887,-0.0464 L 951.611,756.47042 H 801.48872 L 746.30297,627.47021 951.611,445.404 Z m -8.08744,56.43234 -57.53313,181.17321 H 417.91837 l -57.499,-181.12238 z m 32.27971,310.68399 55.18577,129.00463 c -46.64361,-0.0181 -187.92441,0.0221 -187.92441,0.0221 l 2.29095,-99.22452 130.44769,-29.80218 z m -208.6568,129.03342 c 0,0 -144.55372,0.0238 -187.89029,0.0221 L 328.13965,627.5144 c 133.85,28.61698 133.85,29.7536 133.85,29.7536 z"
+     sodipodi:nodetypes="ccccccccccccccccccccccccccccc" />
+</svg>

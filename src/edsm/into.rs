@@ -67,9 +67,21 @@ impl Into<state::fss::Body> for edsm::bodies::Body {
             parent_id: None,
             r#type: None,
             signals: Vec::new(),
-            terraform_state: self.terraforming_state,
+            terraformable: self.terraforming_state.as_deref() == Some("Terraformable"),
             was_discovered: self.discovery.is_some(),
-            was_mapped: false
+            was_mapped: false,
+            was_footfalled: false,
+            atmosphere: None,
+            atmosphere_type: None,
+            volcanism: None,
+            is_landable: false,
+            rings: vec![],
+            is_ammonia_world: false,
+            is_water_world: false,
+            is_high_metal_content: false,
+            is_gas_giant: false,
+            is_earthlike: false,
+            has_life: false,
         }
     }
 }

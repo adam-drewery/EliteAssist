@@ -4,6 +4,7 @@ use iced::Size;
 use crate::gui::Gui;
 use crate::subscription::subscription;
 use crate::theme::theme;
+pub use util::*;
 
 mod gui;
 mod journal;
@@ -18,6 +19,7 @@ mod lookup;
 mod query;
 mod config;
 mod message;
+mod util;
 
 fn main() {
 

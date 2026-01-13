@@ -16,7 +16,7 @@ pub mod suit;
 use crate::state::chat::Message;
 use crate::state::engineering::Engineer;
 use crate::state::fss::Fss;
-use crate::state::history::Event;
+use crate::state::history::EventLog;
 use crate::state::layout::Layout;
 use crate::state::market::Market;
 use crate::state::material::Materials;
@@ -38,7 +38,7 @@ pub struct State {
     pub active_screen: Screen,
     pub materials: Materials,
     pub messages: Vec<Message>,
-    pub logs: Vec<Event>,
+    pub logs: Vec<EventLog>,
     pub crime: CrimeStats,
     pub market: Market,
     pub rank: Rank,

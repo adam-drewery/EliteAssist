@@ -32,7 +32,7 @@ pub fn theme(_state: &State) -> Theme {
 
 pub mod style {
 
-    use crate::theme::{BACKGROUND, DARK_GRAY, GRAY, ORANGE, WHITE};
+    use crate::theme::{BACKGROUND, DARK_GRAY, GRAY, ORANGE, WHITE, Color};
     use iced::border::radius;
     use iced::{Background, Border, Theme};
     use iced::widget;
@@ -160,6 +160,25 @@ pub mod style {
                 radius: Default::default(),
             },
             text_color: None,
+        }
+    }
+
+    pub fn slider(_theme: &Theme, _status: widget::slider::Status) -> widget::slider::Style {
+        widget::slider::Style {
+            rail: widget::slider::Rail {
+                backgrounds: (ORANGE.into(), DARK_GRAY.into()),
+                width: 2.0,
+                border: Border::default(),
+            },
+            handle: widget::slider::Handle {
+                shape: widget::slider::HandleShape::Rectangle {
+                    width: 8,
+                    border_radius: radius(0),
+                },
+                background: ORANGE.into(),
+                border_width: 0.0,
+                border_color: Color::TRANSPARENT,
+            },
         }
     }
 }

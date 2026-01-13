@@ -33,6 +33,8 @@ pub enum Gui {
     // Journal directory selection
     ChooseJournalDir,
     JournalDirChosen(Option<std::path::PathBuf>),
+
+    UpdateMessageLimit(u16),
 }
 
 impl Gui {
@@ -120,6 +122,11 @@ impl Gui {
                         // Cause subscriptions to refresh next cycle; nothing else needed
                     }
                 }
+            }
+
+            UpdateMessageLimit(days) => {
+                state.layout.show_messages_days_limit = days;
+                let _ = crate::config::Settings::save_from_state(&state.layout);
             }
         }
 

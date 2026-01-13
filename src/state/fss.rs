@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use crate::edsm;
+use crate::{edsm, BoxStrOptionExt};
 use crate::journal::event;
 
 #[derive(Default, Clone, Debug)]
@@ -26,7 +26,47 @@ impl From<event::FSSDiscoveryScan> for ScanProgress {
     }
 }
 
+#[derive(Default, Clone, Debug)]
+pub struct Body {
+    pub id: u8,
+    pub name: Box<str>,
+    pub r#type: Option<Box<str>>,
+    pub parent_id: Option<u64>,
+    pub signals: Vec<SignalCount>,
+    pub terraformable: bool,
+    pub was_discovered: bool,
+    pub was_mapped: bool,
+    pub was_footfalled: bool,
+    pub atmosphere: Option<Box<str>>,
+    pub atmosphere_type: Option<Box<str>>,
+    pub volcanism: Option<Box<str>>,
+    pub is_landable: bool,
+    pub rings: Vec<Box<str>>,
+    pub is_ammonia_world: bool,
+    pub is_water_world: bool,
+    pub is_high_metal_content: bool,
+    pub is_gas_giant: bool,
+    pub is_earthlike: bool,
+    pub has_life: bool,
+}
+
 impl Body {
+    //
+    // pub fn icons(&self) -> Vec<&[u8]> {
+    //     let result = Vec::new();
+    //
+    // }
+
+    pub fn has_ammonia_based_life(&self) -> bool {
+        self.is_ammonia_world && self.has_life
+    }
+
+    pub fn has_water_based_life(&self) -> bool {
+        self.has_life && self.is_water_world
+    }
+
+    // todo: how to figure out high value?
+
 
     // todo: not u64 plz
     pub fn get_parent_id(event: &event::Scan) -> Option<u64> {
@@ -50,7 +90,8 @@ impl Body {
         self.id = event.body_id as u8;
         self.was_discovered = event.was_discovered;
         self.was_mapped = event.was_mapped;
-        self.terraform_state = event.terraform_state;
+        self.terraformable = event.terraform_state.as_deref() == Some("Terraformable");
+        self.atmosphere = event.atmosphere;
         self.r#type = event.planet_class
             .or_else(||
                 event.star_type.map(|s|
@@ -60,7 +101,7 @@ impl Body {
     pub fn update_from_query(&mut self, response: edsm::bodies::Body) {
         self.name = response.name;
         self.id = response.body_id as u8;
-        self.terraform_state = response.terraforming_state;
+        //todo: self.terraformable = response.terraforming_state.as_deref() == Some("Terraformable");
         self.was_discovered = response.discovery.is_some();
     }
 }
@@ -71,29 +112,29 @@ pub struct SignalCount {
     pub count: u32,
 }
 
-#[derive(Default, Clone, Debug)]
-pub struct Body {
-    pub id: u8,
-    pub name: Box<str>,
-    pub r#type: Option<Box<str>>,
-    pub parent_id: Option<u64>,
-    pub signals: Vec<SignalCount>,
-    pub terraform_state: Option<Box<str>>,
-    pub was_discovered: bool,
-    pub was_mapped: bool,
-}
-
 impl From<event::Scan> for Body {
     fn from(value: event::Scan) -> Self {
         Self {
             name: value.body_name,
             id: value.body_id as u8,
-            r#type: value.planet_class.filter(|s| !s.is_empty()),
-            terraform_state: value.terraform_state,
+            terraformable: value.terraform_state.as_deref() == Some("Terraformable"),
             was_discovered: value.was_discovered,
             was_mapped: value.was_mapped,
             signals: Vec::new(),
-            parent_id: None
+            parent_id: None,
+            atmosphere: value.atmosphere.none_if_empty(),
+            atmosphere_type: value.atmosphere_type.none_if_empty(),
+            volcanism: value.volcanism.none_if_empty(),
+            is_landable: value.landable.unwrap_or_default(),
+            rings: value.rings.unwrap_or_default().into_iter().map(|ring| ring.name).collect(),
+            was_footfalled: value.was_footfalled.unwrap_or_default(),
+            is_ammonia_world: value.atmosphere_type.is_some_and(|atm| atm.as_ref() == "Ammonia"),
+            is_water_world: value.planet_class.as_ref().is_some_and(|pc| pc.as_ref() == "Water world"),
+            is_earthlike: value.planet_class.as_ref().is_some_and(|pc| pc.as_ref() == "Earthlike body"),
+            is_high_metal_content: value.planet_class.as_ref().is_some_and(|pc| pc.as_ref() == "High metal content body"),
+            is_gas_giant: value.planet_class.as_ref().is_some_and(|pc| pc.as_ref().to_lowercase().contains("gas giant")),
+            r#type: value.planet_class.filter(|s| !s.is_empty()),
+            has_life: false
         }
     }
 }
@@ -105,8 +146,6 @@ impl From<event::FSSBodySignals> for Body {
         Self { 
             id: value.body_id as u8,
             name: value.body_name,
-            r#type: None,
-            parent_id: None,
             signals: value.signals.into_iter().map(|sig| {
                 SignalCount {
                     count: sig.count as u32,
@@ -115,9 +154,7 @@ impl From<event::FSSBodySignals> for Body {
                         .unwrap_or(sig.r#type)
                 }
             }).collect(),
-            terraform_state: None,
-            was_discovered: false,
-            was_mapped: false 
+            ..Default::default()
         }
     }
 }

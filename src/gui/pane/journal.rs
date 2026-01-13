@@ -13,11 +13,18 @@ impl pane::Type for LogJournal {
     fn title(&self) -> &'static str { "Journal" }
 
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
+        let cutoff = if state.layout.show_messages_days_limit > 0 {
+            chrono::Utc::now().timestamp() - (state.layout.show_messages_days_limit as i64 * 24 * 60 * 60)
+        } else {
+            0
+        };
+
         column![
             scroll_list(
                 state
                     .logs
                     .iter()
+                    .filter(|item| item.timestamp >= cutoff)
                     .map(|item| {
                         row![
                             column![
