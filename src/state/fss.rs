@@ -1,3 +1,4 @@
+use crate::image::planet;
 use std::collections::HashMap;
 use crate::{edsm, BoxStrOptionExt};
 use crate::journal::event;
@@ -48,14 +49,33 @@ pub struct Body {
     pub is_gas_giant: bool,
     pub is_earthlike: bool,
     pub has_life: bool,
+    pub distance_ls: f64,
+    pub is_journal_scan: bool,
 }
 
 impl Body {
-    //
-    // pub fn icons(&self) -> Vec<&[u8]> {
-    //     let result = Vec::new();
-    //
-    // }
+    pub fn icons(&self) -> Vec<&'static [u8]> {
+        let mut result = Vec::new();
+
+        if self.is_earthlike { result.push(planet::EARTHLIKE); }
+        else if self.is_water_world { result.push(planet::WATER_WORLD); }
+        else if self.is_ammonia_world { result.push(planet::AMMONIA_WORLD); }
+        else if self.is_gas_giant { result.push(planet::GAS_GIANT); }
+        else if self.is_high_metal_content { result.push(planet::HIGH_METAL_CONTENT); }
+        else if self.r#type.is_some() { result.push(planet::PLANET); }
+
+        if self.terraformable { result.push(planet::TERRAFORMABLE); }
+        if self.is_landable { result.push(planet::LANDABLE); }
+        if !self.rings.is_empty() { result.push(planet::RINGED); }
+        if self.volcanism.is_some() { result.push(planet::VOLCANIC); }
+        if self.atmosphere.is_some() { result.push(planet::ATMOSPHERE); }
+
+        if self.has_ammonia_based_life() { result.push(planet::AMMONIA_BASED_LIFE); }
+        else if self.has_water_based_life() { result.push(planet::WATER_BASED_LIFE); }
+        else if self.has_life { result.push(planet::LIFE); }
+
+        result
+    }
 
     pub fn has_ammonia_based_life(&self) -> bool {
         self.is_ammonia_world && self.has_life
@@ -85,6 +105,7 @@ impl Body {
     }
 
     pub fn update_from_scan(&mut self, event: event::Scan) {
+        self.is_journal_scan = true;
         self.parent_id = Self::get_parent_id(&event);
         self.name = event.body_name;
         self.id = event.body_id as u8;
@@ -92,17 +113,53 @@ impl Body {
         self.was_mapped = event.was_mapped;
         self.terraformable = event.terraform_state.as_deref() == Some("Terraformable");
         self.atmosphere = event.atmosphere;
-        self.r#type = event.planet_class
-            .or_else(||
-                event.star_type.map(|s|
-                    format!("{}{:?}", s, event.subclass.unwrap_or_default()).into()));
+        self.atmosphere_type = event.atmosphere_type;
+        self.volcanism = event.volcanism;
+        self.is_landable = event.landable.unwrap_or_default();
+        self.distance_ls = event.distance_from_arrival_ls;
+        self.r#type = event.planet_class.clone().filter(|s| !s.is_empty());
+
+        self.is_ammonia_world = self.atmosphere_type.as_ref().is_some_and(|atm| atm.as_ref() == "Ammonia");
+        self.is_water_world = event.planet_class.as_ref().is_some_and(|pc| pc.as_ref() == "Water world");
+        self.is_earthlike = event.planet_class.as_ref().is_some_and(|pc| pc.as_ref() == "Earthlike body");
+        self.is_high_metal_content = event.planet_class.as_ref().is_some_and(|pc| pc.as_ref() == "High metal content body");
+        self.is_gas_giant = event.planet_class.as_ref().is_some_and(|pc| pc.as_ref().to_lowercase().contains("gas giant"));
+
+        if let Some(rings) = event.rings {
+            self.rings = rings.into_iter().map(|r| r.name).collect();
+        }
+
+        if self.r#type.is_none() {
+            self.r#type = event.star_type.map(|s|
+                    format!("{}{:?}", s, event.subclass.unwrap_or_default()).into());
+        }
     }
 
     pub fn update_from_query(&mut self, response: edsm::bodies::Body) {
+        if self.is_journal_scan {
+            return;
+        }
+
         self.name = response.name;
         self.id = response.body_id as u8;
-        //todo: self.terraformable = response.terraforming_state.as_deref() == Some("Terraformable");
         self.was_discovered = response.discovery.is_some();
+        self.distance_ls = response.distance_to_arrival;
+        self.is_landable = response.is_landable.unwrap_or_default();
+        self.terraformable = response.terraforming_state.as_deref() == Some("Terraformable");
+        self.atmosphere = response.atmosphere_type.clone();
+        self.atmosphere_type = response.atmosphere_type.clone();
+        self.volcanism = response.volcanism_type.clone();
+
+        self.is_ammonia_world = response.atmosphere_type.as_ref().is_some_and(|atm| atm.as_ref() == "Ammonia");
+        self.is_water_world = response.sub_type.as_ref() == "Water world";
+        self.is_earthlike = response.sub_type.as_ref() == "Earthlike body";
+        self.is_high_metal_content = response.sub_type.as_ref() == "High metal content body";
+        self.is_gas_giant = response.sub_type.as_ref().to_lowercase().contains("gas giant");
+        self.r#type = Some(response.sub_type).filter(|s| !s.is_empty());
+
+        if let Some(rings) = response.rings {
+            self.rings = rings.into_iter().map(|r| r.name).collect();
+        }
     }
 }
 
@@ -134,7 +191,9 @@ impl From<event::Scan> for Body {
             is_high_metal_content: value.planet_class.as_ref().is_some_and(|pc| pc.as_ref() == "High metal content body"),
             is_gas_giant: value.planet_class.as_ref().is_some_and(|pc| pc.as_ref().to_lowercase().contains("gas giant")),
             r#type: value.planet_class.filter(|s| !s.is_empty()),
-            has_life: false
+            has_life: false,
+            distance_ls: value.distance_from_arrival_ls,
+            is_journal_scan: true,
         }
     }
 }

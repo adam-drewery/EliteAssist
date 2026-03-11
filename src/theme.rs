@@ -116,6 +116,12 @@ pub mod style {
             border: orange_border(),
         }
     }
+    pub fn planet_icon(_theme: &Theme, _status: widget::svg::Status) -> widget::svg::Style {
+        widget::svg::Style {
+            color: Some(ORANGE)
+        }
+    }
+
     pub fn icon_button(_theme: &Theme, _status: widget::svg::Status) -> widget::svg::Style {
         widget::svg::Style {
             color: Some(WHITE)

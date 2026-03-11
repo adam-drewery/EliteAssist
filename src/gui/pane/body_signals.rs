@@ -5,8 +5,8 @@ use crate::message::Message;
 use crate::state::fss;
 use crate::state::State;
 use crate::theme::{style, ORANGE, WHITE};
-use iced::widget::{column, container, row, text, Row};
-use iced::{Element, Fill};
+use iced::widget::{column, container, row, svg, text, Row};
+use iced::{Center, Element, Fill};
 
 pub struct BodySignals;
 
@@ -18,10 +18,12 @@ impl pane::Type for BodySignals {
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         if let Some(system_scans) = state.system_scans.get(&state.location.system_address)
             && !system_scans.bodies.is_empty() {
+                let mut bodies: Vec<_> = system_scans.bodies.iter().collect();
+                bodies.sort_by_key(|b| b.0);
+
                 column![scroll_list(
-                    system_scans
-                        .bodies
-                        .iter()
+                    bodies
+                        .into_iter()
                         .map(|body| body_details(body.1))
                         .collect()
                 )]
@@ -33,16 +35,48 @@ impl pane::Type for BodySignals {
 }
 
 fn body_details(body: &fss::Body) -> Row<'_, Message> {
-    bordered_list_item![column![
-        row![column![text(body.name.to_string()).size(16).color(WHITE)].padding([0, 6])],
-        row![
-            column![
-                text(body.r#type.clone().unwrap_or_default().to_string())
-                    .size(16)
-                    .color(ORANGE)
+    bordered_list_item![
+        column![
+            row![
+                text(body.name.to_string()).size(16).color(WHITE),
+                text(format!("  {:.0}ls", body.distance_ls))
+                    .size(14)
+                    .color(ORANGE),
+            ],
+            row![
+                text(body.r#type.as_deref().unwrap_or_default())
+                    .size(14)
+                    .color(ORANGE),
+                row(body
+                    .signals
+                    .iter()
+                    .map(|sig| {
+                        text(format!("{}: {}", sig.kind, sig.count))
+                            .size(12)
+                            .color(WHITE)
+                            .into()
+                    })
+                    .collect::<Vec<_>>())
+                .spacing(8)
+                .padding([0, 10])
             ]
-            .padding([0, 6])
         ]
-    ]]
+        .width(Fill)
+        .padding([0, 6]),
+        row(body
+            .icons()
+            .into_iter()
+            .map(|icon| {
+                svg(svg::Handle::from_memory(icon))
+                    .style(style::planet_icon)
+                    .width(32)
+                    .height(32)
+                    .into()
+            })
+            .collect::<Vec<_>>())
+        .spacing(4)
+        .align_y(Center)
+        .padding([4, 10])
+    ]
     .height(48)
 }

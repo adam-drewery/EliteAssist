@@ -26,7 +26,7 @@ pub struct Body {
     pub sub_type: Box<str>,
     pub parents: Option<Vec<HashMap<Box<str>, i32>>>,
     #[serde(rename = "distanceToArrival")]
-    pub distance_to_arrival: f32,
+    pub distance_to_arrival: f64,
     #[serde(rename = "isMainStar")]
     pub is_main_star: Option<bool>,
     #[serde(rename = "isScoopable")]

@@ -1,6 +1,6 @@
 use crate::state::*;
 use crate::journal;
-use crate::journal::{format, Event};
+use crate::journal::format;
 use crate::query;
 use iced::Task;
 use log::warn;
@@ -484,8 +484,12 @@ impl journal::Event {
 
                 body.name = e.body_name;
                 body.signals = e.signals.into_iter().map(|s|{
+                    let kind = s.type_localised.unwrap_or(s.r#type);
+                    if kind.as_ref() == "Biological" {
+                        body.has_life = true;
+                    }
                     fss::SignalCount {
-                        kind: s.type_localised.unwrap_or(s.r#type),
+                        kind,
                         count: s.count as u32
                     }
                 }).collect()
@@ -511,7 +515,28 @@ impl journal::Event {
                 system_scan.signals.push(e.into());
             }
 
-            SAASignalsFound(_) => {}
+            SAASignalsFound(e) => {
+                let system_scan = state
+                    .system_scans
+                    .entry(e.system_address)
+                    .or_default();
+                
+                let body = system_scan.bodies
+                    .entry(e.body_id as u8)
+                    .or_default();
+
+                body.name = e.body_name;
+                body.signals = e.signals.into_iter().map(|s|{
+                    let kind = s.type_localised.unwrap_or(s.r#type);
+                    if kind.as_ref() == "Biological" {
+                        body.has_life = true;
+                    }
+                    fss::SignalCount {
+                        kind,
+                        count: s.count as u32
+                    }
+                }).collect()
+            }
             SAAScanComplete(_) => {}
 
             // SESSION

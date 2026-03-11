@@ -61,27 +61,35 @@ impl Into<Vec<state::fss::Body>> for edsm::Bodies {
 
 impl Into<state::fss::Body> for edsm::bodies::Body {
     fn into(self) -> state::fss::Body {
+        let is_ammonia_world = self.atmosphere_type.as_ref().is_some_and(|atm| atm.as_ref() == "Ammonia");
+        let is_water_world = self.sub_type.as_ref() == "Water world";
+        let is_earthlike = self.sub_type.as_ref() == "Earthlike body";
+        let is_high_metal_content = self.sub_type.as_ref() == "High metal content body";
+        let is_gas_giant = self.sub_type.as_ref().to_lowercase().contains("gas giant");
+
         state::fss::Body {
             id: self.body_id as u8,
             name: self.name,
             parent_id: None,
-            r#type: None,
+            r#type: Some(self.sub_type).filter(|s| !s.is_empty()),
             signals: Vec::new(),
             terraformable: self.terraforming_state.as_deref() == Some("Terraformable"),
             was_discovered: self.discovery.is_some(),
             was_mapped: false,
             was_footfalled: false,
-            atmosphere: None,
-            atmosphere_type: None,
-            volcanism: None,
-            is_landable: false,
-            rings: vec![],
-            is_ammonia_world: false,
-            is_water_world: false,
-            is_high_metal_content: false,
-            is_gas_giant: false,
-            is_earthlike: false,
+            atmosphere: self.atmosphere_type.clone(),
+            atmosphere_type: self.atmosphere_type,
+            volcanism: self.volcanism_type,
+            is_landable: self.is_landable.unwrap_or_default(),
+            rings: self.rings.unwrap_or_default().into_iter().map(|r| r.name).collect(),
+            is_ammonia_world,
+            is_water_world,
+            is_high_metal_content,
+            is_gas_giant,
+            is_earthlike,
             has_life: false,
+            distance_ls: self.distance_to_arrival,
+            is_journal_scan: false,
         }
     }
 }
