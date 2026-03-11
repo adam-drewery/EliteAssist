@@ -5,7 +5,8 @@ use crate::message::Message;
 use crate::state::fss;
 use crate::state::State;
 use crate::theme::{style, ORANGE, WHITE};
-use iced::widget::{column, container, row, svg, text, Row};
+use iced::widget::tooltip::Position;
+use iced::widget::{column, container, row, svg, text, tooltip, Row};
 use iced::{Center, Element, Fill};
 
 pub struct BodySignals;
@@ -67,11 +68,16 @@ fn body_details(body: &fss::Body) -> Row<'_, Message> {
             .icons()
             .into_iter()
             .map(|icon| {
-                svg(svg::Handle::from_memory(icon))
-                    .style(style::planet_icon)
-                    .width(32)
-                    .height(32)
-                    .into()
+                tooltip(
+                    svg(svg::Handle::from_memory(icon.data))
+                        .style(style::planet_icon)
+                        .width(32)
+                        .height(32),
+                    container(text(icon.tooltip).size(14)).padding(4),
+                    Position::Top,
+                )
+                .style(style::tooltip)
+                .into()
             })
             .collect::<Vec<_>>())
         .spacing(4)

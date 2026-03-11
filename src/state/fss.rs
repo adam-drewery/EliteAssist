@@ -53,26 +53,31 @@ pub struct Body {
     pub is_journal_scan: bool,
 }
 
+pub struct BodyIcon {
+    pub data: &'static [u8],
+    pub tooltip: &'static str,
+}
+
 impl Body {
-    pub fn icons(&self) -> Vec<&'static [u8]> {
+    pub fn icons(&self) -> Vec<BodyIcon> {
         let mut result = Vec::new();
 
-        if self.is_earthlike { result.push(planet::EARTHLIKE); }
-        else if self.is_water_world { result.push(planet::WATER_WORLD); }
-        else if self.is_ammonia_world { result.push(planet::AMMONIA_WORLD); }
-        else if self.is_gas_giant { result.push(planet::GAS_GIANT); }
-        else if self.is_high_metal_content { result.push(planet::HIGH_METAL_CONTENT); }
-        else if self.r#type.is_some() { result.push(planet::PLANET); }
+        if self.is_earthlike { result.push(BodyIcon { data: planet::EARTHLIKE, tooltip: "Earth-like World" }); }
+        else if self.is_water_world { result.push(BodyIcon { data: planet::WATER_WORLD, tooltip: "Water World" }); }
+        else if self.is_ammonia_world { result.push(BodyIcon { data: planet::AMMONIA_WORLD, tooltip: "Ammonia World" }); }
+        else if self.is_gas_giant { result.push(BodyIcon { data: planet::GAS_GIANT, tooltip: "Gas Giant" }); }
+        else if self.is_high_metal_content { result.push(BodyIcon { data: planet::HIGH_METAL_CONTENT, tooltip: "High Metal Content Body" }); }
+        else if self.r#type.is_some() { result.push(BodyIcon { data: planet::PLANET, tooltip: "Planet" }); }
 
-        if self.terraformable { result.push(planet::TERRAFORMABLE); }
-        if self.is_landable { result.push(planet::LANDABLE); }
-        if !self.rings.is_empty() { result.push(planet::RINGED); }
-        if self.volcanism.is_some() { result.push(planet::VOLCANIC); }
-        if self.atmosphere.is_some() { result.push(planet::ATMOSPHERE); }
+        if self.terraformable { result.push(BodyIcon { data: planet::TERRAFORMABLE, tooltip: "Terraformable" }); }
+        if self.is_landable { result.push(BodyIcon { data: planet::LANDABLE, tooltip: "Landable" }); }
+        if !self.rings.is_empty() { result.push(BodyIcon { data: planet::RINGED, tooltip: "Ringed" }); }
+        if self.volcanism.is_some() { result.push(BodyIcon { data: planet::VOLCANIC, tooltip: "Volcanism Detected" }); }
+        if self.atmosphere.is_some() { result.push(BodyIcon { data: planet::ATMOSPHERE, tooltip: "Atmosphere Present" }); }
 
-        if self.has_ammonia_based_life() { result.push(planet::AMMONIA_BASED_LIFE); }
-        else if self.has_water_based_life() { result.push(planet::WATER_BASED_LIFE); }
-        else if self.has_life { result.push(planet::LIFE); }
+        if self.has_ammonia_based_life() { result.push(BodyIcon { data: planet::AMMONIA_BASED_LIFE, tooltip: "Ammonia-based Life" }); }
+        else if self.has_water_based_life() { result.push(BodyIcon { data: planet::WATER_BASED_LIFE, tooltip: "Water-based Life" }); }
+        else if self.has_life { result.push(BodyIcon { data: planet::LIFE, tooltip: "Biological Signals" }); }
 
         result
     }
