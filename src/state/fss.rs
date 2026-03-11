@@ -248,6 +248,11 @@ pub struct Signal {
     pub name: Box<str>,
     pub kind: Option<Box<str>>,
     pub is_station: bool,
+    pub uss_type: Option<Box<str>>,
+    pub spawning_state: Option<Box<str>>,
+    pub spawning_faction: Option<Box<str>>,
+    pub threat_level: Option<u32>,
+    pub time_remaining: Option<f64>,
 }
 
 impl From<event::FSSSignalDiscovered> for Signal {
@@ -257,6 +262,11 @@ impl From<event::FSSSignalDiscovered> for Signal {
             name,
             kind: value.signal_type,
             is_station: value.is_station.unwrap_or(false),
+            uss_type: value.uss_type_localised.or(value.uss_type),
+            spawning_state: value.spawning_state_localised.or(value.spawning_state),
+            spawning_faction: value.spawning_faction_localised.or(value.spawning_faction),
+            threat_level: value.threat_level.map(|v| v as u32),
+            time_remaining: value.time_remaining,
         }
     }
 }

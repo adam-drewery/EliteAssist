@@ -106,7 +106,7 @@ fn rank(
             row![text(title).size(16).color(ORANGE)].align_y(Center).padding(4),
             row![
                 progress_bar(0f32..=100f32, progress as f32)
-                    .height(8)
+                    .girth(8)
                     .style(style::progress_bar)
             ]
             .padding(4),
@@ -145,7 +145,7 @@ fn superpower_rank(
             if progress.is_some() {
                 row![
                     progress_bar(0f32..=100f32, progress.unwrap_or(0) as f32)
-                        .height(8)
+                        .girth(8)
                         .style(style::progress_bar)
                 ]
             } else {
@@ -166,7 +166,7 @@ fn superpower_rank(
             .padding(4),
             row![
                 progress_bar(0f32..=100f32, reputation as f32)
-                    .height(8)
+                    .girth(8)
                     .style(style::progress_bar)
             ]
             .padding(4),

@@ -23,11 +23,12 @@ pub const PALETTE: Palette = Palette {
     background: BACKGROUND,
     danger: RED,
     primary: ORANGE,
-    success: BLUE
+    success: BLUE,
+    warning: YELLOW,
 };
 
 pub fn theme(_state: &State) -> Theme {
-    Theme::custom("Elite".into(), PALETTE)
+    Theme::custom("Elite", PALETTE)
 }
 
 pub mod style {
@@ -51,6 +52,7 @@ pub mod style {
             text_color: Some(WHITE),
             border: Default::default(),
             shadow: Default::default(),
+            snap: false,
         }
     }
 
@@ -60,6 +62,7 @@ pub mod style {
             text_color: Some(WHITE),
             border: Default::default(),
             shadow: Default::default(),
+            snap: false,
         }
     }
 
@@ -74,6 +77,7 @@ pub mod style {
             },
             border: orange_border(),
             shadow: Default::default(),
+            snap: false,
         }
     }
 
@@ -88,6 +92,7 @@ pub mod style {
             },
             border: Default::default(),
             shadow: Default::default(),
+            snap: false,
         }
     }
 
@@ -97,6 +102,7 @@ pub mod style {
             text_color: Some(WHITE),
             border: orange_border(),
             shadow: Default::default(),
+            snap: false,
         }
     }
 
@@ -106,6 +112,7 @@ pub mod style {
             text_color: Some(ORANGE),
             border: orange_border(),
             shadow: Default::default(),
+            snap: false,
         }
     }
 
@@ -134,6 +141,12 @@ pub mod style {
             vertical_rail: rail(status),
             horizontal_rail: rail(status),
             gap: None,
+            auto_scroll: widget::scrollable::AutoScroll {
+                background: Color::TRANSPARENT.into(),
+                border: Default::default(),
+                shadow: Default::default(),
+                icon: Color::TRANSPARENT,
+            },
         }
     }
 
@@ -143,8 +156,8 @@ pub mod style {
             border: orange_border(),
             scroller: widget::scrollable::Scroller {
                 border: orange_border(),
-                color: match status {
-                    widget::scrollable::Status::Active => DARK_GRAY.into(),
+                background: match status {
+                    widget::scrollable::Status::Active { .. } => DARK_GRAY.into(),
                     widget::scrollable::Status::Hovered { .. } => ORANGE.into(),
                     widget::scrollable::Status::Dragged { .. } => ORANGE.into(),
                 }

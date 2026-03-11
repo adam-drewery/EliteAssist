@@ -1,6 +1,7 @@
 #![windows_subsystem = "windows"]
 
 use iced::Size;
+use iced::Task;
 use crate::gui::Gui;
 use crate::subscription::subscription;
 use crate::theme::theme;
@@ -28,7 +29,8 @@ fn main() {
     clog.init();
 
     // Run the Iced application
-    let _ = iced::application("EliteAssist", Gui::update, Gui::view)
+    let _ = iced::application(|| (crate::state::State::default(), Task::none()), Gui::update, Gui::view)
+        .title("EliteAssist")
         .font(font::bytes::EUROSTILE)
         .font(font::bytes::EURO_CAPS)
         .default_font(font::EURO_CAPS)

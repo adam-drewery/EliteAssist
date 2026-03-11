@@ -96,7 +96,7 @@ fn loading_bar(state: &State) -> Element<'_, Message> {
                 state.first_message_timestamp as f32..=Utc::now().timestamp() as f32,
                 state.latest_message_timestamp as f32
             )
-            .width(Fill)
+            .length(Fill)
             .style(style::progress_bar),
         ],
         row![

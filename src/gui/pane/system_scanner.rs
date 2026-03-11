@@ -1,28 +1,83 @@
+
+use crate::bordered_list_item;
+use crate::gui::components::{empty_placeholder, scroll_list};
 use crate::gui::{pane, Message};
+use crate::state::fss;
 use crate::state::State;
 use crate::theme::{style, ORANGE, WHITE};
-use iced::widget::{column, container, progress_bar, row, scrollable, text};
-use iced::{Element, Fill};
-use crate::gui::components::empty_placeholder;
+use iced::widget::{column, container, progress_bar, row, text, Row};
+use iced::{Element, Fill, Right};
 
 pub struct SystemScanner;
+
+impl SystemScanner {
+    fn signal_details(signal: &fss::Signal) -> Row<'_, Message> {
+        let left_side = column![
+            row![
+                text(signal.name.to_string()).size(16).color(WHITE),
+                if let Some(threat) = signal.threat_level {
+                    text(format!("  Threat {}", threat)).size(14).color(ORANGE)
+                } else {
+                    text("")
+                }
+            ],
+            row![
+                text(signal.kind.as_deref().unwrap_or("Unknown")).size(14).color(ORANGE),
+                if let Some(uss) = &signal.uss_type {
+                    text(format!("  {}", uss)).size(14).color(WHITE)
+                } else {
+                    text("")
+                },
+                if let Some(state) = &signal.spawning_state {
+                    text(format!("  ({})", state)).size(14).color(WHITE)
+                } else {
+                    text("")
+                },
+            ].spacing(4)
+        ]
+        .width(Fill)
+        .padding([0, 6]);
+
+        let right_side = column![
+            if let Some(faction) = &signal.spawning_faction {
+                text(faction.to_string()).size(12).color(WHITE)
+            } else {
+                text("")
+            },
+            if let Some(time) = signal.time_remaining {
+                text(format_time(time)).size(12).color(ORANGE)
+            } else if signal.is_station {
+                text("STATION").size(12).color(ORANGE)
+            } else {
+                text("")
+            }
+        ]
+        .align_x(Right)
+        .padding([4, 10]);
+
+        bordered_list_item![
+            left_side,
+            right_side
+        ]
+        .height(48)
+    }
+}
 
 impl pane::Type for SystemScanner {
     fn title(&self) -> &'static str { "System Scanner" }
 
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
-        let mut content = column![];
-
         if let Some(system_scans) = state.system_scans.get(&state.location.system_address) {
+            let mut rows: Vec<Element<'a, Message>> = Vec::new();
 
             if let Some(progress) = &system_scans.progress {
-                content = content
-                    .push(
+                rows.push(
+                    row![
                         container(column![
                             row![text("Discovery").size(16).color(ORANGE)].padding(4),
                             row![
                                 progress_bar(0f32..=1f32, progress.progress as f32)
-                                    .height(8)
+                                    .girth(8)
                                     .style(style::progress_bar)
                             ]
                             .padding(4),
@@ -36,45 +91,29 @@ impl pane::Type for SystemScanner {
                             ]
                             .padding(4)
                         ])
-                            .style(style::bordered),
-                    )
-                    .padding(4);
+                        .style(style::bordered)
+                        .padding(4)
+                        .width(Fill)
+                    ]
+                    .padding([4, 8])
+                    .into()
+                );
             }
 
-            // System signals
-            if !system_scans.signals.is_empty() {
-                let mut items = column![];
-                for s in system_scans.signals.iter() {
-                    let kind = s.kind.as_deref().unwrap_or("Unknown");
-                    items = items.push(row![
-                        text(format!(
-                            "{} ({}){}",
-                            s.name,
-                            kind,
-                            if s.is_station { " [Station]" } else { "" }
-                        ))
-                        .size(14)
-                        .color(WHITE)
-                    ]);
-                }
-                content = content
-                    .push(
-                        container(column![
-                            row![text("Signals in System").size(16).color(ORANGE)].padding(4),
-                            items.padding(4)
-                        ])
-                            .style(style::bordered),
-                    )
-                    .padding(4);
+            for s in system_scans.signals.iter() {
+                rows.push(Self::signal_details(s).into());
             }
 
-            column![scrollable(content).style(style::scrollable)]
-                .width(Fill)
-                .height(Fill)
-                .into()
+            column![scroll_list(rows)].into()
         }
         else {
-            empty_placeholder("No bodies").into()
+            empty_placeholder("No signals").into()
         }
     }
+}
+
+fn format_time(seconds: f64) -> String {
+    let minutes = (seconds / 60.0).floor();
+    let seconds = (seconds % 60.0).floor();
+    format!("{:02.0}:{:02.0}", minutes, seconds)
 }

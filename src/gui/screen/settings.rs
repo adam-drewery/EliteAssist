@@ -71,7 +71,8 @@ pub fn settings(state: &State) -> Row<'_, Message> {
             let checked = pane::is_enabled(*id, &state.layout);
             let id_copy: &'static dyn Type = *id;
             pane_items.push(
-                checkbox(id.title(), checked)
+                checkbox(checked)
+                    .label(id.title())
                     .on_toggle(move |v| Message::Gui(TogglePane(id_copy.title().into(), v)))
                     .style(style::checkbox)
                     .into(),

@@ -70,7 +70,7 @@ impl Gui {
             }
             
             ToggleFullscreen => {
-                return window::get_latest()
+                return window::oldest()
                     .map(|id| Message::Gui(ToggleFullscreenWithId(id)));
             }
 
@@ -82,7 +82,7 @@ impl Gui {
                         window::Mode::Fullscreen
                     };
                     state.layout.fullscreen = !state.layout.fullscreen;
-                    return window::change_mode(id, mode).map(|_: ()| Message::Empty);
+                    return window::set_mode(id, mode).map(|_: ()| Message::Empty);
                 }
             }
 

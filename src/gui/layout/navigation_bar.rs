@@ -85,6 +85,7 @@ fn selected_style(_theme: &Theme, _status: Status) -> Style {
         text_color: ORANGE,
         border: Default::default(),
         shadow: Default::default(),
+        snap: false,
     }
     .with_background(GRAY)
 }
@@ -95,6 +96,7 @@ fn default_style(_theme: &Theme, _status: Status) -> Style {
         text_color: WHITE,
         border: Default::default(),
         shadow: Default::default(),
+        snap: false,
     }
     .with_background(GRAY)
 }
