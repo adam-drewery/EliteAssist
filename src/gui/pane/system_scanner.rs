@@ -1,17 +1,18 @@
-
 use crate::bordered_list_item;
 use crate::gui::components::{empty_placeholder, scroll_list};
 use crate::gui::{pane, Message};
 use crate::state::fss;
 use crate::state::State;
 use crate::theme::{style, ORANGE, WHITE};
-use iced::widget::{column, container, progress_bar, row, text, Row};
+use iced::widget::{column, container, progress_bar, row, svg, text, Row};
 use iced::{Element, Fill, Right};
 
 pub struct SystemScanner;
 
 impl SystemScanner {
     fn signal_details(signal: &fss::Signal) -> Row<'_, Message> {
+        let icon = signal.get_icon();
+
         let left_side = column![
             row![
                 text(signal.name.to_string()).size(16).color(WHITE),
@@ -56,11 +57,22 @@ impl SystemScanner {
         .padding([4, 10]);
 
         bordered_list_item![
+            if let Some(data) = icon {
+                column![svg(svg::Handle::from_memory(data))
+                    .width(32)
+                    .height(32)
+                    .style(style::planet_icon)]
+                .padding([4, 0])
+            } else {
+                column![].width(0)
+            },
             left_side,
             right_side
         ]
         .height(48)
     }
+
+
 }
 
 impl pane::Type for SystemScanner {
@@ -99,6 +111,9 @@ impl pane::Type for SystemScanner {
                     .into()
                 );
             }
+
+            let mut bodies: Vec<_> = system_scans.bodies.values().collect();
+            bodies.sort_by_key(|b| b.id);
 
             for s in system_scans.signals.iter() {
                 rows.push(Self::signal_details(s).into());

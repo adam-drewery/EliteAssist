@@ -190,7 +190,7 @@ macro_rules! scroll_list {
 /// - Wraps the container in another row
 #[macro_export]
 macro_rules! bordered_list_item {
-    ($($x:expr),*) => {
+    ($($x:expr),* $(,)?) => {
         row![
             container(
                 row![$($x),*]

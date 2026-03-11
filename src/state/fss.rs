@@ -1,7 +1,7 @@
-use crate::image::planet;
-use std::collections::HashMap;
-use crate::{edsm, BoxStrOptionExt};
+use crate::image::{planet, station};
 use crate::journal::event;
+use crate::{edsm, image, BoxStrOptionExt};
+use std::collections::HashMap;
 
 #[derive(Default, Clone, Debug)]
 pub struct Fss {
@@ -62,18 +62,30 @@ impl Body {
     pub fn icons(&self) -> Vec<BodyIcon> {
         let mut result = Vec::new();
 
+        if self.is_earthlike || self.is_water_world || self.is_ammonia_world || self.terraformable {
+            result.push(BodyIcon { data: planet::HIGH_VALUE, tooltip: "High Value Body" });
+        }
+
         if self.is_earthlike { result.push(BodyIcon { data: planet::EARTHLIKE, tooltip: "Earth-like World" }); }
         else if self.is_water_world { result.push(BodyIcon { data: planet::WATER_WORLD, tooltip: "Water World" }); }
         else if self.is_ammonia_world { result.push(BodyIcon { data: planet::AMMONIA_WORLD, tooltip: "Ammonia World" }); }
         else if self.is_gas_giant { result.push(BodyIcon { data: planet::GAS_GIANT, tooltip: "Gas Giant" }); }
         else if self.is_high_metal_content { result.push(BodyIcon { data: planet::HIGH_METAL_CONTENT, tooltip: "High Metal Content Body" }); }
         else if self.r#type.is_some() { result.push(BodyIcon { data: planet::PLANET, tooltip: "Planet" }); }
+        else { result.push(BodyIcon { data: planet::EMPTY, tooltip: "Unknown Body" }); }
 
         if self.terraformable { result.push(BodyIcon { data: planet::TERRAFORMABLE, tooltip: "Terraformable" }); }
-        if self.is_landable { result.push(BodyIcon { data: planet::LANDABLE, tooltip: "Landable" }); }
+
+        if self.is_landable && self.atmosphere.is_some() {
+            result.push(BodyIcon { data: planet::ATMOSPHERE_LANDABLE, tooltip: "Landable with Atmosphere" });
+        } else {
+            if self.is_landable { result.push(BodyIcon { data: planet::LANDABLE, tooltip: "Landable" }); }
+            if self.atmosphere.is_some() { result.push(BodyIcon { data: planet::ATMOSPHERE, tooltip: "Atmosphere Present" }); }
+        }
+        if self.was_footfalled { result.push(BodyIcon { data: planet::LANDER, tooltip: "First Footfall" }); }
+
         if !self.rings.is_empty() { result.push(BodyIcon { data: planet::RINGED, tooltip: "Ringed" }); }
         if self.volcanism.is_some() { result.push(BodyIcon { data: planet::VOLCANIC, tooltip: "Volcanism Detected" }); }
-        if self.atmosphere.is_some() { result.push(BodyIcon { data: planet::ATMOSPHERE, tooltip: "Atmosphere Present" }); }
 
         if self.has_ammonia_based_life() { result.push(BodyIcon { data: planet::AMMONIA_BASED_LIFE, tooltip: "Ammonia-based Life" }); }
         else if self.has_water_based_life() { result.push(BodyIcon { data: planet::WATER_BASED_LIFE, tooltip: "Water-based Life" }); }
@@ -257,7 +269,7 @@ pub struct Signal {
 
 impl From<event::FSSSignalDiscovered> for Signal {
     fn from(value: event::FSSSignalDiscovered) -> Self {
-        let name = value.signal_name_localised.unwrap_or(value.signal_name);
+        let name = value.signal_name_localised.clone().unwrap_or(value.signal_name.clone());
         Self {
             name,
             kind: value.signal_type,
@@ -267,6 +279,22 @@ impl From<event::FSSSignalDiscovered> for Signal {
             spawning_faction: value.spawning_faction_localised.or(value.spawning_faction),
             threat_level: value.threat_level.map(|v| v as u32),
             time_remaining: value.time_remaining,
+        }
+    }
+}
+
+impl Signal {
+    pub(crate) fn get_icon(&self) -> Option<&'static [u8]> {
+        match self.kind.as_deref() {
+            Some("Installation") => Some(station::OUTPOST),
+            Some("FleetCarrier") => Some(station::FLEET_CARRIER),
+            Some("StationCoriolis") => Some(station::CORIOLIS_STARPORT),
+            Some("StationOcellus") => Some(station::OCELLUS_STARPORT),
+            Some("StationOrbis") => Some(station::ORBIS_STARPORT),
+            Some("StationAsteroid") => Some(station::ASTEROID_BASE),
+            Some("StationMegaShip") | Some("Megaship") => Some(station::MEGASHIP),
+            Some("Outpost") => Some(station::OUTPOST),
+            _ => Some(image::POI),
         }
     }
 }
