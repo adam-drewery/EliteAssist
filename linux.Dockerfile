@@ -15,7 +15,12 @@ RUN apt update && apt install -y \
   pkg-config \
   git \
   cmake \
-  libssl-dev
+  libssl-dev \
+  gcc-10 \
+  g++-10
+
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100 \
+    --slave /usr/bin/g++ g++ /usr/bin/g++-10
 
 # Install Rust
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
