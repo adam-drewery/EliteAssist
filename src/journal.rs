@@ -229,7 +229,7 @@ impl JournalWatcher {
             self.watcher_rx.recv().await.ok_or(JournalError::Channel)?;
 
             // Small delay to allow the filesystem to finish writing and debounce multiple events
-            tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+            tokio::time::sleep(std::time::Duration::from_millis(500)).await;
             while self.watcher_rx.try_recv().is_ok() {}
 
             // Check for new or updated journal files
