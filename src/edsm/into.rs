@@ -67,10 +67,21 @@ impl Into<state::fss::Body> for edsm::bodies::Body {
         let is_high_metal_content = self.sub_type.as_ref() == "High metal content body";
         let is_gas_giant = self.sub_type.as_ref().to_lowercase().contains("gas giant");
 
+        let parent_id = self.parents.as_ref()
+            .and_then(|p| p.first())
+            .and_then(|f| {
+                let (key, &val) = f.iter().next()?;
+                if key.as_ref() == "Null" {
+                    None
+                } else {
+                    Some(val as u8)
+                }
+            });
+
         state::fss::Body {
             id: self.body_id as u8,
             name: self.name,
-            parent_id: None,
+            parent_id,
             r#type: Some(self.sub_type).filter(|s| !s.is_empty()),
             signals: Vec::new(),
             terraformable: self.terraforming_state.as_deref() == Some("Terraformable"),

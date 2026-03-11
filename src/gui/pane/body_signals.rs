@@ -8,8 +8,38 @@ use crate::theme::{style, ORANGE, WHITE};
 use iced::widget::tooltip::Position;
 use iced::widget::{column, container, row, svg, text, tooltip, Row};
 use iced::{Center, Element, Fill};
+use std::collections::{HashMap, HashSet};
 
 pub struct BodySignals;
+
+impl BodySignals {
+    fn render_node<'a>(
+        id: u8,
+        depth: u16,
+        bodies: &'a HashMap<u8, fss::Body>,
+        children_map: &HashMap<Option<u8>, Vec<u8>>,
+        rows: &mut Vec<Element<'a, Message>>,
+    ) {
+        let indentation = (depth * 16) as f32;
+        let content: Element<'a, Message> = if let Some(body) = bodies.get(&id) {
+            body_details(body).into()
+        } else {
+            unknown_body_details().into()
+        };
+
+        rows.push(
+            container(content)
+                .padding(iced::padding::left(indentation))
+                .into(),
+        );
+
+        if let Some(children) = children_map.get(&Some(id)) {
+            for &child_id in children {
+                Self::render_node(child_id, depth + 1, bodies, children_map, rows);
+            }
+        }
+    }
+}
 
 impl pane::Type for BodySignals {
     fn title(&self) -> &'static str {
@@ -18,17 +48,40 @@ impl pane::Type for BodySignals {
 
     fn render<'a>(&self, state: &'a State) -> Element<'a, Message> {
         if let Some(system_scans) = state.system_scans.get(&state.location.system_address)
-            && !system_scans.bodies.is_empty() {
-                let mut bodies: Vec<_> = system_scans.bodies.iter().collect();
-                bodies.sort_by_key(|b| b.0);
+            && !system_scans.bodies.is_empty()
+        {
+            let mut all_ids: HashSet<u8> = system_scans.bodies.keys().cloned().collect();
+            for body in system_scans.bodies.values() {
+                if let Some(p_id) = body.parent_id {
+                    all_ids.insert(p_id);
+                }
+            }
 
-                column![scroll_list(
-                    bodies
-                        .into_iter()
-                        .map(|body| body_details(body.1))
-                        .collect()
-                )]
-                .into()
+            let mut children_map: HashMap<Option<u8>, Vec<u8>> = HashMap::new();
+            for &id in &all_ids {
+                let parent_id = if let Some(body) = system_scans.bodies.get(&id) {
+                    body.parent_id
+                } else {
+                    None
+                };
+
+                children_map.entry(parent_id).or_default().push(id);
+            }
+
+            for children in children_map.values_mut() {
+                children.sort();
+            }
+
+            let mut rows = Vec::new();
+            if let Some(roots) = children_map.get(&None) {
+                let mut sorted_roots = roots.clone();
+                sorted_roots.sort();
+                for &root_id in &sorted_roots {
+                    Self::render_node(root_id, 0, &system_scans.bodies, &children_map, &mut rows);
+                }
+            }
+
+            column![scroll_list(rows)].into()
         } else {
             empty_placeholder("No signals found").into()
         }
@@ -84,5 +137,14 @@ fn body_details(body: &fss::Body) -> Row<'_, Message> {
         .align_y(Center)
         .padding([4, 10])
     ]
+    .height(48)
+}
+
+fn unknown_body_details() -> Row<'static, Message> {
+    bordered_list_item![container(text("Unknown Body").size(16).color(WHITE))
+        .width(Fill)
+        .height(Fill)
+        .align_x(Center)
+        .align_y(Center)]
     .height(48)
 }

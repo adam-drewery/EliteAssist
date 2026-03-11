@@ -32,7 +32,7 @@ pub struct Body {
     pub id: u8,
     pub name: Box<str>,
     pub r#type: Option<Box<str>>,
-    pub parent_id: Option<u64>,
+    pub parent_id: Option<u8>,
     pub signals: Vec<SignalCount>,
     pub terraformable: bool,
     pub was_discovered: bool,
@@ -90,21 +90,16 @@ impl Body {
         self.has_life && self.is_water_world
     }
 
-    // todo: how to figure out high value?
-
-
     // todo: not u64 plz
-    pub fn get_parent_id(event: &event::Scan) -> Option<u64> {
+    pub fn get_parent_id(event: &event::Scan) -> Option<u8> {
         if let Some(parents) = &event.parents {
             // ignore rings, they're annoying.
             let planet_ids: Vec<u64> = parents.iter().filter_map(|p| p.planet).collect();
             let star_ids: Vec<u64> = parents.iter().filter_map(|p| p.star).collect();
 
-            if planet_ids.len() > 0 { Some(planet_ids[0]) }
-            else if star_ids.len() > 0 { Some(star_ids[0]) }
+            if planet_ids.len() > 0 { Some(planet_ids[0] as u8) }
+            else if star_ids.len() > 0 { Some(star_ids[0] as u8) }
             else { None }
-
-
         }
         else { None }
     }
@@ -117,7 +112,6 @@ impl Body {
         self.was_discovered = event.was_discovered;
         self.was_mapped = event.was_mapped;
         self.terraformable = event.terraform_state.as_deref() == Some("Terraformable");
-        self.atmosphere = event.atmosphere;
         self.atmosphere_type = event.atmosphere_type;
         self.volcanism = event.volcanism;
         self.is_landable = event.landable.unwrap_or_default();
@@ -165,6 +159,31 @@ impl Body {
         if let Some(rings) = response.rings {
             self.rings = rings.into_iter().map(|r| r.name).collect();
         }
+        if let Some(parents) = response.parents {
+            let mut planet_id = None;
+            let mut star_id = None;
+
+            for parent in parents.iter() {
+                for (key, &val) in parent.iter() {
+                    match key.as_ref() {
+                        "Planet" => {
+                            planet_id = Some(val as u8);
+                            break;
+                        }
+                        "Star" if star_id.is_none() => {
+                            star_id = Some(val as u8);
+                        }
+                        "Null" => continue,
+                        _ => {}
+                    }
+                }
+                if planet_id.is_some() {
+                    break;
+                }
+            }
+
+            self.parent_id = planet_id.or(star_id);
+        }
     }
 }
 
@@ -176,6 +195,7 @@ pub struct SignalCount {
 
 impl From<event::Scan> for Body {
     fn from(value: event::Scan) -> Self {
+        let parent_id = Self::get_parent_id(&value);
         Self {
             name: value.body_name,
             id: value.body_id as u8,
@@ -183,7 +203,7 @@ impl From<event::Scan> for Body {
             was_discovered: value.was_discovered,
             was_mapped: value.was_mapped,
             signals: Vec::new(),
-            parent_id: None,
+            parent_id,
             atmosphere: value.atmosphere.none_if_empty(),
             atmosphere_type: value.atmosphere_type.none_if_empty(),
             volcanism: value.volcanism.none_if_empty(),
