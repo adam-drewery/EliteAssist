@@ -7,7 +7,7 @@ use crate::state::State;
 use crate::theme::{style, ORANGE, WHITE};
 use iced::widget::tooltip::Position;
 use iced::widget::{column, container, row, svg, text, tooltip, Row};
-use iced::{Center, Element, Fill};
+use iced::{Center, Element, Fill, Right};
 use std::collections::{HashMap, HashSet};
 
 pub struct BodySignals;
@@ -90,6 +90,20 @@ impl pane::Type for BodySignals {
 
 fn body_details(body: &fss::Body) -> Row<'_, Message> {
     bordered_list_item![
+        if let Some(icon) = body.primary_icon() {
+            column![tooltip(
+                svg(svg::Handle::from_memory(icon.data))
+                    .style(style::planet_icon)
+                    .width(32)
+                    .height(32),
+                container(text(icon.tooltip).size(14)).padding(4),
+                Position::Top,
+            )
+            .style(style::tooltip)]
+            .padding([4, 0])
+        } else {
+            column![].width(0)
+        },
         column![
             row![
                 text(body.name.to_string()).size(16).color(WHITE),
@@ -117,15 +131,25 @@ fn body_details(body: &fss::Body) -> Row<'_, Message> {
         ]
         .width(Fill)
         .padding([0, 6]),
+        if let Some(discovery) = &body.discovery {
+            column![
+                text(discovery.commander.to_string()).size(12).color(WHITE),
+                text(discovery.date.to_string()).size(12).color(ORANGE),
+            ]
+            .align_x(Right)
+            .padding([4, 10])
+        } else {
+            column![].width(0)
+        },
         row(body
-            .icons()
+            .secondary_icons()
             .into_iter()
             .map(|icon| {
                 tooltip(
                     svg(svg::Handle::from_memory(icon.data))
                         .style(style::planet_icon)
-                        .width(32)
-                        .height(32),
+                        .width(24)
+                        .height(24),
                     container(text(icon.tooltip).size(14)).padding(4),
                     Position::Top,
                 )

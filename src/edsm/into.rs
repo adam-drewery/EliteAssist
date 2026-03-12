@@ -86,6 +86,10 @@ impl Into<state::fss::Body> for edsm::bodies::Body {
             signals: Vec::new(),
             terraformable: self.terraforming_state.as_deref() == Some("Terraformable"),
             was_discovered: self.discovery.is_some(),
+            discovery: self.discovery.map(|d| state::fss::BodyDiscovery {
+                commander: d.commander,
+                date: d.date,
+            }),
             was_mapped: false,
             was_footfalled: false,
             atmosphere: self.atmosphere_type.clone(),

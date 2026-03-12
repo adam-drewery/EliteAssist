@@ -36,6 +36,7 @@ pub struct Body {
     pub signals: Vec<SignalCount>,
     pub terraformable: bool,
     pub was_discovered: bool,
+    pub discovery: Option<BodyDiscovery>,
     pub was_mapped: bool,
     pub was_footfalled: bool,
     pub atmosphere: Option<Box<str>>,
@@ -53,35 +54,40 @@ pub struct Body {
     pub is_journal_scan: bool,
 }
 
+#[derive(Default, Clone, Debug)]
+pub struct BodyDiscovery {
+    pub commander: Box<str>,
+    pub date: Box<str>,
+}
+
 pub struct BodyIcon {
     pub data: &'static [u8],
     pub tooltip: &'static str,
 }
 
 impl Body {
-    pub fn icons(&self) -> Vec<BodyIcon> {
+    pub fn primary_icon(&self) -> Option<BodyIcon> {
+        if self.is_earthlike { Some(BodyIcon { data: planet::EARTHLIKE, tooltip: "Earth-like World" }) }
+        else if self.is_water_world { Some(BodyIcon { data: planet::WATER_WORLD, tooltip: "Water World" }) }
+        else if self.is_ammonia_world { Some(BodyIcon { data: planet::AMMONIA_WORLD, tooltip: "Ammonia World" }) }
+        else if self.is_gas_giant { Some(BodyIcon { data: planet::GAS_GIANT, tooltip: "Gas Giant" }) }
+        else if self.is_landable && self.atmosphere.is_some() { Some(BodyIcon { data: planet::ATMOSPHERE_LANDABLE, tooltip: "Landable with Atmosphere" }) }
+        else if self.is_landable { Some(BodyIcon { data: planet::LANDABLE, tooltip: "Landable" }) }
+        else if self.is_high_metal_content { Some(BodyIcon { data: planet::HIGH_METAL_CONTENT, tooltip: "High Metal Content Body" }) }
+        else if self.atmosphere.is_some() { Some(BodyIcon { data: planet::ATMOSPHERE, tooltip: "Atmosphere Present" }) }
+        else if self.r#type.is_some() { Some(BodyIcon { data: planet::PLANET, tooltip: "Planet" }) }
+        else { Some(BodyIcon { data: planet::EMPTY, tooltip: "Unknown Body" }) }
+    }
+
+    pub fn secondary_icons(&self) -> Vec<BodyIcon> {
         let mut result = Vec::new();
 
         if self.is_earthlike || self.is_water_world || self.is_ammonia_world || self.terraformable {
             result.push(BodyIcon { data: planet::HIGH_VALUE, tooltip: "High Value Body" });
         }
 
-        if self.is_earthlike { result.push(BodyIcon { data: planet::EARTHLIKE, tooltip: "Earth-like World" }); }
-        else if self.is_water_world { result.push(BodyIcon { data: planet::WATER_WORLD, tooltip: "Water World" }); }
-        else if self.is_ammonia_world { result.push(BodyIcon { data: planet::AMMONIA_WORLD, tooltip: "Ammonia World" }); }
-        else if self.is_gas_giant { result.push(BodyIcon { data: planet::GAS_GIANT, tooltip: "Gas Giant" }); }
-        else if self.is_high_metal_content { result.push(BodyIcon { data: planet::HIGH_METAL_CONTENT, tooltip: "High Metal Content Body" }); }
-        else if self.r#type.is_some() { result.push(BodyIcon { data: planet::PLANET, tooltip: "Planet" }); }
-        else { result.push(BodyIcon { data: planet::EMPTY, tooltip: "Unknown Body" }); }
-
         if self.terraformable { result.push(BodyIcon { data: planet::TERRAFORMABLE, tooltip: "Terraformable" }); }
 
-        if self.is_landable && self.atmosphere.is_some() {
-            result.push(BodyIcon { data: planet::ATMOSPHERE_LANDABLE, tooltip: "Landable with Atmosphere" });
-        } else {
-            if self.is_landable { result.push(BodyIcon { data: planet::LANDABLE, tooltip: "Landable" }); }
-            if self.atmosphere.is_some() { result.push(BodyIcon { data: planet::ATMOSPHERE, tooltip: "Atmosphere Present" }); }
-        }
         if self.was_footfalled { result.push(BodyIcon { data: planet::LANDER, tooltip: "First Footfall" }); }
 
         if !self.rings.is_empty() { result.push(BodyIcon { data: planet::RINGED, tooltip: "Ringed" }); }
@@ -154,6 +160,10 @@ impl Body {
         self.name = response.name;
         self.id = response.body_id as u8;
         self.was_discovered = response.discovery.is_some();
+        self.discovery = response.discovery.map(|d| BodyDiscovery {
+            commander: d.commander,
+            date: d.date,
+        });
         self.distance_ls = response.distance_to_arrival;
         self.is_landable = response.is_landable.unwrap_or_default();
         self.terraformable = response.terraforming_state.as_deref() == Some("Terraformable");
@@ -213,6 +223,7 @@ impl From<event::Scan> for Body {
             id: value.body_id as u8,
             terraformable: value.terraform_state.as_deref() == Some("Terraformable"),
             was_discovered: value.was_discovered,
+            discovery: None,
             was_mapped: value.was_mapped,
             signals: Vec::new(),
             parent_id,
