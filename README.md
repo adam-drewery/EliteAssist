@@ -31,6 +31,8 @@ _A Linux compatible Elite:Dangerous companion for your second monitor_
   - Location details.
   - Engineering materials.
   - Ship locker contents.
+  - Bodies & Planets.
+  - System signals.
   - Market data (in-progress).
   - Missions (in-progress).
   - Outstanding claims (in progress).
