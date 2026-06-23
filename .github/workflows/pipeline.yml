@@ -78,11 +78,49 @@ jobs:
           docker cp temp-container:/app/target/release ./artifacts
           docker rm temp-container
 
+      - name: Stage standalone executable
+        run: |
+          mkdir -p dist/linux
+          cp ./artifacts/release/EliteAssist "dist/linux/EliteAssist-${VERSION}"
+          chmod +x "dist/linux/EliteAssist-${VERSION}"
+
+      - name: Install packaging tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ruby ruby-dev build-essential rpm libarchive-tools zstd
+          sudo gem install --no-document fpm
+
+      - name: Build distribution installers
+        run: |
+          # Lay out the files as they should be installed on the target system
+          mkdir -p pkgroot/usr/bin
+          cp ./artifacts/release/EliteAssist pkgroot/usr/bin/EliteAssist
+          chmod +x pkgroot/usr/bin/EliteAssist
+
+          COMMON_ARGS=(
+            -s dir
+            -n eliteassist
+            -v "${VERSION}"
+            --description "EliteAssist - companion app for Elite Dangerous"
+            --url "https://github.com/${GITHUB_REPOSITORY}"
+            --license "MIT"
+            -C pkgroot
+          )
+
+          # Debian / Ubuntu (.deb)
+          fpm "${COMMON_ARGS[@]}" -t deb --architecture amd64 -p dist/linux/ usr
+
+          # Fedora / RHEL / openSUSE (.rpm)
+          fpm "${COMMON_ARGS[@]}" -t rpm --architecture x86_64 -p dist/linux/ usr
+
+          # Arch Linux / CachyOS / Manjaro (.pkg.tar.zst)
+          fpm "${COMMON_ARGS[@]}" -t pacman --architecture x86_64 -p dist/linux/ usr
+
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
           name: EliteAssist-linux
-          path: ./artifacts/release/EliteAssist
+          path: ./dist/linux/*
 
   build-windows:
     name: Build / Windows
@@ -110,14 +148,14 @@ jobs:
           docker build -f windows.Dockerfile -t eliteassist-windows-builder .
           docker create --name temp-container eliteassist-windows-builder
           mkdir -p ./artifacts/windows
-          docker cp temp-container:/app/target/x86_64-pc-windows-gnu/release/EliteAssist.exe ./artifacts/windows/EliteAssist.exe
+          docker cp temp-container:/app/target/x86_64-pc-windows-gnu/release/EliteAssist.exe "./artifacts/windows/EliteAssist-${VERSION}.exe"
           docker rm temp-container
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
           name: EliteAssist-windows
-          path: ./artifacts/windows/EliteAssist.exe
+          path: ./artifacts/windows/EliteAssist-${{ env.VERSION }}.exe
 
   build-macos:
     name: Build / macOS
@@ -228,8 +266,8 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           files: |
-            dist/linux/EliteAssist
-            dist/windows/EliteAssist.exe
+            dist/linux/*
+            dist/windows/*.exe
             dist/macos/*.dmg
           prerelease: true
           generate_release_notes: true
