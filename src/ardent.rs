@@ -325,7 +325,7 @@ pub struct StationEconomiesStats {
 pub struct StationTypes {
     pub null: u64,
     #[serde(rename = "")]
-    pub field: u64,
+    pub field: Option<u64>,
     #[serde(rename = "AsteroidBase")]
     pub asteroid_base: u64,
     #[serde(rename = "Bernal")]
