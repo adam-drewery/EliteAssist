@@ -49,6 +49,7 @@ pub struct Body {
     pub is_high_metal_content: bool,
     pub is_gas_giant: bool,
     pub is_earthlike: bool,
+    pub is_star: bool,
     pub has_life: bool,
     pub distance_ls: f64,
     pub is_journal_scan: bool,
@@ -75,6 +76,7 @@ impl Body {
         else if self.is_landable { Some(BodyIcon { data: planet::LANDABLE, tooltip: "Landable" }) }
         else if self.is_high_metal_content { Some(BodyIcon { data: planet::HIGH_METAL_CONTENT, tooltip: "High Metal Content Body" }) }
         else if self.atmosphere.is_some() { Some(BodyIcon { data: planet::ATMOSPHERE, tooltip: "Atmosphere Present" }) }
+        else if self.is_star { Some(BodyIcon { data: image::STAR, tooltip: "Star" }) }
         else if self.r#type.is_some() { Some(BodyIcon { data: planet::PLANET, tooltip: "Planet" }) }
         else { Some(BodyIcon { data: planet::EMPTY, tooltip: "Unknown Body" }) }
     }
@@ -141,6 +143,7 @@ impl Body {
         self.is_earthlike = event.planet_class.as_ref().is_some_and(|pc| pc.as_ref() == "Earthlike body");
         self.is_high_metal_content = event.planet_class.as_ref().is_some_and(|pc| pc.as_ref() == "High metal content body");
         self.is_gas_giant = event.planet_class.as_ref().is_some_and(|pc| pc.as_ref().to_lowercase().contains("gas giant"));
+        self.is_star = event.star_type.is_some();
 
         if let Some(rings) = event.rings {
             self.rings = rings.into_iter().map(|r| r.name).collect();
@@ -176,6 +179,7 @@ impl Body {
         self.is_earthlike = response.sub_type.as_ref() == "Earthlike body";
         self.is_high_metal_content = response.sub_type.as_ref() == "High metal content body";
         self.is_gas_giant = response.sub_type.as_ref().to_lowercase().contains("gas giant");
+        self.is_star = response.body_type.as_ref() == "Star";
         self.r#type = Some(response.sub_type).filter(|s| !s.is_empty());
 
         if let Some(rings) = response.rings {
@@ -238,6 +242,7 @@ impl From<event::Scan> for Body {
             is_earthlike: value.planet_class.as_ref().is_some_and(|pc| pc.as_ref() == "Earthlike body"),
             is_high_metal_content: value.planet_class.as_ref().is_some_and(|pc| pc.as_ref() == "High metal content body"),
             is_gas_giant: value.planet_class.as_ref().is_some_and(|pc| pc.as_ref().to_lowercase().contains("gas giant")),
+            is_star: value.star_type.is_some(),
             r#type: value.planet_class.filter(|s| !s.is_empty()),
             has_life: false,
             distance_ls: value.distance_from_arrival_ls,

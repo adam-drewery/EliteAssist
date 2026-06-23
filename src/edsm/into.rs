@@ -66,6 +66,7 @@ impl Into<state::fss::Body> for edsm::bodies::Body {
         let is_earthlike = self.sub_type.as_ref() == "Earthlike body";
         let is_high_metal_content = self.sub_type.as_ref() == "High metal content body";
         let is_gas_giant = self.sub_type.as_ref().to_lowercase().contains("gas giant");
+        let is_star = self.body_type.as_ref() == "Star";
 
         let parent_id = self.parents.as_ref()
             .and_then(|p| p.first())
@@ -102,6 +103,7 @@ impl Into<state::fss::Body> for edsm::bodies::Body {
             is_high_metal_content,
             is_gas_giant,
             is_earthlike,
+            is_star,
             has_life: false,
             distance_ls: self.distance_to_arrival,
             is_journal_scan: false,
