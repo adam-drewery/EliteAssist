@@ -72,7 +72,7 @@ impl Settings {
             (None, Some(layout.current_visible_vec()))
         };
 
-        // Build multi-screen payload if available in state
+        // Build multiscreen payload if available in state
         let mut custom_screens_opt = None;
         let mut selected_screen_opt = None;
 
@@ -150,11 +150,22 @@ pub fn default_journal_dir() -> std::path::PathBuf {
             return std::path::Path::new(&user_profile).join(JOURNAL_DIRECTORY);
         }
     }
-    #[cfg(not(target_os = "windows"))]
+    #[cfg(target_os = "macos")]
+    {
+        // Elite Dangerous is typically run on macOS via CrossOver, which keeps a
+        // Windows "bottle" containing the game's Saved Games directory. The bottle
+        // name can vary between installations, so this default may not exist; when
+        // it doesn't, the application prompts the user to select the directory.
+        const JOURNAL_DIRECTORY: &str = "Library/Application Support/CrossOver/Bottles/Steam/drive_c/users/crossover/Saved Games/Frontier Developments/Elite Dangerous/";
+        if let Ok(home) = std::env::var("HOME") {
+            return std::path::Path::new(&home).join(JOURNAL_DIRECTORY);
+        }
+    }
+    #[cfg(all(not(target_os = "windows"), not(target_os = "macos")))]
     {
         const JOURNAL_DIRECTORY: &str = ".steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/";
         if let Ok(home) = std::env::var("HOME") {
-            return std::path::Path::new(&home).join(JOURNAL_DIRECTORY);
+            return Path::new(&home).join(JOURNAL_DIRECTORY);
         }
     }
     std::path::PathBuf::new()

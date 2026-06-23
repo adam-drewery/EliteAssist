@@ -22,7 +22,7 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
 
@@ -36,7 +36,7 @@ jobs:
     outputs:
       version: ${{ steps.compute.outputs.VERSION }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
       - name: Compute Version
@@ -58,7 +58,7 @@ jobs:
     env:
       VERSION: ${{ needs.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
 
@@ -67,7 +67,7 @@ jobs:
           sed -i "s/^version = \".*\"/version = \"${VERSION}\"/" Cargo.toml
 
       - name: Setup Docker
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Build Docker
         run: |
@@ -79,7 +79,7 @@ jobs:
           docker rm temp-container
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: EliteAssist-linux
           path: ./artifacts/release/EliteAssist
@@ -94,7 +94,7 @@ jobs:
     env:
       VERSION: ${{ needs.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
 
@@ -103,7 +103,7 @@ jobs:
           sed -i "s/^version = \".*\"/version = \"${VERSION}\"/" Cargo.toml
 
       - name: Setup Docker
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Build Docker
         run: |
@@ -114,10 +114,40 @@ jobs:
           docker rm temp-container
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: EliteAssist-windows
           path: ./artifacts/windows/EliteAssist.exe
+
+  build-macos:
+    name: Build / macOS
+    if: github.event_name == 'push'
+    needs:
+      - test
+      - version
+    runs-on: macos-latest
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Apply Version to Cargo.toml
+        run: |
+          sed -i '' "s/^version = \".*\"/version = \"${VERSION}\"/" Cargo.toml
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build
+        run: cargo build --release --verbose
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: EliteAssist-macos
+          path: ./target/release/EliteAssist
 
   publish:
     name: Publish
@@ -125,34 +155,42 @@ jobs:
     needs:
       - build-linux
       - build-windows
+      - build-macos
       - version
     runs-on: ubuntu-latest
     environment: beta
     env:
       VERSION: ${{ needs.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           submodules: recursive
 
       - name: Download Linux artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: EliteAssist-linux
           path: dist/linux
 
       - name: Download Windows artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           name: EliteAssist-windows
           path: dist/windows
 
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: EliteAssist-macos
+          path: dist/macos
+
       - name: Publish
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             dist/linux/EliteAssist
             dist/windows/EliteAssist.exe
+            dist/macos/EliteAssist
           prerelease: true
           generate_release_notes: true
           tag_name: v${{ env.VERSION }}
