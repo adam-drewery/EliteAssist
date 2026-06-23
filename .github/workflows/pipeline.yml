@@ -143,11 +143,51 @@ jobs:
       - name: Build
         run: cargo build --release --verbose
 
+      - name: Package .app bundle
+        run: |
+          APP_DIR="dist/EliteAssist.app"
+          mkdir -p "${APP_DIR}/Contents/MacOS"
+          mkdir -p "${APP_DIR}/Contents/Resources"
+          cp ./target/release/EliteAssist "${APP_DIR}/Contents/MacOS/EliteAssist"
+          chmod +x "${APP_DIR}/Contents/MacOS/EliteAssist"
+          cat > "${APP_DIR}/Contents/Info.plist" <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>CFBundleName</key>
+            <string>EliteAssist</string>
+            <key>CFBundleDisplayName</key>
+            <string>EliteAssist</string>
+            <key>CFBundleIdentifier</key>
+            <string>com.eliteassist.app</string>
+            <key>CFBundleVersion</key>
+            <string>${VERSION}</string>
+            <key>CFBundleShortVersionString</key>
+            <string>${VERSION}</string>
+            <key>CFBundleExecutable</key>
+            <string>EliteAssist</string>
+            <key>CFBundlePackageType</key>
+            <string>APPL</string>
+          </dict>
+          </plist>
+          EOF
+
+      - name: Create .dmg installer
+        run: |
+          mkdir -p dist/dmg
+          cp -R dist/EliteAssist.app dist/dmg/
+          ln -s /Applications dist/dmg/Applications
+          hdiutil create -volname "EliteAssist" \
+            -srcfolder dist/dmg \
+            -ov -format UDZO \
+            "dist/EliteAssist-${VERSION}.dmg"
+
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
           name: EliteAssist-macos
-          path: ./target/release/EliteAssist
+          path: ./dist/EliteAssist-${{ env.VERSION }}.dmg
 
   publish:
     name: Publish
@@ -190,7 +230,7 @@ jobs:
           files: |
             dist/linux/EliteAssist
             dist/windows/EliteAssist.exe
-            dist/macos/EliteAssist
+            dist/macos/*.dmg
           prerelease: true
           generate_release_notes: true
           tag_name: v${{ env.VERSION }}
