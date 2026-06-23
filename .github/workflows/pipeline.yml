@@ -103,7 +103,7 @@ jobs:
             -v "${VERSION}"
             --description "EliteAssist - companion app for Elite Dangerous"
             --url "https://github.com/${GITHUB_REPOSITORY}"
-            --license "MIT"
+            --license "WTFPL2"
             -C pkgroot
           )
 
